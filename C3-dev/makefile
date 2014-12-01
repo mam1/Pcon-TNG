@@ -15,8 +15,10 @@ OBJS = main.o cogA.cog cogB.cog cogC.cog
 
 program_NAME := Pcon
 program_C_SRCS := $(wildcard *.c)
+program_COG_SRCS := $(wildcard *.cogc)
 program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
+program_COG_OBJS := ${program_COG_SRCS:.cogc=.o}
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
 
@@ -31,10 +33,15 @@ LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 
 .PHONY: all clean distclean
 
-all: $(NAME).elf
-	@echo "starting compile"
-	@echo $(CPPFLAGS)
-	@echo $(LDFLAGS)
-	
 
+all: $(NAME).elf
+	@echo "starting compile\n"
+	@echo "CPPFLAGS: " $(CPPFLAGS) '\n'
+	@echo "LDFLAGS: " $(LDFLAGS) '\n'
+	@echo "C sources " $(program_C_SRCS)
+	@echo "C cog sources " $(program_COG_SRCS)
+	@echo "C objects " $(program_C_OBJS)
+	@echo "COG objects " $(program_COG_OBJS)	
+	@echo "program objects " $(program_OBJS)
+	
 include common.mk
