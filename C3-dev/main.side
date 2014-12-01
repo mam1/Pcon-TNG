@@ -1,0 +1,13 @@
+main.c
+main.h
+cogA.cogc
+cogB.cogc
+cogC.cogc
+>compiler=C
+>memtype=lmm main ram
+>optimize=-Os
+>-m32bit-doubles
+>-Wall
+>-fno-exceptions
+>defs::-std=c99
+>BOARD::QUICKSTART

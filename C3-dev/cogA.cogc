@@ -1,0 +1,60 @@
+/**
+ * This code zeros the cog query counter on startup.  It then
+ * loops checking for a increment request.  If it receives one 
+ * it reset the flag and increments the cog query counter  
+*/
+
+#include <propeller.h>
+#include <stdint.h>        //uint_8, uint_16, uint_32, etc.
+//#include "simpletools.h"                      // Include simpletools
+#include "stdint.h"        //uint_8, uint_16, uint_32, etc.
+
+//#include <cog.h>
+//#include "simpletools.h"                      // Include simpletools
+#include "fdserial.h"
+
+#include "main.h"
+
+#define RX                      1
+#define TX                      0
+#define MODE                    0
+#define BAUD                 9600
+#define SERIAL_BUFFER_SIZE    128
+#define START_COMMAND         27
+
+int get_serial(fdserial *port,int bcnt,uint8_t buf[SERIAL_BUFFER_SIZE]){
+ return 0;
+}
+
+int put_serial(fdserial *port,int bcnt,uint8_t buf[SERIAL_BUFFER_SIZE]){
+ return 0;
+}
+
+_NAKED
+void main (volatile CONTROL_BLOCK_BBBmon *cb)
+{ 
+	 fdserial    *serial_connection;
+	 uint8_t      serial_buffer[SERIAL_BUFFER_SIZE],*buf_ptr;
+	 int         cmd_code;
+	
+	cb->query_ctr = 0;			//zero the query counter 
+	cb->query_flag = 0;		//reset query flag 
+	
+	serial_connection = fdserial_open(RX, TX, MODE, BAUD);
+	
+	while(1)					//loop forever
+	{
+		if(cb->query_flag)		//test for query
+		{
+			cb->query_ctr++;	//increment query counter
+			cb->query_flag = 0;	//reset query flag
+		} 
+		 buf_ptr = serial_buffer;
+		 *buf_ptr = fdserial_rxChar(serial_connection);
+		 
+		
+	
+	
+	}
+}
+
