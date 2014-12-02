@@ -6,11 +6,7 @@
 
 #include <propeller.h>
 #include <stdint.h>        //uint_8, uint_16, uint_32, etc.
-//#include "simpletools.h"                      // Include simpletools
-#include "stdint.h"        //uint_8, uint_16, uint_32, etc.
-
-//#include <cog.h>
-//#include "simpletools.h"                      // Include simpletools
+#include "simpletools.h"                      // Include simpletools
 #include "fdserial.h"
 
 #include "main.h"

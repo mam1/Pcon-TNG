@@ -23,7 +23,9 @@ program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
 
 
-program_INCLUDE_DIRS := /Simple_Libraries/Text_Devices/libsimpletext /Simple_Libraries/Text_Devices/libfdserial
+#program_INCLUDE_DIRS := /SimpleLibraries/TextDevices/libsimpletext /SimpleLibraries/TextDevices/libfdserial 
+program_INCLUDE_DIRS := /SimpleLibraries/TextDevices/libfdserial /SimpleLibraries/Utility/libsimpletools 
+
 program_LIBRARY_DIRS := /Simple_Libraries/Text_Devices/libsimpletext/lmm /Simple_Libraries/Text_Devices/libserial/lmm
 program_LIBRARIES := simpletext fdserial simpletools 
 
