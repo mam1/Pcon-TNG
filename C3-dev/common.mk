@@ -40,7 +40,8 @@ endif
 CFLAGS_NO_MODEL := $(CFLAGS) $(CHIPFLAG)
 CFLAGS += -m$(MODEL) $(CHIPFLAG)
 CXXFLAGS += $(CFLAGS)
-LDFLAGS += $(CFLAGS) $(CPPFLAGS) -fno-exceptions 
+#LDFLAGS += $(CFLAGS) $(CPPFLAGS) -fno-exceptions 
+LDFLAGS += $(CFLAGS) -fno-exceptions 
 
 ifneq ($(LDSCRIPT),)
 LDFLAGS += -T $(LDSCRIPT)
@@ -62,7 +63,7 @@ SPINDIR=.
 
 ifneq ($(NAME),)
 $(NAME).elf: $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(CC) $(LDFLAGS) $(INCLUDE_DIRS) -o $@ $(OBJS) $(LIBS) $(LIBRARY_DIRS) $(LIBRARIES)
 endif
 
 ifneq ($(LIBNAME),)
@@ -71,7 +72,7 @@ lib$(LIBNAME).a: $(OBJS)
 endif
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(LDFLAGS) $(INCLUDE_DIRS)  -o $@ -c $<  $(LIBRARY_DIRS) $(LIBRARIES)
 
 %.o: %.cpp
 	$(CC) $(CXXFLAGS) -o $@ -c $<
@@ -85,11 +86,11 @@ endif
 # driver that the linker will place in the .text section.
 #
 %.cog: %.c
-	$(CC) $(CFLAGS_NO_MODEL) $(LDFLAGS) -mcog -r -o $@ $<
+	$(CC) $(CFLAGS_NO_MODEL)  -mcog -r -o $@ $<
 	$(OBJCOPY) --localize-text --rename-section .text=$@ $@
 
 %.cog: %.cogc
-	$(CC) $(CFLAGS_NO_MODEL) $(LDFLAGS)  -mcog -xc -r -o $@ $<
+	$(CC) $(CFLAGS_NO_MODEL)   -mcog -xc -r -o $@ $<
 	$(OBJCOPY) --localize-text --rename-section .text=$@ $@
 
 #
@@ -120,7 +121,16 @@ clean:
 
 distclean: clean
 
-#
+dump: 
+	@echo "starting compile\n"
+	@echo "CPPFLAGS: " $(CPPFLAGS) '\n'
+	@echo "LDFLAGS: " $(LDFLAGS) '\n'
+	@echo "C sources " $(program_C_SRCS)
+	@echo "C cog sources " $(program_COG_SRCS)
+	@echo "C objects " $(program_C_OBJS)
+	@echo "COG objects " $(program_COG_OBJS)	
+	@echo "program objects " $(program_OBJS)
+	
 # how to run
 run: $(NAME).elf
 	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t

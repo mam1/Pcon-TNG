@@ -1,13 +1,15 @@
 
 #PROPLIB = common
-CFLAGS = -Os -m32bit-doubles
+CFLAGS = -Os -m32bit-doubles -Wall
 NM = propeller-elf-nm
 MODEL = lmm
 BOARD = QUICKSTART
 #LDFLAGS = -I
-#LIBS = '/Users/mam1/Documents/SimpleIDE/Learn/Simple Libraries/Text Devices/libsimpletext'
-#LIBNAME = /Users/mam1/Documents/SimpleIDE/Learn/Simple Libraries/Utility/libsimpletools
-
+LIBS := simpletools simpletext simplei2c 
+LIBNAME := /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools/$(MODEL)/
+LIBNAME += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libfdserial/$(MODEL)/
+LIBNAME += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext/$(MODEL)/
+LIBNAME += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c/$(MODEL)/
 
 # objects for this program
 NAME = main
@@ -23,27 +25,25 @@ program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
 
 
-#program_INCLUDE_DIRS := /SimpleLibraries/TextDevices/libsimpletext /SimpleLibraries/TextDevices/libfdserial 
-program_INCLUDE_DIRS := /SimpleLibraries/TextDevices/libfdserial /SimpleLibraries/Utility/libsimpletools 
+program_INCLUDE_DIRS := . 
+program_INCLUDE_DIRS += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools   
+program_INCLUDE_DIRS += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libfdserial  
+program_INCLUDE_DIRS += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext
+program_INCLUDE_DIRS += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c
 
-program_LIBRARY_DIRS := /Simple_Libraries/Text_Devices/libsimpletext/lmm /Simple_Libraries/Text_Devices/libserial/lmm
-program_LIBRARIES := simpletext fdserial simpletools 
+program_LIBRARY_DIRS := . 
+program_LIBRARY_DIRS += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools/$(MODEL)/ 
+program_LIBRARY_DIRS += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libfdserial/$(MODEL)/ 
+program_LIBRARY_DIRS += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext/$(MODEL)/
+program_LIBRARY_DIRS += /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c/$(MODEL)/
 
-CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
-LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
-LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
+program_LIBRARIES := m simpletools simpletext simplei2c m simpletools simpletext m simpletools 
+
+INCLUDE_DIRS += $(foreach includedir,$(program_INCLUDE_DIRS),-I $(includedir))
+LIBRARY_DIRS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L $(librarydir))
+LIBRARIES += $(foreach library,$(program_LIBRARIES),-l$(library))
 
 .PHONY: all clean distclean
 
-
-all: $(NAME).elf
-	@echo "starting compile\n"
-	@echo "CPPFLAGS: " $(CPPFLAGS) '\n'
-	@echo "LDFLAGS: " $(LDFLAGS) '\n'
-	@echo "C sources " $(program_C_SRCS)
-	@echo "C cog sources " $(program_COG_SRCS)
-	@echo "C objects " $(program_C_OBJS)
-	@echo "COG objects " $(program_COG_OBJS)	
-	@echo "program objects " $(program_OBJS)
-	
+all: $(NAME).elf	
 include common.mk

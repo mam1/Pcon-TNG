@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <cog.h>
+#include "simpletools.h"                      // Include simpletools
+#include "fdserial.h"
 
 
 #include "main.h"
@@ -142,6 +144,10 @@ int main(void)
     char        input_buffer[INPUT_BUFFER]; //buffer for user input
     int         i;
 
+	fdserial    *serial_connection;
+	uint8_t      serial_buffer[SERIAL_BUFFER],*buf_ptr;
+	int         op_code;
+
     sleep(1);                 				//wait until initialization is complete
 	printf("\033\143"); 					//clear the terminal screen, preserve the scroll back
     printf("XMMC-cogc demo v%s\n",VERSION); //display startup message
@@ -152,6 +158,8 @@ int main(void)
     parB.B.cog = -1; 
     parC.C.cog = -1; 
     status();
+
+
 
 /* loop forever */
     while(1) 
