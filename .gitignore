@@ -3,6 +3,8 @@
 *.ko
 *.obj
 *.elf
+*.cog
+
 
 # Libraries
 *.lib
@@ -21,4 +23,7 @@
 *.i*86
 *.x86_64
 *.hex
-/Debug
+
+# Other
+*.map*
+

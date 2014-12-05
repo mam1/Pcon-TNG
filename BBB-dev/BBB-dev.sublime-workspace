@@ -1,0 +1,455 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "Pcon.c",
+			"settings":
+			{
+				"buffer_size": 6547,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Makefile",
+			"settings":
+			{
+				"buffer_size": 1145,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "# /etc/fstab: static file system information.\n#\n# Use 'blkid' to print the universally unique identifier for a\n# device; this may be used with UUID= as a more robust way to name devices\n# that works even if disks are added and removed. See fstab(5).\n#\n# <file system> <mount point>   <type>  <options>       <dump>  <pass>\n# / was on /dev/sda7 during installation\nUUID=9ca05f36-6c48-44fe-ba12-e2280c467293 /               ext4    errors=remount-ro 0       1\n# /boot was on /dev/sda5 during installation\nUUID=aab71823-3479-4e77-bf8a-ed8649f5cc03 /boot           ext2    defaults        0       2\n# /boot/efi was on /dev/sda1 during installation\nUUID=67E3-17ED  /boot/efi       vfat    defaults        0       1\n# /home was on /dev/sda8 during installation\nUUID=3f61866a-baab-48d2-a453-0dd7db362ceb /home           ext4    defaults        0       2\n# swap was on /dev/sda6 during installation\nUUID=bc8b472f-36c4-4f62-ba0b-9ae8a28f5d2e none            swap    sw              0       0\n//192.168.254.34/home/debian/Pcon guest,rw,uid=1000,gid=1000,nounix,iocharset=utf8,file_mode=0777,dir_mode=0777 0 0",
+			"file": "/etc/fstab",
+			"file_size": 983,
+			"file_write_time": 130587241226931429,
+			"settings":
+			{
+				"buffer_size": 1098,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/etc/auto.nfs",
+			"settings":
+			{
+				"buffer_size": 36,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/etc/auto.master",
+			"settings":
+			{
+				"buffer_size": 774,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "char_fsm.h",
+			"settings":
+			{
+				"buffer_size": 590,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Makefile/Make.sublime-build",
+	"command_palette":
+	{
+		"height": 306.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"pro",
+				"Project: Add Folder"
+			],
+			[
+				"proj",
+				"Project: Add Folder"
+			],
+			[
+				"mar",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"mark",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"Package Control:",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"GitHub Flavored Markdown: Preview"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 301.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/mam1/Git/Pcon-TNG/BBB-dev"
+	],
+	"file_history":
+	[
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/Pcon.c",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/Makefile",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/common.mk",
+		"/home/mam1/.profile",
+		"/home/mam1/Git/Pcon-TNG/C3-dev/common.mk",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/makefile-old",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/makefile",
+		"/home/mam1/Git/Pcon-TNG/.gitignore",
+		"/home/mam1/Git/Pcon-TNG/C3-dev/Makefile",
+		"/home/mam1/Git/Pcon-TNG/C3-dev/cogA.cogc",
+		"/home/mam1/SimpleIDE/Propeller GCC Demos/toggle/cog_c_toggle/Makefile",
+		"/etc/ld.so.conf.d/libc.conf",
+		"/etc/profile",
+		"/etc/bash.bashrc",
+		"/home/mam1/git/Pcon-TNG/cmd_fsm.c",
+		"/home/mam1/git/Pcon-TNG/README.md",
+		"/home/mam1/git/Pcon/README.md",
+		"/home/mam1/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/mam1/git/BeagleBone-Black/README.md",
+		"/home/mam1/git/Pcon/rtc.cogc",
+		"/home/mam1/Logic 1.1.30 (64-bit)/linux_readme.txt",
+		"/home/mam1/.cache/.fr-u8UOF8/Logic 1.1.15 (64-bit)/linux_readme.txt",
+		"/home/mam1/.cache/.fr-cOMZou/Logic 1.1.15 (64-bit)/linux_readme.txt",
+		"/home/mam1/.cache/.fr-5d813R/Logic 1.1.15 (64-bit)/linux_readme.txt",
+		"/home/mam1/.cache/.fr-FeqBAE/Logic 1.1.15 (64-bit)/linux_readme.txt",
+		"/home/mam1/Logic 1.1.15 (64-bit)/11_07_2014__20_54_31.txt",
+		"/home/mam1/Logic 1.1.15 (64-bit)/11_07_2014__20_33_44.txt",
+		"/home/mam1/SimpleIDE/Learn/Simple Libraries Index.html",
+		"/boot/config-3.13.0-24-generic",
+		"/home/mam1/git/XMMC-cogs-demo/README.md"
+	],
+	"find":
+	{
+		"height": 32.0
+	},
+	"find_in_files":
+	{
+		"height": 108.0,
+		"where_history":
+		[
+			"/home/mam1/Git/Pcon-TNG"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"PREFIX",
+			"c_1",
+			"c_23",
+			"c_5",
+			"c_31",
+			"c_13",
+			"root@beaglebone:/dev# cat /media/BEAGLEBONE/uEnv.txt"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "Pcon.c",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6547,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3072,
+								3072
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1176.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Makefile",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1145,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								614,
+								614
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.tmLanguage"
+						},
+						"translation.x": -0.0,
+						"translation.y": 1056.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/etc/fstab",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1098,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1016,
+								1016
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/etc/auto.nfs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 36,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/etc/auto.master",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 774,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								751,
+								739
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "char_fsm.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 590,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								470,
+								470
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 87.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 32.0
+	},
+	"input":
+	{
+		"height": 40.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 434.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "BBB-dev.sublime-project",
+	"replace":
+	{
+		"height": 60.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 210.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

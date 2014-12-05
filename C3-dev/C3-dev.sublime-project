@@ -1,0 +1,13 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "/home/mam1/Git/Pcon-TNG/C3-dev"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "."
+		}
+	]
+}

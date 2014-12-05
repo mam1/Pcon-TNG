@@ -27,9 +27,16 @@
 #include <cog.h>
 #include "simpletools.h"                      // Include simpletools
 #include "fdserial.h"
-
-
 #include "main.h"
+
+
+#define RX                      1
+#define TX                      0
+#define MODE                    0
+#define BAUD                 9600
+#define SERIAL_BUFFER_SIZE    128
+#define START_COMMAND         27
+
 /* allocate control block & stack for cogA */
 struct {
     unsigned            stack[STACK_A];
@@ -145,7 +152,7 @@ int main(void)
     int         i;
 
 	fdserial    *serial_connection;
-	uint8_t      serial_buffer[SERIAL_BUFFER],*buf_ptr;
+	uint8_t     serial_buffer[SERIAL_BUFFER],*buf_ptr;
 	int         op_code;
 
     sleep(1);                 				//wait until initialization is complete

@@ -10,13 +10,6 @@
 
 #include "main.h"
 
-#define RX                      1
-#define TX                      0
-#define MODE                    0
-#define BAUD                 9600
-#define SERIAL_BUFFER_SIZE    128
-#define START_COMMAND         27
-
 //int get_serial(fdserial *port,int bcnt,uint8_t buf[SERIAL_BUFFER_SIZE]){
 // return 0;
 //}
@@ -28,15 +21,13 @@
 _NAKED
 void main (volatile CONTROL_BLOCK_BBBmon *cb)
 { 
-//	 fdserial    *serial_connection;
-	 uint8_t      serial_buffer[SERIAL_BUFFER_SIZE],*buf_ptr;
-	 int         cmd_code;
+
 	
 	cb->query_ctr = 0;			//zero the query counter 
 	cb->query_flag = 0;		//reset query flag 
 	
 //	serial_connection = fdserial_open(RX, TX, MODE, BAUD);
-	
+/*	
 	while(1)					//loop forever
 	{
 		if(cb->query_flag)		//test for query
@@ -49,7 +40,7 @@ void main (volatile CONTROL_BLOCK_BBBmon *cb)
 		 
 		
 	
-	
-	}
+*/	
+	//}
 }
 
