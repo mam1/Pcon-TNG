@@ -1,28 +1,18 @@
 # #########################################################
-# This makefile fragment builds LMM/XMM/XMMC demo programs
 #   
-# To use it, define:
-#  PROPLIB to be the path to this directory
 #  NAME to be the name of project
 #       - this is used to create the final program $(NAME).elf
 #  OBJS to be the object files needed for the project
 #  MODEL to lmm, xmm, or xmmc
 #  CFLAGS to be desired CFLAGS
 #
-#  Then set up a default "all" target (normally this will be
-#    all: $(NAME).elf
-#  and finally
-#    include $(PROPLIB)/demo.mk
-#
-# Copyright (c) 2011 Parallax Inc.
-# All rights MIT licensed
 # #########################################################
 
 # where we installed the propeller binaries and libraries
 PREFIX = /opt/parallax
 
 ifndef MODEL
-MODEL=lmm
+MODEL=xmmc
 endif
 
 ifndef BOARD
@@ -41,6 +31,8 @@ CFLAGS_NO_MODEL := $(CFLAGS) $(CHIPFLAG)
 CFLAGS += -m$(MODEL) $(CHIPFLAG)
 CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti
+LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
+LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 
 ifneq ($(LDSCRIPT),)
 LDFLAGS += -T $(LDSCRIPT)
@@ -56,13 +48,13 @@ OBJCOPY = propeller-elf-objcopy
 LOADER = propeller-load
 LOADER2 = p2load
 
-# BSTC program
-BSTC=bstc
+# SPIN program
+SPIN=bstc
 SPINDIR=.
 
 ifneq ($(NAME),)
 $(NAME).elf: $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(CC) $(INCLUDE_DIRS) $(LDFLAGS) -o $@ $(OBJS) 
 endif
 
 ifneq ($(LIBNAME),)
@@ -71,13 +63,13 @@ lib$(LIBNAME).a: $(OBJS)
 endif
 
 %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) $(INCLUDE_DIRS) $(CFLAGS) -o $@ -c $<
 
 %.o: %.cpp
-	$(CC) $(CXXFLAGS) -o $@ -c $<
+	$(CC) $(INCLUDE_DIRS) $(CXXFLAGS) -o $@ -c $<
 
 %.o: %.s
-	$(CC) -o $@ -c $<
+	$(CC) -o $@ -c -M $<
 
 #
 # a .cog program is an object file that contains code intended to
@@ -110,7 +102,7 @@ endif
 	$(LOADER) -s $<
 
 %.dat: $(SPINDIR)/%.spin
-	$(BSTC) -Ox -c -o $(basename $@) $<
+	$(SPIN) -Ox -c -o $(basename $@) $<
 
 %_firmware.o: %.dat
 	$(OBJCOPY) -I binary -B propeller -O $(CC) $< $@
@@ -124,7 +116,10 @@ run: $(NAME).elf
 	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t
 
 r: $(NAME).elf
-	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -p /dev/cu.usbserial-A4009G3O
+	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -p /dev/cu.usbserial-004213FA
+
+e: $(NAME).elf
+	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -e -p /dev/cu.usbserial-004213FA
 
 run2: $(NAME).elf
 	$(LOADER2) $(NAME).elf -t
