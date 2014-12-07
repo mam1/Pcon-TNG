@@ -7,30 +7,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "cogA.cogc",
-			"settings":
-			{
-				"buffer_size": 966,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "README.md",
-			"settings":
-			{
-				"buffer_size": 1535,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "main.c",
-			"settings":
-			{
-				"buffer_size": 9209,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "Packages/Makefile/Make.sublime-build",
 	"command_palette":
@@ -92,11 +68,14 @@
 	},
 	"expanded_folders":
 	[
+		"/home/mam1/Git/Pcon-TNG/C3-dev",
+		"/home/mam1/Git/Pcon-TNG/Pcon-C3"
 	],
 	"file_history":
 	[
-		"/home/mam1/Git/Pcon-TNG/C3-dev/Makefile",
 		"/home/mam1/Git/Pcon-TNG/C3-dev/cogA.cogc",
+		"/home/mam1/Git/Pcon-TNG/C3-dev/main.c",
+		"/home/mam1/Git/Pcon-TNG/C3-dev/Makefile",
 		"/home/mam1/Git/Pcon-TNG/.gitignore",
 		"/home/mam1/SimpleIDE/Propeller GCC Demos/toggle/cog_c_toggle/Makefile",
 		"/etc/ld.so.conf.d/libc.conf",
@@ -159,96 +138,8 @@
 	"groups":
 	[
 		{
-			"selected": 2,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "cogA.cogc",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 966,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								961,
-								961
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 576.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "README.md",
-					"semi_transient": true,
-					"settings":
-					{
-						"buffer_size": 1535,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								573,
-								573
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Markdown/Markdown.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "main.c",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9209,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5907,
-								5907
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1440.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],

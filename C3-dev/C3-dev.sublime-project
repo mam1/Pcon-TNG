@@ -3,11 +3,11 @@
 	[
 		{
 			"follow_symlinks": true,
-			"path": "/home/mam1/Git/Pcon-TNG/C3-dev"
+			"path": "."
 		},
 		{
 			"follow_symlinks": true,
-			"path": "."
+			"path": "/home/mam1/Git/Pcon-TNG/Pcon-C3"
 		}
 	]
 }
