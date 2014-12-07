@@ -100,6 +100,7 @@ C - Propgcc, Spin, Python, SimpleIDE, Sublime Text, Eclipse, Linux Debian (on th
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**load** - load schedules from default file<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**file {file name} {load|save}** - save or load a named schedule file<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**edit** - edit the schedule for a specific channel and day<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**assign** - schedule to a (channel,day)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**delete** - delete a schedule record for the specified time<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**on** - set the schedule state to on for the specified time<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**off** - set the schedule state to off for the specified time<br />
