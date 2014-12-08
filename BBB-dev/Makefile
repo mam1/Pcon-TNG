@@ -12,8 +12,8 @@ CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 
-CFLAGS_NO_MODEL := $(CFLAGS) $(CHIPFLAG)
-CFLAGS += -m$(MODEL) $(CHIPFLAG)
+# CFLAGS_NO_MODEL := $(CFLAGS) $(CHIPFLAG)
+# CFLAGS += -m$(MODEL) $(CHIPFLAG)
 CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti
 
