@@ -149,11 +149,45 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 28  ?        */  { c_0, c_0, c_0}};
 
 /***************start fsm support functions ********************/
+int is_valid_int(const char *str)
+{
+   if (*str == '-')     //negative numbers
+      ++str;
+   if (!*str)           //empty string or just "-"
+      return 0;
+   while (*str)         //check for non-digit chars in the rest of the string
+   {
+      if (!isdigit(*str))
+         return 0;
+      else
+         ++str;
+   }
+   return -1;
+}
+int cmd_type(char *c)
+{
+    int     i;
+    /*test for an empty command que */
+    if((*c=='\0') || (*c==' '))
+        return 3;
+    /* test for a quoted string*/
+    if(*c==_QUOTE)
+        return 1;
+    /* test for a integer */
+    if(is_valid_int(c))
+        return 0;
+    /* test for a keyword */
+    for(i=3;i<_CMD_TOKENS;i++)
+    {
+        if(strlen(c) == strlen(keyword[i]))
+            if(strncmp(c,keyword[i],strlen(c))==0)
+                return i;
+    }
+    /* unrecognized token */
+    return 2;
+}
 
-
-
-
-/**************** command fsm action routines ******************/
+/**************** start command fsm action routines ******************/
 /* do nothing */
 int c_0(int tt, int *n, char *s)
 {
@@ -180,10 +214,9 @@ int c_3(int tt, int *n, char *s)
 	term(1);
     return 0;
 }
+/**************** end command fsm action routines ******************/
 
-/*****************************************************/
-/*********  command parser state machine end  ********/
-/*****************************************************/
+
 /* cycle state machine */
 void cmd_fsm(char *token,int *state)
 {
@@ -224,41 +257,4 @@ void cmd_fsm(char *token,int *state)
 }
 
 
-/*********************** functions **************************/
-int is_valid_int(const char *str)
-{
-   if (*str == '-')     //negative numbers
-      ++str;
-   if (!*str)           //empty string or just "-"
-      return 0;
-   while (*str)         //check for non-digit chars in the rest of the string
-   {
-      if (!isdigit(*str))
-         return 0;
-      else
-         ++str;
-   }
-   return -1;
-}
-int cmd_type(char *c)
-{
-    int     i;
-    /*test for an empty command que */
-    if((*c=='\0') || (*c==' '))
-        return 3;
-    /* test for a quoted string*/
-    if(*c==_QUOTE)
-        return 1;
-    /* test for a integer */
-    if(is_valid_int(c))
-        return 0;
-    /* test for a keyword */
-    for(i=3;i<_CMD_TOKENS;i++)
-    {
-        if(strlen(c) == strlen(keyword[i]))
-            if(strncmp(c,keyword[i],strlen(c))==0)
-                return i;
-    }
-    /* unrecognized token */
-    return 2;
-}
+

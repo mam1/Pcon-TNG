@@ -119,10 +119,7 @@ int main(void) {
 			prompted = true;
 			prompt();
 		}
-
-//		c = getchar();			//grab a character from the keyboard buffer
 		c = fgetc(stdin);
-
 		switch (c) {
 /* NOCR */ case _NO_CHAR:
 			   break;

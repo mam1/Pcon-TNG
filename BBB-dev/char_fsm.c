@@ -296,8 +296,8 @@ int cr2(char *);	//remove trailing delimiter, process buffer, reset char_fsm
 int crq(char *);
 
 /* character processor action table - initialized with fsm fuctions */
-typedef int (*ACTION_PTR)(char *);
-ACTION_PTR char_action[_CHAR_TOKENS][_CHAR_STATES] = {
+
+CHAR_ACTION_PTR char_action[_CHAR_TOKENS][_CHAR_STATES] = {
 /* DELIM */{nop, add, add, nop},
 /* QUOTE */{add, aqd, adq, add},
 /*   DEL */{del, del, del, del},

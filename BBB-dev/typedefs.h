@@ -3,8 +3,18 @@
 
 #include "Pcon.h"
 
-/* action routines for the cmd fsm */
+/* action routine definitions */
 typedef int (*CMD_ACTION_PTR)(int, int *, char *);
+typedef int (*CHAR_ACTION_PTR)(char *);
+
+/* cmd_fsm control block */
+typedef struct {
+	int				state;
+	char 			*token;
+	int				token_type;
+	int				*int_buffer;
+	char 			*prompt_buffer;
+}
 
 /* control block pointer definitions */
 typedef volatile struct RTC_CB *RTC_CB_ADDR;
