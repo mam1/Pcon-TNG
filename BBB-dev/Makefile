@@ -35,6 +35,7 @@ all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
 	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
+	cp proggram_name /home/mam1/BBB
 
 clean:
 	@- $(RM) $(program_NAME)
