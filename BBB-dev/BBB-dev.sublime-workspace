@@ -8,34 +8,10 @@
 	"buffers":
 	[
 		{
-			"file": "Makefile",
+			"file": "char_fsm.c",
 			"settings":
 			{
-				"buffer_size": 1149,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Pcon",
-			"settings":
-			{
-				"buffer_size": 57807,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Pcon.c",
-			"settings":
-			{
-				"buffer_size": 6480,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "cmd_fsm.c",
-			"settings":
-			{
-				"buffer_size": 6903,
+				"buffer_size": 9996,
 				"line_ending": "Unix"
 			}
 		},
@@ -43,15 +19,23 @@
 			"file": "typedefs.h",
 			"settings":
 			{
-				"buffer_size": 2343,
+				"buffer_size": 2359,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "char_fsm.c",
+			"file": "Makefile",
 			"settings":
 			{
-				"buffer_size": 9974,
+				"buffer_size": 1239,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Pcon.h",
+			"settings":
+			{
+				"buffer_size": 2402,
 				"line_ending": "Unix"
 			}
 		}
@@ -116,19 +100,19 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/mam1/Git/Pcon-TNG/BBB-dev"
+		"/home/mam1/Git/Pcon-TNG/BBB-dev"
 	],
 	"file_history":
 	[
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/Makefile",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/Pcon.c",
 		"/home/mam1/Git/Pcon-TNG/Pcon-BBB/Pcon.map",
+		"/etc/fstab",
 		"/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c",
 		"/home/mam1/Documents/SimpleIDE/Updated.txt",
-		"/home/mam1/Git/Pcon-TNG/BBB-dev/Pcon.c",
-		"/etc/fstab",
 		"/home/mam1/Git/Pcon-TNG/BBB-dev/char_fsm.h",
 		"/etc/auto.nfs",
 		"/etc/auto.master",
-		"/home/mam1/Git/Pcon-TNG/BBB-dev/Makefile",
 		"/home/mam1/Git/Pcon-TNG/BBB-dev/common.mk",
 		"/home/mam1/.profile",
 		"/home/mam1/Git/Pcon-TNG/C3-dev/common.mk",
@@ -199,116 +183,30 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "Makefile",
+					"file": "char_fsm.c",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1149,
+						"buffer_size": 9996,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1149,
-								1149
+								228,
+								228
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Makefile/Makefile.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "Pcon",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 57807,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "Pcon.c",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6480,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4247,
-								4247
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage",
+							"syntax": "Packages/C++/C++.tmLanguage",
 							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1895.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "cmd_fsm.c",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6903,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								102,
-								102
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -318,58 +216,85 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 1,
 					"file": "typedefs.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2343,
+						"buffer_size": 2359,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								683,
-								683
+								347,
+								347
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C.tmLanguage",
+							"syntax": "Packages/C++/C++.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 0.0,
+						"translation.x": -0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Makefile",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1239,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1096,
+								1096
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.tmLanguage"
+						},
+						"translation.x": -0.0,
+						"translation.y": 360.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "char_fsm.c",
+					"buffer": 3,
+					"file": "Pcon.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 9974,
+						"buffer_size": 2402,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8313,
-								8313
+								109,
+								109
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/C++/C++.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 4744.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,

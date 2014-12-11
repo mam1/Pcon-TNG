@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include "Pcon.h"
+#include "typedefs.h"
 #include "char_fsm.h"
 #include "cmd_fsm.h"
 #include "trace.h"
