@@ -7,6 +7,7 @@ Pcon-TNG
 The state of up to 8 channels can be controlled by:
 * time of day
 * time of day and a sensor value
+* cycle (seconds on, seconds off)
 * manually
 
 Each channel can switch 120 volt 8 amp load.  The channel is controlled by a schedule for the current day of the week.  There can be a different schedule for each day of the week. Each channel has it own set of schedules, so for any one day of the week there are 8 (number of channels) schedules active.  
