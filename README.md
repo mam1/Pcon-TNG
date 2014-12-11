@@ -10,16 +10,13 @@ The state of up to 8 channels can be controlled by:
 * cycle (seconds on, seconds off)
 * manually
 
-Each channel can switch 120 volt 8 amp load.  The channel is controlled by a schedule for the current day of the week.  There can be a different schedule for each day of the week. Each channel has it own set of schedules, so for any one day of the week there are 8 (number of channels) schedules active.  
-
-The software supports the creation of a library of schedules.  Any schedule can be assigned to any channel(s). 
-
-####Hardware
-* Parallax C3
-* Parallax Digital IO Board
-* BeagleBone Black
-* DS3232 RTC
-* MID400 AC line monitor
+####Hardware:
+* C3 micro controller, Parallax  
+* Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax 
+* ChronoDot real time clock module, based on a DS3231, adafruit
+* BeagleBone Black rev C, adafruit 
+* AQY212GH PhotoMOS relays, Newark
+* MID400 AC Line Monitor, Newark 
 
 ####Language
 * C
@@ -30,114 +27,13 @@ The software supports the creation of a library of schedules.  Any schedule can 
 
 ####Envirnoment
 * Development machine - MacMini Linux Mint 17.0
-* BeagleBone - Debian
+* BeagleBone Black (rev C)- Debian
 
-####Hardware architecture
-
-
-####Application architecture
-The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the application handle backspace/delete. The app maintains a buffer which matches the user's screen. When a CR is entered the screen buffer is passed to a state machine(char_fsm) which parses the screen buffer into a fifo stack of tokens. 
-
-![character parser state diagram](state_diagrams/char_fsm-2-0-7.jpg?raw=true)
-
-When the main event loop detects a non-empyt token stack it passes the stack to a second state machine (cmd_fsm) which processes the token stack. 
-
-![command parser state diagram](state_diagrams/cmd_fsm.jpg?raw=true)
-
-A third state machine handles communication with the C3. 
-
-It runs on a BeagleBone Black and uses a comm
- 
-
-####Serial connection between the C3 and BeagleBone 
-
-The C3 is running fdserial and UART1 is used on the BBB.  H
-BBB					  C3
-Tx P9_24  ----------> Rx 1
-Rx P9_26  <---------- Tx 0
-
-######Serial connection between C3 and DIOB
-C3					DIOB
-Din 4 ------------> Din      4 - dio, DIN
-DATA_RLY     4 - dio, 
-    5 - dio, SCLK_IN
-    5 - dio, SCLK_RLY
-    6 - dio, LOAD_INy
-    7 - dio, LAT_RLY
-    4 - dio, DATA_RLY
-    5 - dio, SCLK_IN
-    5 - dio, SCLK_RLY
-    6 - dio, LOAD_IN
-    7 - dio, LAT_RLY
-
-The code was developed in c using SimpleIDE, Eclipse, SublimeText 3. The development platform is a Parallax C3 making use of flash memory and the SD card.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
-
-The application can be configured to drive 1 to 8 channels using the preprocessor variable *_NUMBER_OF_CHANNELS* in Pcon.h.  It can be configured to drive IO pins or to drive the Parallax Digital IO Board serial interface. The the preprocessor variable *_DRIVEN* in Pcon.h controls which interface is used. In one implementation I am driving AQY212GH PhotoMOS relays connected to 5 propeller IO pins.  The PhotoMOS relays are rated at 60 V AC/DC 1.1 A. These relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. The second instance is driving a Parallax Digital IO board which can control 8, 120 VAC 8 A loads and accept input from 8 sensors. 
-####Software environment:
-C - Propgcc, Spin, Python, SimpleIDE, Sublime Text, Eclipse, Linux Debian (on the BBB), Cloud9, Linux Mint (cross compile)
-####Hardware:
-* C3 micro controller, Parallax  
-* Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax 
-* ChronoDot real time clock module, based on a DS3231, adafruit 
-* AQY212GH PhotoMOS relays, Newark
-* MID400 AC Line Monitor, Newark 
-
-####Command processor functions:
-* name channels  
-* manually control channel state  
-* set channel control mode (manual, time, time & sensor)
-* zero on time time for a channel
-* load/save channel information to SD card  
-* create and maintain schedules for each channel
-* copy and paste schedules between days across channels
-* load/save schedules to SD card (default file names)
-* load/save schedules to a named file on the SD card
-* display current time and date
-* set date and time
-* display schedules
-* display system configuration information
-* stop and start the control cogs
-* set the real time clock
-* reboot from EEPROM
-
-####Command processor commands:
-######schedule mode commands:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**copy** - copy the schedule for a channel and day to a buffer<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**paste** - paste the buffered schedule into a channel and day<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**delete** - delete the schedule for the channel and day<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**save** - save edited schedules data to default file<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**load** - load schedules from default file<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**file {file name} {load|save}** - save or load a named schedule file<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**edit** - edit the schedule for a specific channel and day<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**assign** - schedule to a (channel,day)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**delete** - delete a schedule record for the specified time<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**on** - set the schedule state to on for the specified time<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**off** - set the schedule state to off for the specified time<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**quit** - exit schedule edit mode<br />           
-######channel mode commands:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**save** - save current channel data to default file<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**load** - load channel data from default file<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**name** - set the name of a channel<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**mode** - set the control mode of a channel, 0-manual, 1-time, 2-time & sensor<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**zero {channel #}** - set the on time accumlator for a channel to 0<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**on {channel #}** - force the control mode of a channel to manual and set the state to on<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**off {channel #}** - force the control mode of a channel to manual and set the state to off<br />
-######system commands:
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**system** - display system information<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status** - display a formated dump of schedules, channel information and current state for all channels for all days<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**time** - display current time and date<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**set {YYYY}{MM}{DD}{N(day #)}{HH}{MM}{SS}** - set the real time clock<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**shutdown** - force all channels to manual control and turn them off, stop control cogs<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**start** - start control cogs<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**reboot** - reboot the system from EEPROM<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**help(?)** - display list of valid commands<br />
-
-Because the command processor is implemented by a state machine there is a lot of flexibility in the way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. ESC will clear input buffers and reset the state machines.   Tokens can be entered individually or strung together. Spaces, commas, colons and slashes will work as a delimiters. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
-
-![Command Processor FSM](FSM-docs/cmd_fsm.png?raw=true)
+####Channels
+Each channel can switch 120 volt 8 amp load.  The channel is controlled by a schedule for the current day of the week.  There can be a different schedule for each day of the week. Each channel has it own set of schedules, so for any one day of the week there are 8 (number of channels) schedules active. The schedule for a picticular day is created my selecting a schedule "template" from the schedule libaray.  A template can be assigned to; a specific day for a specific channel, all days for a specific channel, all channels for a specific day. 
 
 ####Schedules:
-A schedule is a list of times and corresponding states.  A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
+A schedule  is a list of times and corresponding states.  A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
 
 * 1:00  on
 * 13:00 off
@@ -157,6 +53,42 @@ will result in the channel turning on at 1:00, off at 13:00 and on at 18:00.  If
 
 The maximum number of records for a schedule is configured by setting the preprocessor variable *_MAX_SCHEDULE_RECS*.  Schedules are stored on the SD card. 
 
+####Application development
+The code was developed in c using SublimeText. The development machine is a MacMini running Mint 17.  The code is cross compiled on the mac.  The C3 is connected to the development machine via USB.  The development machine mounts a nsf share from the BeagleBone.
+
+The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the application handle backspace/delete. The app maintains a buffer which matches the user's screen. When a CR is entered the screen buffer is passed to a state machine(char_fsm) which parses the screen buffer into a fifo stack of tokens. 
+
+![character parser state diagram](state_diagrams/char_fs.jpg?raw=true)
+
+When the main event loop detects a non-empty token stack it passes the stack to a second state machine (cmd_fsm) which processes the token stack. 
+
+![command parser state diagram](state_diagrams/cmd_fsm.jpg?raw=true)
+
+A third state machine handles communication with the C3. 
+
+It runs on a BeagleBone Black and uses a comm
+ 
+
+###Hardware architecture
+
+![hardware layout](state_diagrams/hardware.jpg?raw=true)
+
+
+A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, headers and terminals for the external connections are mounted on an additional board connected to the C3. 
+
+####Serial connection between the C3 and BeagleBone 
+The C3 is running fdserial and UART1 is used on the BBB.  H
+BBB					  C3
+Tx P9_24  ----------> Rx 1
+Rx P9_26  <---------- Tx 0
+
+######Serial connection between C3 and DIOB
+C3    DIOB (serial)
+pin 4  DATA_RLY
+pin 5  SCLK_IN
+pin 5  SCLK_RLY
+pin 6  LOAD_IN
+pin 7  LAT_RLY
 
 ####Architecture:
 A schedule is a vector of 32 bit unsigned integers. The length is configured by the preprocessor variable *_MAX_SCHEDULE_RECS* .  These are fixed length vectors. I have an alternate implementation using linked lists but his approach is much simpler and has less chance of memory leaks. Since I am already using xmmc size is not a big deal.
@@ -197,10 +129,10 @@ In the following format:
 
 ####Propeller Pins:
 
-    0 - day light savings on
-    1 - AC line power monitor MID400
-    2 - serial port Rx
-    3 - serail port Tx
+    0 - serial port Rx
+    1 - serail port Tx
+    2 - 
+    3 - 
     4 - dio, DIN
     4 - dio, DATA_RLY
     5 - dio, SCLK_IN
