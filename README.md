@@ -36,9 +36,11 @@ The software supports the creation of a library of schedules.  Any schedule can 
 
 ####Application architecture
 The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the application handle backspace/delete. The app maintains a buffer which matches the user's screen. When a CR is entered the screen buffer is passed to a state machine(char_fsm) which parses the screen buffer into a fifo stack of tokens. 
+
 ![character parser state diagram](state_diagrams/char_fsm-2-0-7.jpg?raw=true)
 
 When the main event loop detects a non-empyt token stack it passes the stack to a second state machine (cmd_fsm) which processes the token stack. 
+
 ![command parser state diagram](state_diagrams/cmd_fsm.jpg?raw=true)
 
 A third state machine handles communication with the C3. 
