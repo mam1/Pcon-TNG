@@ -14,7 +14,7 @@ typedef struct {
 	int				token_type;
 	int				*int_buffer;
 	char 			*prompt_buffer;
-} CMD_FSM_BUFFER;
+} CMD_FSM_CB;
 
 /* control block pointer definitions */
 typedef volatile struct RTC_CB *RTC_CB_ADDR;

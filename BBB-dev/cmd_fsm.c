@@ -39,6 +39,9 @@ extern char *sch_mode[2];
 #ifdef _TRACE
 	char			trace_buf[128];
 #endif
+/* cmd_fsm control block */
+CMD_FSM_CB      cmd_fsm_cb, *cmd_fsm_cb_ptr = &cmd_fsm_cb;
+
 /***************************************/
 /*****  command  parser fsm start ******/
 /***************************************/
@@ -113,6 +116,8 @@ int c_0(int,int *,char *); /* nop */
 int c_1(int,int *,char *); /* display all valid commands for the current state */
 int c_2(int,int *,char *); /* ping */
 int c_3(int,int *,char *); /* terminate program */
+// int c_4(int,int *,char *); /*  */
+   
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -168,8 +173,12 @@ int is_valid_int(const char *str)
 int cmd_type(char *c)
 {
     int     i;
+<<<<<<< Updated upstream
     char    *p;
     /*test for an empty command que */
+=======
+    /*test for an empty command */
+>>>>>>> Stashed changes
     if((*c=='\0') || (*c==' '))
         return 3;
     /* test for a quoted string*/
