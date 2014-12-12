@@ -2,19 +2,20 @@
 #define _TYPEDEFS_H_
 
 #include "Pcon.h"
-
-/* action routine definitions */
-typedef int (*CMD_ACTION_PTR)(int, int *, char *);
-typedef int (*CHAR_ACTION_PTR)(char *);
+// #include "cmd_fsm.h"
 
 /* cmd_fsm control block */
 typedef struct {
 	int				state;
-	char 			*token;
+	char 			token[_MAX_TOKEN_SIZE];
 	int				token_type;
-	int				*int_buffer;
-	char 			*prompt_buffer;
+	int				token_value;
+	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
 } CMD_FSM_CB;
+
+/* action routine definitions */
+typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
+typedef int (*CHAR_ACTION_PTR)(char *);
 
 /* control block pointer definitions */
 typedef volatile struct RTC_CB *RTC_CB_ADDR;

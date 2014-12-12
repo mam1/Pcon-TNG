@@ -18,14 +18,14 @@
 // #include "cmd_fsm.h"
 
 /******************************** globals **************************************/
-int	trace_flag;			//control program trace
-int exit_flag = false;	//exit man loop if TRUE
-int bbb;				//UART1 file descriptor
+int				trace_flag;							//control program trace
+int 			exit_flag = false;					//exit man loop if TRUE
+int 			bbb;								//UART1 file descriptor
 
-CMD_FSM_BUFFER  cmd_fsm_cb, *cmd_fs_cb;
+CMD_FSM_CB  	cmd_fsm_cb, *cmd_fsm_cb_ptr=&cmd_fsm_cb;	//cmd_fsm control block
 
-char work_buffer[_INPUT_BUFFER], *work_buffer_ptr;
-char tbuf[_TOKEN_BUFFER];
+char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
+char 			tbuf[_TOKEN_BUFFER_SIZE];
 
 uint8_t cmd_state,char_state;
 /***************** global code to text conversion ********************/
@@ -41,7 +41,7 @@ char *sch_mode[2] = {"day","week"};
 void disp_sys(void) {
 	printf("*** Pcon  %d.%d.%d ***\n\n", _major_version, _minor_version,
 	_minor_revision);
-	printf(" input buffer size: %d characters\n", _INPUT_BUFFER);
+	printf(" input buffer size: %d characters\n", _INPUT_BUFFER_SIZE);
 	return;
 }
 /* prompt for user input */
@@ -103,9 +103,11 @@ int main(void) {
 	/************************************************************/
 	while (1){
         /* check the token stack */
-        while(pop_cmd_q(tbuf))
+        while(pop_cmd_q(cmd_fsm_cb.token))
         {
-            cmd_fsm(tbuf,&cmd_state);   	//cycle cmd fsm until queue is empty
+            // cmd_fsm(tbuf,&cmd_state);   	//cycle cmd fsm until queue is empty
+            cmd_fsm(cmd_fsm_cb_ptr);   	//cycle cmd fsm until queue is empty
+
             prompted = false;
  /**********************************************************************************************
 	system ("/bin/stty cooked");			//switch to buffered input
@@ -147,7 +149,7 @@ int main(void) {
 			reset_char_fsm();
 			while(*work_buffer_ptr != '\0')			//send the work buffer content to the fsm
 				char_fsm(char_type(*work_buffer_ptr),&char_state,work_buffer_ptr++);  //cycle fsm
-			for (i = 0; i < _INPUT_BUFFER; i++)		//clean out work buffer
+			for (i = 0; i < _INPUT_BUFFER_SIZE; i++)		//clean out work buffer
 				work_buffer[i] = '\0';
 			work_buffer_ptr = work_buffer;			//reset pointer
 			break;

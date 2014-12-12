@@ -14,7 +14,7 @@ typedef struct node {
 /* fuctions */
 int reset_char_fsm(void);
 void char_fsm(int, int *, char *);
-void cmd_fsm(char *, int *);
+
 int char_type(char);
 int pop_cmd_q(char *);
 int test_cmd_q();
