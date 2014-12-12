@@ -20,7 +20,9 @@
 /******************************** globals **************************************/
 int	trace_flag;			//control program trace
 int exit_flag = false;	//exit man loop if TRUE
-int bbb;				//UART1 file dscriptor
+int bbb;				//UART1 file descriptor
+
+CMD_FSM_BUFFER  cmd_fsm_cb, *cmd_fs_cb;
 
 char work_buffer[_INPUT_BUFFER], *work_buffer_ptr;
 char tbuf[_TOKEN_BUFFER];

@@ -5,11 +5,11 @@ Pcon-TNG
 - - - - - - - - -
 ###Pcon - multi channel programmable controller
 The state of up to 8 channels can be controlled by:
+
 * time of day
 * time of day and a sensor value
 * cycle (seconds on, seconds off)
 * manually
-
 ####Hardware:
 * C3 micro controller, Parallax  
 * Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax 
@@ -58,7 +58,7 @@ The code was developed in c using SublimeText. The development machine is a MacM
 
 The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the application handle backspace/delete. The app maintains a buffer which matches the user's screen. When a CR is entered the screen buffer is passed to a state machine(char_fsm) which parses the screen buffer into a fifo stack of tokens. 
 
-![character parser state diagram](state_diagrams/char_fs.jpg?raw=true)
+![character parser state diagram](state_diagrams/char_fsm.jpg?raw=true)
 
 When the main event loop detects a non-empty token stack it passes the stack to a second state machine (cmd_fsm) which processes the token stack. 
 

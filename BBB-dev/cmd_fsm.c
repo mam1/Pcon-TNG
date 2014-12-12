@@ -21,12 +21,13 @@
 
 
 /*********************** externals **************************/
- extern int          cmd_state,char_state;
- extern char         input_buffer[_INPUT_BUFFER],*input_buffer_ptr;
- extern char         c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
- extern int 		 exit_flag;		//exit man loop if TRUE
- extern int			 trace_flag;
- extern int 		 bbb;				//UART1 file dscriptor
+ extern int             cmd_state,char_state;
+ extern char            input_buffer[_INPUT_BUFFER],*input_buffer_ptr;
+ extern char            c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
+ extern int 		    exit_flag;		//exit man loop if TRUE
+ extern int             trace_flag;
+ extern int             bbb;				//UART1 file descriptor
+ extern CMD_FSM_BUFFER  cmd_fsm_cb, *cmd_fs_cb;
 
 /* code to text conversion */
 extern char *day_names_long[7];
@@ -167,6 +168,7 @@ int is_valid_int(const char *str)
 int cmd_type(char *c)
 {
     int     i;
+    char    *p;
     /*test for an empty command que */
     if((*c=='\0') || (*c==' '))
         return 3;
@@ -179,9 +181,13 @@ int cmd_type(char *c)
     /* test for a keyword */
     for(i=3;i<_CMD_TOKENS;i++)
     {
-        if(strlen(c) == strlen(keyword[i]))
+        if(strlen(c) == strlen(keyword[i])){
+            p = c;
+            while(*p != '\0') 
+                *p = tolower(*p++);
             if(strncmp(c,keyword[i],strlen(c))==0)
                 return i;
+        }
     }
     /* unrecognized token */
     return 2;
