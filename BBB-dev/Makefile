@@ -11,9 +11,6 @@ program_LIBRARIES :=
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
-
-# CFLAGS_NO_MODEL := $(CFLAGS) $(CHIPFLAG)
-# CFLAGS += -m$(MODEL) $(CHIPFLAG)
 CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti
 
@@ -40,21 +37,20 @@ else
 	OBJCOPY := arm-linux-gnueabihf-objcopy
 endif
 
-# LOADER := propeller-load
-# LOADER2 := p2load
-
 .PHONY: all clean distclean
 
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
 	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
-#	cd /home/mam1/BBB
+
 ifeq ($(UNAME_S),Darwin)
 	@echo "no way to load"
 else
 	cp -v /home/mam1/Git/Pcon-TNG/BBB-dev/$(program_NAME) /home/mam1/BBB
 endif
+	@- $(RM) $(program_NAME)
+	@- $(RM) $(program_OBJS)
 
 clean:
 	@- $(RM) $(program_NAME)

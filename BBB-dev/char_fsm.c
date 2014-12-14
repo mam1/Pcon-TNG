@@ -12,7 +12,7 @@
 #include "trace.h"
 
 /***************************** globals ******************************/
-char input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
+char input_buffer[_INPUT_BUFFER_SIZE], *input_buffer_ptr;
 
 /***************************** globals ******************************/
 TQ *head, *tail;
@@ -37,7 +37,7 @@ TQ *process_buffer(void) {
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME,"process_buffer", char_state, input_buffer, "called",trace_flag);
 #endif
-	char tb[_INPUT_BUFFER], *t_ptr, *start_char;        //
+	char tb[_INPUT_BUFFER_SIZE], *t_ptr, *start_char;        //
 	int i;
 	input_buffer_ptr = input_buffer;					//set pointer to start of input buffer
 	t_ptr = tb;											//set pointer to temporary buffer
@@ -106,7 +106,7 @@ TQ *process_buffer(void) {
 		trace(_TRACE_FILE_NAME,"process_buffer",char_state,tb,"character added to temp buffer",trace_flag);
 #endif
 	}
-	for (i = 0; i < _INPUT_BUFFER; i++)					//clean out input buffer
+	for (i = 0; i < _INPUT_BUFFER_SIZE; i++)					//clean out input buffer
 		input_buffer[i] = '\0';
 	input_buffer_ptr = input_buffer;					//reset pointer
 #ifdef _TRACE
@@ -150,7 +150,7 @@ int reset_cmd_fsm(void) {
 	trace(_TRACE_FILE_NAME,"reset_cmd_fsm",char_state,input_buffer,"resetting",trace_flag);
 #endif
 	abort();
-	char dump[_TOKEN_BUFFER];
+	char dump[_TOKEN_BUFFER_SIZE];
 	cmd_state = 0;          //reset state
 	while (pop_cmd_q(dump))
 		; //clear out the command queue 
@@ -171,6 +171,11 @@ int reset_cmd_fsm(void) {
 /********************************************/
 /* do nothing */
 int nop(char *c) {
+	if((*c==_CR)&&(char_state==0)){
+		fputc(_CR,stdout);
+		fputc('>',stdout);
+		fputc(' ',stdout);
+	}
 	return 0;
 }
 /* add char to buffer */

@@ -22,12 +22,12 @@
 
 /*********************** externals **************************/
  extern int             cmd_state,char_state;
- extern char            input_buffer[_INPUT_BUFFER],*input_buffer_ptr;
+ extern char            input_buffer[_INPUT_BUFFER_SIZE],*input_buffer_ptr;
  extern char            c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
- extern int 		    exit_flag;		//exit man loop if TRUE
- extern int             trace_flag;
- extern int             bbb;				//UART1 file descriptor
- extern CMD_FSM_BUFFER  cmd_fsm_cb, *cmd_fs_cb;
+ extern int 		    exit_flag;		              //exit man loop if TRUE
+ extern int             trace_flag;                   //trace file is active
+ extern int             bbb;				          //UART1 file descriptor
+ extern CMD_FSM_CB      cmd_fsm_cb, *cmd_fsm_cb_ptr;  //cmd_fsm control block
 
 /* code to text conversion */
 extern char *day_names_long[7];
@@ -39,6 +39,7 @@ extern char *sch_mode[2];
 #ifdef _TRACE
 	char			trace_buf[128];
 #endif
+
 /***************************************/
 /*****  command  parser fsm start ******/
 /***************************************/
@@ -109,10 +110,12 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 28  ?        */  {0, 1, 2}};
 
 /*cmd processor functions */
-int c_0(int,int *,char *); /* nop */
-int c_1(int,int *,char *); /* display all valid commands for the current state */
-int c_2(int,int *,char *); /* ping */
-int c_3(int,int *,char *); /* terminate program */
+int c_0(CMD_FSM_CB *); /* nop */
+int c_1(CMD_FSM_CB *); /* display all valid commands for the current state */
+int c_2(CMD_FSM_CB *); /* ping */
+int c_3(CMD_FSM_CB *); /* terminate program */
+// int c_4(CMD_FSM_CB *); /*  */
+   
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -165,11 +168,14 @@ int is_valid_int(const char *str)
    }
    return -1;
 }
+/* return cmd type; 0-INT, 1-QUOTE, 2-unrecognized, 3-NULL, command number (0 - xx) */
 int cmd_type(char *c)
 {
     int     i;
     char    *p;
-    /*test for an empty command que */
+
+    /*test for an empty command */
+
     if((*c=='\0') || (*c==' '))
         return 3;
     /* test for a quoted string*/
@@ -195,18 +201,24 @@ int cmd_type(char *c)
 
 /**************** start command fsm action routines ******************/
 /* do nothing */
-int c_0(int tt, int *n, char *s)
+int c_0(CMD_FSM_CB *cb)
 {
+    cb->prompt_buffer[0] = '>';
+    cb->prompt_buffer[1] = ' ';
+    cb->prompt_buffer[2] = '\0';
     return 0;
 }
 /* display all valid commands for the current state */
-int c_1(int tt, int *n, char *s)
+int c_1(CMD_FSM_CB *cb)
 {
-
+    int         i;
+    for(i=0;i<sizeof(keyword)/4;i++){
+        printf("command = %s\n",keyword[i]);
+    }
     return 0;
 }
 /* ping BBB */
-int c_2(int tt, int *n, char *s)
+int c_2(CMD_FSM_CB *cb)
 {
 	char	cmd = 'p';
 //	printf("  sending ping request to BBB <%u>\n\r",cmd);
@@ -215,7 +227,7 @@ int c_2(int tt, int *n, char *s)
 	return 0;
 }
 /* terminate program */
-int c_3(int tt, int *n, char *s)
+int c_3(CMD_FSM_CB *cb)
 {
 	term(1);
     return 0;
@@ -224,37 +236,38 @@ int c_3(int tt, int *n, char *s)
 
 
 /* cycle state machine */
-void cmd_fsm(char *token,int *state)
+void cmd_fsm(CMD_FSM_CB *cb)
 {
     static int         tt, num,*n_ptr;
     static char        *s_ptr;
 
-    tt = cmd_type(token);
+    cb->token_type = cmd_type(cb->token);
 #ifdef _TRACE
-		    sprintf(trace_buf, "cmd_fsm called: token <%s>, token type <%i>, state <%i>\n",token,tt, *state);
+		    sprintf(trace_buf, "cmd_fsm called: token <%s>, token type <%i>, state <%i>\n",cb->token,cb->token_type, cb->state);
 			strace(_TRACE_FILE_NAME,trace_buf,trace_flag);
 #endif
-//    printf("cmd_fsm called: token <%s>, token type <%i>, state <%i>\n",token,tt, *state);
-    if((tt==1)||(tt==2))
+//    printf("cmd_fsm called: token <%s>, token type <%i>, state <%i>\n",cb->token,cb->token_type, *state);
+    if((cb->token_type==1)||(cb->token_type==2))
     {
         n_ptr = NULL;
-        s_ptr = token;
+        s_ptr = cb->token;
     }
-    else if(tt==0)
+    else if(cb->token_type==0) //integer
     {
-        sscanf(token,"%u",&num);
+        sscanf(cb->token,"%u",&num);
+        cb->token_value = num;
         n_ptr = &num;
         s_ptr = NULL;
     }
     else
     {
-        num = tt;
+        num = cb->token_type;
         n_ptr = &num;
         s_ptr = NULL;
     }
-//    printf("call cmd_action[%i][%i](<%i>,<%i>,<%s>)\n",tt,*state,tt,*n_ptr,s_ptr);
-    if(cmd_action[tt][*state](tt,n_ptr,s_ptr)==0)   //fire off an fsm action routine
-        *state = cmd_new_state[tt][*state];         //transition to next state
+//    printf("call cmd_action[%i][%i](<%i>,<%i>,<%s>)\n",cb->token_type,*state,cb->token_type,*n_ptr,s_ptr);
+    if(cmd_action[cb->token_type][cb->state](cb)==0)   //fire off an fsm action routine
+        cb->state = cmd_new_state[cb->token_type][cb->state];         //transition to next state
     else
     {
         // printf("*** error returned from action routine\n");
