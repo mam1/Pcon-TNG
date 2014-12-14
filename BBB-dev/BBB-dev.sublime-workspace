@@ -3,39 +3,19 @@
 	{
 		"selected_items":
 		[
+			[
+				"U",
+				"UNAME_S"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "char_fsm.c",
-			"settings":
-			{
-				"buffer_size": 9996,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "typedefs.h",
-			"settings":
-			{
-				"buffer_size": 2359,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "Makefile",
 			"settings":
 			{
-				"buffer_size": 1239,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "Pcon.h",
-			"settings":
-			{
-				"buffer_size": 2402,
+				"buffer_size": 1775,
 				"line_ending": "Unix"
 			}
 		}
@@ -43,9 +23,13 @@
 	"build_system": "Packages/Makefile/Make.sublime-build",
 	"command_palette":
 	{
-		"height": 306.0,
+		"height": 392.0,
 		"selected_items":
 		[
+			[
+				"M",
+				"Markdown Preview: Preview in Browser"
+			],
 			[
 				"Package Control: ",
 				"Package Control: Install Package"
@@ -79,7 +63,7 @@
 				"Preferences: Browse Packages"
 			]
 		],
-		"width": 449.0
+		"width": 575.0
 	},
 	"console":
 	{
@@ -100,10 +84,19 @@
 	},
 	"expanded_folders":
 	[
-		"/home/mam1/Git/Pcon-TNG/BBB-dev"
+		"/Users/mam1/Git/Pcon-TNG/BBB-dev"
 	],
 	"file_history":
 	[
+		"/Users/mam1/Git/Pcon-TNG/BBB-dev/t.mk",
+		"/usr/local/carlson-minot/crosscompilers/bin/arm-none-linux-gnueabi-gcc",
+		"/Users/mam1/Git/Pcon-TNG/BBB-dev/char_fsm.c",
+		"/Users/mam1/Git/Pcon-TNG/BBB-dev/typedefs.h",
+		"/Users/mam1/Git/Pcon-TNG/BBB-dev/cmd_fsm.c",
+		"/Users/mam1/Git/Pcon-TNG/BBB-dev/Makefile",
+		"/Users/mam1/Git/Pcon-TNG/BBB-dev/Pcon.h",
+		"/Users/mam1/Git/Pcon-TNG/BBB-dev/Pcon.c",
+		"/Users/mam1/Git/Pcon-TNG/README.md",
 		"/home/mam1/Git/Pcon-TNG/BBB-dev/Makefile",
 		"/home/mam1/Git/Pcon-TNG/BBB-dev/Pcon.c",
 		"/home/mam1/Git/Pcon-TNG/Pcon-BBB/Pcon.map",
@@ -144,13 +137,15 @@
 	],
 	"find":
 	{
-		"height": 32.0
+		"height": 38.0
 	},
 	"find_in_files":
 	{
 		"height": 108.0,
 		"where_history":
 		[
+			"<open files>",
+			"/Users/mam1/Git/Pcon-TNG/BBB-dev",
 			"/home/mam1/Git/Pcon-TNG"
 		]
 	},
@@ -159,6 +154,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"arm",
+			"    ",
+			"        ",
+			"       ",
+			"      ",
+			"     ",
+			"    ",
+			"CMD_FSM_BUFFER",
 			"PREFIX",
 			"c_1",
 			"c_23",
@@ -183,118 +186,33 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "char_fsm.c",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 9996,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								228,
-								228
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "typedefs.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2359,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								347,
-								347
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
 					"file": "Makefile",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1239,
+						"buffer_size": 1775,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1096,
-								1096
+								1755,
+								1755
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Makefile/Makefile.tmLanguage"
-						},
-						"translation.x": -0.0,
-						"translation.y": 360.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "Pcon.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2402,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								109,
-								109
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage"
+							"spell_check": true,
+							"syntax": "Packages/Makefile Improved/Makefile Improved.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 342.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -305,7 +223,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 32.0
+		"height": 30.0
 	},
 	"input":
 	{
@@ -336,7 +254,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 434.0
+		"height": 295.0
 	},
 	"output.find_results":
 	{
@@ -345,7 +263,7 @@
 	"project": "BBB-dev.sublime-project",
 	"replace":
 	{
-		"height": 60.0
+		"height": 56.0
 	},
 	"save_all_on_build": true,
 	"select_file":
