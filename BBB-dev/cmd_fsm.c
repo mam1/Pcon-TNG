@@ -223,9 +223,11 @@ int c_1(CMD_FSM_CB *cb)
 int c_2(CMD_FSM_CB *cb)
 {
 	char	cmd = 'p';
-//	printf("  sending ping request to BBB <%u>\n\r",cmd);
+    char    ret = 'x';
+	printf("  sending ping request to C3 <%u>\n\r",cmd);
 	write(bbb,&cmd,1);
-	printf("  BBB acknowledge recieved\n");
+    read(bbb,&ret,1);
+	printf("  BBB acknowledge recieved <%c>\n\r",ret);
 	return 0;
 }
 /* terminate program */

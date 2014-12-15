@@ -16,12 +16,10 @@
 #include <fcntl.h>
 #include "serial_io.h"
 
-
 struct termios oldtio, newtio;
 
 int s_open(void){
     int fd;
-
 
     int ret = system("echo uart1 > /sys/devices/bone_capemgr.9/slots");	// Load the pin configuration
     /* Open modem device for reading and writing and not as controlling tty

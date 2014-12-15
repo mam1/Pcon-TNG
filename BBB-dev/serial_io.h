@@ -18,6 +18,4 @@
 int s_open(void);
 void s_close(int);
 
-
-
 #endif /* SERIAL_IO_H_ */

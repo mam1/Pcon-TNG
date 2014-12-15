@@ -78,6 +78,7 @@ int main(void) {
 	}
 	if (trace_flag == false)
 		printf(" program trace disabled\n");
+
 	/************************ initializations ****************************/
 	printf("\033\143"); //clear the terminal screen, perserve the scroll back
 	disp_sys();	        //display system info on serial terminal
@@ -177,13 +178,14 @@ int main(void) {
 		}
 
 	};
-
+	s_close(bbb);
 	system("/bin/stty cooked");			//switch to buffered iput
 	system("/bin/stty echo");			//turn on terminal echo
 	printf("\f\nnormal termination\n\n");
 	return 0;
 }
 int term(int t){
+	s_close(bbb);
 	switch(t){
 	case 1:
 		system("/bin/stty cooked");			//switch to buffered iput

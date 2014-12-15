@@ -4,56 +4,28 @@
 		"selected_items":
 		[
 			[
-<<<<<<< HEAD
-				"U",
-				"UNAME_S"
-=======
+				"char",
+				"char_state"
+			],
+			[
 				"key",
 				"keyword"
 			],
 			[
 				"cmd_",
 				"cmd_fsm_cb"
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
 			]
 		]
 	},
 	"buffers":
 	[
-		{
-<<<<<<< HEAD
-			"file": "Makefile",
-			"settings":
-			{
-				"buffer_size": 1775,
-=======
-			"file": "cmd_fsm.c",
-			"settings":
-			{
-				"buffer_size": 7557,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "typedefs.h",
-			"settings":
-			{
-				"buffer_size": 2409,
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "Packages/Makefile/Make.sublime-build",
 	"command_palette":
 	{
-		"height": 392.0,
+		"height": 306.0,
 		"selected_items":
 		[
-			[
-				"M",
-				"Markdown Preview: Preview in Browser"
-			],
 			[
 				"Package Control: ",
 				"Package Control: Install Package"
@@ -87,7 +59,7 @@
 				"Preferences: Browse Packages"
 			]
 		],
-		"width": 575.0
+		"width": 449.0
 	},
 	"console":
 	{
@@ -108,31 +80,21 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/mam1/Git/Pcon-TNG/BBB-dev"
+		"/home/mam1/Git/Pcon-TNG/BBB-dev"
 	],
 	"file_history":
 	[
-<<<<<<< HEAD
-		"/Users/mam1/Git/Pcon-TNG/BBB-dev/t.mk",
-		"/usr/local/carlson-minot/crosscompilers/bin/arm-none-linux-gnueabi-gcc",
-		"/Users/mam1/Git/Pcon-TNG/BBB-dev/char_fsm.c",
-		"/Users/mam1/Git/Pcon-TNG/BBB-dev/typedefs.h",
-		"/Users/mam1/Git/Pcon-TNG/BBB-dev/cmd_fsm.c",
-		"/Users/mam1/Git/Pcon-TNG/BBB-dev/Makefile",
-		"/Users/mam1/Git/Pcon-TNG/BBB-dev/Pcon.h",
-		"/Users/mam1/Git/Pcon-TNG/BBB-dev/Pcon.c",
-		"/Users/mam1/Git/Pcon-TNG/README.md",
-		"/home/mam1/Git/Pcon-TNG/BBB-dev/Makefile",
-=======
-		"/home/mam1/Git/Pcon-TNG/BBB-dev/cmd_fsm.c",
-		"/home/mam1/Git/Pcon-TNG/BBB-dev/typedefs.h",
-		"/home/mam1/Git/Pcon-TNG/BBB-dev/Pcon.h",
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/serial_io.c",
 		"/home/mam1/Git/Pcon-TNG/BBB-dev/Pcon.c",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/cmd_fsm.c",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/serial_io.h",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/Makefile",
+		"/home/mam1/git/BeagleBone-Black/serial_io.c",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/typedefs.h",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/char_fsm.c",
+		"/home/mam1/Git/Pcon-TNG/BBB-dev/Pcon.h",
 		"/home/mam1/Git/Pcon-TNG/BBB-dev/cmd_fsm.h",
 		"/home/mam1/Git/Pcon-TNG/BBB-dev/char_fsm.h",
-		"/home/mam1/Git/Pcon-TNG/BBB-dev/Makefile",
-		"/home/mam1/Git/Pcon-TNG/BBB-dev/char_fsm.c",
 		"/home/mam1/Git/Pcon-TNG/README.md",
 		"/home/mam1/Git/Pcon-TNG/Pcon-BBB/Pcon.map",
 		"/etc/fstab",
@@ -171,23 +133,14 @@
 	],
 	"find":
 	{
-<<<<<<< HEAD
-		"height": 38.0
-=======
 		"height": 35.0
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
 	},
 	"find_in_files":
 	{
 		"height": 108.0,
 		"where_history":
 		[
-<<<<<<< HEAD
-			"<open files>",
-			"/Users/mam1/Git/Pcon-TNG/BBB-dev",
-=======
 			"/home/mam1/Git/Pcon-TNG/BBB-dev",
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
 			"/home/mam1/Git/Pcon-TNG"
 		]
 	},
@@ -196,20 +149,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-<<<<<<< HEAD
-			"arm",
-			"    ",
-			"        ",
-			"       ",
-			"      ",
-			"     ",
-			"    ",
-			"CMD_FSM_BUFFER",
-=======
+			"prompt",
+			"_INPUT_BUFFER",
+			"_TOKEN_BUFFER",
 			"tt",
 			"token",
 			"cmd_fsm(",
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
 			"PREFIX",
 			"c_1",
 			"c_23",
@@ -224,6 +169,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"_INPUT_BUFFER_SIZE",
+			"_TOKEN_BUFFER_SIZE"
 		],
 		"reverse": false,
 		"show_context": true,
@@ -234,102 +181,14 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-<<<<<<< HEAD
-					"file": "Makefile",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1775,
-=======
-					"file": "cmd_fsm.c",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 7557,
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-<<<<<<< HEAD
-								1755,
-								1755
-=======
-								7317,
-								7317
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
-							]
-						],
-						"settings":
-						{
-<<<<<<< HEAD
-							"spell_check": true,
-							"syntax": "Packages/Makefile Improved/Makefile Improved.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 342.0,
-=======
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 4420.0,
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-<<<<<<< HEAD
-=======
-				},
-				{
-					"buffer": 1,
-					"file": "typedefs.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2409,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								69,
-								69
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
-				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-<<<<<<< HEAD
-		"height": 30.0
-=======
 		"height": 27.0
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
 	},
 	"input":
 	{
@@ -360,11 +219,7 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-<<<<<<< HEAD
-		"height": 295.0
-=======
-		"height": 425.0
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
+		"height": 627.0
 	},
 	"output.find_results":
 	{
@@ -373,11 +228,7 @@
 	"project": "BBB-dev.sublime-project",
 	"replace":
 	{
-<<<<<<< HEAD
-		"height": 56.0
-=======
 		"height": 50.0
->>>>>>> 43d3073d1770d1896a1358752e3bacdd4076619f
 	},
 	"save_all_on_build": true,
 	"select_file":
