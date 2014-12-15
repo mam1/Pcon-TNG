@@ -11,8 +11,9 @@ program_LIBRARIES :=
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
+CFLAGS  += -Wall
 CXXFLAGS += $(CFLAGS)
-LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti
+LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti 
 
 #get the development machine OS
 UNAME_S := $(shell uname -s)
@@ -21,19 +22,19 @@ UNAME_P := $(shell uname -p)
 # set up locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
 	sPREFIX = /usr/local/carlson-minot/crosscompilers/arm-none-linux-gnueabi/bin/
-	CC := $(PREFIX)gcc 
+	CC  := $(PREFIX)gcc 
 	CXX := $(PREFIX)g++
-	LD := $(PREFIX)ld
-	AS := $(PREFIX)as
-	AR := $(PREFIX)ar
+	LD  := $(PREFIX)ld
+	AS  := $(PREFIX)as
+	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
 else
 	PREFIX = /usr/bin
-	CC := arm-linux-gnueabihf-gcc
+	CC  := arm-linux-gnueabihf-gcc
 	CXX := arm-linux-gnueabihf-g++
-	LD := arm-linux-gnueabihf-ld
-	AS := arm-linux-gnueabihf-as
-	AR := arm-linux-gnueabihf-ar
+	LD  := arm-linux-gnueabihf-ld
+	AS  := arm-linux-gnueabihf-as
+	AR  := arm-linux-gnueabihf-ar
 	OBJCOPY := arm-linux-gnueabihf-objcopy
 endif
 
@@ -42,7 +43,7 @@ endif
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
+	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
 
 ifeq ($(UNAME_S),Darwin)
 	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB-dev root@192.168.254.34:/home/rsync-Pcon

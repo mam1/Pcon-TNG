@@ -149,8 +149,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 24  schedule */  { c_0, c_0, c_0},
 /* 25  channel  */  { c_0, c_0, c_0},
 /* 26  load     */  { c_0, c_0, c_0},
-/* 27  help     */  { c_0, c_0, c_0},
-/* 28  ?        */  { c_0, c_0, c_0}};
+/* 27  help     */  { c_1, c_0, c_0},
+/* 28  ?        */  { c_1, c_0, c_0}};
 
 /***************start fsm support functions ********************/
 int is_valid_int(const char *str)
@@ -189,8 +189,10 @@ int cmd_type(char *c)
     {
         if(strlen(c) == strlen(keyword[i])){
             p = c;
-            while(*p != '\0') 
-                *p = tolower(*p++);
+            while(*p != '\0'){
+                *p = tolower(*p);
+                p++;
+            }; 
             if(strncmp(c,keyword[i],strlen(c))==0)
                 return i;
         }
@@ -213,7 +215,7 @@ int c_1(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<sizeof(keyword)/4;i++){
-        printf("command = %s\n",keyword[i]);
+        printf("command = %s\n\r",keyword[i]);
     }
     return 0;
 }
@@ -238,8 +240,8 @@ int c_3(CMD_FSM_CB *cb)
 /* cycle state machine */
 void cmd_fsm(CMD_FSM_CB *cb)
 {
-    static int         tt, num,*n_ptr;
-    static char        *s_ptr;
+    static int         num;
+    // static char        *s_ptr;
 
     cb->token_type = cmd_type(cb->token);
 #ifdef _TRACE
@@ -249,21 +251,21 @@ void cmd_fsm(CMD_FSM_CB *cb)
 //    printf("cmd_fsm called: token <%s>, token type <%i>, state <%i>\n",cb->token,cb->token_type, *state);
     if((cb->token_type==1)||(cb->token_type==2))
     {
-        n_ptr = NULL;
-        s_ptr = cb->token;
+        // n_ptr = NULL;
+        // s_ptr = cb->token;
     }
     else if(cb->token_type==0) //integer
     {
         sscanf(cb->token,"%u",&num);
         cb->token_value = num;
-        n_ptr = &num;
-        s_ptr = NULL;
+        // n_ptr = &num;
+        // s_ptr = NULL;
     }
     else
     {
         num = cb->token_type;
-        n_ptr = &num;
-        s_ptr = NULL;
+        // n_ptr = &num;
+        // s_ptr = NULL;
     }
 //    printf("call cmd_action[%i][%i](<%i>,<%i>,<%s>)\n",cb->token_type,*state,cb->token_type,*n_ptr,s_ptr);
     if(cmd_action[cb->token_type][cb->state](cb)==0)   //fire off an fsm action routine
