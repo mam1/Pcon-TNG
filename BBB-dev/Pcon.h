@@ -3,7 +3,7 @@
 
 #define _major_version 			2
 #define _minor_version 			0
-#define _minor_revision 		15
+#define _minor_revision 		16
 #define _TRACE
 
 /* character parser fsm */

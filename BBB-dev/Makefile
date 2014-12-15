@@ -20,13 +20,13 @@ UNAME_P := $(shell uname -p)
 
 # set up locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
-	PREFIX = /usr/local/carlson-minot/crosscompilers/bin/
-	CC := $(PREFIX)arm-none-linux-gnueabi-gcc 
-	CXX := $(PREFIX)arm-none-linux-gnueabi-g++
-	LD := $(PREFIX)arm-none-linux-gnueabi-ld
-	AS := $(PREFIX)arm-none-linux-gnueabi-as
-	AR := $(PREFIX)arm-none-linux-gnueabi-ar
-	OBJCOPY := $(PREFIX)arm-none-linux-gnueabi-objcopy
+	sPREFIX = /usr/local/carlson-minot/crosscompilers/arm-none-linux-gnueabi/bin/
+	CC := $(PREFIX)gcc 
+	CXX := $(PREFIX)g++
+	LD := $(PREFIX)ld
+	AS := $(PREFIX)as
+	AR := $(PREFIX)ar
+	OBJCOPY := $(PREFIX)objcopy
 else
 	PREFIX = /usr/bin
 	CC := arm-linux-gnueabihf-gcc
@@ -45,7 +45,7 @@ $(program_NAME): $(program_OBJS)
 	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
 
 ifeq ($(UNAME_S),Darwin)
-	@echo "no way to load"
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB-dev root@192.168.254.34:/home/rsync-Pcon
 else
 	cp -v /home/mam1/Git/Pcon-TNG/BBB-dev/$(program_NAME) /home/mam1/BBB
 endif
