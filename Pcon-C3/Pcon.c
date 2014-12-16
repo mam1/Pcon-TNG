@@ -9,10 +9,8 @@
 #include <stdio.h>
 #include <unistd.h>		//sleep
 #include <stdint.h>		//uint_8, uint_16, uint_32, etc.
-#include "simpletools.h"
-#include "fdserial.h"
- 
-
+#include <simpletools.h>
+#include <fdserial.h>
 #include "Pcon.h"
 
 #define RX                      1
@@ -31,7 +29,7 @@ _Driver *_driverlist[] = {&_FullDuplexSerialDriver,&_FileDriver,NULL};
 int main(int argc, char *argv[]){
 
 	fdserial			*bbb;
-	bbb = fdserial_open(RX, TX, MODE, BAUD);
+	bbb =  fdserial_open(RX, TX, MODE, BAUD);
 	sleep(1);
 	disp_sys();
 

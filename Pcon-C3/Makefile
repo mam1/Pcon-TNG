@@ -5,7 +5,7 @@ NM = propeller-elf-nm
 MODEL = lmm
 BOARD = QUICKSTART
 # LDF                                           LAGS = -I
-LIBS := simpletools simpletext 	 
+LIBS := simpletools simpletext libfdserial
 LIBNAME := /home/mam1/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools/$(MODEL)/
 LIBNAME += /home/mam1/SimpleIDE/Learn/SimpleLibraries/TextDevices/libfdserial/$(MODEL)/
 LIBNAME += /home/mam1/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext/$(MODEL)/
@@ -37,7 +37,7 @@ program_LIBRARY_DIRS += /home/mam1/SimpleIDE/Learn/SimpleLibraries/TextDevices/l
 program_LIBRARY_DIRS += /home/mam1/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext/$(MODEL)/
 program_LIBRARY_DIRS += /home/mam1/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c/$(MODEL)/
 
-program_LIBRARIES := simpletools simpletext 
+program_LIBRARIES := simpletools simpletext
 
 INCLUDE_DIRS += $(foreach includedir,$(program_INCLUDE_DIRS),-I $(includedir))
 LIBRARY_DIRS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L $(librarydir))
