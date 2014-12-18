@@ -30,7 +30,7 @@ endif
 CFLAGS_NO_MODEL := $(CFLAGS) $(CHIPFLAG)
 CFLAGS += -m$(MODEL) $(CHIPFLAG)
 CXXFLAGS += $(CFLAGS)
-LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti
+LDFLAGS += $(CFLAGS) -fno-exceptions
 
 ifneq ($(LDSCRIPT),)
 LDFLAGS += -T $(LDSCRIPT)
@@ -50,9 +50,12 @@ LOADER2 = p2load
 SPIN=bstc
 SPINDIR=.
 
+
 ifneq ($(NAME),)
 $(NAME).elf: $(OBJS)
-		$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+		$(shell propeller-elf-gcc -v)
+		# nlinit=`echo 'nl="'; echo '"'`; eval "$$nlinit"
+		$(CC) $(HACK) -o $@ $(LDFLAGS) Pcon.c $(HACK2)
 endif
 
 ifneq ($(LIBNAME),)
