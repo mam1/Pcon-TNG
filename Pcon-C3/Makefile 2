@@ -1,17 +1,27 @@
+# #########################################################
+# This makefile allows building and cleaning the 
+# full duplex serial HT demo.
+#
+# Copyright (c) 2011 Michael Rychlik
+# MIT Licensed
+# #########################################################
 
+# Propeller Demo include
+PROPLIB = ../common
 
-CFLAGS = -Os -m32bit-doubles -Wall -std=c99 
-NM = propeller-elf-nm
+CFLAGS = -Os -mlmm
 MODEL = lmm
-BOARD =  QUICKSTART
+BOARD = QUICKSTART
 
+#
 # objects for this program
-NAME = Pcon
-OBJS = Pcon.o full_duplex_serial_ht.o fds_ht.cog
+#
+NAME = full_duplex_serial_ht_demo
+OBJS = full_duplex_serial_ht_demo.o full_duplex_serial_ht.o fds_ht.cog
 
 all: $(NAME).elf
 
-include common.mk
+include $(PROPLIB)/common.mk
 
 #
 # do a partial link of all driver code
@@ -35,4 +45,3 @@ fds_ht.o: full_duplex_serial_ht_cog.c
 
 %.cog: %.o
 	$(OBJCOPY) --rename-section .text=$@ --localize-text $^ $@
-
