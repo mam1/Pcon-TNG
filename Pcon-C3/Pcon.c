@@ -34,8 +34,10 @@ int main(int argc, char *argv[]){
 
 	char		*jackSays = "one more time";
 
-	// fdserial			*bbb;
-//	bbb =  fdserial_open(RX, TX, MODE, BAUD);
+    fdx_start(30, 31, 115200);
+    fdx_puts("one mre time"); 
+
+
 	sleep(1);
 	disp_sys();
 

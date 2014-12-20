@@ -9,7 +9,7 @@
 #define PCON_H_
 #define _major_version 2
 #define _minor_version 0
-#define _minor_revision 12
+#define _minor_revision 18
 #define _TRACE
 
 /* functions */
