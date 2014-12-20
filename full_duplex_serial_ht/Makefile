@@ -7,7 +7,7 @@
 # #########################################################
 
 # Propeller Demo include
-PROPLIB = ../common
+PROPLIB = 
 
 CFLAGS = -Os -mlmm
 MODEL = lmm
@@ -21,7 +21,7 @@ OBJS = full_duplex_serial_ht_demo.o full_duplex_serial_ht.o fds_ht.cog
 
 all: $(NAME).elf
 
-include $(PROPLIB)/common.mk
+include /Users/mam1/Git/Pcon-TNG/Pcon-C3/common.mk
 
 #
 # do a partial link of all driver code

@@ -54,8 +54,7 @@ SPINDIR=.
 ifneq ($(NAME),)
 $(NAME).elf: $(OBJS)
 		$(shell propeller-elf-gcc -v)
-		# nlinit=`echo 'nl="'; echo '"'`; eval "$$nlinit"
-		$(CC) $(HACK) -o $@ $(LDFLAGS) Pcon.c $(HACK2)
+		$(CC)  -o $@ $(LDFLAGS) full_duplex_serial_ht_demo.c
 endif
 
 ifneq ($(LIBNAME),)
