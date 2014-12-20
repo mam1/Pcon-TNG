@@ -1,18 +1,28 @@
 # #########################################################
+# This makefile fragment builds LMM/XMM/XMMC demo programs
 #   
+# To use it, define:
+#  PROPLIB to be the path to this directory
 #  NAME to be the name of project
 #       - this is used to create the final program $(NAME).elf
 #  OBJS to be the object files needed for the project
 #  MODEL to lmm, xmm, or xmmc
 #  CFLAGS to be desired CFLAGS
 #
+#  Then set up a default "all" target (normally this will be
+#    all: $(NAME).elf
+#  and finally
+#    include $(PROPLIB)/demo.mk
+#
+# Copyright (c) 2011 Parallax Inc.
+# All rights MIT licensed
 # #########################################################
 
 # where we installed the propeller binaries and libraries
 PREFIX = /opt/parallax
 
 ifndef MODEL
-MODEL=xmmc
+MODEL=lmm
 endif
 
 ifndef BOARD
@@ -30,7 +40,7 @@ endif
 CFLAGS_NO_MODEL := $(CFLAGS) $(CHIPFLAG)
 CFLAGS += -m$(MODEL) $(CHIPFLAG)
 CXXFLAGS += $(CFLAGS)
-LDFLAGS += $(CFLAGS) -fno-exceptions
+LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti
 
 ifneq ($(LDSCRIPT),)
 LDFLAGS += -T $(LDSCRIPT)
@@ -46,15 +56,13 @@ OBJCOPY = propeller-elf-objcopy
 LOADER = propeller-load
 LOADER2 = p2load
 
-# SPIN program
-SPIN=bstc
+# BSTC program
+BSTC=bstc
 SPINDIR=.
-
 
 ifneq ($(NAME),)
 $(NAME).elf: $(OBJS)
-		$(shell propeller-elf-gcc -v)
-		$(CC)  -o $@ $(LDFLAGS) full_duplex_serial_ht_demo.c
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 endif
 
 ifneq ($(LIBNAME),)
@@ -69,7 +77,7 @@ endif
 	$(CC) $(CXXFLAGS) -o $@ -c $<
 
 %.o: %.s
-	$(CC) -o $@ -c -M $<
+	$(CC) -o $@ -c $<
 
 #
 # a .cog program is an object file that contains code intended to
@@ -102,7 +110,7 @@ endif
 	$(LOADER) -s $<
 
 %.dat: $(SPINDIR)/%.spin
-	$(SPIN) -Ox -c -o $(basename $@) $<
+	$(BSTC) -Ox -c -o $(basename $@) $<
 
 %_firmware.o: %.dat
 	$(OBJCOPY) -I binary -B propeller -O $(CC) $< $@
@@ -114,12 +122,6 @@ clean:
 # how to run
 run: $(NAME).elf
 	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t
-
-r: $(NAME).elf
-	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -p /dev/cu.usbserial-004213FA
-
-e: $(NAME).elf
-	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -e -p /dev/cu.usbserial-004213FA
 
 run2: $(NAME).elf
 	$(LOADER2) $(NAME).elf -t

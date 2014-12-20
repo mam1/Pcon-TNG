@@ -11,8 +11,6 @@
 #include <stdint.h>		//uint_8, uint_16, uint_32, etc.
 #include "propeller.h"
 #include "full_duplex_serial_ht.h"
-// #include <simpletools.h>
-// #include <fdserial.h>
 #include "Pcon.h"
 
 #define RX                      1
@@ -30,47 +28,35 @@
 
 int main(int argc, char *argv[]){
 	char		temp;
-	int			i;
 
-	char		*jackSays = "one more time";
-
-    fdx_start(30, 31, 115200);
-    fdx_puts("one mre time"); 
-
-
-	sleep(1);
+	sleep(2);
+    printf("\033\143");                     //clear the terminal screen, preserve the scroll back
 	disp_sys();
 
 /* setup full duplex serial */
-    _DIRA = 0;	// Give up the pin for the fds driver
-    _OUTA = 0;	// Give up the pin for the fds driver
-    // fdx_start(1, 0, 115200);
-
+    _DIRA = 0;	//set pins to input (0) or output (1)
+    _OUTA = 0;	//set output pin states when corresponding DIRA bits are 1
     fdx_start(30, 31, 115200);
-
-    fdx_puts(jackSays); 
 
 /* echo */
     temp = fdx_rx();
-        for (i = 0; i < 8; i++)
-        {
-            if (temp & 0x80)
-            {
-                fdx_tx('1'); 
-            }
-            else
-            {
-                fdx_tx('0');
-            }
-            temp <<= 1;
-        }
+    while(temp != 'q'){
         fdx_tx('\n');
+        fdx_tx('\r');
+        fdx_tx('<'); 
+        fdx_tx(temp);
+        fdx_tx('>');
+        fdx_tx('\n');
+        fdx_tx('\r'); 
+        temp = fdx_rx(); 
+    }   
+        
 
+    printf("\nnormal termination\n");
 	return 0;
 }
 
 void disp_sys(void) {
-	printf("\033\143"); 					//clear the terminal screen, preserve the scroll back
 	printf("\n*** Pcon  %d.%d.%d ***\n\n", _major_version, _minor_version, _minor_revision);
 	return;
 }
