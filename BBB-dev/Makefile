@@ -21,7 +21,7 @@ UNAME_P := $(shell uname -p)
 
 # set up locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
-	sPREFIX = /usr/local/carlson-minot/crosscompilers/arm-none-linux-gnueabi/bin/
+	PREFIX = /usr/local/carlson-minot/crosscompilers/bin/arm-willtm-linux-gnueabi-
 	CC  := $(PREFIX)gcc 
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld

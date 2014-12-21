@@ -57,7 +57,7 @@ void prompt(void){
 /************************** start main  *****************************/
 /********************************************************************/
 int main(void) {
-	char c;       			//character typed on keyboard
+	uint8_t c;       			//character typed on keyboard
 
 	int	char_state;			//current state of the character processing fsm
 	int prompted = false;	//has a prompt been sent
