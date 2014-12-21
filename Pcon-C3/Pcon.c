@@ -29,25 +29,28 @@
 int main(int argc, char *argv[]){
 	char		temp;
 
-	sleep(2);
-    printf("\033\143");                     //clear the terminal screen, preserve the scroll back
+	sleep(1);
+    printf("\033\143"); //clear the terminal screen, preserve the scroll back
 	disp_sys();
 
 /* setup full duplex serial */
-    _DIRA = 0;	//set pins to input (0) or output (1)
-    _OUTA = 0;	//set output pin states when corresponding DIRA bits are 1
-    fdx_start(30, 31, 115200);
+    _DIRA = 0;			//set pins to input (0) or output (1)
+    _OUTA = 0;			//set output pin states when corresponding DIRA bits are 1
+    fdx_start(RX, TX, BAUD);
 
 /* echo */
-    temp = fdx_rx();
+    printf("start echo\n");
+    while((temp = fdx_rx()) == '\0');
+    printf("recieved %u\n",temp);
     while(temp != 'q'){
-        fdx_tx('\n');
-        fdx_tx('\r');
-        fdx_tx('<'); 
+        // fdx_tx('\n');
+        // fdx_tx('\r');
+        // fdx_tx('<'); 
         fdx_tx(temp);
-        fdx_tx('>');
-        fdx_tx('\n');
-        fdx_tx('\r'); 
+        printf("recieved %u\n",temp);
+        // fdx_tx('>');
+        // fdx_tx('\n');
+        // fdx_tx('\r'); 
         temp = fdx_rx(); 
     }   
         
