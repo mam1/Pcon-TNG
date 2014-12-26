@@ -18,6 +18,7 @@
 #include "char_fsm.h"
 #include "cmd_fsm.h"
 #include "trace.h"
+#include "serial_io.h"
 
 
 /*********************** externals **************************/
@@ -222,14 +223,39 @@ int c_1(CMD_FSM_CB *cb)
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-	char	cmd = 'p';
-    char    ret = 'x';
-	printf("  sending ping request to C3 <%u>\n\r",cmd);
+	uint8_t   cmd;
+    int    ret;
+    char     byte;
+    int     i;
+
+#define READ_TRYS       100
+
+    cmd = 22;
+    ret = 66;
+	printf("  sending ping request to C3 <%u>\r\n",cmd);
 	write(bbb,&cmd,1);
-    slep(1);
-    read(bbb,&ret,1);
-	printf("  BBB acknowledge recieved <%c>\n\r",ret);
-	return 0;
+    printf("  ping <%u> sent\r\n",cmd);
+
+//   usleep(10);
+    for(i=0;i<READ_TRYS;i++){
+        ret = read(bbb,&byte,1);
+        // if(ret < 0){
+        //     perror("\n*** read error <bbb>");
+        //     printf("\n\r");
+        //     s_close(bbb);
+        //     exit(-1);
+        // }
+        if(ret > 0){
+            printf("  BBB acknowledge recieved <%u>\n\r",ret);
+            printf("  read returns <%d>, byte <%u>\n\r",ret,byte);
+            return 0;
+        }
+       usleep(10);
+    }
+    
+ //   fread(&ret,1,1,bbb);
+    printf("last READ returned <%d>\n",ret);
+	return 1;
 }
 /* terminate program */
 int c_3(CMD_FSM_CB *cb)

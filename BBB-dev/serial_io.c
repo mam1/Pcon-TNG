@@ -7,6 +7,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <stdint.h>    //uint_8, uint_16, uint_32, etc.
 #include <fcntl.h>
 #include <termios.h>
 #include <stdio.h>
@@ -14,50 +15,112 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/ioctl.h>
+#include "Pcon.h"
 #include "serial_io.h"
 
-struct termios oldtio, newtio;
+static struct termios oldtio, newtio;
 
 int s_open(void){
     int fd;
+    int ret;
+    int   v24;
 
-    int ret = system("echo uart1 > /sys/devices/bone_capemgr.9/slots");	// Load the pin configuration
-    /* Open modem device for reading and writing and not as controlling tty
-       because we don't want to get killed if linenoise sends CTRL-C. */
-    fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY );
-    if (fd < 0) {
-    	perror(MODEMDEVICE);
-    	exit(-1);
+  /* Load the pin configuration */
+
+    ret  = system("echo uart1 > /sys/devices/bone_capemgr.9/slots");
+    if(ret < 0){
+      perror("echo uart1 > /sys/devices/bone_capemgr.9/slots");
+      s_error(1);
     }
 
-    bzero(&newtio, sizeof(newtio)); /* clear struct for new port settings */
+  /* Open modem device for reading and writing and not as controlling tty
+    because we don't want to get killed if linenoise sends CTRL-C.          */
+    fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY  | O_NDELAY);
+    if (fd < 0) {
+    	perror(MODEMDEVICE);
+    	s_error(2);
+    }
 
-    /* BAUDRATE: Set bps rate. You could also use cfsetispeed and cfsetospeed.
-       CRTSCTS : output hardware flow control (only used if the cable has
-                 all necessary lines. See sect. 7 of Serial-HOWTO)
-       CS8     : 8n1 (8bit,no parity,1 stopbit)
-       CLOCAL  : local connection, no modem contol
-       CREAD   : enable receiving characters */
-    newtio.c_cflag = BAUDRATE | CRTSCTS | CS8 | CLOCAL | CREAD;
+  /* save old settings */
+    ret = tcgetattr(fd, &oldtio);
+    if (ret < 0) {
+      perror("tcgetattr(oldtio)");
+      s_close(fd);
+      s_error(3);
+    }
 
-    /* IGNPAR  : ignore bytes with parity errors
-       otherwise make device raw (no other input processing) */
-    newtio.c_iflag = IGNPAR;
+    bzero(&newtio, sizeof(newtio)); // clear struct for new port settings 
 
-    /*  Raw output  */
-    newtio.c_oflag = 0;
+    cfsetispeed(&newtio, BAUDRATE);
+    cfsetospeed(&newtio, BAUDRATE);
 
-    /* ICANON  : enable canonical input
-       disable all echo functionality, and don't send signals to calling program */
-    newtio.c_lflag = ICANON;
-    /* now clean the modem line and activate the settings for the port */
-    tcflush(fd, TCIFLUSH);
-    tcsetattr(fd,TCSANOW,&newtio);
+    newtio.c_cflag &= ~(PARENB | CSTOPB | CSIZE | CRTSCTS);
+    newtio.c_cflag |=  (CREAD | CLOCAL | CS8);
+    newtio.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    newtio.c_iflag |=  (INPCK | ISTRIP);
+    newtio.c_iflag &= ~(ISTRIP | IXON | IXOFF | IGNBRK | INLCR | ICRNL | IGNCR);
+    newtio.c_oflag &= ~(OPOST | ONLCR);
+
+    newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
+    newtio.c_cc[VMIN]     = 1;   /* blocking read until 1 chars received */
+
+  // /* Configure serial interface */
+  //   ret = tcgetattr(fd, &newtio);
+  //   if (ret < 0) {
+  //     perror("tcgetattr(newtio)");
+  //     s_close(fd);
+  //     exit(-1);
+  //   }
+
+  //  Configure serial interface wit old settings 
+  //   ret = tcgetattr(fd, &newtio);
+  //   if (ret < 0) {
+  //     perror("tcgetattr(newtio)");
+  //     s_close(fd);
+  //     exit(-1);
+  //   }
+
+    // tcflush(fd, TCIFLUSH);
+    ret = tcsetattr(fd,TCSANOW,&newtio);
+    if (ret < 0) {
+      perror("tcsetattr(newtio)");
+      s_close(fd);
+      s_error(4);
+    }
+    
+
+  /* Set ready to read/write */
+    v24 = TIOCM_DTR | TIOCM_RTS;
+    ret = ioctl(fd, TIOCMBIS, &v24);
+    if (ret < 0) {
+      perror("ioctl(TIOCMBIS)");
+      s_error(5);
+    } 
+
     return fd;
 }
 
 void s_close(int fd){
     tcsetattr(fd, TCSANOW, &oldtio);
+    close(fd);
     return;
+}
+
+uint8_t s_rbyte(uint8_t *byte){
+
+  return *byte;
+}
+
+void s_wbyte(uint8_t *byte){
+
+  return;
+
+}
+
+void s_error(int fd){
+  s_close(fd);
+  term(3);
+  return;
 }
 

@@ -16,31 +16,29 @@
 #define SERIAL_BUFFER_SIZE    128
 #define START_COMMAND         27
 
-
-int get_serial(fdserial *port,int bcnt,uint8_t buf[SERIAL_BUFFER_SIZE]){
-  return 0;
-}
-  
-int put_serial(fdserial *port,int bcnt,uint8_t buf[SERIAL_BUFFER_SIZE]){
-  return 0;
-}
 int main()                                    // main function
 {
-  int c,i; 
+  char c;
+  int i; 
   fdserial    *serial_connection;
   int         cmd_code;
+  
+  cmd_code = '6';
   print("Serial test is running\n");
   serial_connection = fdserial_open(RX, TX, MODE, BAUD);
   print("fdserial_open retuned<%d>\n",serial_connection);
-  writeChar(serial_connection, CLS);
-  print("CLS written to serial connection\n");
   print("waiting for serial port\n");
-while(1){
-    c = fdserial_rxChar(serial_connection);
-    print("recieved %c\n",c);
+  while(1){
+//    c = fdserial_rxChar(serial_connection);
+    c = readChar(serial_connection);
+    print("recieved <%u>\n",c);
 //    fdserial_txChar(serial_connection,c);
-    writeChar(serial_connection, c);  
-    printf("sent %c\n\n",c);
+    usleep(10);
+    for(i=0;i<10;i++){
+      usleep(10);
+      writeChar(serial_connection, cmd_code);  
+      printf("sent <%u>\n\n",cmd_code);
+   }      
   }
   print("\n");
 

@@ -191,13 +191,19 @@ int term(int t){
 		system("/bin/stty cooked");			//switch to buffered iput
 		system("/bin/stty echo");			//turn on terminal echo
 		printf("\f\nnormal termination\n\n");
-		exit(1);
+		exit(-1);
 		break;
 	case 2:
 		system("/bin/stty cooked");			//switch to buffered iput
 		system("/bin/stty echo");			//turn on terminal echo
 		printf("\f\nescape termination\n\n");
-		exit(1);
+		exit(-1);
+		break;
+	case 3:
+		system("/bin/stty cooked");			//switch to buffered iput
+		system("/bin/stty echo");			//turn on terminal echo
+		printf("\f\nserall error program terminated\n\n");
+		exit(-1);
 		break;
 	default:
 			break;
