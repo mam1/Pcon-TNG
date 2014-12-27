@@ -91,6 +91,7 @@ int main(void) {
 
 	/* open UART1 to connect to BBB */
 	bbb = s_open();
+	printf("  serial device opened handel = %d\r\n",bbb);
 
 	work_buffer_ptr = work_buffer;    	//initialize work buffer pointer
 	char_state = 0;						//initialize the character fsm

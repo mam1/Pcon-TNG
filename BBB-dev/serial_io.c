@@ -107,15 +107,41 @@ void s_close(int fd){
     return;
 }
 
-uint8_t s_rbyte(uint8_t *byte){
+void s_rbyte(int fd, uint8_t *byte){
+  int    ret;
+  int     i;
 
-  return *byte;
+  printf("before read fd = %d, byte = <%u>\r\n",fd,*byte);
+
+  // ret = read(fd,byte,1);
+  // printf("\r\n  return <%d> byte <%u>\r\n",ret, *byte);
+  // return;
+  i =0;
+  while(1){
+    ret = read(fd,byte,1);
+    if((ret < 0) && (i++ == READ_TRYS)){
+      perror("\n*** serial read error ");
+      s_error(fd);
+    }
+    if(ret > 0)
+      return;
+    usleep(10);
+  }
+  perror("\n*** serial read error no records read ");
+  s_error(fd);
+  return;
 }
 
-void s_wbyte(uint8_t *byte){
+void s_wbyte(int fd, uint8_t *byte){
+  int    ret;
+
+  ret = write(fd,byte,1);
+  if(ret < 0){
+    perror("\n*** serial write error ");
+    s_error(fd);
+  }
 
   return;
-
 }
 
 void s_error(int fd){

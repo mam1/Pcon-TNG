@@ -14,12 +14,12 @@
 #define _POSIX_SOURCE 1 			//POSIX compliant source */
 #define FALSE 0
 #define TRUE 1
+#define READ_TRYS       100
 
-
-int  s_open(void);
-void s_close(int);
-uint8_t s_rbyte(uint8_t *);
-void s_wbyte(uint8_t *);
-void s_error(int);
+int     s_open(void);
+void    s_close(int);
+void    s_rbyte(int, uint8_t *);
+void    s_wbyte(int, uint8_t *);
+void    s_error(int);
 
 #endif /* SERIAL_IO_H_ */

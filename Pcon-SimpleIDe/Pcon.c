@@ -23,22 +23,16 @@ int main()                                    // main function
   fdserial    *serial_connection;
   int         cmd_code;
   
-  cmd_code = '6';
+  cmd_code = '7';
   print("Serial test is running\n");
   serial_connection = fdserial_open(RX, TX, MODE, BAUD);
   print("fdserial_open retuned<%d>\n",serial_connection);
   print("waiting for serial port\n");
   while(1){
-//    c = fdserial_rxChar(serial_connection);
     c = readChar(serial_connection);
     print("recieved <%u>\n",c);
-//    fdserial_txChar(serial_connection,c);
-    usleep(10);
-    for(i=0;i<10;i++){
-      usleep(10);
-      writeChar(serial_connection, cmd_code);  
-      printf("sent <%u>\n\n",cmd_code);
-   }      
+    writeChar(serial_connection, cmd_code);  
+    printf("sent <%u>\n\n",cmd_code++);     
   }
   print("\n");
 

@@ -224,37 +224,17 @@ int c_1(CMD_FSM_CB *cb)
 int c_2(CMD_FSM_CB *cb)
 {
 	uint8_t   cmd;
-    int    ret;
-    char     byte;
-    int     i;
-
-#define READ_TRYS       100
+    uint8_t   ret;
 
     cmd = 22;
-    ret = 66;
-	printf("  sending ping request to C3 <%u>\r\n",cmd);
-	write(bbb,&cmd,1);
-    printf("  ping <%u> sent\r\n",cmd);
-
-//   usleep(10);
-    for(i=0;i<READ_TRYS;i++){
-        ret = read(bbb,&byte,1);
-        // if(ret < 0){
-        //     perror("\n*** read error <bbb>");
-        //     printf("\n\r");
-        //     s_close(bbb);
-        //     exit(-1);
-        // }
-        if(ret > 0){
-            printf("  BBB acknowledge recieved <%u>\n\r",ret);
-            printf("  read returns <%d>, byte <%u>\n\r",ret,byte);
-            return 0;
-        }
-       usleep(10);
-    }
+    ret = 99;
     
- //   fread(&ret,1,1,bbb);
-    printf("last READ returned <%d>\n",ret);
+	printf("  sending ping request to C3 <%u>\r\n",cmd);
+	s_wbyte(bbb,&cmd);
+    printf("  ping <%u> sent\r\n",cmd);
+    s_rbyte(bbb,&ret);
+    printf("  BBB acknowledge recieved <%u>\n\r",ret);
+    
 	return 1;
 }
 /* terminate program */
