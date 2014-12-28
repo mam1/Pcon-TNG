@@ -15,6 +15,8 @@
 #define FALSE 0
 #define TRUE 1
 #define READ_TRYS       100
+#define SREAD			1
+#define SWRITE			0
 
 int     s_open(void);
 void    s_close(int);

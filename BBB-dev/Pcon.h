@@ -3,7 +3,7 @@
 
 #define _major_version 			2
 #define _minor_version 			0
-#define _minor_revision 		17
+#define _minor_revision 		18
 #define _TRACE
 
 /* character parser fsm */
@@ -46,6 +46,10 @@
 #define _EOF		0
 #define _NO_CHAR    255
 #define _DELIMITER	42	//asterisk
+
+/* shared codes, bone and prop */
+#define PING         27
+#define ACK           6
 
 /* other */
 #define	_BYTES_PER_INT 				4

@@ -223,16 +223,31 @@ int c_1(CMD_FSM_CB *cb)
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-	uint8_t   cmd;
-    uint8_t   ret;
+    int         i;
+	uint8_t   cmd = PING;
+    uint8_t   ret = '\0', *ptr;
+    int         s;
+    char       *cs = "high here\n\0";
 
-    cmd = 22;
+    s  = sizeof(cs);
+    ptr = (uint8_t *)&s;
     ret = 99;
     
 	printf("  sending ping request to C3 <%u>\r\n",cmd);
 	s_wbyte(bbb,&cmd);
     printf("  ping <%u> sent\r\n",cmd);
     s_rbyte(bbb,&ret);
+    cmd = 1;
+    if(ret == ACK){
+        s_wbyte(bbb,&cmd);
+        for(i=0;i<4;i++) s_wbyte(bbb,ptr++);
+        printf("message size %i\n",s);
+        ptr = (uint8_t *)cs;
+        for(i=0;i<s;i++) {
+            printf("sending <%c>\n",*ptr);
+            s_wbyte(bbb,ptr++);
+        }
+    }
     printf("  BBB acknowledge recieved <%u>\n\r",ret);
     
 	return 1;

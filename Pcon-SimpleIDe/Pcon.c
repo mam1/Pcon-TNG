@@ -14,16 +14,25 @@
 #define MODE                    0
 #define BAUD                 9600
 #define SERIAL_BUFFER_SIZE    128
-#define START_COMMAND         27
+#define PING         27
+#define ACK           6
 
 int main()                                    // main function
 {
   char c;
-  int i; 
+  int i;
+  struct{
+    int       size;
+    uint8_t   action;     // 0=read, 1=write
+    uint8_t   buf[SERIAL_BUFFER_SIZE];
+  } iob;    
+
   fdserial    *serial_connection;
   int         cmd_code;
+  uint8_t     *bptr, cc;
   
   cmd_code = '7';
+  cc = (uint8_t)6;
   print("Serial test is running\n");
   serial_connection = fdserial_open(RX, TX, MODE, BAUD);
   print("fdserial_open retuned<%d>\n",serial_connection);
@@ -31,10 +40,24 @@ int main()                                    // main function
   while(1){
     c = readChar(serial_connection);
     print("recieved <%u>\n",c);
-    writeChar(serial_connection, cmd_code);  
-    printf("sent <%u>\n\n",cmd_code++);     
-  }
-  print("\n");
-
-     
+    switch(c){
+      case PING:
+        writeChar(serial_connection, cc);  
+        printf("sent <%u>\n\n",cc);
+        iob.action = readChar(serial_connection);
+        printf("recieved <%u>\n",iob.action);
+        if(c){
+          bptr = (uint8_t *)&iob.size;
+          for(i=0;i<4;i++)*bptr++ = readChar(serial_connection);   
+          printf("size = %i\n",iob.size);
+          bptr = iob.buf;
+          for(i=0;i<iob.size;i++)*bptr++ = readChar(serial_connection);\
+          printf("mesage <%s>\n",iob.buf);
+        }                          
+        break;
+      default:
+        printf("unrecognized command\n");
+      }        
+    } 
+  return 0;       
 }
