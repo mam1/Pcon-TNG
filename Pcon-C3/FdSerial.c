@@ -158,7 +158,7 @@ fdserial_fopen(FILE *fp, const char *name, const char *mode)
     if (*name) {
       name++;
       rxpin = atoi(name);
-      while (*name && *name != ',') name+
+      while (*name && *name != ',') name++;
       if (*name)
 	{
 	  name++;

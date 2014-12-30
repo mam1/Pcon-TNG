@@ -23,8 +23,8 @@
 
 FdSerial_t 	*s_open(void);
 void    	s_close(FdSerial_t *);
-uint8_t     s_rbyte(FdSerial_t *);
-void    	s_wbyte(FdSerial_t *, uint8_t *);
+int     	s_rbyte(FdSerial_t *);
+void    	s_wbyte(FdSerial_t *, int);
 void    	s_error(FdSerial_t *);
 
 #endif /* SERIAL_IO_H_ */

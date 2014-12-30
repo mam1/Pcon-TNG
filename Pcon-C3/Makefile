@@ -7,7 +7,9 @@ BOARD =  QUICKSTART
 
 # objects for this program
 NAME = Pcon
-OBJS = Pcon.o FdSerial.o serial_io.o
+OBJS = Pcon.o 
+
+#FdSerial.o serial_io.o
 
 all: $(NAME).elf
 

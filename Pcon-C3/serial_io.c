@@ -34,12 +34,12 @@ void s_close(FdSerial_t *fd){
     return;
 }
 
-uint8_t s_rbyte(FdSerial_t *fd){
+int s_rbyte(FdSerial_t *fd){
   int       i;
-  uint8_t   byte;
+  int   byte;
   i =0;
   while(1){
-    byte = _FdSerial_rx(fd);
+    byte = _FdSerial_rxcheck(fd);
     if((byte < 0) && (i++ == READ_TRYS)){
       perror("\n*** serial read error ");
       s_error(fd);
@@ -53,9 +53,9 @@ uint8_t s_rbyte(FdSerial_t *fd){
   return '\0';
 }
 
-void s_wbyte(FdSerial_t *fd, uint8_t *byte){
+void s_wbyte(FdSerial_t *fd, int byte){
   int    ret;
-  ret = write(fd,byte,1);
+  ret = _FdSerial_tx(fd, byte);
   if(ret < 0){
     perror("\n*** serial write error ");
     s_error(fd);
@@ -64,8 +64,7 @@ void s_wbyte(FdSerial_t *fd, uint8_t *byte){
 }
 
 void s_error(FdSerial_t *fd){
-  s_close(fd);
-  term(3);
+  term(fd);
   return;
 }
 

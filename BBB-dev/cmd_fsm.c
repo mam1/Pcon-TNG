@@ -41,6 +41,10 @@ extern char *sch_mode[2];
 	char			trace_buf[128];
 #endif
 
+int                 w_channel;                      //working channel number
+CCR             c_data[_NUMBER_OF_CHANNELS];    //channel data
+uint8_t         c_state[_NUMBER_OF_CHANNELS];       //chanel state arry
+
 /***************************************/
 /*****  command  parser fsm start ******/
 /***************************************/
@@ -80,8 +84,8 @@ char    *keyword[_CMD_TOKENS] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                   0  1  2 */
-/*  0  INT      */  {0, 2, 2},
-/*  1  STR      */  {0, 1, 2},
+/*  0  INT      */  {1, 2, 2},
+/*  1  STR      */  {0, 0, 2},
 /*  2  CMD      */  {0, 1, 2},
 /*  3  OTHER    */  {0, 1, 2},
 /*  4  quit     */  {0, 1, 2},
@@ -92,12 +96,12 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  9  quit     */  {0, 0, 0},
 /* 10  cancel   */  {0, 1, 0},
 /* 11  name     */  {0, 1, 3},
-/* 12  mode     */  {0, 1, 4},
+/* 12  mode     */  {3, 1, 4},
 /* 13  zero     */  {0, 1, 0},
 /* 14  on       */  {0, 1, 0},
 /* 15  off      */  {0, 1, 0},
 /* 16  system   */  {0, 1, 2},
-/* 17  status   */  {0, 0, 2},
+/* 17  status   */  {0, 1, 2},
 /* 18  time     */  {0, 1, 2},
 /* 19  set      */  {0, 1, 2},
 /* 20  shutdown */  {0, 1, 2},
@@ -115,32 +119,34 @@ int c_0(CMD_FSM_CB *); /* nop */
 int c_1(CMD_FSM_CB *); /* display all valid commands for the current state */
 int c_2(CMD_FSM_CB *); /* ping */
 int c_3(CMD_FSM_CB *); /* terminate program */
-// int c_4(CMD_FSM_CB *); /*  */
-   
+int c_4(CMD_FSM_CB *); /* set working channel number*/
+int c_5(CMD_FSM_CB *); /* set channel name for working channel*/
+int c_6(CMD_FSM_CB *); /* set channel name for working channel*/
+  
 
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0    1     2 */
-/*  0  INT      */  { c_0, c_0, c_0},
-/*  1  STR      */  { c_0, c_0, c_0},
+/*  0  INT      */  { c_4, c_0, c_0},
+/*  1  STR      */  { c_1, c_5, c_0},
 /*  2  CMD      */  { c_0, c_0, c_0},
 /*  3  OTHER    */  { c_0, c_0, c_0},
 /*  4  quit     */  { c_3, c_0, c_0},
-/*  5     q     */  { c_3, c_0, c_0},
+/*  5     q     */  { c_3, c_3, c_3},
 /*  6  ping     */  { c_2, c_0, c_0},
 /*  7  file     */  { c_0, c_0, c_0},
 /*  8  edit     */  { c_0, c_0, c_0},
 /*  9  quit     */  { c_0, c_0, c_0},
 /* 10  cancel   */  { c_0, c_0, c_0},
 /* 11  name     */  { c_0, c_0, c_0},
-/* 12  mode     */  { c_0, c_0, c_0},
+/* 12  mode     */  { c_1, c_0, c_0},
 /* 13  zero     */  { c_0, c_0, c_0},
 /* 14  on       */  { c_0, c_0, c_0},
 /* 15  off      */  { c_0, c_0, c_0},
 /* 16  system   */  { c_0, c_0, c_0},
-/* 17  status   */  { c_0, c_0, c_0},
+/* 17  status   */  { c_6, c_0, c_0},
 /* 18  time     */  { c_0, c_0, c_0},
 /* 19  set      */  { c_0, c_0, c_0},
 /* 20  shutdown */  { c_0, c_0, c_0},
@@ -148,10 +154,10 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 22  reboot   */  { c_0, c_0, c_0},
 /* 23  save     */  { c_0, c_0, c_0},
 /* 24  schedule */  { c_0, c_0, c_0},
-/* 25  channel  */  { c_0, c_0, c_0},
+/* 25  channel  */  { c_6, c_6, c_0},
 /* 26  load     */  { c_0, c_0, c_0},
 /* 27  help     */  { c_1, c_0, c_0},
-/* 28  ?        */  { c_1, c_0, c_0}};
+/* 28  ?        */  { c_1, c_1, c_1}};
 
 /***************start fsm support functions ********************/
 int is_valid_int(const char *str)
@@ -202,6 +208,16 @@ int cmd_type(char *c)
     return 2;
 }
 
+char *dequote(char *s){
+    char        *p1,*p2;
+    p1=p2=s;
+    while(*p1 != '\0'){
+        if(*p1 == _QUOTE) p1++;
+        else *p2++ = *p1++;
+    }
+    *p2 = '\0';
+    return s;
+}
 /**************** start command fsm action routines ******************/
 /* do nothing */
 int c_0(CMD_FSM_CB *cb)
@@ -214,10 +230,10 @@ int c_0(CMD_FSM_CB *cb)
 /* display all valid commands for the current state */
 int c_1(CMD_FSM_CB *cb)
 {
-    int         i;
-    for(i=0;i<sizeof(keyword)/4;i++){
-        printf("command = %s\n\r",keyword[i]);
-    }
+
+    printf("token cb: state <%i>, token <%s>, type <%i>, value <%i>,prompt <%s>\n",
+            cb->state,cb->token,cb->token_type,cb->token_value,cb->prompt_buffer);
+
     return 0;
 }
 /* ping BBB */
@@ -256,6 +272,42 @@ int c_2(CMD_FSM_CB *cb)
 int c_3(CMD_FSM_CB *cb)
 {
 	term(1);
+    return 0;
+}
+/* set working chanel number */
+int c_4(CMD_FSM_CB *cb)
+{
+    if (cb->token_value < _NUMBER_OF_CHANNELS){
+        w_channel = cb->token_value;
+        strcpy(cb->prompt_buffer,"enter action for channel ");
+        strcat(cb->prompt_buffer,cb->token);
+        strcat(cb->prompt_buffer,"\n\r> ");
+        return 0;
+    }
+    strcpy(cb->prompt_buffer,"channel number must be 0 to 7\r\n> ");
+    return 1;
+}
+/* set chanel name for working cahnnel */
+int c_5(CMD_FSM_CB *cb)
+{
+
+    strcpy(c_data[w_channel].name,dequote(cb->token));
+    //save channel data
+    strcpy(cb->prompt_buffer,"name set for channel ");
+    strcat(cb->prompt_buffer,cb->token);
+    strcat(cb->prompt_buffer,"\n\r> ");
+
+    return 0;
+}
+
+/* display channel data */
+int c_6(CMD_FSM_CB *cb)
+{
+    int         i;
+    for(i=0;i<_NUMBER_OF_CHANNELS;i++){
+        printf("%s <%i>%s\r\n",onoff[c_state[i]],i,c_data[i].name);
+    }
+    strcpy(cb->prompt_buffer,"\n\r> ");
     return 0;
 }
 /**************** end command fsm action routines ******************/

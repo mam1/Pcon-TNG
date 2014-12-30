@@ -24,25 +24,39 @@
 /*************************** drivers  ********************************/
 extern _Driver _FullDuplexSerialDriver;
 extern _Driver _FileDriver;
-_Driver *_driverlist[] = {&_FullDuplexSerialDriver,&_FileDriver,NULL};
-/***************************** external ******************************/
+_Driver *_driverlist[] = {&_FullDuplexSerialDriver,&_FileDriver,NULL}; 
+
+/***************************** externals ******************************/
+extern unsigned int _rxpin;
+extern unsigned int _txpin;
+extern unsigned int _baud;
 
 int main(int argc, char *argv[]){
-	uint8_t         in_byte;
-    uint8_t         out_byte;
-    FdSerial_t      *serial_port;
+	// int         in_byte;
+ //    int         out_byte;
+    // FdSerial_t      *serial_port;
+
+    FILE                *serial_port;
+
 
 	sleep(1);
     printf("\033\143"); //clear the terminal screen, preserve the scroll back
 	disp_sys();
 
-/* setup full duplex serial */
-    serial_port = s_open();
+    _rxpin = RX;
+    _txpin = TX;
+    _baud = BAUD;
+
+    serial_port = fopen("serial.port","w");
+    printf(" fopen returned <%u>\n",(uint32_t)serial_port);
+
+
+    // serial_port = s_open();
     while(1){
-        in_byte = s_rbyte(serial_port);
+        // in_byte = s_rbyte(serial_port);
 
     }   
-    term(serial_port);
+    // term(serial_port);
     printf("\nnormal termination\n");
 	return 0;
 }
@@ -52,10 +66,10 @@ void disp_sys(void) {
 	return;
 }
 
-void term(FdSerial_t *fd){
-    s_close(fd);
-    printf("serial port closed \n");
-    return;
-}
+// void term(FdSerial_t *fd){
+//     s_close(fd);
+//     printf("serial port closed \n");
+//     return;
+// }
 
 

@@ -23,7 +23,8 @@ int				trace_flag;							//control program trace
 int 			exit_flag = false;					//exit man loop if TRUE
 int 			bbb;								//UART1 file descriptor
 
-CMD_FSM_CB  	cmd_fsm_cb, *cmd_fsm_cb_ptr=&cmd_fsm_cb;	//cmd_fsm control block
+CMD_FSM_CB  	cmd_fsm_cb;	//cmd_fsm control block
+
 
 char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
@@ -47,10 +48,7 @@ void disp_sys(void) {
 }
 /* prompt for user input */
 void prompt(void){
-	fputc(_CR,stdout);
-	fputc('>',stdout);
-	fputc(' ',stdout);
-	return;
+	printf("%s",cmd_fsm_cb.prompt_buffer);
 }
 
 /********************************************************************/
@@ -101,6 +99,9 @@ int main(void) {
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME,"Pcon",char_state,NULL,"starting main event loop\n",trace_flag);
 #endif
+
+	/* set initial prompt */
+	strcpy(cmd_fsm_cb.prompt_buffer,"enter a command\r\n> ");
 	/************************************************************/
 	/**************** start main processing loop ****************/
 	/************************************************************/
@@ -109,7 +110,7 @@ int main(void) {
         while(pop_cmd_q(cmd_fsm_cb.token))
         {
             // cmd_fsm(tbuf,&cmd_state);   	//cycle cmd fsm until queue is empty
-            cmd_fsm(cmd_fsm_cb_ptr);   	//cycle cmd fsm until queue is empty
+            cmd_fsm(&cmd_fsm_cb);   	//cycle cmd fsm until queue is empty
 
             prompted = false;
  /**********************************************************************************************
