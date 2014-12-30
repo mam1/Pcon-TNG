@@ -12,9 +12,10 @@
 #define _minor_revision 18
 #define _TRACE
 
+#include "FdSerial.h"
+
 /* functions */
 void disp_sys(void);
-
-
+void term(FdSerial_t *);
 
 #endif /* PCON_H_ */
