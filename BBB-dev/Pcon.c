@@ -56,11 +56,10 @@ void prompt(void){
 /********************************************************************/
 int main(void) {
 	uint8_t c;       			//character typed on keyboard
-
 	int	char_state;			//current state of the character processing fsm
 	int prompted = false;	//has a prompt been sent
 	int i;
-
+	// FILE *sd_card;	
 	/************************* setup trace *******************************/
 #ifdef _TRACE
 	trace_flag = true;
@@ -89,7 +88,10 @@ int main(void) {
 
 	/* open UART1 to connect to BBB */
 	bbb = s_open();
-	printf("  serial device opened handel = %d\r\n",bbb);
+	printf(" serial device opened handel = %d\r\n",bbb);
+
+	/* load data from file on sd card */
+	load_channel_data(_SYSTEM_DATA_FILE);
 
 	work_buffer_ptr = work_buffer;    	//initialize work buffer pointer
 	char_state = 0;						//initialize the character fsm
@@ -211,4 +213,11 @@ int term(int t){
 			break;
 	}
 	return 1;
+}
+void term1(void){
+	system("/bin/stty cooked");			//switch to buffered iput
+	system("/bin/stty echo");			//turn on terminal echo
+	printf("\r\n*** program terminated\n\n");
+	exit(-1);
+	return;
 }

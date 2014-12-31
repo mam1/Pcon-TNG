@@ -3,8 +3,9 @@
 
 #define _major_version 			2
 #define _minor_version 			0
-#define _minor_revision 		19
+#define _minor_revision 		20
 #define _TRACE
+#define _SYSTEM_DATA_FILE		"/media/rootfs/Pcon.dat" //sd card file
 
 /* character parser fsm */
 #define _CHAR_TOKENS     		5
@@ -56,4 +57,6 @@
 
 /* fuctions */
 int term(int);
+void term1(void);
+FILE *d_open(char *);
 #endif

@@ -12,5 +12,7 @@ int cmd_type(char *);
 char *build_prompt(char *, int);
 void reset_active(void);
 void reset_edit(void);
+void save_channel_data(char *);
+void load_channel_data(char *);
 
 #endif

@@ -41,9 +41,15 @@ extern char *sch_mode[2];
 	char			trace_buf[128];
 #endif
 
-int                 w_channel;                      //working channel number
-CCR             c_data[_NUMBER_OF_CHANNELS];    //channel data
-uint8_t         c_state[_NUMBER_OF_CHANNELS];       //chanel state arry
+/* channel data */
+int             w_channel;                      //working channel number
+uint8_t         c_state[_NUMBER_OF_CHANNELS];   //chanel state arry
+struct {
+    int         major_version;
+    int         minor_version;
+    int         minor_revision;
+    CCR         c_data[_NUMBER_OF_CHANNELS];
+} sys_dat;
 
 /***************************************/
 /*****  command  parser fsm start ******/
@@ -218,6 +224,65 @@ char *dequote(char *s){
     *p2 = '\0';
     return s;
 }
+
+FILE *d_open(char *fname){
+    FILE *sd;
+    uint8_t     null = 0;
+    /* see if the file is there */
+    sd = fopen(fname,"R");
+    if(sd != NULL){
+        printf(" system data file <%s> opened\r\n",fname);
+        return sd;
+    }
+
+    /* file does not exist try and create it */
+    sd = fopen(fname,"w");
+    if(sd == NULL){
+        printf("\n*** error opening system data file\r\n");
+        perror(fname);
+        term1();
+    }
+    /* write a null record */
+    if(fwrite(&null, 1, sizeof(sys_dat), sd) != sizeof(sys_dat)){
+        printf("\n*** error initializing system data file\r\n");
+        perror(fname);
+        term1();
+    }
+    fclose(sd);
+    sd = fopen(fname,"w");
+    if(sd == NULL){
+        printf("\n*** error reopening system data file\r\n");
+        perror(fname);
+        term1();
+    }
+    printf(" system data file <%s> created and initilaized\r\n",fname);
+    printf("size of sys_dat %i, sd <%i>\r\n",sizeof(sys_dat),(int)sd);
+    return sd;
+}
+void save_channel_data(char *fname){
+    FILE *sd;
+    sd = d_open(fname);
+    if(fwrite(&sys_dat, sizeof(sys_dat), 1, sd) != sizeof(sys_dat)){
+        printf("\n*** error reading system data file\r\n");
+        perror(fname);
+        term1();
+    }
+    fclose(sd);
+    return;
+}
+void load_channel_data(char *fname){
+    FILE *sd;
+    sd = d_open(fname);
+    printf("size of sys_dat %i, sd <%i>\r\n",sizeof(sys_dat),(int)sd);
+    printf("fread retunrs %i\r\n",fread(&sys_dat, sizeof(sys_dat), 1, sd));
+    // if(fread(&sys_dat, sizeof(sys_dat), 1, sd) != sizeof(sys_dat)){
+    //     printf("\n*** error reading system data file\r\n");
+    //     perror(fname);
+    //     term1();
+    // }
+    fclose(sd);    
+    return;
+}
 /**************** start command fsm action routines ******************/
 /* do nothing */
 int c_0(CMD_FSM_CB *cb)
@@ -291,8 +356,8 @@ int c_4(CMD_FSM_CB *cb)
 int c_5(CMD_FSM_CB *cb)
 {
 
-    strcpy(c_data[w_channel].name,dequote(cb->token));
-    //save channel data
+    strcpy(sys_dat.c_data[w_channel].name,dequote(cb->token));
+    save_channel_data(_SYSTEM_DATA_FILE);
     strcpy(cb->prompt_buffer,"name set for channel ");
     strcat(cb->prompt_buffer,cb->token);
     strcat(cb->prompt_buffer,"\n\r> ");
@@ -305,7 +370,7 @@ int c_6(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-        printf("%s <%i>%s\r\n",onoff[c_state[i]],i,c_data[i].name);
+        printf("%s <%i>%s\r\n",onoff[c_state[i]],i,sys_dat.c_data[i].name);
     }
     strcpy(cb->prompt_buffer,"\n\r> ");
     return 0;

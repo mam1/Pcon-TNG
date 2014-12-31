@@ -45,7 +45,7 @@ int s_open(void){
   /* save old settings */
     ret = tcgetattr(fd, &oldtio);
     if (ret < 0) {
-      perror("tcgetattr(oldtio)");
+
       s_close(fd);
       s_error(3);
     }
