@@ -4,7 +4,7 @@ program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
-program_INCLUDE_DIRS :=
+program_INCLUDE_DIRS :=  
 program_LIBRARY_DIRS :=
 program_LIBRARIES :=
 
@@ -21,7 +21,7 @@ UNAME_P := $(shell uname -p)
 
 # set up locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
-	PREFIX = /usr/local/carlson-minot/crosscompilers/bin/arm-willtm-linux-gnueabi-
+	PREFIX = /Volumes/arm-willtm-linux-gnueabi/bin/arm-linux-gnueabihf-
 	CC  := $(PREFIX)gcc 
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
