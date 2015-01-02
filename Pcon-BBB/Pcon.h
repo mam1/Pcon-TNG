@@ -3,7 +3,7 @@
 
 #define _major_version 			2
 #define _minor_version 			0
-#define _minor_revision 		21
+#define _minor_revision 		22
 #define _TRACE
 #define _SYSTEM_DATA_FILE		"/media/rootfs/Pcon.dat" //sd card file
 
@@ -58,5 +58,5 @@
 /* fuctions */
 int term(int);
 void term1(void);
-FILE *d_open(char *);
+
 #endif

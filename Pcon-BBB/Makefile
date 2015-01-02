@@ -48,7 +48,7 @@ $(program_NAME): $(program_OBJS)
 ifeq ($(UNAME_S),Darwin)
 	rsync -avz  /Users/mam1/Git/Pcon-TNG/Pcon-BBB root@192.168.254.34:/home/rsync-Pcon
 else
-	cp -v /home/mam1/Git/Pcon-TNG/Pcon-BBB/sd_card/$(program_NAME) /home/mam1/BBB
+	cp -v /home/mam1/Git/Pcon-TNG/Pcon-BBB/$(program_NAME) /home/mam1/BBB
 endif
 	@- $(RM) $(program_NAME)
 	@- $(RM) $(program_OBJS)

@@ -17,15 +17,21 @@ typedef struct {
 typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
 typedef int (*CHAR_ACTION_PTR)(char *);
 
-
-/* channel control array element definitions */
+/* channel data */
 typedef struct {
-	int time_on; 	// accumulated minutes of on time for channel
-	int	on_sec;		//on cycle in seconds
-	int off_sec;	//off cycle in seconds
-	char name[_CHANNEL_NAME_SIZE];
-	uint8_t c_mode; //Control mode: 0-manual, 1-time, 2-time & sensor
+	int 		time_on; 	// accumulated minutes of on time for channel
+	int			on_sec;		//on cycle in seconds
+	int 		off_sec;	//off cycle in seconds
+	char 		name[_CHANNEL_NAME_SIZE];
+	int 		c_mode; 	//Control mode: 0-manual, 1-time, 2-time & sensor, 4-cycle
 } CCR;
+
+typedef	struct {
+	    int         major_version;
+	    int         minor_version;
+	    int         minor_revision;
+	    CCR         c_data[_NUMBER_OF_CHANNELS];
+	} SYS_DAT;
 
 
 /************************************************************************************/
