@@ -47,9 +47,11 @@ $(program_NAME): $(program_OBJS)
 	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
 
 ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/Pcon-BBB root@192.168.254.34:/home/rsync-Pcon
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/Pcon-BBB root@192.168.254.34:/home/rsync-OSX
 else
-	cp -v /home/mam1/Git/Pcon-TNG/Pcon-BBB/$(program_NAME) /home/mam1/BBB
+#	cp -v /home/mam1/Git/Pcon-TNG/Pcon-BBB/$(program_NAME) /home/mam1/BBB
+	rsync -avz  /home/mam1/Git/Pcon-TNG/Pcon-BBB root@192.168.254.34:/home/rsync-Mint
+	
 endif
 	@- $(RM) $(program_NAME)
 	@- $(RM) $(program_OBJS)
