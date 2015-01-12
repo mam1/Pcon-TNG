@@ -5,8 +5,17 @@
 * @Last Modified time: 2015-01-02 20:50:33
 */
 
+
+
+
 #include <stdio.h>
+#include <unistd.h>     //sleep
+#include <stdint.h>     //uint_8, uint_16, uint_32, etc.
+#include <ctype.h>      //isalnum, tolower
+#include <stdlib.h>
+#include <fcntl.h>
 #include <string.h>
+
 #include "Pcon.h"
 #include "sd_card.h"
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
@@ -28,7 +37,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     if(sd == NULL){
         printf("\n*** error opening system data file\r\n");
         perror(fname);
-        term1();
+        exit(-1);
     }
     /* write a null record */
     memset(&dummy, '\0', sizeof(dummy));
@@ -38,7 +47,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     if(fwrite(&dummy, 1, sizeof(dummy), sd) != sizeof(dummy)){
         printf("\n*** error initializing system data file\r\n");
         perror(fname);
-        term1();
+        exit(-1);
     }
     fclose(sd);
 
@@ -47,36 +56,36 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     if(sd == NULL){
         printf("\n*** error reopening system data file\r\n");
         perror(fname);
-        term1();
+        exit(-1);
     }
     printf(" system data file <%s> created and initilaized\r\n",fname);
-    printf("size of cdat %i, sd <%i>\r\n",sizeof(cdat),(int)sd);
+    printf(" size of cdat <%i>\r\n",(int)sizeof(cdat));
     return sd;
 }
 
 void save_channel_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
-    sd = sd_open(fname);
+    sd = sd_open(fname,cdat);
     if(fwrite(cdat, sizeof(*cdat), 1, sd) != sizeof(cdat)){
         printf("\n*** error reading system data file\r\n");
         perror(fname);
-        term1();
+        exit(-1);
     }
     fclose(sd);
     return;
 }
 void load_channel_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
-    sd = sd_open(fname);
-    printf("size of sys_dat %i, sd <%i>\r\n",sizeof(*cdat),(int)sd);
-    printf("fread retunrs %i\r\n",fread(cdat, sizeof(*cdat), 1, sd));
+    sd = sd_open(fname,cdat);
+    printf("size of sys_dat %i\r\n",(int)sizeof(*cdat));
+    printf("fread retunrs %i\r\n",(int)fread(cdat, sizeof(*cdat), 1, sd));
 
 
 
     // if(fread(&sys_dat, sizeof(sys_dat), 1, sd) != sizeof(sys_dat)){
     //     printf("\n*** error reading system data file\r\n");
     //     perror(fname);
-    //     term1();
+    //     exit(-1);
     // }
     fclose(sd);    
     return;
