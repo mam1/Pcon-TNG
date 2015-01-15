@@ -30,7 +30,7 @@ ifeq ($(UNAME_S),Darwin)
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
 else
-	PREFIX = /usr/bin/x86_64-linux-gnu-
+	PREFIX = /usr/bin/arm-linux-gnueabihf-
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
