@@ -5,7 +5,7 @@ program_C_OBJS := ${program_C_SRCS:.c=.o}
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
 program_INCLUDE_DIRS :=  /usr/include/x86_64-linux-gnu
-program_INCLUDE_DIRS +=  /usr/include
+program_INCLUDE_DIRS +=  /usr/lib32
 program_LIBRARY_DIRS :=
 program_LIBRARIES :=
 
@@ -30,7 +30,7 @@ ifeq ($(UNAME_S),Darwin)
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
 else
-	PREFIX = /usr/bin/arm-linux-gnueabihf-
+	PREFIX = /usr/bin/
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
