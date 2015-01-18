@@ -1,3 +1,4 @@
+# scan directory 
 program_NAME := Pcon
 program_C_SRCS := $(wildcard *.c)
 program_CXX_SRCS := $(wildcard *.cpp)
@@ -8,8 +9,12 @@ program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
 # get the development machine OS
 UNAME_S := $(shell uname -s)
 UNAME_P := $(shell uname -p)
-ifeq ($(UNAME_S),Darwin)
 
+# set directories
+ifeq ($(UNAME_S),Darwin)
+	program_INCLUDE_DIRS := 
+	program_LIBRARY_DIRS := 
+	program_LIBRARIES := 
 else
 	program_INCLUDE_DIRS := /usr/include/x86_64-linux-gnu/
 	program_INCLUDE_DIRS += /usr/include 
@@ -17,7 +22,7 @@ else
 	program_LIBRARIES := 
 endif
 
-# setup parameters
+# set parameters
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
@@ -25,10 +30,11 @@ CFLAGS  += -Wall
 CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti 
 
-# setup locations for basic gnu tools
+# set locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
-	PREFIX := /Volumes/arm-willtm-linux-gnueabi/bin/arm-linux-gnueabihf-
-	CC  := $(PREFIX)gcc 
+	# PREFIX := /Volumes/arm-willtm-linux-gnueabi/bin/arm-linux-gnueabihf-
+	PREFIX = /Volumes/arm-willtm-linux-gnueabi/bin/arm-linux-gnueabihf-
+	# PREFIX := /opt/cross-compile/arm-willtm-linux-gnueabi/bin/arm-linux-gnueabihf-
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
 	AS  := $(PREFIX)as
@@ -57,11 +63,13 @@ ifeq ($(UNAME_S),Darwin)
 else
 	rsync -avz  /home/mam1/Git/Pcon-TNG/Pcon-BBB root@192.168.254.34:/home/rsync-Mint	
 endif
+
+# clean up
 	@- $(RM) $(program_NAME)
 	@- $(RM) $(program_OBJS)
 
 clean:
-	@- $(RM) $(program_NAME)
-	@- $(RM) $(program_OBJS)
+	@- $(RM) -v $(program_NAME)
+	@- $(RM) -v $(program_OBJS)
 
 distclean: clean
