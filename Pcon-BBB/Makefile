@@ -16,10 +16,7 @@ ifeq ($(UNAME_S),Darwin)
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
 else
-	program_INCLUDE_DIRS := /usr/include 
-	program_INCLUDE_DIRS += /usr/include/x86_64-linux-gnu
-	# /usr/include/x86_64-linux-gnu/
-
+	program_INCLUDE_DIRS := 
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
 endif
@@ -43,7 +40,6 @@ ifeq ($(UNAME_S),Darwin)
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
 else
-	# CFLAGS += -march=armv7-a -mtune=cortex-a8 -mfpu=neon -B/usr/lib32
 	PREFIX := /usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)gcc
@@ -60,7 +56,7 @@ all: $(program_NAME)
 $(program_NAME): $(program_OBJS)
 	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
 
-# move the binary to the bone
+# move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
 	rsync -avz  /Users/mam1/Git/Pcon-TNG/Pcon-BBB/ root@192.168.254.34:/home/rsync-OSX
 else
