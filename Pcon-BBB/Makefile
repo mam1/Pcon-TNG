@@ -16,8 +16,10 @@ ifeq ($(UNAME_S),Darwin)
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
 else
-	program_INCLUDE_DIRS := /usr/include/x86_64-linux-gnu/
-	program_INCLUDE_DIRS += /usr/include 
+	program_INCLUDE_DIRS := /usr/include 
+	program_INCLUDE_DIRS += /usr/include/x86_64-linux-gnu
+	# /usr/include/x86_64-linux-gnu/
+
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
 endif
@@ -41,7 +43,8 @@ ifeq ($(UNAME_S),Darwin)
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
 else
-	PREFIX := /usr/bin/arm-linux-gnueabi-
+	# CFLAGS += -march=armv7-a -mtune=cortex-a8 -mfpu=neon -B/usr/lib32
+	PREFIX := /usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)gcc
 	LD  := $(PREFIX)ld
@@ -59,14 +62,14 @@ $(program_NAME): $(program_OBJS)
 
 # move the binary to the bone
 ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/Pcon-BBB root@192.168.254.34:/home/rsync-OSX
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/Pcon-BBB/ root@192.168.254.34:/home/rsync-OSX
 else
-	rsync -avz  /home/mam1/Git/Pcon-TNG/Pcon-BBB root@192.168.254.34:/home/rsync-Mint	
+	rsync -avz  /home/mam1/Git/Pcon-TNG/Pcon-BBB/ root@192.168.254.34:/home/rsync-Mint	
 endif
 
 # clean up
-	@- $(RM) $(program_NAME)
-	@- $(RM) $(program_OBJS)
+	@- $(RM) -v $(program_NAME)
+	@- $(RM) -v $(program_OBJS)
 
 clean:
 	@- $(RM) -v $(program_NAME)
