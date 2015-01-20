@@ -15,7 +15,6 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
-
 #include "Pcon.h"
 #include "sd_card.h"
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
@@ -37,7 +36,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     if(sd == NULL){
         printf("\n*** error opening system data file\r\n");
         perror(fname);
-        exit(-1);
+        term1();
     }
     /* write a null record */
     memset(&dummy, '\0', sizeof(dummy));
@@ -47,7 +46,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     if(fwrite(&dummy, 1, sizeof(dummy), sd) != sizeof(dummy)){
         printf("\n*** error initializing system data file\r\n");
         perror(fname);
-        exit(-1);
+        term1();
     }
     fclose(sd);
 
@@ -56,7 +55,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     if(sd == NULL){
         printf("\n*** error reopening system data file\r\n");
         perror(fname);
-        exit(-1);
+        term1();
     }
     printf(" system data file <%s> created and initilaized\r\n",fname);
     printf(" size of cdat <%i>\r\n",(int)sizeof(cdat));
@@ -69,23 +68,26 @@ void save_channel_data(char *fname,SYS_DAT *cdat){
     if(fwrite(cdat, sizeof(*cdat), 1, sd) != sizeof(cdat)){
         printf("\n*** error reading system data file\r\n");
         perror(fname);
-        exit(-1);
+        term1();
     }
     fclose(sd);
     return;
 }
 void load_channel_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
+    int     rtn;
     sd = sd_open(fname,cdat);
-    printf("size of sys_dat %i\r\n",(int)sizeof(*cdat));
-    printf("fread retunrs %i\r\n",(int)fread(cdat, sizeof(*cdat), 1, sd));
+    printf("  size of sys_dat %i\r\n",(int)sizeof(*cdat));
+    printf("  read system data\n");
+    rtn = fread(cdat, sizeof(*cdat), 1, sd);
+    printf("fread retunrs %i\r\n",rtn);
 
 
 
     // if(fread(&sys_dat, sizeof(sys_dat), 1, sd) != sizeof(sys_dat)){
     //     printf("\n*** error reading system data file\r\n");
     //     perror(fname);
-    //     exit(-1);
+    //     term1();
     // }
     fclose(sd);    
     return;

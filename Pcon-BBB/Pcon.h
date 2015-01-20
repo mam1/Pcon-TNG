@@ -3,9 +3,9 @@
 
 #define _major_version 			2
 #define _minor_version 			0
-#define _minor_revision 		23
+#define _minor_revision 		24
 #define _TRACE
-#define _SYSTEM_DATA_FILE		"/media/Pcon-datacd/Pcon.dat" //sd card file
+#define _SYSTEM_DATA_FILE		"/media/Pcon-data/Pcon.dat" //sd card file
 
 /* character parser fsm */
 #define _CHAR_TOKENS     		5

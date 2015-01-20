@@ -22,6 +22,7 @@
 int				trace_flag;							//control program trace
 int 			exit_flag = false;					//exit man loop if TRUE
 int 			bbb;								//UART1 file descriptor
+SYS_DAT 		sdat;								//system data structure
 
 CMD_FSM_CB  	cmd_fsm_cb;	//cmd_fsm control block
 
@@ -77,7 +78,7 @@ int main(void) {
 		printf(" program trace disabled\n");
 
 	/************************ initializations ****************************/
-	printf("\033\143"); //clear the terminal screen, perserve the scroll back
+	printf("\033\143"); //clear the terminal screen, preserve the scroll back
 	disp_sys();	        //display system info on serial terminal
 
 	/* set up unbuffered io */
@@ -88,10 +89,11 @@ int main(void) {
 
 	/* open UART1 to connect to BBB */
 	bbb = s_open();
-	printf(" serial device opened handel = %d\r\n",bbb);
+	printf(" serial device opened handle = %d\r\n",bbb);
 
 	/* load data from file on sd card */
-	load_channel_data(_SYSTEM_DATA_FILE);
+	load_channel_data(_SYSTEM_DATA_FILE,&sdat);
+	printf("  channel data loaded\n");
 
 	work_buffer_ptr = work_buffer;    	//initialize work buffer pointer
 	char_state = 0;						//initialize the character fsm

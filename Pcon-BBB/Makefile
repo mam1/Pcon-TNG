@@ -41,7 +41,7 @@ ifeq ($(UNAME_S),Darwin)
 else
 	PREFIX := /usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
 	CC  := $(PREFIX)gcc
-	CXX := $(PREFIX)gcc
+	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
 	AS  := $(PREFIX)as
 	AR  := $(PREFIX)ar

@@ -1,4 +1,4 @@
-/*
+ /*
  * cmd_fsm.c
  *
  *  Created on: Nov 23, 2014
@@ -29,6 +29,8 @@
  extern int             trace_flag;                   //trace file is active
  extern int             bbb;				          //UART1 file descriptor
  extern CMD_FSM_CB      cmd_fsm_cb, *cmd_fsm_cb_ptr;  //cmd_fsm control block
+ extern SYS_DAT         sdat;                         //system data structure
+
 
 /* code to text conversion */
 extern char *day_names_long[7];
@@ -44,12 +46,12 @@ extern char *sch_mode[2];
 /* channel data */
 int             w_channel;                      //working channel number
 uint8_t         c_state[_NUMBER_OF_CHANNELS];   //chanel state arry
-struct {
-    int         major_version;
-    int         minor_version;
-    int         minor_revision;
-    CCR         c_data[_NUMBER_OF_CHANNELS];
-} sys_dat;
+// struct {
+//     int         major_version;
+//     int         minor_version;
+//     int         minor_revision;
+//     CCR         c_data[_NUMBER_OF_CHANNELS];
+// } sdat;
 
 /***************************************/
 /*****  command  parser fsm start ******/
@@ -299,8 +301,8 @@ int c_4(CMD_FSM_CB *cb)
 int c_5(CMD_FSM_CB *cb)
 {
 
-    strcpy(sys_dat.c_data[w_channel].name,dequote(cb->token));
-    save_channel_data(_SYSTEM_DATA_FILE);
+    strcpy(sdat.c_data[w_channel].name,dequote(cb->token));
+    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"name set for channel ");
     strcat(cb->prompt_buffer,cb->token);
     strcat(cb->prompt_buffer,"\n\r> ");
@@ -313,7 +315,7 @@ int c_6(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-        printf("%s <%i>%s\r\n",onoff[c_state[i]],i,sys_dat.c_data[i].name);
+        printf("%s <%i>%s\r\n",onoff[c_state[i]],i,sdat.c_data[i].name);
     }
     strcpy(cb->prompt_buffer,"\n\r> ");
     return 0;
