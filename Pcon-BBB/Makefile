@@ -31,9 +31,8 @@ LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti
 
 # set locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
-	# PREFIX := /Volumes/arm-willtm-linux-gnueabi/bin/arm-linux-gnueabihf-
-	PREFIX = /Volumes/arm-willtm-linux-gnueabi/bin/arm-linux-gnueabihf-
-	# PREFIX := /opt/cross-compile/arm-willtm-linux-gnueabi/bin/arm-linux-gnueabihf-
+	PREFIX := /Volumes/arm-willtm-linux-gnueabi/bin/arm-linux-gnueabihf-
+	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
 	AS  := $(PREFIX)as
