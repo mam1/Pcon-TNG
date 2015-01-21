@@ -5,9 +5,6 @@
 * @Last Modified time: 2015-01-02 20:50:33
 */
 
-
-
-
 #include <stdio.h>
 #include <unistd.h>     //sleep
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
@@ -78,9 +75,9 @@ void load_channel_data(char *fname,SYS_DAT *cdat){
     int     rtn;
     sd = sd_open(fname,cdat);
     printf("  size of sys_dat %i\r\n",(int)sizeof(*cdat));
-    printf("  read system data\n");
+    printf("  read system data\r\n");
     rtn = fread(cdat, sizeof(*cdat), 1, sd);
-    printf("fread retunrs %i\r\n",rtn);
+    printf("  fread returns %i\r\n",rtn);
 
 
 

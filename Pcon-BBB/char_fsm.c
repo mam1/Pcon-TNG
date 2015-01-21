@@ -292,16 +292,16 @@ TQ *process_buffer(void);
 
 /* fsm fuctions */
 int nop(char *);	//do nothing
-int del(char *);	//remove charater from input buffer
+int del(char *);	//remove character from input buffer
 int add(char *);	//add character to input buffer
 int aqd(char *);	//add quote + delim to input buffer
 int adq(char *);	//delim  + quote to input buffer
-//int dlm(char *);	//add delimitier to buffer
+//int dlm(char *);	//add delimiter to buffer
 int cr(char *);		//process input buffer, reset char_fsm
 int cr2(char *);	//remove trailing delimiter, process buffer, reset char_fsm
 int crq(char *);
 
-/* character processor action table - initialized with fsm fuctions */
+/* character processor action table - initialized with fsm functions */
 
 CHAR_ACTION_PTR char_action[_CHAR_TOKENS][_CHAR_STATES] = {
 /* DELIM */{nop, add, add, nop},

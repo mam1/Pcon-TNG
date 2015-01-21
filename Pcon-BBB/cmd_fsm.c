@@ -226,7 +226,12 @@ char *dequote(char *s){
     *p2 = '\0';
     return s;
 }
-
+/* reset cmd_fsm to initial state */
+void cmd_fsm_reset(CMD_FSM_CB *cb){
+    strcpy(cb->prompt_buffer,"\n\r> ");
+    cb->state = 0;
+    return;
+}
 
 /**************** start command fsm action routines ******************/
 /* do nothing */
@@ -274,7 +279,7 @@ int c_2(CMD_FSM_CB *cb)
             s_wbyte(bbb,ptr++);
         }
     }
-    printf("  BBB acknowledge recieved <%u>\n\r",ret);
+    printf("  BBB acknowledge received <%u>\n\r",ret);
     
 	return 1;
 }
@@ -284,7 +289,7 @@ int c_3(CMD_FSM_CB *cb)
 	term(1);
     return 0;
 }
-/* set working chanel number */
+/* set working channel number */
 int c_4(CMD_FSM_CB *cb)
 {
     if (cb->token_value < _NUMBER_OF_CHANNELS){
@@ -297,7 +302,7 @@ int c_4(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"channel number must be 0 to 7\r\n> ");
     return 1;
 }
-/* set chanel name for working cahnnel */
+/* set channel name for working channel */
 int c_5(CMD_FSM_CB *cb)
 {
 

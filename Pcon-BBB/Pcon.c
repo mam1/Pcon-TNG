@@ -93,7 +93,9 @@ int main(void) {
 
 	/* load data from file on sd card */
 	load_channel_data(_SYSTEM_DATA_FILE,&sdat);
-	printf("  channel data loaded\n");
+	printf(" system data loaded\r\n");
+	printf(" version info from system data file - %d.%d.%d\r\n", sdat.major_version, sdat.minor_version,
+	sdat.minor_revision);
 
 	work_buffer_ptr = work_buffer;    	//initialize work buffer pointer
 	char_state = 0;						//initialize the character fsm
@@ -103,7 +105,7 @@ int main(void) {
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME,"Pcon",char_state,NULL,"starting main event loop\n",trace_flag);
 #endif
-
+	printf("initialization complete\r\n\n");
 	/* set initial prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer,"enter a command\r\n> ");
 	/************************************************************/
@@ -113,19 +115,8 @@ int main(void) {
         /* check the token stack */
         while(pop_cmd_q(cmd_fsm_cb.token))
         {
-            // cmd_fsm(tbuf,&cmd_state);   	//cycle cmd fsm until queue is empty
             cmd_fsm(&cmd_fsm_cb);   	//cycle cmd fsm until queue is empty
-
             prompted = false;
- /**********************************************************************************************
-	system ("/bin/stty cooked");			//switch to buffered input
-	system("stty echo");					//turn on terminal echo
-	char	bbb[128];
-	printf("\npopping command queue\n");
-	while(pop_cmd_q(bbb)) printf("<%s>\n",bbb);
-	system("stty -echo");					//turn off terminal echo
-	system("/bin/stty raw");				// use system call to make terminal send all keystrokes directly to stdin
-**********************************************************************************************/
 		}	
 		if(prompted == false){				//display prompt if necessary
 			prompted = true;
@@ -140,10 +131,13 @@ int main(void) {
 			trace(_TRACE_FILE_NAME,"Pcon",char_state,work_buffer,"escape entered",trace_flag);
 #endif
 			exit_flag = 0;
-			system("/bin/stty cooked");			//switch to buffered iput
-			system("stty echo");				//turn on terminal echo
+			// system("/bin/stty cooked");		//switch to buffered input
+			// system("stty echo");				//turn on terminal echo
+			while(pop_cmd_q(cmd_fsm_cb.token)); //empty command queue
+			cmd_fsm_reset(&cmd_fsm_cb);			//reset command fsm
+			// char_fsm_reset();
+			prompted = false;
 			printf("\nsystem reset\n");
-			term(2);
 			break;
 
 /* CR */	case _CR:
