@@ -20,11 +20,6 @@ The state of up to 8 channels can be controlled by:
 
 ####Language
 * C
-
-####IDE
-* Eclipse - cross compile BBB code
-* SimpleIDE - cross compile C3 code
-
 ####Envirnoment
 * Development machine - MacMini Linux Mint 17.0
 * BeagleBone Black (rev C)- Debian
