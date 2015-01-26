@@ -17,12 +17,13 @@ The state of up to 8 channels can be controlled by:
 * BeagleBone Black rev C, adafruit 
 * AQY212GH PhotoMOS relays, Newark
 * MID400 AC Line Monitor, Newark 
-
 ####Language
 * C
+#####see the project wiki for more information
 ####Envirnoment
 * Development machine - MacMini Linux Mint 17.0
 * BeagleBone Black (rev C)- Debian
+* C3 -  bare metal
 
 ####Channels
 Each channel can switch 120 volt 8 amp load.  The channel is controlled by a schedule for the current day of the week.  There can be a different schedule for each day of the week. Each channel has it own set of schedules, so for any one day of the week there are 8 (number of channels) schedules active. The schedule for a picticular day is created my selecting a schedule "template" from the schedule libaray.  A template can be assigned to; a specific day for a specific channel, all days for a specific channel, all channels for a specific day. 
