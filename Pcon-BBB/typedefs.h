@@ -23,7 +23,8 @@ typedef struct {
 	int			on_sec;		//on cycle in seconds
 	int 		off_sec;	//off cycle in seconds
 	char 		name[_CHANNEL_NAME_SIZE];
-	int 		c_mode; 	//Control mode: 0-manual, 1-time, 2-time & sensor, 4-cycle
+	int 		c_mode; 	//Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
+	int 		c_state;	//0 = off, 1 = on
 } CCR;
 
 typedef	struct {
