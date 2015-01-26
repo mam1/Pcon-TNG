@@ -8,6 +8,7 @@
 
 /* fuctions */
 void cmd_fsm(CMD_FSM_CB *);
+void cmd_fsm_reset(CMD_FSM_CB *);
 int cmd_type(char *);
 char *build_prompt(char *, int);
 void reset_active(void);

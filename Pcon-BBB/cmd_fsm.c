@@ -45,13 +45,7 @@ extern char *sch_mode[2];
 
 /* channel data */
 int             w_channel;                      //working channel number
-uint8_t         c_state[_NUMBER_OF_CHANNELS];   //chanel state arry
-// struct {
-//     int         major_version;
-//     int         minor_version;
-//     int         minor_revision;
-//     CCR         c_data[_NUMBER_OF_CHANNELS];
-// } sdat;
+uint8_t         c_state[_NUMBER_OF_CHANNELS];   //channel state array, 0 = off, 1 = on
 
 /***************************************/
 /*****  command  parser fsm start ******/
@@ -61,7 +55,7 @@ uint8_t         c_state[_NUMBER_OF_CHANNELS];   //chanel state arry
 char    *keyword[_CMD_TOKENS] = {
 /*  0 */    "INT",
 /*  1 */    "STR",
-/*  2 */    "CMD",
+/*  2 */    "OTHER",
 /*  3 */    "OTHER",
 /*  4 */    "q",
 /*  5 */    "quit",
@@ -78,7 +72,7 @@ char    *keyword[_CMD_TOKENS] = {
 /* 16 */    "system",
 /* 17 */    "status",
 /* 18 */    "time",
-/* 19 */    "set",
+/* 19 */    "t&s",
 /* 20 */    "shutdown",
 /* 21 */    "startup",
 /* 22 */    "reboot",
@@ -89,12 +83,44 @@ char    *keyword[_CMD_TOKENS] = {
 /* 27 */    "help",
 /* 28 */    "?"  };
 
+/* command definitions */
+char    *keyword_defs[_CMD_TOKENS] = {
+/*  0 */    "valid integer",
+/*  1 */    "alpha numeric string",
+/*  2 */    "OTHER",
+/*  3 */    "OTHER",
+/*  4 */    "terminate the application",
+/*  5 */    "quit",
+/*  6 */    "ping",
+/*  7 */    "file",
+/*  8 */    "edit",
+/*  9 */    "quit",
+/* 10 */    "cancel",
+/* 11 */    "name",
+/* 12 */    "mode",
+/* 13 */    "zero",
+/* 14 */    "set channel control mode to manual and turn channel on",
+/* 15 */    "set channel control mode to manual and turn channel off",
+/* 16 */    "system",
+/* 17 */    "display status for all channels",
+/* 18 */    "set channel control mode to time",
+/* 19 */    "set channel control mode to time and sensor",
+/* 20 */    "shutdown",
+/* 21 */    "startup",
+/* 22 */    "reboot",
+/* 23 */    "save",
+/* 24 */    "schedule",
+/* 25 */    "channel",
+/* 26 */    "load",
+/* 27 */    "display all valid commands",
+/* 28 */    "display all valid commands"  };
+
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                   0  1  2 */
 /*  0  INT      */  {1, 2, 2},
 /*  1  STR      */  {0, 0, 2},
-/*  2  CMD      */  {0, 1, 2},
+/*  2  OTHER    */  {0, 1, 2},
 /*  3  OTHER    */  {0, 1, 2},
 /*  4  quit     */  {0, 1, 2},
 /*  5     q     */  {0, 1, 2},
@@ -106,8 +132,8 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 11  name     */  {0, 1, 3},
 /* 12  mode     */  {3, 1, 4},
 /* 13  zero     */  {0, 1, 0},
-/* 14  on       */  {0, 1, 0},
-/* 15  off      */  {0, 1, 0},
+/* 14  on       */  {0, 0, 0},
+/* 15  off      */  {0, 0, 0},
 /* 16  system   */  {0, 1, 2},
 /* 17  status   */  {0, 1, 2},
 /* 18  time     */  {0, 1, 2},
@@ -117,7 +143,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 22  reboot   */  {0, 1, 2},
 /* 23  save     */  {0, 1, 2},
 /* 24  schedule */  {5, 5, 2},
-/* 25  channel  */  {1, 1, 2},
+/* 25  channel  */  {0, 0, 2},
 /* 26  load     */  {0, 1, 2},
 /* 27  help     */  {0, 1, 2},
 /* 28  ?        */  {0, 1, 2}};
@@ -128,46 +154,49 @@ int c_1(CMD_FSM_CB *); /* display all valid commands for the current state */
 int c_2(CMD_FSM_CB *); /* ping */
 int c_3(CMD_FSM_CB *); /* terminate program */
 int c_4(CMD_FSM_CB *); /* set working channel number*/
-int c_5(CMD_FSM_CB *); /* set channel name for working channel*/
-int c_6(CMD_FSM_CB *); /* set channel name for working channel*/
-  
+int c_5(CMD_FSM_CB *); /* set channel name for working channel */
+int c_6(CMD_FSM_CB *); /* display channel data */
+int c_7(CMD_FSM_CB *); /* command not valid in current state */ 
+int c_8(CMD_FSM_CB *); /* command is not recognized */ 
+int c_9(CMD_FSM_CB *); /* set channel control mode to manual and turn channel on */ 
+int c_10(CMD_FSM_CB *); /* set channel control mode to manual and turn channel off */ 
 
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0    1     2 */
-/*  0  INT      */  { c_4, c_0, c_0},
-/*  1  STR      */  { c_1, c_5, c_0},
-/*  2  CMD      */  { c_0, c_0, c_0},
-/*  3  OTHER    */  { c_0, c_0, c_0},
-/*  4  quit     */  { c_3, c_0, c_0},
-/*  5     q     */  { c_3, c_3, c_3},
-/*  6  ping     */  { c_2, c_0, c_0},
-/*  7  file     */  { c_0, c_0, c_0},
-/*  8  edit     */  { c_0, c_0, c_0},
-/*  9  quit     */  { c_0, c_0, c_0},
+/*  0  INT      */  { c_4, c_7, c_0},
+/*  1  STR      */  { c_7, c_5, c_0},
+/*  2  OTHER    */  { c_8, c_0, c_0},
+/*  3  OTHER    */  { c_8, c_8, c_8},
+/*  4  q        */  { c_3, c_3, c_3},
+/*  5  quit     */  { c_8, c_8, c_8},
+/*  6  ping     */  { c_2, c_7, c_7},
+/*  7  file     */  { c_7, c_7, c_0},
+/*  8  edit     */  { c_7, c_7, c_0},
+/*  9  quit     */  { c_8, c_8, c_8},
 /* 10  cancel   */  { c_0, c_0, c_0},
-/* 11  name     */  { c_0, c_0, c_0},
-/* 12  mode     */  { c_1, c_0, c_0},
-/* 13  zero     */  { c_0, c_0, c_0},
-/* 14  on       */  { c_0, c_0, c_0},
-/* 15  off      */  { c_0, c_0, c_0},
+/* 11  name     */  { c_7, c_0, c_0},
+/* 12  mode     */  { c_7, c_0, c_0},
+/* 13  zero     */  { c_7, c_0, c_0},
+/* 14  on       */  { c_0, c_9, c_0},
+/* 15  off      */  { c_0, c_10, c_0},
 /* 16  system   */  { c_0, c_0, c_0},
 /* 17  status   */  { c_6, c_0, c_0},
 /* 18  time     */  { c_0, c_0, c_0},
-/* 19  set      */  { c_0, c_0, c_0},
+/* 19  set      */  { c_7, c_0, c_0},
 /* 20  shutdown */  { c_0, c_0, c_0},
 /* 21  startup  */  { c_0, c_0, c_0},
 /* 22  reboot   */  { c_0, c_0, c_0},
-/* 23  save     */  { c_0, c_0, c_0},
-/* 24  schedule */  { c_0, c_0, c_0},
-/* 25  channel  */  { c_6, c_6, c_0},
-/* 26  load     */  { c_0, c_0, c_0},
-/* 27  help     */  { c_1, c_0, c_0},
+/* 23  save     */  { c_7, c_0, c_0},
+/* 24  schedule */  { c_7, c_0, c_0},
+/* 25  channel  */  { c_8, c_7, c_0},
+/* 26  load     */  { c_7, c_0, c_0},
+/* 27  help     */  { c_8, c_0, c_0},
 /* 28  ?        */  { c_1, c_1, c_1}};
 
-/***************start fsm support functions ********************/
+/*************** start fsm support functions ********************/
 int is_valid_int(const char *str)
 {
    if (*str == '-')     //negative numbers
@@ -228,6 +257,7 @@ char *dequote(char *s){
 }
 /* reset cmd_fsm to initial state */
 void cmd_fsm_reset(CMD_FSM_CB *cb){
+    memset(&cb->prompt_buffer,'\0',sizeof(cb->prompt_buffer));
     strcpy(cb->prompt_buffer,"\n\r> ");
     cb->state = 0;
     return;
@@ -245,11 +275,20 @@ int c_0(CMD_FSM_CB *cb)
 /* display all valid commands for the current state */
 int c_1(CMD_FSM_CB *cb)
 {
+    int         i;
+    printf("valid commands in state %i\r\n",cb->state);
+    printf("  ESC key - resets the command processor to state 0 and clears all queues\r\n");
+    for(i=0;i<_CMD_TOKENS;i++){
+        if((cmd_action[i][cb->state] != c_8) && (cmd_action[i][cb->state] != c_7) && (cmd_action[i][cb->state] != c_0)){
+            printf("  %s - %s\r\n",keyword[i],keyword_defs[i]);
 
-    printf("token cb: state <%i>, token <%s>, type <%i>, value <%i>,prompt <%s>\n",
-            cb->state,cb->token,cb->token_type,cb->token_value,cb->prompt_buffer);
+        }
+    }
 
+    // printf("token cb: state <%i>, token <%s>, type <%i>, value <%i>,prompt <%s>\r\n",
+    //         cb->state,cb->token,cb->token_type,cb->token_value,cb->prompt_buffer);
     return 0;
+    
 }
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
@@ -305,11 +344,13 @@ int c_4(CMD_FSM_CB *cb)
 /* set channel name for working channel */
 int c_5(CMD_FSM_CB *cb)
 {
+    char        numstr[2];
 
     strcpy(sdat.c_data[w_channel].name,dequote(cb->token));
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"name set for channel ");
-    strcat(cb->prompt_buffer,cb->token);
+    sprintf(numstr, "%d", w_channel);
+    strcat(cb->prompt_buffer,numstr);
     strcat(cb->prompt_buffer,"\n\r> ");
 
     return 0;
@@ -320,11 +361,62 @@ int c_6(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-        printf("%s <%i>%s\r\n",onoff[c_state[i]],i,sdat.c_data[i].name);
+        printf("  %i - %s %s\r\n",i,onoff[c_state[i]],sdat.c_data[i].name);
     }
     strcpy(cb->prompt_buffer,"\n\r> ");
     return 0;
 }
+
+/* command is not valid in current state */
+int c_7(CMD_FSM_CB *cb)
+{
+    char        numstr[2];
+    strcpy(cb->prompt_buffer,"'");
+    strcat(cb->prompt_buffer,cb->token);
+    strcat(cb->prompt_buffer,"' is not a valid command in state ");
+    sprintf(numstr, "%d", cb->state);
+    strcat(cb->prompt_buffer,numstr);
+    strcat(cb->prompt_buffer,"\n\r> ");
+
+    return 0;
+}
+
+/* command is not recognized */
+int c_8(CMD_FSM_CB *cb)
+{
+    strcpy(cb->prompt_buffer,"'");
+    strcat(cb->prompt_buffer,cb->token);
+    strcat(cb->prompt_buffer,"' is not a valid command\n\r> ");
+    return 0;
+}
+
+/* set channel control mode to manual and turn channel on */
+int c_9(CMD_FSM_CB *cb)
+{
+    char        numstr[2];
+    sdat.c_data[w_channel].c_mode = 0;
+    c_state[w_channel] = 1;
+    strcpy(cb->prompt_buffer,"channel ");
+    sprintf(numstr, "%d", w_channel);
+    strcat(cb->prompt_buffer,numstr);
+    strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n> ");
+    return 0;
+}
+
+/* set channel control mode to manual and turn channel off */
+int c_10(CMD_FSM_CB *cb)
+{
+    char        numstr[2];
+    sdat.c_data[w_channel].c_mode = 0;
+    c_state[w_channel] = 0;
+    strcpy(cb->prompt_buffer,"channel ");
+    sprintf(numstr, "%d", w_channel);
+    strcat(cb->prompt_buffer,numstr);
+    strcat(cb->prompt_buffer, " turned off and mode set to manual\r\n> ");
+    return 0;
+}
+
+
 /**************** end command fsm action routines ******************/
 
 

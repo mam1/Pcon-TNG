@@ -24,10 +24,9 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     /* see if the file is there */
     sd = fopen(fname,"r+");
     if(sd != NULL){
-        printf(" system data file <%s> opened\r\n",fname);
+        // printf(" system data file <%s> opened\r\n",fname);
         return sd;
     }
-
     /* file does not exist try and create it */
     sd = fopen(fname,"w");
     if(sd == NULL){
@@ -54,7 +53,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
         perror(fname);
         term1();
     }
-    printf(" system data file <%s> created and initilaized\r\n",fname);
+    printf(" system data file <%s> created and initialized\r\n",fname);
     printf(" size of cdat <%i>\r\n",(int)sizeof(cdat));
     return sd;
 }
@@ -62,8 +61,8 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
 void save_channel_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
     sd = sd_open(fname,cdat);
-    if(fwrite(cdat, sizeof(*cdat), 1, sd) != sizeof(cdat)){
-        printf("\n*** error reading system data file\r\n");
+    if(fwrite(cdat, sizeof(*cdat), 1, sd) != 1){
+        printf("\n*** error reading system data file %s\r\n",fname);
         perror(fname);
         term1();
     }
@@ -74,10 +73,10 @@ void load_channel_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
     int     rtn;
     sd = sd_open(fname,cdat);
-    printf("  size of sys_dat %i\r\n",(int)sizeof(*cdat));
-    printf("  read system data\r\n");
+    // printf("  size of sys_dat %i\r\n",(int)sizeof(*cdat));
+    // printf("  read system data\r\n");
     rtn = fread(cdat, sizeof(*cdat), 1, sd);
-    printf("  fread returns %i\r\n",rtn);
+    // printf("  fread returns %i\r\n",rtn);
 
 
 

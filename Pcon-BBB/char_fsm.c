@@ -134,9 +134,9 @@ int char_type(char c) {
 }
 
 
-int reset_char_fsm(void) {
+int char_fsm_reset(void) {
 #ifdef _TRACE
-	trace(_TRACE_FILE_NAME,"reset_char_fsm",char_state,input_buffer,"resetting",trace_flag);
+	trace(_TRACE_FILE_NAME,"char_fsm_reset",char_state,input_buffer,"resetting",trace_flag);
 #endif
 	char_state = 0;
 	input_buffer_ptr = input_buffer;
