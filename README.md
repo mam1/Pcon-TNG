@@ -10,16 +10,20 @@ The state of up to 8 channels can be controlled by:
 * time of day and a sensor value
 * cycle (seconds on, seconds off)
 * manually
+
 ####Hardware:
 * C3 micro controller, Parallax  
 * Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax 
 * ChronoDot real time clock module, based on a DS3231, adafruit
 * BeagleBone Black rev C, adafruit 
 * AQY212GH PhotoMOS relays, Newark
-* MID400 AC Line Monitor, Newark 
+* MID400 AC Line Monitor, Newark
+
 ####Language
 * C
-#####see the project wiki for more information
+
+######see the project wiki for more information
+
 ####Envirnoment
 * Development machine - MacMini Linux Mint 17.0
 * BeagleBone Black (rev C)- Debian
