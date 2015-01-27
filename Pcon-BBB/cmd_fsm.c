@@ -361,7 +361,7 @@ int c_6(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-        printf("  %i - %s %s\r\n",i,onoff[c_state[i]],sdat.c_data[i].name);
+        printf("  %s - %i %s\r\n",onoff[c_state[i]],i,sdat.c_data[i].name);
     }
     strcpy(cb->prompt_buffer,"\n\r> ");
     return 0;

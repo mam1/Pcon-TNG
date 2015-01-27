@@ -45,8 +45,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
         term1();
     }
     fclose(sd);
-
-
+    /* set file pointer to start of file */
     sd = fopen(fname,"r+");
     if(sd == NULL){
         printf("\n*** error reopening system data file\r\n");
@@ -54,7 +53,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
         term1();
     }
     printf(" system data file <%s> created and initialized\r\n",fname);
-    printf(" size of cdat <%i>\r\n",(int)sizeof(cdat));
+    // printf(" size of cdat <%i>\r\n",(int)sizeof(*cdat));
     return sd;
 }
 
@@ -77,14 +76,11 @@ void load_channel_data(char *fname,SYS_DAT *cdat){
     // printf("  read system data\r\n");
     rtn = fread(cdat, sizeof(*cdat), 1, sd);
     // printf("  fread returns %i\r\n",rtn);
-
-
-
-    // if(fread(&sys_dat, sizeof(sys_dat), 1, sd) != sizeof(sys_dat)){
-    //     printf("\n*** error reading system data file\r\n");
-    //     perror(fname);
-    //     term1();
-    // }
+    if(rtn != 1){
+        printf("\n*** error reading system data file\r\n");
+        perror(fname);
+        term1();
+    }
     fclose(sd);    
     return;
 }
