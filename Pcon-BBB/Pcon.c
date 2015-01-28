@@ -192,6 +192,7 @@ int main(void) {
 	trace(_TRACE_FILE_NAME,"Pcon",char_state,work_buffer,"add character to work buffer",trace_flag);
 #endif
 		}
+		
 
 	};
 	s_close(bbb);

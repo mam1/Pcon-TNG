@@ -6,8 +6,8 @@ MODEL = lmm
 BOARD =  QUICKSTART
 
 # objects for this program
-NAME = Pcon
-OBJS = Pcon.o fds.o
+NAME = test
+OBJS = test.o fds.o
 
 #FdSerial.o serial_io.o
 
