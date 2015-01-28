@@ -38,13 +38,15 @@ char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 char *onoff[2] = {"off"," on"};
 char *con_mode[3] = {"manual","  time","time & sensor"};
 char *sch_mode[2] = {"day","week"};
+char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
+
 
 /***************************** support routines ********************************/
 /* write system info to stdout */
 void disp_sys(void) {
-	printf("*** Pcon  %d.%d.%d ***\n\n", _major_version, _minor_version,
+	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version,
 	_minor_revision);
-	printf(" input buffer size: %d characters\n", _INPUT_BUFFER_SIZE);
+	printf(" input buffer size: %d characters\n\r", _INPUT_BUFFER_SIZE);
 	return;
 }
 /* prompt for user input */

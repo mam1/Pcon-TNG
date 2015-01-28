@@ -7,6 +7,7 @@
 /* cmd_fsm control block */
 typedef struct {
 	int				state;
+	int 			p_state;
 	char 			token[_MAX_TOKEN_SIZE];
 	int				token_type;
 	int				token_value;

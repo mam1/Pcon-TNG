@@ -268,7 +268,6 @@ int crq(char *c) {
 	return 0;
 }
 
-
 /* 7 – add delimiter to buffer, add quote to buffer */
 int char_delim_add(char *c) {
 	*input_buffer_ptr++ = _QUOTE;
