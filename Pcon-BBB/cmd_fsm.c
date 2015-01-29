@@ -46,7 +46,9 @@ extern char *c_mode[4];
 
 /* channel data */
 int             w_channel;                      //working channel number
-uint8_t         c_state[_NUMBER_OF_CHANNELS];   //channel state array, 0 = off, 1 = on
+int             w_minutes;
+int             w_hours;
+// uint8_t         c_state[_NUMBER_OF_CHANNELS];   //channel state array, 0 = off, 1 = on
 
 /***************************************/
 /*****  command  parser fsm start ******/
@@ -333,6 +335,8 @@ int c_4(CMD_FSM_CB *cb)
 {
     if (cb->token_value < _NUMBER_OF_CHANNELS){
         w_channel = cb->token_value;
+        w_minutes = 0;
+        w_hours = 0;
         strcpy(cb->prompt_buffer,"enter action for channel ");
         strcat(cb->prompt_buffer,cb->token);
         strcat(cb->prompt_buffer,"\n\r> ");

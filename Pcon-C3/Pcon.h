@@ -9,7 +9,7 @@
 #define PCON_H_
 #define _major_version 2
 #define _minor_version 0
-#define _minor_revision 26
+#define _minor_revision 27
 #define _TRACE
 
 // #include "FdSerial.h"

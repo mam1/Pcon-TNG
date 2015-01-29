@@ -1,15 +1,22 @@
 
 
 CFLAGS = -Os -m32bit-doubles -Wall -std=c99 
+LDFLAGS = -I /Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools
 NM = propeller-elf-nm
 MODEL = lmm
 BOARD =  QUICKSTART
 
-# objects for this program
-NAME = Pcon
-OBJS = Pcon.o fds.o
 
-#FdSerial.o serial_io.o
+#CFLAGS = -Os -mlmm
+CFLAGS = -Os
+NM = propeller-elf-nm
+
+#
+# objects for this program
+#
+
+NAME = Pcon
+OBJS = Pcon.o
 
 all: $(NAME).elf
 
@@ -18,21 +25,21 @@ include common.mk
 #
 # do a partial link of all driver code
 #
+# Note that any sections called .cog* (or *.cog) are automatically
+# set up as overlays in cog memory space by the linker.
+# So to load a COG C program from an LMM program, we
 
-# # Note that calling our output file *_1.cog ensures that it
-# is placed in the .coguser1 section by the main program's
-# linker script; similarly *_2.cog would be placed in .coguser2,
-# and so on
-
-# the raw C code for the cog
-fds_ht.o: full_duplex_serial_ht_cog.c
+toggle_fw.o: toggle_fw.c
 	$(CC) -r -Os -mcog -o $@ $<
+
 
 #
 # We have to avoid conflicts between symbols in the main C program and
 # symbols in the local cog C programs. We do this by using objcopy to
 # turn all the global symbols in the cog .text segment into local symbols
-# (that's what --localize-text does).
+# (that's what --localize-text does). At the same time we rename
+# the .text section to something ending in .cog (the filename works!) so
+# that the linker knows to treat it as an overlay.
 #
 
 %.cog: %.o

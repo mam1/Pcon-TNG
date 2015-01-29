@@ -18,6 +18,29 @@
 # All rights MIT licensed
 # #########################################################
 
+
+# get the development machine OS
+UNAME_S := $(shell uname -s)
+UNAME_P := $(shell uname -p)
+
+# set include directories
+ifeq ($(UNAME_S),Darwin)
+INC=/Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools 
+INC+=/Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext
+INC+=/Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c
+INC+=/Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libfdserial
+INC_PARAMS=$(foreach d, $(INC), -I$d)
+
+LIBS= /Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools/xmmc/libsimpletools.a
+LIBS+=/Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libfdserial/lmm/libfdserial.a
+LIBS+=/Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext/lmm/libsimpletext.a
+LIBS+= /Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c/lmm/libsimplei2c.a
+LIBNAME =  
+else
+LIBS = /Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools/xmmc/libsimpletools.a
+LIBNAME = 
+endif
+
 # where we installed the propeller binaries and libraries
 PREFIX = /opt/parallax
 
@@ -71,7 +94,7 @@ lib$(LIBNAME).a: $(OBJS)
 endif
 
 %.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CC) -m32bit-doubles $(CFLAGS) $(INC_PARAMS)  -o $@ -c $<
 
 %.o: %.cpp
 	$(CC) $(CXXFLAGS) -o $@ -c $<
@@ -121,8 +144,11 @@ clean:
 #
 # how to run
 run: $(NAME).elf
+ifeq ($(UNAME_S),Darwin)
+	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -p /dev/cu.usbserial-A4009G3O
+else
 	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -p /dev/ttyUSB0
-
+endif
 run2: $(NAME).elf
 	$(LOADER2) $(NAME).elf -t
 #

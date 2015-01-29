@@ -10,16 +10,16 @@
 #include <unistd.h>		//sleep
 #include <stdint.h>		//uint_8, uint_16, uint_32, etc.
 #include "propeller.h"
- 
 #include "Pcon.h"
-
-#include "test.h"
-
+// #include "test.h"
+#include "simpletools.h"                      // Include simple tools
+#include "simpletext.h"
+#include "fdserial.h"
 
 #define RX                      1
 #define TX                      0
 #define MODE                    0
-#define BAUD                 9600
+#define BAUD                 115200
 #define SERIAL_BUFFER_SIZE    128
 #define START_COMMAND         27
 
@@ -31,24 +31,48 @@
 /***************************** externals ******************************/
 
 int main(int argc, char *argv[]){
-    // FILE        *C3in;
+    fdserial             *C3port;
+    int             C3byte;
+    int             out_byte;
+
+    int             i;
+
     // FILE        *C3out;
 
-    int32_t   Val;
 
     sleep(1);
     printf("\033\143"); //clear the terminal screen, preserve the scroll back
     disp_sys();
+    printf("open serial port\n");
+    C3port = fdserial_open(RX, TX, MODE, BAUD); //open io port to C3
+    printf("C3port = %i\n",C3port);
+    fdserial_rxFlush(C3port);           // flush input buffer
+    fdserial_txFlush(C3port);           // flush input buffer
 
-
-    waitcnt(CLKFREQ+CNT);
-    printf("start\n");
-    fdsSpin_Start(31, 30, 0, 115200);
-    fdsSpin_Str("Hello World\r");
-    while (1) {
-        Val = fdsSpin_Rx();
-        fdsSpin_Tx(Val);
+    out_byte = 'x';
+    printf("out byte <%c>\n",out_byte);
+    fdserial_txChar(C3port, out_byte);
+    printf("byte sent \n");
+    for(i=0;i<10;i++){
+        printf("wait for anything from the C3\n");
+        while (fdserial_rxReady(C3port) == 0);
+        C3byte = fdserial_rxChar(C3port);
+        printf("got a <%u> form the bone\n",C3byte);
+        sleep(1);
     }
+    printf("wait for anything from the C3\n");
+
+    C3byte = fdserial_rxChar(C3port);
+    printf("got a <%u> form the bone\n",C3byte);
+    fdserial_close(C3port);
+
+    // fdsSpin_Start(31, 30, 0, 115200);
+    // printf("started\n");
+    // fdsSpin_Str("Hello World\r");
+    // while (1) {
+    //     Val = fdsSpin_Rx();
+    //     fdsSpin_Tx(Val);
+    // }
 
     // C3in  = fopen("C3:9600, 1, 0", "rb");
     // C3out = fopen("C3:9600, 1, 0", "wb"); 
