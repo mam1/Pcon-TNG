@@ -19,7 +19,7 @@
 #define RX                      1
 #define TX                      0
 #define MODE                    0
-#define BAUD                 115200
+#define BAUD                 9600
 #define SERIAL_BUFFER_SIZE    128
 #define START_COMMAND         27
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
         printf("wait for anything from the C3\n");
         while (fdserial_rxReady(C3port) == 0);
         C3byte = fdserial_rxChar(C3port);
-        printf("got a <%u> form the bone\n",C3byte);
+        printf("got a <%u> from the bone\n",C3byte);
         sleep(1);
     }
     printf("wait for anything from the C3\n");

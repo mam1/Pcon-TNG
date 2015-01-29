@@ -310,6 +310,7 @@ int c_2(CMD_FSM_CB *cb)
 	s_wbyte(bbb,&cmd);
     printf("  ping <%u> sent\r\n",cmd);
     s_rbyte(bbb,&ret);
+    printf("<%u> returned from read\n", ret)
     cmd = 1;
     if(ret == ACK){
         s_wbyte(bbb,&cmd);

@@ -37,7 +37,16 @@ LIBS+=/Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpl
 LIBS+= /Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c/lmm/libsimplei2c.a
 LIBNAME =  
 else
-LIBS = /Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools/xmmc/libsimpletools.a
+INC:=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools 
+INC+=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext
+INC+=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c
+INC+=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libfdserial
+INC_PARAMS=$(foreach d, $(INC), -I$d)
+
+LIBS= /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools/xmmc/libsimpletools.a
+LIBS+=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libfdserial/lmm/libfdserial.a
+LIBS+=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext/lmm/libsimpletext.a
+LIBS+=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c/lmm/libsimplei2c.a
 LIBNAME = 
 endif
 
