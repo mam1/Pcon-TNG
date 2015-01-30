@@ -13,8 +13,7 @@
 #define _TRACE
 
 /* shared codes, bone and prop */
-#define PING         27
-#define ACK           6
+#include "../Pcon-share/shared.h"
 
 /* functions */
 void disp_sys(void);

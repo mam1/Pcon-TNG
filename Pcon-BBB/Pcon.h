@@ -6,6 +6,7 @@
 #define _minor_revision 		1
 #define _TRACE
 #define _SYSTEM_DATA_FILE		"/media/Pcon-data/Pcon.dat" //sd card file
+#include "../Pcon-share/shared.h"
 
 /* character parser fsm */
 #define _CHAR_TOKENS     		5
@@ -14,7 +15,7 @@
 
 /* command parser fsm */
 #define _CMD_TOKENS     		29
-#define _CMD_STATES     		3 
+#define _CMD_STATES     		22 
 
 /* channel parameters */
 #define _NUMBER_OF_CHANNELS 	8
@@ -48,9 +49,6 @@
 #define _NO_CHAR    255
 #define _DELIMITER	42	//asterisk
 
-/* shared codes, bone and prop */
-#define PING         27
-#define ACK           6
 
 /* other */
 #define	_BYTES_PER_INT 				4

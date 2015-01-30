@@ -54,7 +54,7 @@ int             w_hours;
 /*****  command  parser fsm start ******/
 /***************************************/
 
-/* key word list */
+/* command list */
 char    *keyword[_CMD_TOKENS] = {
 /*  0 */    "INT",
 /*  1 */    "STR",
@@ -64,7 +64,7 @@ char    *keyword[_CMD_TOKENS] = {
 /*  5 */    "quit",
 /*  6 */    "ping",
 /*  7 */    "file",
-/*  8 */    "edit",
+/*  8 */    "done",
 /*  9 */    "back",
 /* 10 */    "cancel",
 /* 11 */    "name",
@@ -95,8 +95,8 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /*  4 */    "terminate the application",
 /*  5 */    "quit",
 /*  6 */    "ping",
-/*  7 */    "file",
-/*  8 */    "edit",
+/*  7 */    "set the real time clock",
+/*  8 */    "end function",
 /*  9 */    "revert to previous state",
 /* 10 */    "cancel",
 /* 11 */    "name",
@@ -120,36 +120,36 @@ char    *keyword_defs[_CMD_TOKENS] = {
 
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
-/*                   0  1  2 */
-/*  0  INT      */  {1, 2, 3, },
-/*  1  STR      */  {0, 0, 2, },
-/*  2  OTHER    */  {0, 1, 2, },
-/*  3  OTHER    */  {0, 1, 2, },
-/*  4  quit     */  {0, 1, 2, },
-/*  5     q     */  {0, 1, 2, },
-/*  6  ping     */  {0, 1, 2, },
-/*  7  file     */  {0, 1, 2, },
-/*  8  edit     */  {0, 1, 2, },
-/*  9  back     */  {0, 1, 2, },
-/* 10  cancel   */  {0, 1, 0, },
-/* 11  name     */  {0, 1, 3, },
-/* 12  mode     */  {3, 1, 4, },
-/* 13  zero     */  {0, 1, 0, },
-/* 14  on       */  {0, 0, 0, },
-/* 15  off      */  {0, 0, 0, },
-/* 16  system   */  {0, 1, 2, },
-/* 17  status   */  {0, 1, 2, },
-/* 18  time     */  {0, 0, 2, },
-/* 19  t&s      */  {0, 0, 2, },
-/* 20  cycle    */  {0, 2, 2, },
-/* 21  startup  */  {0, 1, 2, },
-/* 22  reboot   */  {0, 1, 2, },
-/* 23  save     */  {0, 1, 2, },
-/* 24  schedule */  {5, 5, 2, },
-/* 25  channel  */  {0, 0, 2, },
-/* 26  load     */  {0, 1, 2, },
-/* 27  help     */  {0, 1, 2, },
-/* 28  ?        */  {0, 1, 2}};
+/*                    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21*/
+/*  0  INT      */  { 1,  1,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  1  STR      */  { 0,  0,  2,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  2  OTHER    */  { 0,  1,  2,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  3  OTHER    */  { 0,  1,  2,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  4  quit     */  { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  5     q     */  { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  6  ping     */  { 0,  1,  2,  0 ,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  7  clock    */  {13,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  8  done     */  { 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  9  back     */  { 0,  0,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 10  cancel   */  { 0,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 11  name     */  { 0,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 12  mode     */  { 0,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 13  zero     */  { 0,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 14  on       */  { 0,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 15  off      */  { 0,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 16  system   */  { 0,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 17  status   */  { 0,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 18  time     */  { 0,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 19  t&s      */  { 0,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 20  cycle    */  { 0,  2,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 21  startup  */  { 0,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 22  reboot   */  { 0,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 23  save     */  { 0,  0,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 24  schedule */  { 4,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 25  channel  */  { 0,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 26  load     */  { 0,  1,  2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 27  help     */  { 0,  1,  2,  3,  4,  5,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 28  ?        */  { 0,  1,  2,  3,  4,  5,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0}};
 
 /*cmd processor functions */
 int c_0(CMD_FSM_CB *); /* nop */
@@ -168,40 +168,42 @@ int c_12(CMD_FSM_CB *); /* set channel control mode to time & sensor */
 int c_13(CMD_FSM_CB *); /* set channel control mode to cycle */ 
 int c_14(CMD_FSM_CB *); /* display system data */ 
 int c_15(CMD_FSM_CB *); /* revert to previous state */ 
+int c_16(CMD_FSM_CB *); /* set on cycle time */ 
+int c_17(CMD_FSM_CB *); /* set off cycle time */ 
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
-/*                STATE 0    1     2 */
-/*  0  INT      */  { c_4, c_7, c_0},
-/*  1  STR      */  { c_7, c_5, c_0},
-/*  2  OTHER    */  { c_8, c_0, c_0},
-/*  3  OTHER    */  { c_8, c_8, c_8},
-/*  4  q        */  { c_3, c_3, c_3},
-/*  5  quit     */  { c_8, c_8, c_8},
-/*  6  ping     */  { c_2, c_7, c_7},
-/*  7  file     */  { c_7, c_7, c_0},
-/*  8  edit     */  { c_7, c_7, c_0},
-/*  9  back     */  { c_15, c_15, c_15},
-/* 10  cancel   */  { c_0, c_0, c_0},
-/* 11  name     */  { c_7, c_0, c_0},
-/* 12  mode     */  { c_7, c_0, c_0},
-/* 13  zero     */  { c_7, c_0, c_0},
-/* 14  on       */  { c_0, c_9, c_0},
-/* 15  off      */  { c_0, c_10, c_0},
-/* 16  system   */  { c_14, c_14, c_14},
-/* 17  status   */  { c_6, c_0, c_0},
-/* 18  time     */  { c_0, c_11, c_0},
-/* 19  t&s      */  { c_7, c_12, c_0},
-/* 20  cycle    */  { c_0, c_13, c_0},
-/* 21  startup  */  { c_0, c_0, c_0},
-/* 22  reboot   */  { c_0, c_0, c_0},
-/* 23  save     */  { c_7, c_0, c_0},
-/* 24  schedule */  { c_7, c_0, c_0},
-/* 25  channel  */  { c_8, c_7, c_0},
-/* 26  load     */  { c_7, c_0, c_0},
-/* 27  help     */  { c_8, c_0, c_0},
-/* 28  ?        */  { c_1, c_1, c_1}};
+/*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21 */
+/*  0  INT      */  { c_4,  c_7, c_16, c_17,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  1  STR      */  { c_7,  c_5,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  2  OTHER    */  { c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  3  OTHER    */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  4  q        */  { c_3,  c_3,  c_3,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  5  quit     */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  6  ping     */  { c_2,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  7  clock    */  { c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  8  done     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  9  back     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 10  cancel   */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 11  name     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 12  mode     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 13  zero     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 15  off      */  { c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 16  system   */  {c_14, c_14, c_14,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 17  status   */  { c_6,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 18  time     */  { c_0, c_11,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 19  t&s      */  { c_7, c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 20  cycle    */  { c_0, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 21  startup  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 22  reboot   */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 23  save     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 24  schedule */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 25  channel  */  { c_8,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 26  load     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 27  help     */  { c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 28  ?        */  { c_1,  c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
 
 /*************** start fsm support functions ********************/
 int is_valid_int(const char *str)
@@ -291,28 +293,37 @@ int c_1(CMD_FSM_CB *cb)
 
         }
     }
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"\r\n> ");
     return 0;    
 }
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-    // int             i;
+    int             i;
 	int             cmd = PING;
     int             ret = '\0';
+    int             *size;
+    uint8_t         s[4];
     // int             s;
-
-	printf("  sending ping request to C3 <%u>\r\n",cmd);
+    size = (int *)&s[0];
+    *size = 128;
+	printf("  sending ping <%u> to C3 \r\n",cmd);
 	s_wbyte(bbb,&cmd);
-    printf("  ping <%u> sent\r\n",cmd);
+    // printf("  ping <%u> sent\r\n",cmd);
     s_rbyte(bbb,&ret);
-    printf("<%u> returned from read\n", ret);
+    // printf("<%u> returned from read\n", ret);
     if(ret == ACK){
-        printf("  BBB acknowledge received <%u>\n\r",ret);
+        printf("  BBB acknowledge received <%u>\n\rsending number <%i>\n\r",ret,*size);
+        cmd = WRITE_CMD;
+        s_wbyte(bbb,&cmd);
+        for(i=0;i<4;i++){
+            s_wbyte(bbb,(int *)&s[i]);
+        }
         return 0;
+
     }
-
     printf("  BBB  received <%u>\n\r",ret);
-
 	return 1;
 }
 /* terminate program */
@@ -343,11 +354,11 @@ int c_5(CMD_FSM_CB *cb)
 
     strcpy(sdat.c_data[w_channel].name,dequote(cb->token));
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    /* build prompt */
     strcpy(cb->prompt_buffer,"name set for channel ");
     sprintf(numstr, "%d", w_channel);
     strcat(cb->prompt_buffer,numstr);
     strcat(cb->prompt_buffer,"\n\r> ");
-
     return 0;
 }
 /* display channel data */
@@ -355,8 +366,10 @@ int c_6(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-        printf("  %s - %i %s - %s\r\n",
-               onoff[sdat.c_data[i].c_state],i,c_mode[sdat.c_data[i].c_mode],sdat.c_data[i].name);
+        printf("  %s - %i %s - %s",onoff[sdat.c_data[i].c_state],i,c_mode[sdat.c_data[i].c_mode],sdat.c_data[i].name);
+        if((sdat.c_data[i].c_mode) == 3)
+            printf(" (%i:%i)",sdat.c_data[i].on_sec,sdat.c_data[i].off_sec);      
+        printf("\r\n");
     }
     strcpy(cb->prompt_buffer,"\n\r> ");
     return 0;
@@ -365,6 +378,7 @@ int c_6(CMD_FSM_CB *cb)
 int c_7(CMD_FSM_CB *cb)
 {
     char        numstr[2];
+    /* build prompt */
     strcpy(cb->prompt_buffer,"'");
     strcat(cb->prompt_buffer,cb->token);
     strcat(cb->prompt_buffer,"' is not a valid command in state ");
@@ -388,8 +402,8 @@ int c_9(CMD_FSM_CB *cb)
     char        numstr[2];
     sdat.c_data[w_channel].c_mode = 0;
     sdat.c_data[w_channel].c_state = 1;
-    // c_state[w_channel] = 1;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    /* build prompt */
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", w_channel);
     strcat(cb->prompt_buffer,numstr);
@@ -402,7 +416,7 @@ int c_10(CMD_FSM_CB *cb)
     char        numstr[2];
     sdat.c_data[w_channel].c_mode = 0;
     sdat.c_data[w_channel].c_state = 0;
-    // c_state[w_channel] = 0;
+    /* build prompt */
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", w_channel);
@@ -434,16 +448,18 @@ int c_12(CMD_FSM_CB *cb)
     strcat(cb->prompt_buffer, " mode set to time & sensor\r\n> ");
     return 0;
 }
-/* set channel control mode to time and sensor */
+/* set channel control mode to cycle */
 int c_13(CMD_FSM_CB *cb)
 {
-    char        numstr[2];
+    char        sbuf[20];
+
     sdat.c_data[w_channel].c_mode = 3;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
-    strcpy(cb->prompt_buffer,"channel ");
-    sprintf(numstr, "%d", w_channel);
-    strcat(cb->prompt_buffer,numstr);
-    strcat(cb->prompt_buffer, " mode set to cycle\r\n> ");
+
+    strcpy(cb->prompt_buffer,"  setting cycle mode for channel ");
+    sprintf(sbuf, "%d", w_channel);
+    strcat(cb->prompt_buffer,sbuf);
+    strcat(cb->prompt_buffer,"\r\n  enter on seconds > ");
     return 0;
 }
 /* display system data */
@@ -462,6 +478,46 @@ int c_15(CMD_FSM_CB *cb)
     cb->state = cb->p_state;
     strcpy(cb->prompt_buffer,"\r\n> ");
 
+    return 0;
+}
+/* set on cycler time */
+int c_16(CMD_FSM_CB *cb)
+{
+    char            sbuf[20];  //max number of digits for a int
+
+    sdat.c_data[w_channel].on_sec = cb->token_value;
+    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+
+    /* build prompt */    
+    strcpy(cb->prompt_buffer,"  setting cycle mode for channel ");
+    sprintf(sbuf, "%d", w_channel);
+    strcat(cb->prompt_buffer,sbuf);
+    strcat(cb->prompt_buffer," on ");
+    sprintf(sbuf, "%d", sdat.c_data[w_channel].on_sec);
+    strcat(cb->prompt_buffer,sbuf);
+    strcat(cb->prompt_buffer," seconds\r\n  enter off seconds > ");
+
+    return 0;
+}
+/* set off cycle time */
+int c_17(CMD_FSM_CB *cb)
+{
+    char            sbuf[20];  //max number of digits for a int
+
+    sdat.c_data[w_channel].off_sec = cb->token_value;
+    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"  channel ");
+    sprintf(sbuf, "%d", w_channel);
+    strcat(cb->prompt_buffer,sbuf);
+    strcat(cb->prompt_buffer," mode set to cycle ");
+    sprintf(sbuf, "%d", sdat.c_data[w_channel].on_sec);
+    strcat(cb->prompt_buffer,sbuf);
+    strcat(cb->prompt_buffer,":");
+    sprintf(sbuf, "%d", sdat.c_data[w_channel].off_sec);
+    strcat(cb->prompt_buffer,sbuf);
+    strcat(cb->prompt_buffer, " (on:off)\r\n\n> ");
     return 0;
 }
 
