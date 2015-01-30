@@ -285,11 +285,16 @@ int c_0(CMD_FSM_CB *cb)
 int c_1(CMD_FSM_CB *cb)
 {
     int         i;
+    int         dots;
     printf("valid commands in state %i\r\n",cb->state);
     printf("  ESC key - resets the command processor to state 0 and clears all queues\r\n");
     for(i=0;i<_CMD_TOKENS;i++){
         if((cmd_action[i][cb->state] != c_8) && (cmd_action[i][cb->state] != c_7) && (cmd_action[i][cb->state] != c_0)){
-            printf("  %s - %s\r\n",keyword[i],keyword_defs[i]);
+            printf("  %s ",keyword[i]);
+            for(i=0;i<(10 - strlen(keyword[i])){
+                printf(".");
+            }
+            printf(" %s\r\n",keyword_defs[i]);
 
         }
     }
