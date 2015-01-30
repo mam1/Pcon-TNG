@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
                 printf("sending ACK <%u>\n",out_byte);
                 fdserial_txChar(C3port, out_byte); 
                 break;
-            case WRITE_SCH:
+            case WRITE_CMD:
                 for(i=0;i<4;i++){
                     while (fdserial_rxReady(C3port) == 0);      //wait for something to show up in the buffer
                     s[i] = fdserial_rxChar(C3port);           //grab a byte 
@@ -76,13 +76,6 @@ int main(int argc, char *argv[]){
             default:
                 printf("unknown command received from the bone <%u>\n",C3byte);
         }
-        if(C3byte == PING){
-            out_byte = ACK;
-            printf("sending ACK <%u>\n",out_byte);
-            fdserial_txChar(C3port, out_byte);   
-        }
-        else
-            printf("unknown character read from the bone\n");
     }
 
     printf("\nnormal termination\n");

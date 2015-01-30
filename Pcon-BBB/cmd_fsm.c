@@ -102,8 +102,8 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /* 11 */    "name",
 /* 12 */    "mode",
 /* 13 */    "zero",
-/* 14 */    "set channel control mode to manual and turn channel on",
-/* 15 */    "set channel control mode to manual and turn channel off",
+/* 14 */    "turn channel on, set channel control mode to manual",
+/* 15 */    "turn channel off, set channel control mode to manual"
 /* 16 */    "display system data",
 /* 17 */    "display status for all channels",
 /* 18 */    "set channel control mode to time",
@@ -284,18 +284,28 @@ int c_0(CMD_FSM_CB *cb)
 /* display all valid commands for the current state */
 int c_1(CMD_FSM_CB *cb)
 {
-    int         i;
+    int         i,ii;
     int         dots;
+
+    // printf("sizeofkeyword %i\n\r",(sizeof(keyword)/4));
+    for(i=0;i<(sizeof(keyword)/4);i++){
+        // printf("i %i\r\n",i);
+        if((strlen(keyword[i]) > dots)){
+            dots = strlen(keyword[i]);
+            // printf("dots %i\r\n",dots);            
+        }
+    }
+    // printf("dots = %i\r\n",dots);
+    
     printf("valid commands in state %i\r\n",cb->state);
-    printf("  ESC key - resets the command processor to state 0 and clears all queues\r\n");
+    printf("  ESC key . resets the command processor to state 0 and clears all queues\r\n");
     for(i=0;i<_CMD_TOKENS;i++){
         if((cmd_action[i][cb->state] != c_8) && (cmd_action[i][cb->state] != c_7) && (cmd_action[i][cb->state] != c_0)){
             printf("  %s ",keyword[i]);
-            for(i=0;i<(10 - strlen(keyword[i])){
+            for(ii=0;ii<(dots - strlen(keyword[i]));ii++){
                 printf(".");
             }
             printf(" %s\r\n",keyword_defs[i]);
-
         }
     }
     /* build prompt */
@@ -312,16 +322,18 @@ int c_2(CMD_FSM_CB *cb)
     uint8_t         s[4];
     // int             s;
     size = (int *)&s[0];
-    *size = 128;
+    *size = 3042;
 	printf("  sending ping <%u> to C3 \r\n",cmd);
 	s_wbyte(bbb,&cmd);
     // printf("  ping <%u> sent\r\n",cmd);
     s_rbyte(bbb,&ret);
     // printf("<%u> returned from read\n", ret);
     if(ret == ACK){
-        printf("  BBB acknowledge received <%u>\n\rsending number <%i>\n\r",ret,*size);
+        printf("  BBB acknowledge received <%u>\n\r",ret);
+        printf("  send WRITE_CMD <%u> \r\n",WRITE_CMD);
         cmd = WRITE_CMD;
         s_wbyte(bbb,&cmd);
+        printf("  sending number <%i>\n\r",*size);
         for(i=0;i<4;i++){
             s_wbyte(bbb,(int *)&s[i]);
         }
