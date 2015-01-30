@@ -20,8 +20,8 @@
 
 int     s_open(void);
 void    s_close(int);
-void    s_rbyte(int, uint8_t *);
-void    s_wbyte(int, uint8_t *);
+void    s_rbyte(int, int *);
+void    s_wbyte(int, int *);
 void    s_error(int);
 
 #endif /* SERIAL_IO_H_ */

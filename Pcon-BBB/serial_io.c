@@ -107,7 +107,7 @@ void s_close(int fd){
     return;
 }
 
-void s_rbyte(int fd, uint8_t *byte){
+void s_rbyte(int fd, int *byte){
   int    ret;
   int     i;
 
@@ -132,7 +132,7 @@ void s_rbyte(int fd, uint8_t *byte){
   return;
 }
 
-void s_wbyte(int fd, uint8_t *byte){
+void s_wbyte(int fd, int *byte){
   int    ret;
 
   ret = write(fd,byte,1);

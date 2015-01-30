@@ -48,17 +48,22 @@ int main(int argc, char *argv[]){
     printf("C3port = %i\n",C3port);
     fdserial_rxFlush(C3port);           // flush input buffer
     fdserial_txFlush(C3port);           // flush input buffer
-
-    out_byte = 'x';
+    out_byte = PING;
     printf("out byte <%c>\n",out_byte);
     fdserial_txChar(C3port, out_byte);
     printf("byte sent \n");
     for(i=0;i<10;i++){
         printf("wait for anything from the C3\n");
-        while (fdserial_rxReady(C3port) == 0);
+        while (fdserial_rxReady(C3port) == 0);      //wait for something to show up in the buffer
         C3byte = fdserial_rxChar(C3port);
         printf("got a <%u> from the bone\n",C3byte);
-        sleep(1);
+        if(C3byte == PING){
+            out_byte = ACK;
+            printf("sending out byte <%c>\n",out_byte);
+            fdserial_txChar(C3port, out_byte);   
+        }
+
+        // sleep(1);
     }
     printf("wait for anything from the C3\n");
 

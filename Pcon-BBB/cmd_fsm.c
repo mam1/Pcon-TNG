@@ -121,34 +121,34 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                   0  1  2 */
-/*  0  INT      */  {1, 2, 2},
-/*  1  STR      */  {0, 0, 2},
-/*  2  OTHER    */  {0, 1, 2},
-/*  3  OTHER    */  {0, 1, 2},
-/*  4  quit     */  {0, 1, 2},
-/*  5     q     */  {0, 1, 2},
-/*  6  ping     */  {0, 1, 2},
-/*  7  file     */  {0, 1, 2},
-/*  8  edit     */  {0, 1, 2},
-/*  9  back     */  {0, 1, 2},
-/* 10  cancel   */  {0, 1, 0},
-/* 11  name     */  {0, 1, 3},
-/* 12  mode     */  {3, 1, 4},
-/* 13  zero     */  {0, 1, 0},
-/* 14  on       */  {0, 0, 0},
-/* 15  off      */  {0, 0, 0},
-/* 16  system   */  {0, 1, 2},
-/* 17  status   */  {0, 1, 2},
-/* 18  time     */  {0, 0, 2},
-/* 19  t&s      */  {0, 0, 2},
-/* 20  cycle    */  {0, 0, 2},
-/* 21  startup  */  {0, 1, 2},
-/* 22  reboot   */  {0, 1, 2},
-/* 23  save     */  {0, 1, 2},
-/* 24  schedule */  {5, 5, 2},
-/* 25  channel  */  {0, 0, 2},
-/* 26  load     */  {0, 1, 2},
-/* 27  help     */  {0, 1, 2},
+/*  0  INT      */  {1, 2, 3, },
+/*  1  STR      */  {0, 0, 2, },
+/*  2  OTHER    */  {0, 1, 2, },
+/*  3  OTHER    */  {0, 1, 2, },
+/*  4  quit     */  {0, 1, 2, },
+/*  5     q     */  {0, 1, 2, },
+/*  6  ping     */  {0, 1, 2, },
+/*  7  file     */  {0, 1, 2, },
+/*  8  edit     */  {0, 1, 2, },
+/*  9  back     */  {0, 1, 2, },
+/* 10  cancel   */  {0, 1, 0, },
+/* 11  name     */  {0, 1, 3, },
+/* 12  mode     */  {3, 1, 4, },
+/* 13  zero     */  {0, 1, 0, },
+/* 14  on       */  {0, 0, 0, },
+/* 15  off      */  {0, 0, 0, },
+/* 16  system   */  {0, 1, 2, },
+/* 17  status   */  {0, 1, 2, },
+/* 18  time     */  {0, 0, 2, },
+/* 19  t&s      */  {0, 0, 2, },
+/* 20  cycle    */  {0, 2, 2, },
+/* 21  startup  */  {0, 1, 2, },
+/* 22  reboot   */  {0, 1, 2, },
+/* 23  save     */  {0, 1, 2, },
+/* 24  schedule */  {5, 5, 2, },
+/* 25  channel  */  {0, 0, 2, },
+/* 26  load     */  {0, 1, 2, },
+/* 27  help     */  {0, 1, 2, },
 /* 28  ?        */  {0, 1, 2}};
 
 /*cmd processor functions */
@@ -296,33 +296,23 @@ int c_1(CMD_FSM_CB *cb)
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-    int         i;
-	uint8_t   cmd = PING;
-    uint8_t   ret = '\0', *ptr;
-    int         s;
-    char       *cs = "high here\n\0";
+    // int             i;
+	int             cmd = PING;
+    int             ret = '\0';
+    // int             s;
 
-    s  = sizeof(cs);
-    ptr = (uint8_t *)&s;
-    ret = 99;
-    
 	printf("  sending ping request to C3 <%u>\r\n",cmd);
 	s_wbyte(bbb,&cmd);
     printf("  ping <%u> sent\r\n",cmd);
     s_rbyte(bbb,&ret);
-    printf("<%u> returned from read\n", ret)
-    cmd = 1;
+    printf("<%u> returned from read\n", ret);
     if(ret == ACK){
-        s_wbyte(bbb,&cmd);
-        for(i=0;i<4;i++) s_wbyte(bbb,ptr++);
-        printf("message size %i\n",s);
-        ptr = (uint8_t *)cs;
-        for(i=0;i<s;i++) {
-            printf("sending <%c>\n",*ptr);
-            s_wbyte(bbb,ptr++);
-        }
+        printf("  BBB acknowledge received <%u>\n\r",ret);
+        return 0;
     }
-    printf("  BBB acknowledge received <%u>\n\r",ret);    
+
+    printf("  BBB  received <%u>\n\r",ret);
+
 	return 1;
 }
 /* terminate program */
@@ -365,7 +355,7 @@ int c_6(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-        printf("  %s - %i %s control - %s\r\n",
+        printf("  %s - %i %s - %s\r\n",
                onoff[sdat.c_data[i].c_state],i,c_mode[sdat.c_data[i].c_mode],sdat.c_data[i].name);
     }
     strcpy(cb->prompt_buffer,"\n\r> ");
@@ -398,7 +388,7 @@ int c_9(CMD_FSM_CB *cb)
     char        numstr[2];
     sdat.c_data[w_channel].c_mode = 0;
     sdat.c_data[w_channel].c_state = 1;
-    c_state[w_channel] = 1;
+    // c_state[w_channel] = 1;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", w_channel);
@@ -412,7 +402,7 @@ int c_10(CMD_FSM_CB *cb)
     char        numstr[2];
     sdat.c_data[w_channel].c_mode = 0;
     sdat.c_data[w_channel].c_state = 0;
-    c_state[w_channel] = 0;
+    // c_state[w_channel] = 0;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", w_channel);

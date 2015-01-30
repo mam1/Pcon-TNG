@@ -12,7 +12,9 @@
 #define _minor_revision 27
 #define _TRACE
 
-// #include "FdSerial.h"
+/* shared codes, bone and prop */
+#define PING         27
+#define ACK           6
 
 /* functions */
 void disp_sys(void);
