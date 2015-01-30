@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
     fdserial_rxFlush(C3port);           // flush input buffer
     fdserial_txFlush(C3port);           // flush input buffer
     out_byte = PING;
-    printf("out byte <%c>\n",out_byte);
+    printf("out byte <%u>\n",out_byte);
     fdserial_txChar(C3port, out_byte);
     printf("byte sent \n");
     for(i=0;i<10;i++){
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
         printf("got a <%u> from the bone\n",C3byte);
         if(C3byte == PING){
             out_byte = ACK;
-            printf("sending out byte <%c>\n",out_byte);
+            printf("sending out byte <%u>\n",out_byte);
             fdserial_txChar(C3port, out_byte);   
         }
 
