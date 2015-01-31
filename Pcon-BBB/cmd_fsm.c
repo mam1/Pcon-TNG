@@ -302,7 +302,7 @@ int update_sch(char *sch_ptr){
         sch_ptr = sch;
         printf("  sending schedule to the C3\r\n");
         for(i=0;i<*size;i++){
-            s_wbyte(bbb,(int *)sch_ptr++)
+            s_wbyte(bbb,(int *)sch_ptr++);
         }
         return 0;
 
@@ -355,7 +355,7 @@ int c_1(CMD_FSM_CB *cb)
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-    int             i;
+    int             i, ii, iii, iiii;
 	int             cmd = PING;
     int             ret = '\0';
     int             *size;
@@ -377,9 +377,17 @@ int c_2(CMD_FSM_CB *cb)
         for(i=0;i<4;i++){
             s_wbyte(bbb,(int *)&s[i]);
         }
+        printf("sending schedule\r\n");
+        iiii=0;
+        for(i=0;i<_DAYS_PER_WEEK;i++)
+            for(ii=0;ii<_NUMBER_OF_CHANNELS;ii++)
+                for(iii=0;iii<(_MAX_SCHEDULE_RECS+1);iii++){
+                    sch[i][ii][iii] = iiii++;
+                }
+
         sch_ptr = sch;
         for(i=0;i<*size;i++){
-            s_wbyte(bbb,(int *)sch_ptr++)
+            s_wbyte(bbb,(int *)sch_ptr++);
         }
         return 0;
 

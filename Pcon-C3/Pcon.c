@@ -39,6 +39,7 @@ int main(int argc, char *argv[]){
     int              sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1];
 
     int             i;
+    int             c;
 
     sleep(1);
     printf("\033\143"); //clear the terminal screen, preserve the scroll back
@@ -56,7 +57,7 @@ int main(int argc, char *argv[]){
     // fdserial_txChar(C3port, out_byte);
     // printf("byte sent \n");
     while(1){
-        printf("wait for anything from the C3\n");
+        printf("wait for anything from the bone\n");
         while (fdserial_rxReady(C3port) == 0);      //wait for something to show up in the buffer
         C3byte = fdserial_rxChar(C3port);           //grab a byte
         printf("got a <%u> from the bone\n",C3byte);
@@ -66,12 +67,17 @@ int main(int argc, char *argv[]){
                 printf("sending ACK <%u>\n",out_byte);
                 fdserial_txChar(C3port, out_byte); 
                 break;
-            case WRITE_CMD:
+            case WRITE_SCH:
                 for(i=0;i<4;i++){
                     while (fdserial_rxReady(C3port) == 0);      //wait for something to show up in the buffer
                     s[i] = fdserial_rxChar(C3port);           //grab a byte 
+                    printf("read <%u> from the bone\r\n",s[i]);
                 }
-                printf("received a size of %i\n",*size);
+                printf("*** received a size of %i\n",*size);
+                for(i=0;i<*size;i++){
+                    c = fdserial_rxChar(C3port); 
+                    printf("%i\r\n",(int)c);      
+                }
                 break;
 
             case PUSH_STATS:
