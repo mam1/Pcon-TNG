@@ -52,6 +52,7 @@ void disp_sys(void) {
 /* prompt for user input */
 void prompt(void){
 	printf("%s",cmd_fsm_cb.prompt_buffer);
+	return;
 }
 
 /********************************************************************/
@@ -192,7 +193,8 @@ int main(void) {
 	trace(_TRACE_FILE_NAME,"Pcon",char_state,work_buffer,"add character to work buffer",trace_flag);
 #endif
 		}
-		
+		if(update_sch(sch))
+			printf("  schedule ")
 
 	};
 	s_close(bbb);

@@ -17,13 +17,7 @@
 #define _CMD_TOKENS     		29
 #define _CMD_STATES     		22 
 
-/* channel parameters */
-#define _NUMBER_OF_CHANNELS 	8
-#define _CHANNEL_NAME_SIZE		20
-#define _MAX_SCHEDULE_RECS		10
-#define _INTS_PER_SCHEDULE			_MAX_SCHEDULE_RECS + 1
-#define _BYTES_PER_SCHEDULE			(_INTS_PER_SCHEDULE) * 4 	//a uint32_t contains the number of active records followed by vector of uint32_ts
-#define _BYTES_PER_WORKING_SET		_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE
+
 
 /* buffers */
 #define _INPUT_BUFFER_SIZE		128

@@ -36,6 +36,7 @@ int main(int argc, char *argv[]){
     int             out_byte;
     int             *size;
     uint8_t          s[4];
+    int              sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1];
 
     int             i;
 
@@ -43,6 +44,7 @@ int main(int argc, char *argv[]){
     printf("\033\143"); //clear the terminal screen, preserve the scroll back
     disp_sys();
 
+    printf("schedule size %i bytes\r\n",sizeof(sch));
     size = &s[0];
     printf("open serial port\n");
     C3port = fdserial_open(RX, TX, MODE, BAUD); //open io port to C3
