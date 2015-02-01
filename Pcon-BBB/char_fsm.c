@@ -28,8 +28,8 @@ extern struct {
 	int hour;
 	int minute;
 	int key;
-	uint32_t edit_buffer[_MAX_SCHEDULE_RECS];
-	uint32_t clipboard_buffer[_MAX_SCHEDULE_RECS];
+	// uint32_t edit_buffer[_MAX_SCHEDULE_RECS];
+	// uint32_t clipboard_buffer[_MAX_SCHEDULE_RECS];
 
 } edit;
 /********************** support functions ****************************/

@@ -1,9 +1,6 @@
 #ifndef PCON_H_
 #define PCON_H_
 
-#define _major_version 			2
-#define _minor_version 			1
-#define _minor_revision 		1
 #define _TRACE
 #define _SYSTEM_DATA_FILE		"/media/Pcon-data/Pcon.dat" //sd card file
 #include "../Pcon-share/shared.h"
@@ -17,12 +14,12 @@
 #define _CMD_TOKENS     		29
 #define _CMD_STATES     		22 
 
-
+#define _MAX_SCHLIB_SCH			20
 
 /* buffers */
 #define _INPUT_BUFFER_SIZE		128
 #define _TOKEN_BUFFER_SIZE		60
-#define _PROMPT_BUFFER_SIZE		60
+#define _PROMPT_BUFFER_SIZE		200
 
 // #define _TIME_STRING_BUFFER     40
 // #define _VCMD_BUFFER            128
@@ -42,10 +39,6 @@
 #define _EOF		0
 #define _NO_CHAR    255
 #define _DELIMITER	42	//asterisk
-
-
-/* other */
-#define	_BYTES_PER_INT 				4
 
 /* fuctions */
 int term(int);

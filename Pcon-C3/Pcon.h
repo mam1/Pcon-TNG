@@ -7,13 +7,15 @@
 
 #ifndef PCON_H_
 #define PCON_H_
-#define _major_version 2
-#define _minor_version 0
-#define _minor_revision 27
+
 #define _TRACE
 
 /* shared codes, bone and prop */
 #include "../Pcon-share/shared.h"
+
+
+
+ 
 
 /* functions */
 void disp_sys(void);
