@@ -19,6 +19,7 @@
 #include "cmd_fsm.h"
 #include "trace.h"
 #include "serial_io.h"
+#include "schedule.h"
 
 
 /*********************** externals **************************/
@@ -186,13 +187,16 @@ int c_17(CMD_FSM_CB *); /* set off cycle time */
 int c_18(CMD_FSM_CB *); /* enter schedule mode */
 int c_19(CMD_FSM_CB *); /* set working schedule name */
 int c_20(CMD_FSM_CB *); /* set working schedule hour */
-int c_21(CMD_FSM_CB *); /* set working schedule minute */
+int c_21(CMD_FSM_CB *); /* set schedule record to on */
+int c_22(CMD_FSM_CB *); /* set set schedule record to off */
+int c_23(CMD_FSM_CB *); /* delete schedule record */
+int c_24(CMD_FSM_CB *); /*  */
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21  */
-/*  0  INT      */  { c_4,  c_7, c_16, c_17,  c_0,  c_0, c_20, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  { c_4,  c_7, c_16, c_17,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0, c_20,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2  OTHER    */  { c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  3  OTHER    */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -206,7 +210,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 11  assign   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 13  zero     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 15  off      */  { c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 16  system   */  {c_14, c_14, c_14,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 17  status   */  { c_6,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -677,11 +681,11 @@ int c_21(CMD_FSM_CB *cb)
     /* build prompt */
     strcpy(cb->prompt_buffer,"  editing schedule template: ");
     strcat(cb->prompt_buffer,w_schedule_name);
-    strcat(cb->prompt_buffer,"\r\n  enter action for ");
+    strcat(cb->prompt_buffer,"\r\n    enter action for ");
     strcat(cb->prompt_buffer,w_hours_str);
     strcat(cb->prompt_buffer,":");
     strcat(cb->prompt_buffer,w_minutes_str);
-    strcat(cb->prompt_buffer," >");
+    strcat(cb->prompt_buffer," > ");
     return 0;
 }
 
