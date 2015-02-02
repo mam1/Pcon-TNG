@@ -35,7 +35,7 @@ typedef struct {
 	int             w_channel;                      //working channel number
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
 	int             w_schedule_number;
-	int             w_schedule[_SCHEDULE_SIZE];
+	uint32_t        w_schedule[_SCHEDULE_SIZE];
 	int             w_minutes;
 	char            w_minutes_str[4];
 	int             w_hours;
