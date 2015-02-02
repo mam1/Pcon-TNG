@@ -4,20 +4,6 @@
 #include "Pcon.h"
 // #include "cmd_fsm.h"
 
-/* cmd_fsm control block */
-typedef struct {
-	int				state;
-	int 			p_state;
-	char 			token[_MAX_TOKEN_SIZE];
-	int				token_type;
-	int				token_value;
-	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
-} CMD_FSM_CB;
-
-/* action routine definitions */
-typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
-typedef int (*CHAR_ACTION_PTR)(char *);
-
 /* channel data */
 typedef struct {
 	int 		time_on; 	// accumulated minutes of on time for channel
@@ -34,6 +20,35 @@ typedef	struct {
 	    int         minor_revision;
 	    CCR         c_data[_NUMBER_OF_CHANNELS];
 	} SYS_DAT;
+
+/* cmd_fsm control block */
+typedef struct {
+	int				state;
+	int 			p_state;
+	char 			token[_MAX_TOKEN_SIZE];
+	int				token_type;
+	int				token_value;
+	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
+	uint32_t        sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE], *sch_ptr;
+	int             schlib[_MAX_SCHLIB_SCH][_SCHEDULE_SIZE];
+	char            schlib_name[_MAX_SCHLIB_SCH][_SCHEDULE_NAME_SIZE];
+	int             w_channel;                      //working channel number
+	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
+	int             w_schedule_number;
+	int             w_schedule[_SCHEDULE_SIZE];
+	int             w_minutes;
+	char            w_minutes_str[4];
+	int             w_hours;
+	char            w_hours_str[4];
+	int				w_srec_state;
+	SYS_DAT			*sdat_ptr;
+} CMD_FSM_CB;
+
+/* action routine definitions */
+typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
+typedef int (*CHAR_ACTION_PTR)(char *);
+
+
 
 
 /************************************************************************************/

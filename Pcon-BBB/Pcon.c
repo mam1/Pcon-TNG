@@ -23,8 +23,8 @@ int				trace_flag;							//control program trace
 // int 			exit_flag = false;					//exit man loop if TRUE
 int 			bbb;								//UART1 file descriptor
 SYS_DAT 		sdat;								//system data structure
+CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 
-CMD_FSM_CB  	cmd_fsm_cb;	//cmd_fsm control block
 
 
 char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
@@ -103,15 +103,16 @@ int main(void) {
 			save_channel_data(_SYSTEM_DATA_FILE,&sdat);
 			printf("  system data file updated\r\n");
 		}
-		// fflush(stdin);		//does not work
 		c = fgetc(stdin);	// get rid of trailing CR
 	}
 
+	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm controll block to allow acces to system data
+
 	/* initialize state machines */
-	work_buffer_ptr = work_buffer;    			//initialize work buffer pointer
+	work_buffer_ptr = work_buffer;  //initialize work buffer pointer
 	cmd_fsm_reset(&cmd_fsm_cb); 	//initialize the command processor fsm
 	char_fsm_reset();
-	char_state = 0;								//initialize the character fsm
+	char_state = 0;					//initialize the character fsm
 
 	/* set up unbuffered io */
 	fflush(stdout);

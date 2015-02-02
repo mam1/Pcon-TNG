@@ -45,22 +45,22 @@ extern char *c_mode[4];
 	char			trace_buf[128];
 #endif
 
-/* schedule stuff */
-int             sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE], *sch_ptr;
-int             schlib[_MAX_SCHLIB_SCH][_SCHEDULE_SIZE];
-char            schlib_name[_MAX_SCHLIB_SCH][_SCHEDULE_NAME_SIZE];
-int             w_schedule_name[_SCHEDULE_NAME_SIZE];
-int             w_schedule_number;
-int             w_schedule[_SCHEDULE_SIZE];
+// /* schedule stuff */
+// int             sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE], *sch_ptr;
+// int             schlib[_MAX_SCHLIB_SCH][_SCHEDULE_SIZE];
+// char            schlib_name[_MAX_SCHLIB_SCH][_SCHEDULE_NAME_SIZE];
+// int             w_schedule_name[_SCHEDULE_NAME_SIZE];
+// int             w_schedule_number;
+// int             w_schedule[_SCHEDULE_SIZE];
 
-/* channel data */
-int             w_channel;                      //working channel number
+// /* channel data */
+// int             w_channel;                      //working channel number
 
-/* working time */
-int             w_minutes;
-char            w_minutes_str[4];
-int             w_hours;
-char            w_hours_str[4];
+// /* working time */
+// int             w_minutes;
+// char            w_minutes_str[4];
+// int             w_hours;
+// char            w_hours_str[4];
 // uint8_t         c_state[_NUMBER_OF_CHANNELS];   //channel state array, 0 = off, 1 = on
 
 
@@ -187,16 +187,16 @@ int c_17(CMD_FSM_CB *); /* set off cycle time */
 int c_18(CMD_FSM_CB *); /* enter schedule mode */
 int c_19(CMD_FSM_CB *); /* set working schedule name */
 int c_20(CMD_FSM_CB *); /* set working schedule hour */
-int c_21(CMD_FSM_CB *); /* set schedule record to on */
-int c_22(CMD_FSM_CB *); /* set set schedule record to off */
-int c_23(CMD_FSM_CB *); /* delete schedule record */
-int c_24(CMD_FSM_CB *); /*  */
+int c_21(CMD_FSM_CB *); /* set working schedule minute */
+int c_22(CMD_FSM_CB *); /* set schedule record to on */
+int c_23(CMD_FSM_CB *); /* set set schedule record to off */
+int c_24(CMD_FSM_CB *); /* delete schedule record */
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21  */
-/*  0  INT      */  { c_4,  c_7, c_16, c_17,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0, c_20,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  { c_4,  c_7, c_16, c_17,  c_0,  c_0, c_20,  c_0,  c_0,  c_0,  c_0, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2  OTHER    */  { c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  3  OTHER    */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -208,10 +208,10 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  9  back     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 10  new      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  assign   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 13  zero     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 15  off      */  { c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_22,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 15  off      */  { c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 16  system   */  {c_14, c_14, c_14,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 17  status   */  { c_6,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 18  time     */  { c_0, c_11,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -294,43 +294,6 @@ void cmd_fsm_reset(CMD_FSM_CB *cb){
     return;
 }
 
-
-int update_sch(char *sch_ptr){
-    int             i;
-    int             cmd = _PING;
-    int             ret = '\0';
-    int             *size;
-    uint8_t         s[4];
-
-    size = (int *)&s[0];
-    *size = sizeof(sch);
-    printf("  sending ping <%u> to C3 \r\n",cmd);
-    s_wbyte(bbb,&cmd);
-    // printf("  ping <%u> sent\r\n",cmd);
-    s_rbyte(bbb,&ret);
-    // printf("<%u> returned from read\n", ret);
-    if(ret == _ACK){
-        printf("  BBB acknowledge received <%u>\n\r",ret);
-        printf("  send WRITE_CMD <%u> \r\n",WRITE_SCH);
-        cmd = WRITE_SCH;
-        s_wbyte(bbb,&cmd);
-        printf("  sending schedule size <%i>\n\r",*size);
-        for(i=0;i<4;i++){
-            s_wbyte(bbb,(int *)&s[i]);
-        }
-        // sch_ptr = &sch[0][0][0];
-        printf("  sending schedule to the C3\r\n");
-        for(i=0;i<*size;i++){
-            s_wbyte(bbb,(int *)sch_ptr++);
-        }
-        return 0;
-
-    }
-    printf("  BBB  received <%u>\n\r",ret);
-
-    return 1;
-}
-
 /**************** start command fsm action routines ******************/
 /* do nothing */
 int c_0(CMD_FSM_CB *cb)
@@ -381,7 +344,7 @@ int c_2(CMD_FSM_CB *cb)
     uint8_t         s[4];
     // int             s;
     size = (int *)&s[0];
-    *size = sizeof(sch);
+    *size = sizeof(cb->sch);
 	printf("  sending ping <%u> to C3 \r\n",cmd);
 	s_wbyte(bbb,&cmd);
     // printf("  ping <%u> sent\r\n",cmd);
@@ -389,8 +352,8 @@ int c_2(CMD_FSM_CB *cb)
     // printf("<%u> returned from read\n", ret);
     if(ret == _ACK){
         printf("  BBB acknowledge received <%u>\n\r",ret);
-        printf("  send WRITE_CMD <%u> \r\n",WRITE_SCH);
-        cmd = WRITE_SCH;
+        printf("  send WRITE_CMD <%u> \r\n",_WRITE_SCH);
+        cmd = _WRITE_SCH;
         s_wbyte(bbb,&cmd);
         printf("  sending schedule size <%i>\n\r",*size);
         for(i=0;i<4;i++){
@@ -401,12 +364,12 @@ int c_2(CMD_FSM_CB *cb)
         for(i=0;i<_DAYS_PER_WEEK;i++)
             for(ii=0;ii<_NUMBER_OF_CHANNELS;ii++)
                 for(iii=0;iii<(_SCHEDULE_SIZE);iii++){
-                    sch[i][ii][iii] = iiii++;
+                    cb->sch[i][ii][iii] = iiii++;
                 }
 
-        sch_ptr = (int *)sch;
+        cb->sch_ptr = (uint32_t *)cb->sch;
         for(i=0;i<*size;i++){
-            s_wbyte(bbb,(int *)sch_ptr++);
+            s_wbyte(bbb,(int *)cb->sch_ptr++);
         }
         return 0;
 
@@ -424,9 +387,9 @@ int c_3(CMD_FSM_CB *cb)
 int c_4(CMD_FSM_CB *cb)
 {
     if (cb->token_value < _NUMBER_OF_CHANNELS){
-        w_channel = cb->token_value;
-        w_minutes = 0;
-        w_hours = 0;
+        cb->w_channel = cb->token_value;
+       cb->w_minutes = 0;
+       cb->w_hours = 0;
         strcpy(cb->prompt_buffer,"enter action for channel ");
         strcat(cb->prompt_buffer,cb->token);
         strcat(cb->prompt_buffer,"\n\r> ");
@@ -440,11 +403,11 @@ int c_5(CMD_FSM_CB *cb)
 {
     char        numstr[2];
 
-    strcpy(sdat.c_data[w_channel].name,dequote(cb->token));
+    strcpy(sdat.c_data[cb->w_channel].name,dequote(cb->token));
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     /* build prompt */
     strcpy(cb->prompt_buffer,"name set for channel ");
-    sprintf(numstr, "%d", w_channel);
+    sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
     strcat(cb->prompt_buffer,"\n\r> ");
     return 0;
@@ -488,12 +451,12 @@ int c_8(CMD_FSM_CB *cb)
 int c_9(CMD_FSM_CB *cb)
 {
     char        numstr[2];
-    sdat.c_data[w_channel].c_mode = 0;
-    sdat.c_data[w_channel].c_state = 1;
+    sdat.c_data[cb->w_channel].c_mode = 0;
+    sdat.c_data[cb->w_channel].c_state = 1;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     /* build prompt */
     strcpy(cb->prompt_buffer,"channel ");
-    sprintf(numstr, "%d", w_channel);
+    sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
     strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n> ");
     return 0;
@@ -502,12 +465,12 @@ int c_9(CMD_FSM_CB *cb)
 int c_10(CMD_FSM_CB *cb)
 {
     char        numstr[2];
-    sdat.c_data[w_channel].c_mode = 0;
-    sdat.c_data[w_channel].c_state = 0;
+    sdat.c_data[cb->w_channel].c_mode = 0;
+    sdat.c_data[cb->w_channel].c_state = 0;
     /* build prompt */
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");
-    sprintf(numstr, "%d", w_channel);
+    sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
     strcat(cb->prompt_buffer, " turned off and mode set to manual\r\n> ");
     return 0;
@@ -516,10 +479,10 @@ int c_10(CMD_FSM_CB *cb)
 int c_11(CMD_FSM_CB *cb)
 {
     char        numstr[2];
-    sdat.c_data[w_channel].c_mode = 1;
+    sdat.c_data[cb->w_channel].c_mode = 1;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");
-    sprintf(numstr, "%d", w_channel);
+    sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
     strcat(cb->prompt_buffer, " mode set to time\r\n> ");
     return 0;
@@ -528,10 +491,10 @@ int c_11(CMD_FSM_CB *cb)
 int c_12(CMD_FSM_CB *cb)
 {
     char        numstr[2];
-    sdat.c_data[w_channel].c_mode = 2;
+    sdat.c_data[cb->w_channel].c_mode = 2;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");
-    sprintf(numstr, "%d", w_channel);
+    sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
     strcat(cb->prompt_buffer, " mode set to time & sensor\r\n> ");
     return 0;
@@ -541,11 +504,11 @@ int c_13(CMD_FSM_CB *cb)
 {
     char        sbuf[20];
 
-    sdat.c_data[w_channel].c_mode = 3;
+    sdat.c_data[cb->w_channel].c_mode = 3;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
 
     strcpy(cb->prompt_buffer,"  setting cycle mode for channel ");
-    sprintf(sbuf, "%d", w_channel);
+    sprintf(sbuf, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,sbuf);
     strcat(cb->prompt_buffer,"\r\n  enter on seconds > ");
     return 0;
@@ -573,15 +536,15 @@ int c_16(CMD_FSM_CB *cb)
 {
     char            sbuf[20];  //max number of digits for a int
 
-    sdat.c_data[w_channel].on_sec = cb->token_value;
+    sdat.c_data[cb->w_channel].on_sec = cb->token_value;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
 
     /* build prompt */    
     strcpy(cb->prompt_buffer,"  setting cycle mode for channel ");
-    sprintf(sbuf, "%d", w_channel);
+    sprintf(sbuf, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,sbuf);
     strcat(cb->prompt_buffer," on ");
-    sprintf(sbuf, "%d", sdat.c_data[w_channel].on_sec);
+    sprintf(sbuf, "%d", sdat.c_data[cb->w_channel].on_sec);
     strcat(cb->prompt_buffer,sbuf);
     strcat(cb->prompt_buffer," seconds\r\n  enter off seconds > ");
 
@@ -592,18 +555,18 @@ int c_17(CMD_FSM_CB *cb)
 {
     char            sbuf[20];  //max number of digits for a int
 
-    sdat.c_data[w_channel].off_sec = cb->token_value;
+    sdat.c_data[cb->w_channel].off_sec = cb->token_value;
     save_channel_data(_SYSTEM_DATA_FILE,&sdat);
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"  channel ");
-    sprintf(sbuf, "%d", w_channel);
+    sprintf(sbuf, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,sbuf);
     strcat(cb->prompt_buffer," mode set to cycle ");
-    sprintf(sbuf, "%d", sdat.c_data[w_channel].on_sec);
+    sprintf(sbuf, "%d", sdat.c_data[cb->w_channel].on_sec);
     strcat(cb->prompt_buffer,sbuf);
     strcat(cb->prompt_buffer,":");
-    sprintf(sbuf, "%d", sdat.c_data[w_channel].off_sec);
+    sprintf(sbuf, "%d", sdat.c_data[cb->w_channel].off_sec);
     strcat(cb->prompt_buffer,sbuf);
     strcat(cb->prompt_buffer, " (on:off)\r\n\n> ");
     return 0;
@@ -617,10 +580,10 @@ int c_18(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"schedule maintenance\r\n");
     hit =0;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-        if(schlib[i][0] != '\0'){
+        if(cb->schlib[i][0] != '\0'){
             hit = 1;
-            strcat(cb->prompt_buffer,&schlib_name[i][0]);
-            printf("  %i - %s\r\n",i,&schlib_name[i][0]);
+            strcat(cb->prompt_buffer,&cb->schlib_name[i][0]);
+            printf("  %i - %s\r\n",i,&cb->schlib_name[i][0]);
         }
     }
     if(hit == 0) 
@@ -635,12 +598,12 @@ int c_18(CMD_FSM_CB *cb)
 /* set working schedule name */
 int c_19(CMD_FSM_CB *cb)
 {
-    strcpy((char *)w_schedule_name,cb->token);
-    dequote((char *)w_schedule_name);
+    strcpy((char *)cb->w_schedule_name,cb->token);
+    dequote((char *)cb->w_schedule_name);
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"  editing schedule template: ");
-    strcat(cb->prompt_buffer,(char *)w_schedule_name);
+    strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
     strcat(cb->prompt_buffer,"\r\n  > ");
     return 0;
 }
@@ -653,15 +616,15 @@ int c_20(CMD_FSM_CB *cb)
         return 1; 
     }
 
-    w_hours = cb->token_value;
-    strcpy(w_hours_str,cb->token);
+    cb->w_hours = cb->token_value;
+    strcpy(cb->w_hours_str,cb->token);
 
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"  editing schedule template: ");
-    strcat(cb->prompt_buffer,(char *)w_schedule_name);
+    strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
     strcat(cb->prompt_buffer, " ");
-    strcat(cb->prompt_buffer, w_hours_str);
+    strcat(cb->prompt_buffer, cb->w_hours_str);
     strcat(cb->prompt_buffer, ":\r\n");
     strcat(cb->prompt_buffer,"  enter minute > ");
     return 0;
@@ -675,16 +638,92 @@ int c_21(CMD_FSM_CB *cb)
         return 1; 
     }
 
-    w_minutes = cb->token_value;
-    strcpy(w_minutes_str,cb->token);
+    cb->w_minutes = cb->token_value;
+    strcpy(cb->w_minutes_str,cb->token);
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"  editing schedule template: ");
-    strcat(cb->prompt_buffer,(char *)w_schedule_name);
+    strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
     strcat(cb->prompt_buffer,"\r\n    enter action for ");
-    strcat(cb->prompt_buffer,w_hours_str);
+    strcat(cb->prompt_buffer,cb->w_hours_str);
     strcat(cb->prompt_buffer,":");
-    strcat(cb->prompt_buffer,w_minutes_str);
+    strcat(cb->prompt_buffer,cb->w_minutes_str);
+    strcat(cb->prompt_buffer," > ");
+    return 0;
+}
+
+/* set schedule record to on */
+int c_22(CMD_FSM_CB *cb)
+{
+    int             sch_recs;
+
+    cb->w_srec_state = 1;
+    add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours,cb->w_minutes), 1);
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"  editing schedule template: ");
+    strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
+    strcat(cb->prompt_buffer,"\r\n      ");
+    sch_recs = cb->w_schedule[0];
+    if(sch_recs == 0){
+        strcat(cb->prompt_buffer,"      no schedule records");
+    }
+    else{
+        for(sch_recs = cb->w_schedule[0];sch_recs > -1; sch_recs--){
+            strcat(cb->prompt_buffer,"      ");
+            strcat(cb->prompt_buffer,cb->w_hours_str);
+            strcat(cb->prompt_buffer,":");
+            strcat(cb->prompt_buffer,cb->w_minutes_str);
+            strcat(cb->prompt_buffer," ");
+            strcat(cb->prompt_buffer,onoff[cb->w_srec_state]);
+        }
+    }
+
+    strcat(cb->prompt_buffer,"\r\n    enter action for ");
+    strcat(cb->prompt_buffer,cb->w_hours_str);
+    strcat(cb->prompt_buffer,":");
+    strcat(cb->prompt_buffer,cb->w_minutes_str);
+    strcat(cb->prompt_buffer," > ");
+    return 0;
+}
+/* set set schedule record to off */
+int c_23(CMD_FSM_CB *cb)
+{
+    cb->w_srec_state = 0;
+    add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours,cb->w_minutes), 0);
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"  editing schedule template: ");
+    strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
+    strcat(cb->prompt_buffer,"\r\n      ");
+    sch_recs = cb->w_schedule[0];
+    if(sch_recs == 0){
+        strcat(cb->prompt_buffer,"      no schedule records\r\n");
+    }
+    else{
+        for(sch_recs = cb->w_schedule[0];sch_recs > -1; sch_recs--){
+            strcat(cb->prompt_buffer,"      ");
+            strcat(cb->prompt_buffer,cb->w_hours_str);
+            strcat(cb->prompt_buffer,":");
+            strcat(cb->prompt_buffer,cb->w_minutes_str);
+            strcat(cb->prompt_buffer," ");
+            strcat(cb->prompt_buffer,onoff[cb->w_srec_state]);
+            strcat(cb->prompt_buffer,"\r\n\n   enter time > "
+        }
+    return 0;
+}
+/* delete schedule record */
+int c_24(CMD_FSM_CB *cb)
+{
+    del_sch_rec(&cb->w_schedule[0], make_key(cb->w_hour,cb->w_minutes));
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"  editing schedule template: ");
+    strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
+    strcat(cb->prompt_buffer,"\r\n    enter action for ");
+    strcat(cb->prompt_buffer,cb->w_hours_str);
+    strcat(cb->prompt_buffer,":");
+    strcat(cb->prompt_buffer,cb->w_minutes_str);
     strcat(cb->prompt_buffer," > ");
     return 0;
 }

@@ -84,122 +84,128 @@
 //     return 0;
 //  }
 
-void clear_sch(uint32_t *sbuf)                  // fill schedule buffer with 0
- {
-    int         i;
-    for(i=0;i<_SCHEDULE_BUFFER;i++) *sbuf++ = '\0';
-    return;
- }
+// void clear_sch(uint32_t *sbuf)                  // fill schedule buffer with 0
+//  {
+//     int         i;
+//     for(i=0;i<_SCHEDULE_BUFFER;i++) *sbuf++ = '\0';
+//     return;
+//  }
 
-void ld_sch(uint32_t *sbuf)                     // load schedule buffer with 0 - _SCHEDULE_BUFFER
- {
-    int         i;
-    for(i=0;i<_SCHEDULE_BUFFER;i++) *sbuf++ = (uint32_t)i;
-    return;
- }
+// void ld_sch(uint32_t *sbuf)                     // load schedule buffer with 0 - _SCHEDULE_BUFFER
+//  {
+//     int         i;
+//     for(i=0;i<_SCHEDULE_BUFFER;i++) *sbuf++ = (uint32_t)i;
+//     return;
+//  }
 
- int init_sch(uint32_t *sbuf)
- {
-    FILE    *sfp;
+//  int init_sch(uint32_t *sbuf)
+//  {
+//     FILE    *sfp;
 
-    printf("schedule file name <%s>\n",fn_schedule);
+//     printf("schedule file name <%s>\n",fn_schedule);
 
-    sfp = fopen(fn_schedule,"r");
-    if(sfp==0)
-    {
-        printf("  schedule file <%s> not found, it will be created\n",fn_schedule);
-        sfp = fopen(fn_schedule,"w");
-        if(sfp)
-        {
-            printf("  schedule file <%s> created\n",fn_schedule);
-            return 0;
-        }
-        else
-        {
-            printf("*** error can't create shedule file <%s>\n",fn_schedule);
-            return 1;
-        }
-    }
-    printf("  schedle file <%s> found\n",fn_schedule);
-    fclose(sfp);
-    return 0;
- }
+//     sfp = fopen(fn_schedule,"r");
+//     if(sfp==0)
+//     {
+//         printf("  schedule file <%s> not found, it will be created\n",fn_schedule);
+//         sfp = fopen(fn_schedule,"w");
+//         if(sfp)
+//         {
+//             printf("  schedule file <%s> created\n",fn_schedule);
+//             return 0;
+//         }
+//         else
+//         {
+//             printf("*** error can't create shedule file <%s>\n",fn_schedule);
+//             return 1;
+//         }
+//     }
+//     printf("  schedle file <%s> found\n",fn_schedule);
+//     fclose(sfp);
+//     return 0;
+//  }
 
-void dump_schs(uint32_t *sbuf)
- {
-    int         i,ii;
-    ii = 0;
-    // printf("day %i\n",iii++);
-    // printf("\nchannel %i: ",ii);
-    for(i=0;i<_SCHEDULE_BUFFER;i++)
-    {
-        printf("%08x ",*sbuf++);
-        if(( ((i+1) % _BYTES_PER_CHANNEL)==0) &&(i>0))
-        {
-            ii++;
-            printf("\n");
-        }
-        if(ii == _NUMBER_OF_CHANNELS)
-        {
-                printf("\n");
-            ii = 0;   
-        } 
-        // if(  ((i%_BYTES_PER_DAY)==0)&&(i>0) ) printf("\n");
-    } 
-    if((i%80)==0) printf("\n");    
-    return;
- }
+// void dump_schs(uint32_t *sbuf)
+//  {
+//     int         i,ii;
+//     ii = 0;
+//     // printf("day %i\n",iii++);
+//     // printf("\nchannel %i: ",ii);
+//     for(i=0;i<_SCHEDULE_BUFFER;i++)
+//     {
+//         printf("%08x ",*sbuf++);
+//         if(( ((i+1) % _BYTES_PER_CHANNEL)==0) &&(i>0))
+//         {
+//             ii++;
+//             printf("\n");
+//         }
+//         if(ii == _NUMBER_OF_CHANNELS)
+//         {
+//                 printf("\n");
+//             ii = 0;   
+//         } 
+//         // if(  ((i%_BYTES_PER_DAY)==0)&&(i>0) ) printf("\n");
+//     } 
+//     if((i%80)==0) printf("\n");    
+//     return;
+//  }
 
-void dump_sch(uint32_t *sbuf)
- {
-    int         i;
+// void dump_sch(uint32_t *sbuf)
+//  {
+//     int         i;
 
-    printf("\n");
-    for(i=0;i<_MAX_SCHEDULE_RECS+1;i++)
-    {
-        printf("%08x ",*sbuf++);
+//     printf("\n");
+//     for(i=0;i<_MAX_SCHEDULE_RECS+1;i++)
+//     {
+//         printf("%08x ",*sbuf++);
 
-    } 
-    printf("\n");    
-    return;
- }
+//     } 
+//     printf("\n");    
+//     return;
+//  }
 
-uint32_t *get_schedule(uint32_t *sbuf,int d,int c) // return pointer to  a schedule
- {
-    SCH         *sch_ptr;   
-    DAY         *day_ptr;   
+// uint32_t *get_schedule(uint32_t *sbuf,int d,int c) // return pointer to  a schedule
+//  {
+//     SCH         *sch_ptr;   
+//     DAY         *day_ptr;   
 
-    day_ptr = (DAY *)sbuf;      //set day pointer to the start of the schedule buffer
-    day_ptr += d-1;             //move day pointer to the start of the requested day
-    sch_ptr = (SCH *)day_ptr;   //set channel pointer to the start of the requested day
-    sch_ptr += c;               //move channel pointer to the requested channel
+//     day_ptr = (DAY *)sbuf;      //set day pointer to the start of the schedule buffer
+//     day_ptr += d-1;             //move day pointer to the start of the requested day
+//     sch_ptr = (SCH *)day_ptr;   //set channel pointer to the start of the requested day
+//     sch_ptr += c;               //move channel pointer to the requested channel
 
-    return (uint32_t *)sch_ptr;
- }
+//     return (uint32_t *)sch_ptr;
+//  }
 
-/* display all schedules records (schedule) for a (channel,day) */
-void dspl_sch(uint32_t *sbuf, int d, int c)
-    {
-        int                         i,rsize;
-        volatile uint32_t           *r;
+//  display all schedules records (schedule) for a (channel,day) 
+// void dspl_sch(uint32_t *sbuf, int d, int c)
+//     {
+//         int                         i,rsize;
+//         volatile uint32_t           *r;
 
-        r = get_schedule(sbuf,d,c); 
-        if(*r==0)
-        {
-            printf("    no schedule records\n");
-            return;   
-        }
+//         r = get_schedule(sbuf,d,c); 
+//         if(*r==0)
+//         {
+//             printf("    no schedule records\n");
+//             return;   
+//         }
 
-        rsize = *r++;
+//         rsize = *r++;
       
-        for(i=0;i<rsize;i++)
-        {
-            printf("    %02i:%02i - %s\n",get_key(*r)/60,get_key(*r)%60,onoff[get_s(*r)]);
-            r++;
-        }
-            // printf("\n\n");    
-        return;
-    }
+//         for(i=0;i<rsize;i++)
+//         {
+//             printf("    %02i:%02i - %s\n",get_key(*r)/60,get_key(*r)%60,onoff[get_s(*r)]);
+//             r++;
+//         }
+//             // printf("\n\n");    
+//         return;
+//     }
+
+ /* create key */
+int make_key(int hour, int minute){
+
+    return (hour*60) + minute;
+}
 
 /* operate on a single record */
 int get_key(uint32_t b)                         // extract key from a schedule record 
@@ -328,66 +334,66 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return NULL;
  }
 
- void disp_all_schedules(uint32_t *buffer)
- {
-    uint32_t        *rec_ptr;
-    int             i;
-    int             day,channel;
-    char            time_state[9];
-    int             rcnt[_DAYS_PER_WEEK],mrcnt;
+ // void disp_all_schedules(uint32_t *buffer)
+ // {
+ //    uint32_t        *rec_ptr;
+ //    int             i;
+ //    int             day,channel;
+ //    char            time_state[9];
+ //    int             rcnt[_DAYS_PER_WEEK],mrcnt;
 
 
-    // day_ptr = buffer;
-    // sch_ptr = buffer;
-    // rec_ptr = &buffer[0];
-    // frec_ptr = rec_ptr;
+ //    // day_ptr = buffer;
+ //    // sch_ptr = buffer;
+ //    // rec_ptr = &buffer[0];
+ //    // frec_ptr = rec_ptr;
 
 
-    for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
-    {
-    /* print channel header */        
-        printf("channel %i <%s> control %s, %s",channel,dio_cb.dio.cca[channel].name,con_mode[dio_cb.dio.cca[channel].c_mode],onoff[dio_cb.dio.cca[channel].state]);
-        // printf("%s",onoff[dio_cb.dio.cca[channel].state]);
-        printf(" as of %i:%02i, %s\n           ",
-        rtc_cb.rtc.td_buffer.hour,
-        rtc_cb.rtc.td_buffer.min,
-        day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
+ //    for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
+ //    {
+ //    /* print channel header */        
+ //        printf("channel %i <%s> control %s, %s",channel,dio_cb.dio.cca[channel].name,con_mode[dio_cb.dio.cca[channel].c_mode],onoff[dio_cb.dio.cca[channel].state]);
+ //        // printf("%s",onoff[dio_cb.dio.cca[channel].state]);
+ //        printf(" as of %i:%02i, %s\n           ",
+ //        rtc_cb.rtc.td_buffer.hour,
+ //        rtc_cb.rtc.td_buffer.min,
+ //        day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
 
 
-        for (day=0;day<_DAYS_PER_WEEK;day++)
-            printf("%s         ",day_names_short[day]);
-        printf("\n");
-        mrcnt = 0;
-        for(day=0;day<_DAYS_PER_WEEK;day++)
-        {
-            rcnt[day] = (int)*get_schedule(bbb,day+1,channel);
-            // printf("rcnt[%i] = %i\n",day,rcnt[day]);
-            if(rcnt[day] > mrcnt)
-                mrcnt = rcnt[day];        //max number of records for the week
-        }
-        // printf("mrcnt %i\n",mrcnt);
-        for(i=0;i<mrcnt;i++)
-        {
-            printf("         ");
-            for(day=0;day<_DAYS_PER_WEEK;day++)
-            {
-                rec_ptr = get_schedule(bbb,day+1,channel);
-                rec_ptr += (i+1);
-                // printf("XXXXXX\n");
-                if(*get_schedule(bbb,day+1,channel) <= i)
-                    strcpy(time_state,"         ");
-                else
-                    sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);
+ //        for (day=0;day<_DAYS_PER_WEEK;day++)
+ //            printf("%s         ",day_names_short[day]);
+ //        printf("\n");
+ //        mrcnt = 0;
+ //        for(day=0;day<_DAYS_PER_WEEK;day++)
+ //        {
+ //            rcnt[day] = (int)*get_schedule(bbb,day+1,channel);
+ //            // printf("rcnt[%i] = %i\n",day,rcnt[day]);
+ //            if(rcnt[day] > mrcnt)
+ //                mrcnt = rcnt[day];        //max number of records for the week
+ //        }
+ //        // printf("mrcnt %i\n",mrcnt);
+ //        for(i=0;i<mrcnt;i++)
+ //        {
+ //            printf("         ");
+ //            for(day=0;day<_DAYS_PER_WEEK;day++)
+ //            {
+ //                rec_ptr = get_schedule(bbb,day+1,channel);
+ //                rec_ptr += (i+1);
+ //                // printf("XXXXXX\n");
+ //                if(*get_schedule(bbb,day+1,channel) <= i)
+ //                    strcpy(time_state,"         ");
+ //                else
+ //                    sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);
 
-                printf("%s   ",time_state);
+ //                printf("%s   ",time_state);
 
-            }
-            printf("\n");
-        }
-        printf("\n");
-     } 
+ //            }
+ //            printf("\n");
+ //        }
+ //        printf("\n");
+ //     } 
 
-    return;  
- }
+ //    return;  
+ // }
 
 
