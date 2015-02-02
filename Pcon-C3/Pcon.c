@@ -62,12 +62,12 @@ int main(int argc, char *argv[]){
         C3byte = fdserial_rxChar(C3port);           //grab a byte
         printf("got a <%u> from the bone\n",C3byte);
         switch(C3byte){
-            case PING:
+            case _PING:
                 out_byte = ACK;
                 printf("sending ACK <%u>\n",out_byte);
                 fdserial_txChar(C3port, out_byte); 
                 break;
-            case WRITE_SCH:
+            case _WRITE_SCH:
                 for(i=0;i<4;i++){
                     while (fdserial_rxReady(C3port) == 0);      //wait for something to show up in the buffer
                     s[i] = fdserial_rxChar(C3port);           //grab a byte 
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]){
                 }
                 break;
 
-            case PUSH_STATS:
+            case _PUSH_STATS:
             default:
                 printf("unknown command received from the bone <%u>\n",C3byte);
         }

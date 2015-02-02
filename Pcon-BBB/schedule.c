@@ -38,51 +38,51 @@
  uint32_t       state_mask = B32(10000000,00000000,00000000,00000000);
  uint32_t       key_mask   = B32(01111111,11111111,11111111,11111111);
  uint32_t       bbb[_SCHEDULE_BUFFER];
- char fn_schedule[_SCHEDULE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_SCHEDULE_SUFIX;
+ // char fn_schedule[_SCHEDULE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_SCHEDULE_SUFIX;
 /*******************************  functions ******************************/
-int read_sch(uint32_t *sbuf)                    // read data from SD card load buffer 
- {
-    FILE    *sfp;
-    int     rtn;
+// int read_sch(uint32_t *sbuf)                    // read data from SD card load buffer 
+//  {
+//     FILE    *sfp;
+//     int     rtn;
 
-    sfp = fopen(fn_schedule,"r");
-    // printf("fopen returned <%x> trying to open %s reading\n",(uint32_t)sfp,fn_schedule);
+//     sfp = fopen(fn_schedule,"r");
+//     // printf("fopen returned <%x> trying to open %s reading\n",(uint32_t)sfp,fn_schedule);
 
-    if(sfp)
-    {
-        rtn = fread(bbb,_SCHEDULE_BUFFER*4,1,sfp);
-        // if(rtn!=1)
-        // {
-            // printf("*** error reading schedula data\n");
-            // return 1;
-        // }
-        printf("schedule data loaded into buffer from SD card\n");;
-        fclose(sfp);
-    }
-    return 0;
- }
+//     if(sfp)
+//     {
+//         rtn = fread(bbb,_SCHEDULE_BUFFER*4,1,sfp);
+//         // if(rtn!=1)
+//         // {
+//             // printf("*** error reading schedula data\n");
+//             // return 1;
+//         // }
+//         printf("schedule data loaded into buffer from SD card\n");;
+//         fclose(sfp);
+//     }
+//     return 0;
+//  }
 
-int write_sch(uint32_t *sbuf)                   // write data from buffer to SD card 
- {
-    FILE    *sfp;
-    int     rtn;
+// int write_sch(uint32_t *sbuf)                   // write data from buffer to SD card 
+//  {
+//     FILE    *sfp;
+//     int     rtn;
 
-    sfp = fopen(fn_schedule,"w");
-    printf("fopen returned <%x> trying to open %s for writing\n",(uint32_t)sfp,fn_schedule);
-    if(sfp)
-    {
-        rtn = fwrite(bbb,_SCHEDULE_BUFFER*4,1,sfp);
-        if(rtn!=1)
-        {
-            printf("*** error writting schedula data\n");
-            return 1;
-        }
-        printf("fwrite returned <%i> writing %i bytes from buffer at $%x\n",rtn,_SCHEDULE_BUFFER,(uint32_t)bbb);
-        fclose(sfp);   
-    }
+//     sfp = fopen(fn_schedule,"w");
+//     printf("fopen returned <%x> trying to open %s for writing\n",(uint32_t)sfp,fn_schedule);
+//     if(sfp)
+//     {
+//         rtn = fwrite(bbb,_SCHEDULE_BUFFER*4,1,sfp);
+//         if(rtn!=1)
+//         {
+//             printf("*** error writting schedula data\n");
+//             return 1;
+//         }
+//         printf("fwrite returned <%i> writing %i bytes from buffer at $%x\n",rtn,_SCHEDULE_BUFFER,(uint32_t)bbb);
+//         fclose(sfp);   
+//     }
 
-    return 0;
- }
+//     return 0;
+//  }
 
 void clear_sch(uint32_t *sbuf)                  // fill schedule buffer with 0
  {

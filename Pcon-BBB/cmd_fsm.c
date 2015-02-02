@@ -297,7 +297,7 @@ void cmd_fsm_reset(CMD_FSM_CB *cb){
 
 int update_sch(char *sch_ptr){
     int             i;
-    int             cmd = PING;
+    int             cmd = _PING;
     int             ret = '\0';
     int             *size;
     uint8_t         s[4];
@@ -309,7 +309,7 @@ int update_sch(char *sch_ptr){
     // printf("  ping <%u> sent\r\n",cmd);
     s_rbyte(bbb,&ret);
     // printf("<%u> returned from read\n", ret);
-    if(ret == ACK){
+    if(ret == _ACK){
         printf("  BBB acknowledge received <%u>\n\r",ret);
         printf("  send WRITE_CMD <%u> \r\n",WRITE_SCH);
         cmd = WRITE_SCH;
@@ -318,7 +318,7 @@ int update_sch(char *sch_ptr){
         for(i=0;i<4;i++){
             s_wbyte(bbb,(int *)&s[i]);
         }
-        sch_ptr = &sch[0][0][0];
+        // sch_ptr = &sch[0][0][0];
         printf("  sending schedule to the C3\r\n");
         for(i=0;i<*size;i++){
             s_wbyte(bbb,(int *)sch_ptr++);
@@ -375,7 +375,7 @@ int c_1(CMD_FSM_CB *cb)
 int c_2(CMD_FSM_CB *cb)
 {
     int             i, ii, iii, iiii;
-	int             cmd = PING;
+	int             cmd = _PING;
     int             ret = '\0';
     int             *size;
     uint8_t         s[4];
@@ -387,7 +387,7 @@ int c_2(CMD_FSM_CB *cb)
     // printf("  ping <%u> sent\r\n",cmd);
     s_rbyte(bbb,&ret);
     // printf("<%u> returned from read\n", ret);
-    if(ret == ACK){
+    if(ret == _ACK){
         printf("  BBB acknowledge received <%u>\n\r",ret);
         printf("  send WRITE_CMD <%u> \r\n",WRITE_SCH);
         cmd = WRITE_SCH;
@@ -404,7 +404,7 @@ int c_2(CMD_FSM_CB *cb)
                     sch[i][ii][iii] = iiii++;
                 }
 
-        sch_ptr = &sch[0][0][0];
+        sch_ptr = (int *)sch;
         for(i=0;i<*size;i++){
             s_wbyte(bbb,(int *)sch_ptr++);
         }
@@ -635,12 +635,12 @@ int c_18(CMD_FSM_CB *cb)
 /* set working schedule name */
 int c_19(CMD_FSM_CB *cb)
 {
-    strcpy(w_schedule_name,cb->token);
-    dequote(w_schedule_name);
+    strcpy((char *)w_schedule_name,cb->token);
+    dequote((char *)w_schedule_name);
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"  editing schedule template: ");
-    strcat(cb->prompt_buffer,w_schedule_name);
+    strcat(cb->prompt_buffer,(char *)w_schedule_name);
     strcat(cb->prompt_buffer,"\r\n  > ");
     return 0;
 }
@@ -659,7 +659,7 @@ int c_20(CMD_FSM_CB *cb)
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"  editing schedule template: ");
-    strcat(cb->prompt_buffer,w_schedule_name);
+    strcat(cb->prompt_buffer,(char *)w_schedule_name);
     strcat(cb->prompt_buffer, " ");
     strcat(cb->prompt_buffer, w_hours_str);
     strcat(cb->prompt_buffer, ":\r\n");
@@ -680,7 +680,7 @@ int c_21(CMD_FSM_CB *cb)
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"  editing schedule template: ");
-    strcat(cb->prompt_buffer,w_schedule_name);
+    strcat(cb->prompt_buffer,(char *)w_schedule_name);
     strcat(cb->prompt_buffer,"\r\n    enter action for ");
     strcat(cb->prompt_buffer,w_hours_str);
     strcat(cb->prompt_buffer,":");
