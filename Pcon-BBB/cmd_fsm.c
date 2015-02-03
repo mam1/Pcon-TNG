@@ -143,14 +143,14 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  5     q     */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  6  ping     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  7  clock    */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/*  8  done     */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/*  9  back     */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  8  done     */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  9  back     */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 10  new      */  { 0,  1,  2,  3,  5,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 11  assign   */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 12  delete   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 13  zero     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 14  on       */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 15  off      */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 14  on       */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 15  off      */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 16  system   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 17  status   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 18  time     */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -588,7 +588,7 @@ int c_18(CMD_FSM_CB *cb)
     }
     if(hit == 0) 
         strcat(cb->prompt_buffer,
-            "  no schedule templates defined\r\n  enter name for new template\r\n  > "); 
+            "  no schedule templates defined\r\n  enter name, in quotes, for new template\r\n  > "); 
     else
         strcat(cb->prompt_buffer,
             "  enter template number to edit or name of new template\r\n  > "); 
@@ -602,9 +602,9 @@ int c_19(CMD_FSM_CB *cb)
     dequote((char *)cb->w_schedule_name);
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"  editing schedule template: ");
+    strcpy(cb->prompt_buffer,"editing schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
-    strcat(cb->prompt_buffer,"\r\n  > ");
+    strcat(cb->prompt_buffer,"\r\n  enter time (HH,MM) > ");
     return 0;
 }
 
@@ -619,9 +619,8 @@ int c_20(CMD_FSM_CB *cb)
     cb->w_hours = cb->token_value;
     strcpy(cb->w_hours_str,cb->token);
 
-
     /* build prompt */
-    strcpy(cb->prompt_buffer,"  editing schedule template: ");
+    strcpy(cb->prompt_buffer,"editing schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
     strcat(cb->prompt_buffer, " ");
     strcat(cb->prompt_buffer, cb->w_hours_str);
@@ -642,9 +641,9 @@ int c_21(CMD_FSM_CB *cb)
     strcpy(cb->w_minutes_str,cb->token);
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"  editing schedule template: ");
+    strcpy(cb->prompt_buffer,"editing schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
-    strcat(cb->prompt_buffer,"\r\n    enter action for ");
+    strcat(cb->prompt_buffer,"\r\n  enter action for ");
     strcat(cb->prompt_buffer,cb->w_hours_str);
     strcat(cb->prompt_buffer,":");
     strcat(cb->prompt_buffer,cb->w_minutes_str);
@@ -655,27 +654,28 @@ int c_21(CMD_FSM_CB *cb)
 /* set schedule record to on */
 int c_22(CMD_FSM_CB *cb)
 {
-    int             sch_recs;
+    int             sch_recs, key, h, m;
 
     cb->w_srec_state = 1;       //set working state to on
     if(add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours,cb->w_minutes), 1)) // add/change record
         return -1;
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"  editing schedule template: ");
+    strcpy(cb->prompt_buffer,"editing schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
-    strcat(cb->prompt_buffer,"\r\n      ");
+    strcat(cb->prompt_buffer,"\r\n");
     sch_recs = cb->w_schedule[0];
+    printf("*** schedule records %i\r\n",(int)sch_recs);
     if(sch_recs == 0)
         strcat(cb->prompt_buffer,"      no schedule records");
     else
-        for(sch_recs = cb->w_schedule[0];sch_recs > -1; sch_recs--){
-            strcat(cb->prompt_buffer,"      ");
-            strcat(cb->prompt_buffer,cb->w_hours_str);
-            strcat(cb->prompt_buffer,":");
-            strcat(cb->prompt_buffer,cb->w_minutes_str);
-            strcat(cb->prompt_buffer," ");
-            strcat(cb->prompt_buffer,onoff[cb->w_srec_state]);
+        for(sch_recs=1;sch_recs < cb->w_schedule[0];sch_recs++){
+            key = get_key(cb->w_schedule[sch_recs]);
+            h = key / 60;
+            m = key % 60;
+            sprintf(&cb->prompt_buffer[strlen(cb->prompt_buffer)],"      %i:%i ",h,m);
+            strcat(cb->prompt_buffer,onoff[get_s(cb->w_schedule[sch_recs])]);
+            strcat(cb->prompt_buffer,"\n\r");
         }
 
     strcat(cb->prompt_buffer,"\r\n    enter action for ");
