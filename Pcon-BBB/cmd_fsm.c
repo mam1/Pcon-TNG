@@ -286,12 +286,35 @@ char *dequote(char *s){
     *p2 = '\0';
     return s;
 }
+
 /* reset cmd_fsm to initial state */
 void cmd_fsm_reset(CMD_FSM_CB *cb){
     memset(&cb->prompt_buffer,'\0',sizeof(cb->prompt_buffer));
     strcpy(cb->prompt_buffer,"\n\r> ");
     cb->state = 0;
     return;
+}
+
+/* load buffer with a list of all records in a schedule */
+char *sch2text(uint32_t *sch,char *buf){
+    int         sch_recs,  i,key, h, m;
+    char        record_list[50];
+
+    /*build list of schedule records for prompt */
+    *buf = '\0';
+    sch_recs = *sch;
+    if(sch_recs == 0)
+        strcat(buf,"                              no schedule records");
+    else
+        for(i=1;i < sch_recs+1;i++){
+            key = get_key(sch[i]);
+            h = key / 60;
+            m = key % 60;
+            sprintf(&buf[strlen(buf)],"                              %2i:%02i ",h,m);
+            strcat(buf,onoff[get_s(sch[i])]);
+            strcat(buf,"\n\r");
+        }
+    return buf;
 }
 
 /**************** start command fsm action routines ******************/
@@ -632,17 +655,22 @@ int c_20(CMD_FSM_CB *cb)
 /* set working schedule minute */
 int c_21(CMD_FSM_CB *cb)
 {
+    char            temp[200];
+
+    /* check value */
     if((cb->token_value > 59)|| (cb->token_value < 0)){
         strcpy(cb->prompt_buffer,"  minute must be 0 - 59\r\n  enter minute > ");  
         return 1; 
     }
-
+    /* update schedule record */
     cb->w_minutes = cb->token_value;
     strcpy(cb->w_minutes_str,cb->token);
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"editing schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
+    strcat(cb->prompt_buffer,"\r\n");
+    strcat(cb->prompt_buffer,sch2text(cb->w_schedule,temp));
     strcat(cb->prompt_buffer,"\r\n  enter action for ");
     strcat(cb->prompt_buffer,cb->w_hours_str);
     strcat(cb->prompt_buffer,":");
@@ -654,8 +682,8 @@ int c_21(CMD_FSM_CB *cb)
 /* set schedule record to on */
 int c_22(CMD_FSM_CB *cb)
 {
-    int             sch_recs, key, h, m;
-
+    char            temp[200];
+    /*set the state of the schedule record to on */
     cb->w_srec_state = 1;       //set working state to on
     if(add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours,cb->w_minutes), 1)) // add/change record
         return -1;
@@ -664,25 +692,12 @@ int c_22(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"editing schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
     strcat(cb->prompt_buffer,"\r\n");
-    sch_recs = cb->w_schedule[0];
-    printf("*** schedule records %i\r\n",(int)sch_recs);
-    if(sch_recs == 0)
-        strcat(cb->prompt_buffer,"      no schedule records");
-    else
-        for(sch_recs=1;sch_recs < cb->w_schedule[0];sch_recs++){
-            key = get_key(cb->w_schedule[sch_recs]);
-            h = key / 60;
-            m = key % 60;
-            sprintf(&cb->prompt_buffer[strlen(cb->prompt_buffer)],"      %i:%i ",h,m);
-            strcat(cb->prompt_buffer,onoff[get_s(cb->w_schedule[sch_recs])]);
-            strcat(cb->prompt_buffer,"\n\r");
-        }
-
-    strcat(cb->prompt_buffer,"\r\n    enter action for ");
-    strcat(cb->prompt_buffer,cb->w_hours_str);
-    strcat(cb->prompt_buffer,":");
-    strcat(cb->prompt_buffer,cb->w_minutes_str);
-    strcat(cb->prompt_buffer," > ");
+    strcat(cb->prompt_buffer,sch2text(cb->w_schedule,temp));
+    // strcat(cb->prompt_buffer,"\r\n  enter action for ");
+    // strcat(cb->prompt_buffer,cb->w_hours_str);
+    // strcat(cb->prompt_buffer,":");
+    // strcat(cb->prompt_buffer,cb->w_minutes_str);
+    strcat(cb->prompt_buffer,"\r\n  enter time (HH,MM) > ");
     return 0;
 }
 
@@ -690,43 +705,42 @@ int c_22(CMD_FSM_CB *cb)
 int c_23(CMD_FSM_CB *cb)
 {
     int                 sch_recs;
+    char            temp[200];
 
     cb->w_srec_state = 0;       // set working state to off
     add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours,cb->w_minutes), 0);
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"  editing schedule template: ");
+    strcpy(cb->prompt_buffer,"editing schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
-    strcat(cb->prompt_buffer,"\r\n      ");
-    sch_recs = cb->w_schedule[0];
-    if(sch_recs == 0)
-        strcat(cb->prompt_buffer,"      no schedule records\r\n");
-    else
-        for(sch_recs = cb->w_schedule[0];sch_recs > -1; sch_recs--){
-            strcat(cb->prompt_buffer,"      ");
-            strcat(cb->prompt_buffer,cb->w_hours_str);
-            strcat(cb->prompt_buffer,":");
-            strcat(cb->prompt_buffer,cb->w_minutes_str);
-            strcat(cb->prompt_buffer," ");
-            strcat(cb->prompt_buffer,onoff[cb->w_srec_state]);
-            strcat(cb->prompt_buffer,"\r\n\n   enter time > ");
-        }
+    strcat(cb->prompt_buffer,"\r\n");
+    strcat(cb->prompt_buffer,sch2text(cb->w_schedule,temp));
+    // strcat(cb->prompt_buffer,"\r\n  enter action for ");
+    // strcat(cb->prompt_buffer,cb->w_hours_str);
+    // strcat(cb->prompt_buffer,":");
+    // strcat(cb->prompt_buffer,cb->w_minutes_str);
+    strcat(cb->prompt_buffer,"\r\n  enter time (HH,MM) > ");
     return 0;
 }
 
 /* delete schedule record */
 int c_24(CMD_FSM_CB *cb)
 {
+
+    char            temp[200];
+
     del_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours,cb->w_minutes));
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"  editing schedule template: ");
+    strcpy(cb->prompt_buffer,"editing schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
-    strcat(cb->prompt_buffer,"\r\n    enter action for ");
-    strcat(cb->prompt_buffer,cb->w_hours_str);
-    strcat(cb->prompt_buffer,":");
-    strcat(cb->prompt_buffer,cb->w_minutes_str);
-    strcat(cb->prompt_buffer," > ");
+    strcat(cb->prompt_buffer,"\r\n");
+    strcat(cb->prompt_buffer,sch2text(cb->w_schedule,temp));
+    // strcat(cb->prompt_buffer,"\r\n  enter action for ");
+    // strcat(cb->prompt_buffer,cb->w_hours_str);
+    // strcat(cb->prompt_buffer,":");
+    // strcat(cb->prompt_buffer,cb->w_minutes_str);
+    strcat(cb->prompt_buffer,"\r\n  enter time (HH,MM) > ");
     return 0;
 }
 
