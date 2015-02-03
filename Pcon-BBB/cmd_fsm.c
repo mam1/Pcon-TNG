@@ -604,7 +604,8 @@ int c_18(CMD_FSM_CB *cb)
     /* build prompt */
     strcpy(cb->prompt_buffer,"schedule maintenance\r\n");
     hit =0;
-    for(i=0;i<_NUMBER_OF_CHANNELS;i++){
+    for(i=0;i<_MAX_SCHLIB_SCH;i++){
+        printf("template %i name <%s>\n\r",i, cb->schlib_name[i][0]);
         if(cb->schlib[i][0] != '\0'){
             hit = 1;
             strcat(cb->prompt_buffer,&cb->schlib_name[i][0]);
@@ -741,15 +742,14 @@ int c_24(CMD_FSM_CB *cb)
 /* save schedule template */
 int c_25(CMD_FSM_CB *cb)
 {
-
-
-
-   strcpy(cb->schlib_name[cb->schlib_index++], cb->w_schedule_name);
+    printf("$$$$$$$$ index = %i name = <%s> $$$$$$$$$$$\r\n",cb->schlib_index++,cb->w_schedule_name);
+    strcpy(&(cb->schlib_name[0][cb->schlib_index++]), cb->w_schedule_name);
+    printf("X %s X",cb->schlib_name[0][--cb->schlib_index]);
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"saving schedule template: ");
+    strcpy(cb->prompt_buffer,"schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
-    strcat(cb->prompt_buffer,"\r\n");
+    strcat(cb->prompt_buffer," is saved\r\n");
     c_18(cb);
     return 0;
 }

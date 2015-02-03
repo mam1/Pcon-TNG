@@ -31,7 +31,7 @@ typedef struct {
 	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
 	uint32_t        sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE], *sch_ptr;
 	int             schlib[_MAX_SCHLIB_SCH][_SCHEDULE_SIZE], schlib_index;
-	char            schlib_name[_MAX_SCHLIB_SCH][_SCHEDULE_NAME_SIZE];
+	char            schlib_name[_SCHEDULE_NAME_SIZE][_MAX_SCHLIB_SCH];
 	int             w_channel;                      //working channel number
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
 	int             w_schedule_number;
