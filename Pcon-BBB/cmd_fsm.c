@@ -147,7 +147,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  9  back     */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 10  new      */  { 0,  1,  2,  3,  5,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 11  assign   */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 12  delete   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 12  delete   */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 13  zero     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 14  on       */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 15  off      */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -191,6 +191,8 @@ int c_21(CMD_FSM_CB *); /* set working schedule minute */
 int c_22(CMD_FSM_CB *); /* set schedule record to on */
 int c_23(CMD_FSM_CB *); /* set set schedule record to off */
 int c_24(CMD_FSM_CB *); /* delete schedule record */
+int c_25(CMD_FSM_CB *); /* save schedule template */
+int c_26(CMD_FSM_CB *); /* delete schedule template */
 
 /* cmd processor action table - initialized with fsm functions */
 
@@ -204,11 +206,11 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  5  quit     */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  6  ping     */  { c_2,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  7  clock    */  { c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  8  done     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  8  done     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  9  back     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 10  new      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  assign   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_18,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 13  zero     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_22,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 15  off      */  { c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -219,7 +221,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 20  cycle    */  { c_0, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 21  startup  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 22  reboot   */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 23  save     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 23  save     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_25,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 24  schedule */  {c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 25  channel  */  { c_8,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 26  load     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -715,10 +717,6 @@ int c_23(CMD_FSM_CB *cb)
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
     strcat(cb->prompt_buffer,"\r\n");
     strcat(cb->prompt_buffer,sch2text(cb->w_schedule,temp));
-    // strcat(cb->prompt_buffer,"\r\n  enter action for ");
-    // strcat(cb->prompt_buffer,cb->w_hours_str);
-    // strcat(cb->prompt_buffer,":");
-    // strcat(cb->prompt_buffer,cb->w_minutes_str);
     strcat(cb->prompt_buffer,"\r\n  enter time (HH,MM) > ");
     return 0;
 }
@@ -736,6 +734,39 @@ int c_24(CMD_FSM_CB *cb)
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
     strcat(cb->prompt_buffer,"\r\n");
     strcat(cb->prompt_buffer,sch2text(cb->w_schedule,temp));
+    strcat(cb->prompt_buffer,"\r\n  enter time (HH,MM) > ");
+    return 0;
+}
+
+/* save schedule template */
+int c_25(CMD_FSM_CB *cb)
+{
+
+
+
+   strcpy(cb->schlib_name[cb->schlib_index++], cb->w_schedule_name);
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"saving schedule template: ");
+    strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
+    strcat(cb->prompt_buffer,"\r\n");
+    c_18(cb);
+    return 0;
+}
+
+/* delete schedule template */
+int c_26(CMD_FSM_CB *cb)
+{
+
+    char            temp[200];
+
+
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"editing schedule template: ");
+    strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
+    strcat(cb->prompt_buffer,"\r\n");
+    strcat(cb->prompt_buffer,sch2text(cb->w_schedule,temp));
     // strcat(cb->prompt_buffer,"\r\n  enter action for ");
     // strcat(cb->prompt_buffer,cb->w_hours_str);
     // strcat(cb->prompt_buffer,":");
@@ -743,7 +774,6 @@ int c_24(CMD_FSM_CB *cb)
     strcat(cb->prompt_buffer,"\r\n  enter time (HH,MM) > ");
     return 0;
 }
-
 /**************** end command fsm action routines ******************/
 
 /* cycle state machine */
