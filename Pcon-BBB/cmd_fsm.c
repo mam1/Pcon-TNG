@@ -300,7 +300,6 @@ void cmd_fsm_reset(CMD_FSM_CB *cb){
 /* load buffer with a list of all records in a schedule */
 char *sch2text(uint32_t *sch,char *buf){
     int         sch_recs,  i,key, h, m;
-    char        record_list[50];
 
     /*build list of schedule records for prompt */
     *buf = '\0';
@@ -603,13 +602,12 @@ int c_18(CMD_FSM_CB *cb)
     int             i,hit;
     /* build prompt */
     strcpy(cb->prompt_buffer,"schedule maintenance\r\n");
-    hit =0;
+    hit =0 ;
     for(i=0;i<_MAX_SCHLIB_SCH;i++){
-        printf("template %i name <%s>\n\r",i, cb->schlib_name[i][0]);
-        if(cb->schlib[i][0] != '\0'){
+        if(cb->sdat_ptr->s_data[i].name[0] != '\0'){
             hit = 1;
-            strcat(cb->prompt_buffer,&cb->schlib_name[i][0]);
-            printf("  %i - %s\r\n",i,&cb->schlib_name[i][0]);
+            strcat(cb->prompt_buffer,cb->sdat_ptr->s_data[i].name);
+            // printf("  %i - %s\r\n",i,cb->sdat_ptr->s_data[i].name);
         }
     }
     if(hit == 0) 
@@ -707,7 +705,7 @@ int c_22(CMD_FSM_CB *cb)
 /* set set schedule record to off */
 int c_23(CMD_FSM_CB *cb)
 {
-    int                 sch_recs;
+    // int                 sch_recs;
     char            temp[200];
 
     cb->w_srec_state = 0;       // set working state to off
@@ -742,15 +740,35 @@ int c_24(CMD_FSM_CB *cb)
 /* save schedule template */
 int c_25(CMD_FSM_CB *cb)
 {
-    printf("$$$$$$$$ index = %i name = <%s> $$$$$$$$$$$\r\n",cb->schlib_index++,cb->w_schedule_name);
-    strcpy(&(cb->schlib_name[0][cb->schlib_index++]), cb->w_schedule_name);
-    printf("X %s X",cb->schlib_name[0][--cb->schlib_index]);
+    int             i, index,hit;
+
+    index = (cb->sdat_ptr->schlib_index++);
+    strcpy(cb->sdat_ptr->s_data[index].name, cb->w_schedule_name); //copy name
+    for(i=0;i<_SCHEDULE_SIZE;i++){
+        cb->sdat_ptr->s_data[index].schedule[i]  = cb->w_schedule[i];   
+    }
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"schedule template: ");
+    strcpy(cb->prompt_buffer,"  schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
-    strcat(cb->prompt_buffer," is saved\r\n");
-    c_18(cb);
+    strcat(cb->prompt_buffer," is saved\r\n\n");
+    strcat(cb->prompt_buffer,"schedule maintenance\r\n");
+    hit = 0;
+    for(i=0;i<_MAX_SCHLIB_SCH;i++){
+        if(cb->sdat_ptr->s_data[i].name[0] != '\0'){
+            hit = 1;
+            strcat(cb->prompt_buffer,"  ");
+            strcat(cb->prompt_buffer,cb->sdat_ptr->s_data[i].name);
+            strcat(cb->prompt_buffer,"\r\n");
+            // printf("  %i - %s\r\n",i,cb->sdat_ptr->s_data[i].name);
+        }
+    }
+    if(hit == 0) 
+        strcat(cb->prompt_buffer,
+            "  no schedule templates defined\r\n  enter name, in quotes, for new template\r\n  > "); 
+    else
+        strcat(cb->prompt_buffer,
+            "  enter template number to edit or name of new template\r\n  > "); 
     return 0;
 }
 

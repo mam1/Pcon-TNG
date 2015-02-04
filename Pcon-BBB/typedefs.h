@@ -14,12 +14,21 @@ typedef struct {
 	int 		c_state;	//0 = off, 1 = on
 } CCR;
 
+typedef struct {
+	char 			name[_SCHEDULE_NAME_SIZE];
+	uint32_t		schedule[_SCHEDULE_SIZE];
+} SCH_DAT;
+
 typedef	struct {
-	    int         major_version;
-	    int         minor_version;
-	    int         minor_revision;
-	    CCR         c_data[_NUMBER_OF_CHANNELS];
-	} SYS_DAT;
+    int         major_version;
+    int         minor_version;
+    int         minor_revision;	
+    int 		template_id[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];
+    int 		schlib_index;
+    uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
+    CCR         c_data[_NUMBER_OF_CHANNELS];
+    SCH_DAT		s_data[_MAX_SCHLIB_SCH];
+} SYS_DAT;
 
 /* cmd_fsm control block */
 typedef struct {
@@ -30,8 +39,6 @@ typedef struct {
 	int				token_value;
 	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
 	uint32_t        sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE], *sch_ptr;
-	int             schlib[_MAX_SCHLIB_SCH][_SCHEDULE_SIZE], schlib_index;
-	char            schlib_name[_SCHEDULE_NAME_SIZE][_MAX_SCHLIB_SCH];
 	int             w_channel;                      //working channel number
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
 	int             w_schedule_number;
@@ -47,9 +54,6 @@ typedef struct {
 /* action routine definitions */
 typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
 typedef int (*CHAR_ACTION_PTR)(char *);
-
-
-
 
 /************************************************************************************/
 /************************************************************************************/
