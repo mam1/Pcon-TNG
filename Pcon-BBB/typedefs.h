@@ -48,6 +48,7 @@ typedef struct {
 	int             w_hours;
 	char            w_hours_str[4];
 	int				w_srec_state;
+	int				w_template_index;
 	SYS_DAT			*sdat_ptr;
 } CMD_FSM_CB;
 

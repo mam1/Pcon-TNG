@@ -193,12 +193,13 @@ int c_23(CMD_FSM_CB *); /* set set schedule record to off */
 int c_24(CMD_FSM_CB *); /* delete schedule record */
 int c_25(CMD_FSM_CB *); /* save schedule template */
 int c_26(CMD_FSM_CB *); /* delete schedule template */
+int c_27(CMD_FSM_CB *); /* edit template */
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21  */
-/*  0  INT      */  { c_4,  c_7, c_16, c_17,  c_0,  c_0, c_20,  c_0,  c_0,  c_0,  c_0, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20,  c_0,  c_0,  c_0,  c_0, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2  OTHER    */  { c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  3  OTHER    */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -210,7 +211,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  9  back     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 10  new      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  assign   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_18,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 13  zero     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_22,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 15  off      */  { c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -305,13 +306,13 @@ char *sch2text(uint32_t *sch,char *buf){
     *buf = '\0';
     sch_recs = *sch;
     if(sch_recs == 0)
-        strcat(buf,"                              no schedule records");
+        strcat(buf,"  no schedule records");
     else
         for(i=1;i < sch_recs+1;i++){
             key = get_key(sch[i]);
             h = key / 60;
             m = key % 60;
-            sprintf(&buf[strlen(buf)],"                              %2i:%02i ",h,m);
+            sprintf(&buf[strlen(buf)],"  %2i:%02i ",h,m);
             strcat(buf,onoff[get_s(sch[i])]);
             strcat(buf,"\n\r");
         }
@@ -757,7 +758,16 @@ int c_25(CMD_FSM_CB *cb)
     int             i, index,hit;
     char            sbuf[20];  //max number of digits for a int
 
-    index = (cb->sdat_ptr->schlib_index++);
+    hit = 0;
+    for(i=0;i<_MAX_SCHLIB_SCH;i++){
+        if(strcmp(cb->sdat_ptr->s_data[i].name,cb->w_schedule_name) == 0)
+            hit = 1;                              
+    }
+    if(hit)
+        index = (cb->sdat_ptr->schlib_index);    //overwrie existing template
+    else
+        index = (cb->sdat_ptr->schlib_index++);  // add new template
+
     strcpy(cb->sdat_ptr->s_data[index].name, cb->w_schedule_name);      //copy name
     for(i=0;i<_SCHEDULE_SIZE;i++){
         cb->sdat_ptr->s_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
@@ -780,6 +790,46 @@ int c_26(CMD_FSM_CB *cb)
 {
 
     char            temp[200];
+    int                i,ii;
+
+    printf("wipe out w index %i\r\n",cb->w_template_index);
+    printf("wipe out d index %i\r\n",cb->sdat_ptr->schlib_index);
+
+    if(cb->w_template_index == (cb->sdat_ptr->schlib_index)){        //delete high entry
+        cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index -1;     //back down index
+        memset(cb->sdat_ptr->s_data[cb->w_template_index].name,'\0',sizeof(cb->sdat_ptr->s_data[cb->w_template_index].name)); // wipe name
+        memset(cb->sdat_ptr->s_data[cb->w_template_index].schedule,'\0',sizeof(cb->sdat_ptr->s_data[cb->w_template_index].schedule));
+    }
+    else{
+        for(i = cb->w_template_index;i < cb->sdat_ptr->schlib_index; i++){
+            strcpy(cb->sdat_ptr->s_data[i].name, cb->sdat_ptr->s_data[i+1].name);      //copy name
+            for(ii=0;ii<_SCHEDULE_SIZE;ii++){
+                cb->sdat_ptr->s_data[i].schedule[ii] = cb->sdat_ptr->s_data[i+1].schedule[ii];   //copy schedule
+            }
+        }
+    }
+
+/* build prompt */
+    strcpy(cb->prompt_buffer,"  schedule template: ");
+    strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
+    strcat(cb->prompt_buffer," deleted\r\n\n");
+    strcat(cb->prompt_buffer,"schedule maintenance\r\n");
+    make_lib_list(cb->prompt_buffer, cb);
+}
+
+/* edit schedule template */
+int c_27(CMD_FSM_CB *cb)
+{
+
+    char            temp[200];
+    int             i;
+
+    cb->w_template_index = cb->token_value;
+
+    for(i=0;i<_SCHEDULE_SIZE;i++){
+        cb->w_schedule[i]  = cb->sdat_ptr->s_data[cb->w_template_index].schedule[i];   //load schedule
+    }
+    strcpy(cb->w_schedule_name, cb->sdat_ptr->s_data[cb->w_template_index].name);      //load name
 
 
 
