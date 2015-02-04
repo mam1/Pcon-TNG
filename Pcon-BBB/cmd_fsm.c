@@ -318,6 +318,33 @@ char *sch2text(uint32_t *sch,char *buf){
     return buf;
 }
 
+/* add schedule template list to buffer  */
+char *make_lib_list(char *buf, CMD_FSM_CB *cb){
+    int             hit,i;
+    char            sbuf[20];  //max number of digits for a int
+
+    hit = 0;
+    for(i=0;i<_MAX_SCHLIB_SCH;i++){
+        if(cb->sdat_ptr->s_data[i].name[0] != '\0'){
+            hit = 1;
+            strcat(buf,"  ");
+            sprintf(sbuf, "%d", i);
+            strcat(buf,sbuf);
+            strcat(buf," - ");
+            strcat(buf,cb->sdat_ptr->s_data[i].name);
+            strcat(buf,"\r\n");
+            // printf("  %i - %s\r\n",i,cb->sdat_ptr->s_data[i].name);
+        }
+    }
+    if(hit == 0) 
+        strcat(cb->prompt_buffer,
+            "  no schedule templates defined\r\n  enter name, in quotes, to create a new template\r\n  > "); 
+    else
+        strcat(cb->prompt_buffer,
+            "  enter template number to edit or name to ceate a new template\r\n  > "); 
+    return buf;
+}
+
 /**************** start command fsm action routines ******************/
 /* do nothing */
 int c_0(CMD_FSM_CB *cb)
@@ -599,23 +626,10 @@ int c_17(CMD_FSM_CB *cb)
 /* enter schedule mode */
 int c_18(CMD_FSM_CB *cb)
 {
-    int             i,hit;
+
     /* build prompt */
     strcpy(cb->prompt_buffer,"schedule maintenance\r\n");
-    hit =0 ;
-    for(i=0;i<_MAX_SCHLIB_SCH;i++){
-        if(cb->sdat_ptr->s_data[i].name[0] != '\0'){
-            hit = 1;
-            strcat(cb->prompt_buffer,cb->sdat_ptr->s_data[i].name);
-            // printf("  %i - %s\r\n",i,cb->sdat_ptr->s_data[i].name);
-        }
-    }
-    if(hit == 0) 
-        strcat(cb->prompt_buffer,
-            "  no schedule templates defined\r\n  enter name, in quotes, for new template\r\n  > "); 
-    else
-        strcat(cb->prompt_buffer,
-            "  enter template number to edit or name of new template\r\n  > "); 
+    make_lib_list(cb->prompt_buffer, cb);
     return 0;
 }
 
@@ -741,34 +755,23 @@ int c_24(CMD_FSM_CB *cb)
 int c_25(CMD_FSM_CB *cb)
 {
     int             i, index,hit;
+    char            sbuf[20];  //max number of digits for a int
 
     index = (cb->sdat_ptr->schlib_index++);
-    strcpy(cb->sdat_ptr->s_data[index].name, cb->w_schedule_name); //copy name
+    strcpy(cb->sdat_ptr->s_data[index].name, cb->w_schedule_name);      //copy name
     for(i=0;i<_SCHEDULE_SIZE;i++){
-        cb->sdat_ptr->s_data[index].schedule[i]  = cb->w_schedule[i];   
+        cb->sdat_ptr->s_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
+        cb->w_schedule[i] = '\0';                                       //clear working shcedule
     }
-
+    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    
     /* build prompt */
     strcpy(cb->prompt_buffer,"  schedule template: ");
     strcat(cb->prompt_buffer,(char *)cb->w_schedule_name);
     strcat(cb->prompt_buffer," is saved\r\n\n");
     strcat(cb->prompt_buffer,"schedule maintenance\r\n");
-    hit = 0;
-    for(i=0;i<_MAX_SCHLIB_SCH;i++){
-        if(cb->sdat_ptr->s_data[i].name[0] != '\0'){
-            hit = 1;
-            strcat(cb->prompt_buffer,"  ");
-            strcat(cb->prompt_buffer,cb->sdat_ptr->s_data[i].name);
-            strcat(cb->prompt_buffer,"\r\n");
-            // printf("  %i - %s\r\n",i,cb->sdat_ptr->s_data[i].name);
-        }
-    }
-    if(hit == 0) 
-        strcat(cb->prompt_buffer,
-            "  no schedule templates defined\r\n  enter name, in quotes, for new template\r\n  > "); 
-    else
-        strcat(cb->prompt_buffer,
-            "  enter template number to edit or name of new template\r\n  > "); 
+    make_lib_list(cb->prompt_buffer, cb);
+
     return 0;
 }
 
