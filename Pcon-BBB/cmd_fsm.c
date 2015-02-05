@@ -85,7 +85,7 @@ char    *keyword[_CMD_TOKENS] = {
 /* 12 */    "delete",
 /* 13 */    "zero",
 /* 14 */    "on",
-/* 15 */    "off"
+/* 15 */    "off",
 /* 16 */    "system",
 /* 17 */    "status",
 /* 18 */    "time",
@@ -860,9 +860,12 @@ int c_27(CMD_FSM_CB *cb)
 int c_28(CMD_FSM_CB *cb)
 {
 
+    printf("schedule build\r\n");
+    disp_all_schedules(cb);
+
+
     /* build prompt */
-    strcpy(cb->prompt_buffer,"schedule build\r\n");
-    disp_all_schedules(cb->sdat_ptr->sch,cb);
+    strcpy(cb->prompt_buffer,"\r\n  >");
     return 0;
 }
 

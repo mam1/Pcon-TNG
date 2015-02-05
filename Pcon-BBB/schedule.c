@@ -335,7 +335,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return NULL;
  }
 
- void disp_all_schedules(uint32_t *buffer,CMD_FSM_CB *cb)
+ void disp_all_schedules(CMD_FSM_CB *cb)
  {
     uint32_t        *rec_ptr;
     int             i;
@@ -344,16 +344,10 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     int             rcnt[_DAYS_PER_WEEK],mrcnt;
 
 
-    // day_ptr = buffer;
-    // sch_ptr = buffer;
-    // rec_ptr = &buffer[0];
-    // frec_ptr = rec_ptr;
-
-
     for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
     /* print channel header */        
-        printf("channel %i <%s>\r\n",cb->sdat_ptr->c_data[channel].name);
+        printf("\r\nchannel %i <%s>\r\n",channel,cb->sdat_ptr->c_data[channel].name);
         // printf("%s",onoff[dio_cb.dio.cca[channel].state]);
         // printf(" as of %i:%02i, %s\n           ",
         // rtc_cb.rtc.td_buffer.hour,
