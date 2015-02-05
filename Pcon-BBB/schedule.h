@@ -1,5 +1,6 @@
 #ifndef SCHEDULE_H_
 #define SCHEDULE_H_
+#include "typedefs.h"
 
 /* routines that work with the schedule buffer */
 //  int read_sch(uint32_t *);
@@ -12,7 +13,7 @@
 //  void dspl_schs(uint32_t *, int, int);
 //  void dspl_sch(uint32_t *, int, int);
 //  uint32_t *get_schedule(uint32_t *,int,int);
-//  void disp_all_schedules(uint32_t *);
+ void disp_all_schedules(uint32_t *,CMD_FSM_CB *);
 
 // /* routines to work with schedules */
 // // int      save_schedule_data(uint32_t *,int); 			//write to sd (schedule buffer, day)    

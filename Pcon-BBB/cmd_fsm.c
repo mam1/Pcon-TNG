@@ -81,11 +81,11 @@ char    *keyword[_CMD_TOKENS] = {
 /*  8 */    "done",
 /*  9 */    "back",
 /* 10 */    "new",
-/* 11 */    "assign",
+/* 11 */    "build",
 /* 12 */    "delete",
 /* 13 */    "zero",
 /* 14 */    "on",
-/* 15 */    "off",
+/* 15 */    "off"
 /* 16 */    "system",
 /* 17 */    "status",
 /* 18 */    "time",
@@ -113,7 +113,7 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /*  8 */    "end function",
 /*  9 */    "revert to previous state",
 /* 10 */    "create a new schedule",
-/* 11 */    "assign a schedule to a (day,channel)",
+/* 11 */    "build a schedule from templates",
 /* 12 */    "delete schedule template",
 /* 13 */    "zero",
 /* 14 */    "turn channel on, set channel control mode to manual",
@@ -146,7 +146,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  8  done     */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  9  back     */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 10  new      */  { 0,  1,  2,  3,  5,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 11  assign   */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 11  build    */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 12  delete   */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 13  zero     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 14  on       */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -194,6 +194,11 @@ int c_24(CMD_FSM_CB *); /* delete schedule record */
 int c_25(CMD_FSM_CB *); /* save schedule template */
 int c_26(CMD_FSM_CB *); /* delete schedule template */
 int c_27(CMD_FSM_CB *); /* edit template */
+int c_28(CMD_FSM_CB *); /* enter schedule build */
+int c_29(CMD_FSM_CB *); /* set working channel */
+int c_30(CMD_FSM_CB *); /* set working day */
+int c_31(CMD_FSM_CB *); /* display keyword list */
+
 
 /* cmd processor action table - initialized with fsm functions */
 
@@ -210,7 +215,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  8  done     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  9  back     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 10  new      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 11  assign   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 11  build    */  { c_7,  c_0,  c_0,  c_0, c_28,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 13  zero     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_22,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -570,7 +575,8 @@ int c_14(CMD_FSM_CB *cb)
 {
 
     disp_sys();
-    strcpy(cb->prompt_buffer,"\r\n> ");
+    c_31(cb);
+    // strcpy(cb->prompt_buffer,"\r\n> ");
 
     return 0;
 }
@@ -756,7 +762,7 @@ int c_24(CMD_FSM_CB *cb)
 int c_25(CMD_FSM_CB *cb)
 {
     int             i, index,hit;
-    char            sbuf[20];  //max number of digits for a int
+    // char            sbuf[20];  //max number of digits for a int
 
     hit = 0;
     for(i=0;i<_MAX_SCHLIB_SCH;i++){
@@ -792,8 +798,8 @@ int c_26(CMD_FSM_CB *cb)
     char            temp[200];
     int                i,ii;
 
-    printf("wipe out w index %i\r\n",cb->w_template_index);
-    printf("wipe out d index %i\r\n",cb->sdat_ptr->schlib_index);
+    // printf("wipe out w index %i\r\n",cb->w_template_index);
+    // printf("wipe out d index %i\r\n",cb->sdat_ptr->schlib_index);
 
     if(cb->w_template_index == (cb->sdat_ptr->schlib_index)){        //delete high entry
         cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index -1;     //back down index
@@ -801,13 +807,15 @@ int c_26(CMD_FSM_CB *cb)
         memset(cb->sdat_ptr->s_data[cb->w_template_index].schedule,'\0',sizeof(cb->sdat_ptr->s_data[cb->w_template_index].schedule));
     }
     else{
-        for(i = cb->w_template_index;i < cb->sdat_ptr->schlib_index; i++){
+        for(i = cb->w_template_index;i < (cb->sdat_ptr->schlib_index); i++){
             strcpy(cb->sdat_ptr->s_data[i].name, cb->sdat_ptr->s_data[i+1].name);      //copy name
             for(ii=0;ii<_SCHEDULE_SIZE;ii++){
-                cb->sdat_ptr->s_data[i].schedule[ii] = cb->sdat_ptr->s_data[i+1].schedule[ii];   //copy schedule
+                cb->sdat_ptr->s_data[i].schedule[ii] = cb->sdat_ptr->s_data[ii+1].schedule[ii];   //copy schedule
             }
         }
     }
+    cb->w_template_index = cb->w_template_index - 1;
+    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
 
 /* build prompt */
     strcpy(cb->prompt_buffer,"  schedule template: ");
@@ -815,6 +823,8 @@ int c_26(CMD_FSM_CB *cb)
     strcat(cb->prompt_buffer," deleted\r\n\n");
     strcat(cb->prompt_buffer,"schedule maintenance\r\n");
     make_lib_list(cb->prompt_buffer, cb);
+
+    return 0;
 }
 
 /* edit schedule template */
@@ -845,6 +855,33 @@ int c_27(CMD_FSM_CB *cb)
     strcat(cb->prompt_buffer,"\r\n  enter time (HH,MM) > ");
     return 0;
 }
+
+/* enter schedule build mode */
+int c_28(CMD_FSM_CB *cb)
+{
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"schedule build\r\n");
+    disp_all_schedules(cb->sdat_ptr->sch,cb);
+    return 0;
+}
+
+/* display keyword list */
+int c_31(CMD_FSM_CB *cb)
+{
+        int             i;
+        char             temp[200];
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"Keyword list\r\n");
+    for(i=0;i<_CMD_TOKENS;i++){
+        sprintf(temp, "  %i - %d\r\n", i, cb->w_channel);
+        strcat(cb->prompt_buffer, temp); 
+    }
+    strcpy(cb->prompt_buffer,"\r\n  > ");
+    return 0;
+}
+
 /**************** end command fsm action routines ******************/
 
 /* cycle state machine */

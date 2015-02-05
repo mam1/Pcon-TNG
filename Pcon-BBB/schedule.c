@@ -22,7 +22,8 @@
  #include <unistd.h>
  #include "Pcon.h"
  #include "schedule.h"
- #include "bitlit.h" 
+ #include "bitlit.h"
+ #include "typedefs.h" 
 
 /****************************** externals *******************************/
 
@@ -334,66 +335,67 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return NULL;
  }
 
- // void disp_all_schedules(uint32_t *buffer)
- // {
- //    uint32_t        *rec_ptr;
- //    int             i;
- //    int             day,channel;
- //    char            time_state[9];
- //    int             rcnt[_DAYS_PER_WEEK],mrcnt;
+ void disp_all_schedules(uint32_t *buffer,CMD_FSM_CB *cb)
+ {
+    uint32_t        *rec_ptr;
+    int             i;
+    int             day,channel;
+    char            time_state[9];
+    int             rcnt[_DAYS_PER_WEEK],mrcnt;
 
 
- //    // day_ptr = buffer;
- //    // sch_ptr = buffer;
- //    // rec_ptr = &buffer[0];
- //    // frec_ptr = rec_ptr;
+    // day_ptr = buffer;
+    // sch_ptr = buffer;
+    // rec_ptr = &buffer[0];
+    // frec_ptr = rec_ptr;
 
 
- //    for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
- //    {
- //    /* print channel header */        
- //        printf("channel %i <%s> control %s, %s",channel,dio_cb.dio.cca[channel].name,con_mode[dio_cb.dio.cca[channel].c_mode],onoff[dio_cb.dio.cca[channel].state]);
- //        // printf("%s",onoff[dio_cb.dio.cca[channel].state]);
- //        printf(" as of %i:%02i, %s\n           ",
- //        rtc_cb.rtc.td_buffer.hour,
- //        rtc_cb.rtc.td_buffer.min,
- //        day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
+    for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
+    {
+    /* print channel header */        
+        printf("channel %i <%s>\r\n",cb->sdat_ptr->c_data[channel].name);
+        // printf("%s",onoff[dio_cb.dio.cca[channel].state]);
+        // printf(" as of %i:%02i, %s\n           ",
+        // rtc_cb.rtc.td_buffer.hour,
+        // rtc_cb.rtc.td_buffer.min,
+        // day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
 
 
- //        for (day=0;day<_DAYS_PER_WEEK;day++)
- //            printf("%s         ",day_names_short[day]);
- //        printf("\n");
- //        mrcnt = 0;
- //        for(day=0;day<_DAYS_PER_WEEK;day++)
- //        {
- //            rcnt[day] = (int)*get_schedule(bbb,day+1,channel);
- //            // printf("rcnt[%i] = %i\n",day,rcnt[day]);
- //            if(rcnt[day] > mrcnt)
- //                mrcnt = rcnt[day];        //max number of records for the week
- //        }
- //        // printf("mrcnt %i\n",mrcnt);
- //        for(i=0;i<mrcnt;i++)
- //        {
- //            printf("         ");
- //            for(day=0;day<_DAYS_PER_WEEK;day++)
- //            {
- //                rec_ptr = get_schedule(bbb,day+1,channel);
- //                rec_ptr += (i+1);
- //                // printf("XXXXXX\n");
- //                if(*get_schedule(bbb,day+1,channel) <= i)
- //                    strcpy(time_state,"         ");
- //                else
- //                    sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);
+        for (day=0;day<_DAYS_PER_WEEK;day++)
+            printf("%s         ",day_names_short[day]);
+        printf("\n");
+        mrcnt = 0;
+        for(day=0;day<_DAYS_PER_WEEK;day++)
+        {
+            rcnt[day] = (int)cb->sdat_ptr->sch[channel][day+1][0];
 
- //                printf("%s   ",time_state);
+            // printf("rcnt[%i] = %i\n",day,rcnt[day]);
+            if(rcnt[day] > mrcnt)
+                mrcnt = rcnt[day];        //max number of records for the week
+        }
+        // printf("mrcnt %i\n",mrcnt);
+        for(i=0;i<mrcnt;i++)
+        {
+            printf("         ");
+            for(day=0;day<_DAYS_PER_WEEK;day++)
+            {
+                rec_ptr = &cb->sdat_ptr->sch[channel][day+1][0];
+                rec_ptr += (i+1);
+                // printf("XXXXXX\n");
+                if(cb->sdat_ptr->sch[channel][day+1][0] <= i)
+                    strcpy(time_state,"         ");
+                else
+                    sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);
 
- //            }
- //            printf("\n");
- //        }
- //        printf("\n");
- //     } 
+                printf("%s   ",time_state);
 
- //    return;  
- // }
+            }
+            printf("\n");
+        }
+        printf("\n");
+     } 
+
+    return;  
+ }
 
 
