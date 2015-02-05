@@ -73,7 +73,7 @@ char    *keyword[_CMD_TOKENS] = {
 /*  0 */    "INT",
 /*  1 */    "STR",
 /*  2 */    "OTHER",
-/*  3 */    "OTHER",
+/*  3 */    "*",
 /*  4 */    "q",
 /*  5 */    "quit",
 /*  6 */    "ping",
@@ -105,7 +105,7 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /*  0 */    "valid integer",
 /*  1 */    "alpha numeric string",
 /*  2 */    "OTHER",
-/*  3 */    "OTHER",
+/*  3 */    "wild card match",
 /*  4 */    "terminate the application",
 /*  5 */    "quit",
 /*  6 */    "ping",
@@ -138,7 +138,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9, 10,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  2  OTHER    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/*  3  OTHER    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  4  quit     */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  5     q     */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  6  ping     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -197,17 +197,18 @@ int c_27(CMD_FSM_CB *); /* edit template */
 int c_28(CMD_FSM_CB *); /* enter schedule build */
 int c_29(CMD_FSM_CB *); /* set working channel */
 int c_30(CMD_FSM_CB *); /* set working day */
-int c_31(CMD_FSM_CB *); /* display keyword list */
-
-
+int c_31(CMD_FSM_CB *); /* set working channel to all */
+int c_32(CMD_FSM_CB *); /* set working day to all */
+int c_33(CMD_FSM_CB *); /* set working channel */
+int c_34(CMD_FSM_CB *); /* set working day */
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21  */
-/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20,  c_0,  c_0,  c_0,  c_0, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30,  c_0,  c_0, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2  OTHER    */  { c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  3  OTHER    */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  3  *        */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0, c_31, c_32,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  4  q        */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_0,  c_0,  c_0,  c_0},
 /*  5  quit     */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  6  ping     */  { c_2,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -367,6 +368,11 @@ int c_1(CMD_FSM_CB *cb)
     int         dots;
 
     // printf("sizeofkeyword %i\n\r",(sizeof(keyword)/4));
+
+    printf("ESC - resets command processor"\r\n");
+    printf("?   - display current statr and list all valid commands\r\n");
+    printf("q   - terminate the application\r\n");
+    printf("       -----------------------------------\r\n");
     for(i=0;i<(sizeof(keyword)/4);i++){
         // printf("i %i\r\n",i);
         if((strlen(keyword[i]) > dots)){
@@ -860,6 +866,8 @@ int c_27(CMD_FSM_CB *cb)
 int c_28(CMD_FSM_CB *cb)
 {
 
+    
+    cb->w_wild_card = 0;
     printf("schedule build\r\n");
     disp_all_schedules(cb);
 
@@ -869,21 +877,70 @@ int c_28(CMD_FSM_CB *cb)
     return 0;
 }
 
-/* display keyword list */
-int c_31(CMD_FSM_CB *cb)
+/* set working channel */
+int c_29(CMD_FSM_CB *cb)
 {
-        int             i;
-        char             temp[200];
+
+    printf("schedule build\r\n");
+    disp_all_schedules(cb);
+
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"Keyword list\r\n");
-    for(i=0;i<_CMD_TOKENS;i++){
-        sprintf(temp, "  %i - %d\r\n", i, cb->w_channel);
-        strcat(cb->prompt_buffer, temp); 
-    }
-    strcpy(cb->prompt_buffer,"\r\n  > ");
+    strcpy(cb->prompt_buffer,"\r\n  >");
     return 0;
 }
+
+/* set working day */
+int c_30(CMD_FSM_CB *cb)
+{
+
+    printf("schedule build\r\n");
+    disp_all_schedules(cb);
+
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"\r\n  >");
+    return 0;
+}
+
+/* set working channel to all */
+int c_31(CMD_FSM_CB *cb)
+{   
+    cb->w_wild_card = 1;
+
+
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"\r\nenter day  >");
+    return 0;
+}
+
+/* set working channel to all */
+int c_32(CMD_FSM_CB *cb)
+{
+
+
+
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"\r\n  >");
+    return 0;
+}
+// /* display keyword list */
+// int c_31(CMD_FSM_CB *cb)
+// {
+//         int             i;
+//         char             temp[200];
+
+//     /* build prompt */
+//     strcpy(cb->prompt_buffer,"Keyword list\r\n");
+//     for(i=0;i<_CMD_TOKENS;i++){
+//         sprintf(temp, "  %i - %d\r\n", i, cb->w_channel);
+//         strcat(cb->prompt_buffer, temp); 
+//     }
+//     strcpy(cb->prompt_buffer,"\r\n  > ");
+//     return 0;
+// }
 
 /**************** end command fsm action routines ******************/
 

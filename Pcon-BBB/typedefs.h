@@ -49,6 +49,7 @@ typedef struct {
 	char            w_hours_str[4];
 	int				w_srec_state;
 	int				w_template_index;
+	int 			w_wild_card;
 	SYS_DAT			*sdat_ptr;
 } CMD_FSM_CB;
 
