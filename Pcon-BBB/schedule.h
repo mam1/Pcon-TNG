@@ -12,8 +12,6 @@
 //  void dump_schs(uint32_t *);
 //  void dspl_schs(uint32_t *, int, int);
 //  void dspl_sch(uint32_t *, int, int);
-//  uint32_t *get_schedule(uint32_t *,int,int);
- void disp_all_schedules(CMD_FSM_CB *);
 
 // /* routines to work with schedules */
 // // int      save_schedule_data(uint32_t *,int); 			//write to sd (schedule buffer, day)    
@@ -25,6 +23,13 @@
 // // int 	 del_sch_rec(uint32_t *,int,int);				//delete record from schedule (schedule buffer,channel,key)
 // // int 	 init_schedule_data(void);				//create a set of empty schedule files if they are not present
 // // void	 clean_sch_buf(uint32_t *);					//set a schedule buffer to all '\0's	 
+
+
+/* routines that work with a pointer to the full schedule data structure */
+ void disp_all_schedules(CMD_FSM_CB *,uint32_t *);
+ void load_schedule(uint32_t *,uint32_t *, int, int);  //schedule, template, day, channel
+ uint32_t *get_schedule(uint32_t *,int,int); // (schedule data,day,channel) - return pointer to a schedule
+
 
 /* routines to work with individual schedule records */
  int  get_key(uint32_t);          			//extract key (lower 31 bits) from a uint32_t

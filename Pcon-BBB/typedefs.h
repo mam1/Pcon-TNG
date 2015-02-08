@@ -12,22 +12,25 @@ typedef struct {
 	char 		name[_CHANNEL_NAME_SIZE];
 	int 		c_mode; 	//Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
 	int 		c_state;	//0 = off, 1 = on
-} CCR;
+} CHN_DAT;
 
+/* schedule templates */
 typedef struct {
 	char 			name[_SCHEDULE_NAME_SIZE];
 	uint32_t		schedule[_SCHEDULE_SIZE];
-} SCH_DAT;
+} TMPL_DAT;
 
+/* system data - saved and restored at restart */
 typedef	struct {
     int         major_version;
     int         minor_version;
     int         minor_revision;	
-    int 		template_id[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];
-    int 		schlib_index;
-    uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
-    CCR         c_data[_NUMBER_OF_CHANNELS];
-    SCH_DAT		s_data[_MAX_SCHLIB_SCH];
+    // int 		template_id[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];			// map each (day,channel) to a template id
+    int 		schlib_index;												// points to the next available record (maybe)
+    uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
+    uint32_t	*sch_ptr;   												// pointer to system schedule
+    CHN_DAT     c_data[_NUMBER_OF_CHANNELS];								// channel persistent data
+    TMPL_DAT	s_data[_MAX_SCHLIB_SCH];									// schedule template library
 } SYS_DAT;
 
 /* cmd_fsm control block */
@@ -38,7 +41,8 @@ typedef struct {
 	int				token_type;
 	int				token_value;
 	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
-	uint32_t        sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE], *sch_ptr;
+	uint32_t        w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
+	uint32_t		*w_sch_ptr;
 	int             w_channel;                      //working channel number
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
 	int             w_schedule_number;
@@ -49,7 +53,8 @@ typedef struct {
 	char            w_hours_str[4];
 	int				w_srec_state;
 	int				w_template_index;
-	int 			w_wild_card;
+	int 			w_day;
+	int				w_template_num;
 	SYS_DAT			*sdat_ptr;
 } CMD_FSM_CB;
 
@@ -77,14 +82,14 @@ typedef int (*CHAR_ACTION_PTR)(char *);
 // 	char name[_CHANNEL_NAME_SIZE];
 // 	uint8_t c_mode; //Control mode: 0-manual, 1-time, 2-time & sensor
 // 	uint8_t state;  //Channel State: 0-off, 1-on
-// } CCR;
+// } CHN_DAT;
 
 // /* dio control block definition */
 // typedef volatile struct {
 // 	int rtc_lock;     	          //lock ID for rtc cog contorl block
 // 	RTC_CB_ADDR rtc_cb_addr;              //address of the rtc cog control block
 // 	WORKING_SCH_BUFFER wsb; //current day schedules for all channels + 2 bytes for i2c communication
-// 	CCR cca[_NUMBER_OF_CHANNELS]; //channel control array
+// 	CHN_DAT cca[_NUMBER_OF_CHANNELS]; //channel control array
 // 	int save_cca;                 //!= 0 cog request a save of the channel data
 // 	uint8_t abt;           //!= 0 cog requests a system abort,value = error code
 // } DIO_CB;

@@ -4,7 +4,7 @@
 /* version info */
 #define _major_version 			2
 #define _minor_version 			2
-#define _minor_revision 		1
+#define _minor_revision 		2
 
 /* shared bone-C3 commands */
 #define _PING         	27
@@ -22,11 +22,13 @@
 #define _SCHEDULE_NAME_SIZE		40
 #define _MAX_SCHEDULE_RECS		10
 #define _SCHEDULE_SIZE			_MAX_SCHEDULE_RECS + 1
-#define _SCHEDULE_BUFFER	
+// #define _SCHEDULE_BUFFER		128
+
+#define _BYTES_PER_DAY 			_SCHEDULE_SIZE * 4
 
 
-#define _BYTES_PER_SCHEDULE			(_INTS_PER_SCHEDULE) * 4 	//a uint32_t contains the number of active records followed by vector of uint32_ts
-#define _BYTES_PER_WORKING_SET		_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE
+// #define _BYTES_PER_SCHEDULE			(_INTS_PER_SCHEDULE) * 4 	//a uint32_t contains the number of active records followed by vector of uint32_ts
+// #define _BYTES_PER_WORKING_SET		_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE
 
 /* general */
 #define _DAYS_PER_WEEK 			7

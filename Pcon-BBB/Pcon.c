@@ -106,7 +106,11 @@ int main(void) {
 		c = fgetc(stdin);	// get rid of trailing CR
 	}
 
+	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm controll block to allow acces to system data
+	cmd_fsm_cb.w_sch_ptr = (uint32_t *)cmd_fsm_cb.w_sch;
+	cmd_fsm_cb.sdat_ptr->sch_ptr = (uint32_t *)cmd_fsm_cb.sdat_ptr->sch;
+
 
 	/* initialize state machines */
 	work_buffer_ptr = work_buffer;  //initialize work buffer pointer

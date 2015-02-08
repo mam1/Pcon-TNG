@@ -70,18 +70,18 @@ extern char *c_mode[4];
 
 /* command list */
 char    *keyword[_CMD_TOKENS] = {
-/*  0 */    "INT",
-/*  1 */    "STR",
-/*  2 */    "OTHER",
-/*  3 */    "*",
+/*  0 */    "INT",                                                                                                                        
+/*  1 */    "STR",                                                                                                                              
+/*  2 */    "OTHER",                                                                                                            
+/*  3 */    "*",                                                                                                                                
 /*  4 */    "q",
-/*  5 */    "quit",
-/*  6 */    "ping",
-/*  7 */    "file",
+/*  5 */    "schedule",                                                                                                 
+/*  6 */    "ping",                                                                                 
+/*  7 */    "xxxx",
 /*  8 */    "done",
 /*  9 */    "back",
-/* 10 */    "new",
-/* 11 */    "build",
+/* 10 */    "xxxx",
+/* 11 */    "edit",
 /* 12 */    "delete",
 /* 13 */    "zero",
 /* 14 */    "on",
@@ -94,7 +94,7 @@ char    *keyword[_CMD_TOKENS] = {
 /* 21 */    "startup",
 /* 22 */    "reboot",
 /* 23 */    "save",
-/* 24 */    "schedule",
+/* 24 */    "template",
 /* 25 */    "channel",
 /* 26 */    "load",
 /* 27 */    "help",
@@ -107,17 +107,17 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /*  2 */    "OTHER",
 /*  3 */    "wild card match",
 /*  4 */    "terminate the application",
-/*  5 */    "quit",
-/*  6 */    "ping",
-/*  7 */    "set the real time clock",
+/*  5 */    "edit the system schedule",
+/*  6 */    "send a ping to the C3",
+/*  7 */    "xxxx",
 /*  8 */    "end function",
 /*  9 */    "revert to previous state",
-/* 10 */    "create a new schedule",
-/* 11 */    "build a schedule from templates",
+/* 10 */    "xxxx",
+/* 11 */    "edit active schedule",
 /* 12 */    "delete schedule template",
 /* 13 */    "zero",
 /* 14 */    "turn channel on, set channel control mode to manual",
-/* 15 */    "turn channel off, set channel control mode to manual"
+/* 15 */    "turn channel off, set channel control mode to manual",
 /* 16 */    "display system data",
 /* 17 */    "display status for all channels",
 /* 18 */    "set channel control mode to time",
@@ -135,18 +135,18 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21*/
-/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9, 10,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  2  OTHER    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/*  4  quit     */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/*  5     q     */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  4  q        */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  5  schedule */  { 7,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  6  ping     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  7  clock    */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  8  done     */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  9  back     */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 10  new      */  { 0,  1,  2,  3,  5,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 11  build    */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 11  edit     */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 12  delete   */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 13  zero     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 14  on       */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -159,7 +159,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 21  startup  */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 22  reboot   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 23  save     */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 24  schedule */  { 4,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 24  template */  { 4,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 25  channel  */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 26  load     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 27  help     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0,  0},
@@ -199,24 +199,29 @@ int c_29(CMD_FSM_CB *); /* set working channel */
 int c_30(CMD_FSM_CB *); /* set working day */
 int c_31(CMD_FSM_CB *); /* set working channel to all */
 int c_32(CMD_FSM_CB *); /* set working day to all */
-int c_33(CMD_FSM_CB *); /* set working channel */
-int c_34(CMD_FSM_CB *); /* set working day */
+int c_33(CMD_FSM_CB *); /* build new schedule */
+int c_34(CMD_FSM_CB *); /*  */
+int c_35(CMD_FSM_CB *); /* set working template number */
+
+
+
+
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21  */
-/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30,  c_0,  c_0, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30, c_35, c_33, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2  OTHER    */  { c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  3  *        */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0, c_31, c_32,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  4  q        */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_0,  c_0,  c_0,  c_0},
-/*  5  quit     */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  5  schedule */  {c_28,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  6  ping     */  { c_2,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  7  clock    */  { c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  8  done     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  9  back     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 10  new      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 11  build    */  { c_7,  c_0,  c_0,  c_0, c_28,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 11  edit     */  { c_7,  c_0,  c_0,  c_0, c_28,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 13  zero     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_22,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -229,7 +234,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 21  startup  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 22  reboot   */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 23  save     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_25,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 24  schedule */  {c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 24  template */  {c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 25  channel  */  { c_8,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 26  load     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 27  help     */  { c_8,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -369,12 +374,13 @@ int c_1(CMD_FSM_CB *cb)
 
     // printf("sizeofkeyword %i\n\r",(sizeof(keyword)/4));
 
-    printf("ESC - resets command processor"\r\n");
-    printf("?   - display current statr and list all valid commands\r\n");
-    printf("q   - terminate the application\r\n");
-    printf("       -----------------------------------\r\n");
-    for(i=0;i<(sizeof(keyword)/4);i++){
-        // printf("i %i\r\n",i);
+    printf("\r\n ESC . reset command processor\r\n");
+    printf(" ? ... display current state and list all valid commands\r\n");
+    printf(" q ... terminate the application\r\n");
+    printf("       -------------------------------------\r\n");
+
+    for(i=0;i<_CMD_TOKENS;i++){
+        // printf("keyword = %s, length = %i\r\n",keyword[i],strlen(keyword[i]));
         if((strlen(keyword[i]) > dots)){
             dots = strlen(keyword[i]);
             // printf("dots %i\r\n",dots);            
@@ -383,11 +389,11 @@ int c_1(CMD_FSM_CB *cb)
     // printf("dots = %i\r\n",dots);
     
     printf("valid commands in state %i\r\n",cb->state);
-    printf("  ESC key . resets the command processor to state 0 and clears all queues\r\n");
-    for(i=0;i<_CMD_TOKENS;i++){
+    for(i=0;i<_CMD_TOKENS - 2;i++){
+        // if(cb->token_type != )
         if((cmd_action[i][cb->state] != c_8) && (cmd_action[i][cb->state] != c_7) && (cmd_action[i][cb->state] != c_0)){
             printf("  %s ",keyword[i]);
-            for(ii=0;ii<(dots - strlen(keyword[i]));ii++){
+            for(ii=0;ii<((dots + 2)- strlen(keyword[i]));ii++){
                 printf(".");
             }
             printf(" %s\r\n",keyword_defs[i]);
@@ -407,7 +413,7 @@ int c_2(CMD_FSM_CB *cb)
     uint8_t         s[4];
     // int             s;
     size = (int *)&s[0];
-    *size = sizeof(cb->sch);
+    *size = sizeof(cb->sdat_ptr->sch);
 	printf("  sending ping <%u> to C3 \r\n",cmd);
 	s_wbyte(bbb,&cmd);
     // printf("  ping <%u> sent\r\n",cmd);
@@ -422,18 +428,18 @@ int c_2(CMD_FSM_CB *cb)
         for(i=0;i<4;i++){
             s_wbyte(bbb,(int *)&s[i]);
         }
-        printf("sending schedule\r\n");
-        iiii=0;
-        for(i=0;i<_DAYS_PER_WEEK;i++)
-            for(ii=0;ii<_NUMBER_OF_CHANNELS;ii++)
-                for(iii=0;iii<(_SCHEDULE_SIZE);iii++){
-                    cb->sch[i][ii][iii] = iiii++;
-                }
+        // printf("sending schedule\r\n");
+        // iiii=0;
+        // for(i=0;i<_DAYS_PER_WEEK;i++)
+        //     for(ii=0;ii<_NUMBER_OF_CHANNELS;ii++)
+        //         for(iii=0;iii<(_SCHEDULE_SIZE);iii++){
+        //             cb->sdat_ptr->sch[i][ii][iii] = iiii++;
+        //         }
 
-        cb->sch_ptr = (uint32_t *)cb->sch;
-        for(i=0;i<*size;i++){
-            s_wbyte(bbb,(int *)cb->sch_ptr++);
-        }
+        // cb->sch_ptr = (uint32_t *)cb->sdat_ptr->sch;
+        // for(i=0;i<*size;i++){
+        //     s_wbyte(bbb,(int *)cb->sch_ptr++);
+        // }
         return 0;
 
     }
@@ -582,7 +588,7 @@ int c_14(CMD_FSM_CB *cb)
 
     disp_sys();
     c_31(cb);
-    // strcpy(cb->prompt_buffer,"\r\n> ");
+    strcpy(cb->prompt_buffer,"\r\n> ");
 
     return 0;
 }
@@ -641,7 +647,7 @@ int c_18(CMD_FSM_CB *cb)
 {
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"schedule maintenance\r\n");
+    strcpy(cb->prompt_buffer,"schedule template maintenance\r\n");
     make_lib_list(cb->prompt_buffer, cb);
     return 0;
 }
@@ -865,15 +871,11 @@ int c_27(CMD_FSM_CB *cb)
 /* enter schedule build mode */
 int c_28(CMD_FSM_CB *cb)
 {
-
-    
-    cb->w_wild_card = 0;
-    printf("schedule build\r\n");
-    disp_all_schedules(cb);
-
+    printf("editing system schedule\r\n");
+    disp_all_schedules(cb,cb->w_sch);
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\n  >");
+    strcpy(cb->prompt_buffer,"\r\n  enter channel number or *  > ");
     return 0;
 }
 
@@ -881,12 +883,11 @@ int c_28(CMD_FSM_CB *cb)
 int c_29(CMD_FSM_CB *cb)
 {
 
-    printf("schedule build\r\n");
-    disp_all_schedules(cb);
-
+    printf("editing system schedule\r\n");
+    cb->w_channel = cb->token_value;
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\n  >");
+    strcpy(cb->prompt_buffer,"\r\n  enter day number or *  > ");
     return 0;
 }
 
@@ -894,9 +895,8 @@ int c_29(CMD_FSM_CB *cb)
 int c_30(CMD_FSM_CB *cb)
 {
 
-    printf("schedule build\r\n");
-    disp_all_schedules(cb);
-
+    printf("editing system schedule\r\n");
+    cb->w_day = cb->token_value;
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"\r\n  >");
@@ -905,25 +905,76 @@ int c_30(CMD_FSM_CB *cb)
 
 /* set working channel to all */
 int c_31(CMD_FSM_CB *cb)
-{   
-    cb->w_wild_card = 1;
-
-
-
+{
+    printf("editing system schedule\r\n");   
+    cb->w_channel = _ALL_CHANNELS;
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\nenter day  >");
+    strcpy(cb->prompt_buffer,"\r\n  enter day number or * > ");
     return 0;
 }
 
-/* set working channel to all */
+/* set working day to all */
 int c_32(CMD_FSM_CB *cb)
+{
+    printf("editing system schedule\r\n");
+    cb->w_day = _ALL_CHANNELS;
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"\r\n  enter template number  > ");
+    return 0;
+}
+
+/* build new schedule */
+int c_33(CMD_FSM_CB *cb)
+{
+    int             channel, day, i, ii, iii;
+
+     load_schedule(cb->w_sch, cb->sdat_ptr->s_data[0].schedule, 0, 0);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
+
+
+    // for(i=0;i<_SCHEDULE_SIZE;i++)
+    //     cb->sch[0][0][i] = cb->sdat_ptr->s_data[1].schedule[i];
+
+    
+        // cb->sch[0][0][i] = cb->sdat_ptr->s_data[1].schedule[i];
+
+    // printf("rebuilding system schedule\r\n");
+    // if(cb->w_channel == _ALL_CHANNELS)
+    //     for(i=0;i<_NUMBER_OF_CHANNELS;i++)
+    //         if(cb->w_day == _ALL_DAYS)
+    //             for(ii=0;ii<_DAYS_PER_WEEK;ii++)
+    //                 for(iii=0;iii<cb->sdat_ptr->s_data[cb->sdat_ptr->template_id[ii][i]].schedule[0] + 1;iii++)
+    //                     cb->sch[ii][i][iii] = cb->sdat_ptr->s_data[cb->sdat_ptr->template_id[ii][i]].schedule[iii];
+    
+
+    disp_all_schedules(cb,cb->w_sch);
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"\r\n    > ");
+    return 0;
+}
+
+/*  */
+int c_34(CMD_FSM_CB *cb)
+{
+    printf("**************************\r\n");
+    cb->w_day = _ALL_DAYS;
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"\r\n  enter template number  > ");
+    return 0;
+}
+
+/* set working template number */
+int c_35(CMD_FSM_CB *cb)
 {
 
 
-
+    cb->w_template_num = cb->token_value;
+    c_33(cb);
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\n  >");
+    strcpy(cb->prompt_buffer,"\r\n  enter template number  > ");
     return 0;
 }
 // /* display keyword list */

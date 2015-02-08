@@ -11,6 +11,9 @@ typedef struct node {
 	char *tptr;
 } TQ;
 
+#define _ALL_CHANNELS		99
+#define _ALL_DAYS			99
+
 /* fuctions */
 int char_fsm_reset(void);
 void char_fsm(int, int *, char *);

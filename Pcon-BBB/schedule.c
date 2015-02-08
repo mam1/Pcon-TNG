@@ -38,7 +38,7 @@
 /***************************** globals **********************************/
  uint32_t       state_mask = B32(10000000,00000000,00000000,00000000);
  uint32_t       key_mask   = B32(01111111,11111111,11111111,11111111);
- uint32_t       bbb[_SCHEDULE_BUFFER];
+ // uint32_t       bbb[_SCHEDULE_BUFFER];
  // char fn_schedule[_SCHEDULE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_SCHEDULE_SUFIX;
 /*******************************  functions ******************************/
 // int read_sch(uint32_t *sbuf)                    // read data from SD card load buffer 
@@ -92,12 +92,6 @@
 //     return;
 //  }
 
-// void ld_sch(uint32_t *sbuf)                     // load schedule buffer with 0 - _SCHEDULE_BUFFER
-//  {
-//     int         i;
-//     for(i=0;i<_SCHEDULE_BUFFER;i++) *sbuf++ = (uint32_t)i;
-//     return;
-//  }
 
 //  int init_sch(uint32_t *sbuf)
 //  {
@@ -335,7 +329,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return NULL;
  }
 
- void disp_all_schedules(CMD_FSM_CB *cb)
+ void disp_all_schedules(CMD_FSM_CB *cb,uint32_t *sch)
  {
     uint32_t        *rec_ptr;
     int             i;
@@ -348,35 +342,33 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     {
     /* print channel header */        
         printf("\r\nchannel %i <%s>\r\n",channel,cb->sdat_ptr->c_data[channel].name);
-        // printf("%s",onoff[dio_cb.dio.cca[channel].state]);
-        // printf(" as of %i:%02i, %s\n           ",
-        // rtc_cb.rtc.td_buffer.hour,
-        // rtc_cb.rtc.td_buffer.min,
-        // day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
 
-
+        /* print day header */
         for (day=0;day<_DAYS_PER_WEEK;day++)
             printf("%s         ",day_names_short[day]);
         printf("\n");
+
+        /* figure the maximum number of transitions per day */
         mrcnt = 0;
         for(day=0;day<_DAYS_PER_WEEK;day++)
         {
-            rcnt[day] = (int)cb->sdat_ptr->sch[channel][day+1][0];
-
-            // printf("rcnt[%i] = %i\n",day,rcnt[day]);
+            rcnt[day] = *(get_schedule(sch,day,channel));
+            printf("rcnt[%i] = %i\n\r",day,rcnt[day]);
             if(rcnt[day] > mrcnt)
                 mrcnt = rcnt[day];        //max number of records for the week
         }
-        // printf("mrcnt %i\n",mrcnt);
+        printf("mrcnt %i\n\r",mrcnt);
+
+        /* Print the daily schedules */
         for(i=0;i<mrcnt;i++)
         {
             printf("         ");
             for(day=0;day<_DAYS_PER_WEEK;day++)
             {
-                rec_ptr = &cb->sdat_ptr->sch[channel][day+1][0];
+                rec_ptr = get_schedule(sch,day+1,channel);
                 rec_ptr += (i+1);
                 // printf("XXXXXX\n");
-                if(cb->sdat_ptr->sch[channel][day+1][0] <= i)
+                if(*get_schedule(sch, day+1,channel) <= i)
                     strcpy(time_state,"         ");
                 else
                     sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);
@@ -392,4 +384,31 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return;  
  }
 
+ void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   // load schedule buffer with 0 - _SCHEDULE_BUFFER
+ {
+    int         i;
+    uint32_t    *start_schedule;
+    start_schedule = get_schedule(sch,day,channel);
+    for(i=0;i<_SCHEDULE_SIZE;i++)
+        *start_schedule++ = *template++;
+    
+    return;
+ }
+
+uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to  a schedule
+ {
+    int         i;
+    uint32_t    *start_schedule;
+
+    start_schedule = sch;
+    while(day > 0){
+        start_schedule += _BYTES_PER_DAY;
+        day--;
+    }
+    while(channel > 0){
+        start_schedule += _SCHEDULE_SIZE;
+        channel--;    }               //move channel pointer to the requested channel
+
+    return (uint32_t *)start_schedule;
+ }
 
