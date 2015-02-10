@@ -929,7 +929,16 @@ int c_33(CMD_FSM_CB *cb)
 {
     int             channel, day, i, ii, iii;
 
-     load_schedule(cb->w_sch, cb->sdat_ptr->s_data[0].schedule, 0, 0);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
+    if(cb->w_channel == _ALL_CHANNELS)
+      printf("  setting all channels ");
+    else
+      printf("  setting channel %i ", cb->w_channel);
+    if(cb->w_day == _ALL_DAYS)
+      printf("all days to schedule template %i\r\n",cb->w_template_num);
+    else
+      printf("day %i to schedule template %i\r\n",cb->w_day, cb->w_template_num);
+
+     // load_schedule(cb->w_sch, cb->sdat_ptr->s_data[0].schedule, 0, 0);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
 
 
     // for(i=0;i<_SCHEDULE_SIZE;i++)
@@ -939,7 +948,8 @@ int c_33(CMD_FSM_CB *cb)
         // cb->sch[0][0][i] = cb->sdat_ptr->s_data[1].schedule[i];
 
     // printf("rebuilding system schedule\r\n");
-    // if(cb->w_channel == _ALL_CHANNELS)
+
+    
     //     for(i=0;i<_NUMBER_OF_CHANNELS;i++)
     //         if(cb->w_day == _ALL_DAYS)
     //             for(ii=0;ii<_DAYS_PER_WEEK;ii++)
