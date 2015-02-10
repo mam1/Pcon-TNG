@@ -406,28 +406,29 @@ int c_1(CMD_FSM_CB *cb)
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-    int             i, ii, iii, iiii;
-	int             cmd = _PING;
-    int             ret = '\0';
-    int             *size;
-    uint8_t         s[4];
-    // int             s;
-    size = (int *)&s[0];
-    *size = sizeof(cb->sdat_ptr->sch);
-	printf("  sending ping <%u> to C3 \r\n",cmd);
-	s_wbyte(bbb,&cmd);
-    // printf("  ping <%u> sent\r\n",cmd);
-    s_rbyte(bbb,&ret);
-    // printf("<%u> returned from read\n", ret);
-    if(ret == _ACK){
-        printf("  BBB acknowledge received <%u>\n\r",ret);
-        printf("  send WRITE_CMD <%u> \r\n",_WRITE_SCH);
-        cmd = _WRITE_SCH;
-        s_wbyte(bbb,&cmd);
-        printf("  sending schedule size <%i>\n\r",*size);
-        for(i=0;i<4;i++){
-            s_wbyte(bbb,(int *)&s[i]);
-        }
+    // int             i, ii, iii, iiii;
+ //  int             i;
+	// int             cmd = _PING;
+ //  int             ret = '\0';
+ //  int             *size;
+ //  uint8_t         s[4];
+  // int             s;
+
+ //  // size = sizeof(cb->sdat_ptr->sch);
+	// printf("  sending ping <%u> to C3 \r\n",cmd);
+	// s_wbyte(bbb,&cmd);
+ //    // printf("  ping <%u> sent\r\n",cmd);
+ //  s_rbyte(bbb,&ret);
+ //    // printf("<%u> returned from read\n", ret);
+ //  if(ret == _ACK){
+ //      printf("  BBB acknowledge received <%u>\n\r",ret);
+ //      printf("  send WRITE_CMD <%u> \r\n",_WRITE_SCH);
+ //      cmd = _WRITE_SCH;
+ //      s_wbyte(bbb,&cmd);
+ //      printf("  sending schedule size <%i>\n\r",*size);
+ //      for(i=0;i<4;i++){
+ //          s_wbyte(bbb,(int *)&s[i]);
+      // }
         // printf("sending schedule\r\n");
         // iiii=0;
         // for(i=0;i<_DAYS_PER_WEEK;i++)
@@ -440,10 +441,10 @@ int c_2(CMD_FSM_CB *cb)
         // for(i=0;i<*size;i++){
         //     s_wbyte(bbb,(int *)cb->sch_ptr++);
         // }
-        return 0;
+        // return 0;
 
-    }
-    printf("  BBB  received <%u>\n\r",ret);
+    // }
+  // printf("  BBB  received <%u>\n\r",ret);
 	return 1;
 }
 /* terminate program */
@@ -778,7 +779,7 @@ int c_25(CMD_FSM_CB *cb)
 
     hit = 0;
     for(i=0;i<_MAX_SCHLIB_SCH;i++){
-        if(strcmp(cb->sdat_ptr->s_data[i].name,cb->w_schedule_name) == 0)
+        if(strcmp(cb->sdat_ptr->s_data[i].name,(char *)cb->w_schedule_name) == 0)
             hit = 1;                              
     }
     if(hit)
@@ -786,7 +787,7 @@ int c_25(CMD_FSM_CB *cb)
     else
         index = (cb->sdat_ptr->schlib_index++);  // add new template
 
-    strcpy(cb->sdat_ptr->s_data[index].name, cb->w_schedule_name);      //copy name
+    strcpy(cb->sdat_ptr->s_data[index].name, (char *)cb->w_schedule_name);      //copy name
     for(i=0;i<_SCHEDULE_SIZE;i++){
         cb->sdat_ptr->s_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
         cb->w_schedule[i] = '\0';                                       //clear working shcedule
@@ -807,7 +808,7 @@ int c_25(CMD_FSM_CB *cb)
 int c_26(CMD_FSM_CB *cb)
 {
 
-    char            temp[200];
+    // char            temp[200];
     int                i,ii;
 
     // printf("wipe out w index %i\r\n",cb->w_template_index);
@@ -851,7 +852,7 @@ int c_27(CMD_FSM_CB *cb)
     for(i=0;i<_SCHEDULE_SIZE;i++){
         cb->w_schedule[i]  = cb->sdat_ptr->s_data[cb->w_template_index].schedule[i];   //load schedule
     }
-    strcpy(cb->w_schedule_name, cb->sdat_ptr->s_data[cb->w_template_index].name);      //load name
+    strcpy((char *)cb->w_schedule_name, cb->sdat_ptr->s_data[cb->w_template_index].name);      //load name
 
 
 
@@ -872,7 +873,7 @@ int c_27(CMD_FSM_CB *cb)
 int c_28(CMD_FSM_CB *cb)
 {
     printf("editing system schedule\r\n");
-    disp_all_schedules(cb,cb->w_sch);
+    disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"\r\n  enter channel number or *  > ");
@@ -927,7 +928,8 @@ int c_32(CMD_FSM_CB *cb)
 /* build new schedule */
 int c_33(CMD_FSM_CB *cb)
 {
-    int             channel, day, i, ii, iii;
+    // int             channel, day;
+    // int              i, ii, iii;
 
     if(cb->w_channel == _ALL_CHANNELS)
       printf("  setting all channels ");
@@ -938,8 +940,10 @@ int c_33(CMD_FSM_CB *cb)
     else
       printf("day %i to schedule template %i\r\n",cb->w_day, cb->w_template_num);
 
-     // load_schedule(cb->w_sch, cb->sdat_ptr->s_data[0].schedule, 0, 0);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
 
+
+     load_schedule(cb->w_sch, cb->sdat_ptr->s_data[0].schedule, 0, 0);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
+     //schedule, template, day, channel  
 
     // for(i=0;i<_SCHEDULE_SIZE;i++)
     //     cb->sch[0][0][i] = cb->sdat_ptr->s_data[1].schedule[i];
@@ -957,7 +961,7 @@ int c_33(CMD_FSM_CB *cb)
     //                     cb->sch[ii][i][iii] = cb->sdat_ptr->s_data[cb->sdat_ptr->template_id[ii][i]].schedule[iii];
     
 
-    disp_all_schedules(cb,cb->w_sch);
+    disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"\r\n    > ");

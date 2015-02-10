@@ -264,7 +264,7 @@ int add_sch_rec(uint32_t *sch, int k, int s)    // add or change a schedule reco
         return 0;
     }
     /* insert new record in ordered list */
-    *sch += 1;                  //increase record count
+    *sch += 1;                //increase record count
     end = (sch + *sch) - 1;   //set pointer to end of the list
     sch++;
     printf("\n\n");
@@ -275,7 +275,7 @@ int add_sch_rec(uint32_t *sch, int k, int s)    // add or change a schedule reco
         sch++;      
     } 
     while(end >= sch)
-        *(end+1) = *end--;
+        *(end+1) = *(end--);
     put_state(sch,s);
     put_key(sch,k);
     return 0;      
@@ -397,7 +397,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
 
 uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to  a schedule
  {
-    int         i;
+    // int         i;
     uint32_t    *start_schedule;
 
     start_schedule = sch;
