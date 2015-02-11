@@ -45,25 +45,6 @@ extern char *c_mode[4];
 	char			trace_buf[128];
 #endif
 
-// /* schedule stuff */
-// int             sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE], *sch_ptr;
-// int             schlib[_MAX_SCHLIB_SCH][_SCHEDULE_SIZE];
-// char            schlib_name[_MAX_SCHLIB_SCH][_SCHEDULE_NAME_SIZE];
-// int             w_schedule_name[_SCHEDULE_NAME_SIZE];
-// int             w_schedule_number;
-// int             w_schedule[_SCHEDULE_SIZE];
-
-// /* channel data */
-// int             w_channel;                      //working channel number
-
-// /* working time */
-// int             w_minutes;
-// char            w_minutes_str[4];
-// int             w_hours;
-// char            w_hours_str[4];
-// uint8_t         c_state[_NUMBER_OF_CHANNELS];   //channel state array, 0 = off, 1 = on
-
-
 /***************************************/
 /*****  command  parser fsm start ******/
 /***************************************/
@@ -330,13 +311,35 @@ char *sch2text(uint32_t *sch,char *buf){
     return buf;
 }
 
+/* load buffer with a comma separated list of all records in a schedule */
+char *sch2text2(uint32_t *sch,char *buf){
+    int         sch_recs,  i,key, h, m;
+
+    /*build comma separated list of schedule records for prompt */
+    *buf = '\0';
+    sch_recs = *sch;
+
+    if(sch_recs == 0)
+        strcat(buf,"  no schedule records");
+    else
+        for(i=1;i < sch_recs+1;i++){
+
+            key = get_key(sch[i]);
+            h = key / 60;
+            m = key % 60;
+            sprintf(&buf[strlen(buf)],"  %2i:%02i ",h,m);
+            strcat(buf,onoff[get_s(sch[i])]);
+        }
+    return buf;
+}
+
 /* add schedule template list to buffer  */
 char *make_lib_list(char *buf, CMD_FSM_CB *cb){
     int             hit,i;
-    char            sbuf[20];  //max number of digits for a int
+    char            sbuf[128];  //string buffer
 
     hit = 0;
-    for(i=0;i<_MAX_SCHLIB_SCH;i++){
+    for(i=0;i<cb->sdat_ptr->schlib_index+1;i++){
         if(cb->sdat_ptr->s_data[i].name[0] != '\0'){
             hit = 1;
             strcat(buf,"  ");
@@ -344,8 +347,10 @@ char *make_lib_list(char *buf, CMD_FSM_CB *cb){
             strcat(buf,sbuf);
             strcat(buf," - ");
             strcat(buf,cb->sdat_ptr->s_data[i].name);
-            strcat(buf,"\r\n");
-            // printf("  %i - %s\r\n",i,cb->sdat_ptr->s_data[i].name);
+            strcat(buf," -");
+            sch2text2(cb->sdat_ptr->s_data[i].schedule,sbuf);
+            strcat(buf,sbuf);
+            strcat(buf," \r\n");
         }
     }
     if(hit == 0) 
@@ -487,6 +492,7 @@ int c_6(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
+        printf("state <%i>\r\n",sdat.c_data[i].c_state);
         printf("  %s - %i %s - %s",onoff[sdat.c_data[i].c_state],i,c_mode[sdat.c_data[i].c_mode],sdat.c_data[i].name);
         if((sdat.c_data[i].c_mode) == 3)
             printf(" (%i:%i)",sdat.c_data[i].on_sec,sdat.c_data[i].off_sec);      
@@ -872,11 +878,17 @@ int c_27(CMD_FSM_CB *cb)
 /* enter schedule build mode */
 int c_28(CMD_FSM_CB *cb)
 {
-    printf("editing system schedule\r\n");
+    int           i;
+    char          buf[128];
+
+    printf("editing system schedule\r\n\ntemplate library\r\n");
+    for(i=0;i<cb->sdat_ptr->schlib_index;i++)
+      printf("    %i - %s  %s\r\n",i,cb->sdat_ptr->s_data[i].name,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
+    printf("\r\n*copy of the system schedule\r\n");
     disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\n  enter channel number or *  > ");
+    strcpy(cb->prompt_buffer,"\r\n  enter channel{N|*},day{N|*},template{N}  > ");
     return 0;
 }
 
@@ -897,7 +909,7 @@ int c_30(CMD_FSM_CB *cb)
 {
 
     printf("editing system schedule\r\n");
-    cb->w_day = cb->token_value;
+    cb->w_day = cb->token_value - 1;
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"\r\n  >");
@@ -928,39 +940,37 @@ int c_32(CMD_FSM_CB *cb)
 /* build new schedule */
 int c_33(CMD_FSM_CB *cb)
 {
-    // int             channel, day;
+    int             channel, template, day;
     // int              i, ii, iii;
 
+    template = cb->w_template_num;
     if(cb->w_channel == _ALL_CHANNELS)
       printf("  setting all channels ");
-    else
+    else{
+      channel = cb->w_channel;
       printf("  setting channel %i ", cb->w_channel);
+    }
     if(cb->w_day == _ALL_DAYS)
       printf("all days to schedule template %i\r\n",cb->w_template_num);
-    else
+    else{
+      day = cb->w_day;
       printf("day %i to schedule template %i\r\n",cb->w_day, cb->w_template_num);
+    }
 
-
-
-     load_schedule(cb->w_sch, cb->sdat_ptr->s_data[0].schedule, 0, 0);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
-     //schedule, template, day, channel  
-
-    // for(i=0;i<_SCHEDULE_SIZE;i++)
-    //     cb->sch[0][0][i] = cb->sdat_ptr->s_data[1].schedule[i];
-
-    
-        // cb->sch[0][0][i] = cb->sdat_ptr->s_data[1].schedule[i];
-
-    // printf("rebuilding system schedule\r\n");
-
-    
-    //     for(i=0;i<_NUMBER_OF_CHANNELS;i++)
-    //         if(cb->w_day == _ALL_DAYS)
-    //             for(ii=0;ii<_DAYS_PER_WEEK;ii++)
-    //                 for(iii=0;iii<cb->sdat_ptr->s_data[cb->sdat_ptr->template_id[ii][i]].schedule[0] + 1;iii++)
-    //                     cb->sch[ii][i][iii] = cb->sdat_ptr->s_data[cb->sdat_ptr->template_id[ii][i]].schedule[iii];
-    
-
+    if((cb->w_channel == _ALL_CHANNELS) && (cb->w_day == _ALL_DAYS)){
+      for(day = 0;day < _DAYS_PER_WEEK; day++)
+        for(channel = 0;channel < _NUMBER_OF_CHANNELS; channel++)
+          load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[template].schedule, day, channel);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
+    }
+    else if(cb->w_day == _ALL_DAYS)
+        for(day = 0;day < _DAYS_PER_WEEK; day++)
+          load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[template].schedule, day, channel);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
+    else if(cb->w_channel == _ALL_CHANNELS)
+        for(channel = 0;channel < _NUMBER_OF_CHANNELS; channel++)
+          load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[template].schedule, day, channel);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
+    else
+     load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[template].schedule, day, channel);   // load schedule buffer with 0 - _SCHEDULE_BUFFER
+ 
     disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
     /* build prompt */

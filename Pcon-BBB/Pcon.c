@@ -111,9 +111,13 @@ int main(void) {
 	cmd_fsm_cb.w_sch_ptr = (uint32_t *)cmd_fsm_cb.w_sch;
 	cmd_fsm_cb.sdat_ptr->sch_ptr = (uint32_t *)cmd_fsm_cb.sdat_ptr->sch;
 
+    /* load working schedule from system schedule */
+    printf(" size of schedule buffer = %i\r\n",sizeof(cmd_fsm_cb.w_sch));
+    memcpy(cmd_fsm_cb.w_sch_ptr,cmd_fsm_cb.sdat_ptr->sch_ptr,sizeof(cmd_fsm_cb.w_sch));
+    printf(" system schedule copied to buffer\r\n");
 
 	/* initialize state machines */
-	work_buffer_ptr = work_buffer;  //initialize work buffer pointer
+	work_buffer_ptr = (char *)work_buffer;  //initialize work buffer pointer
 	cmd_fsm_reset(&cmd_fsm_cb); 	//initialize the command processor fsm
 	char_fsm_reset();
 	char_state = 0;					//initialize the character fsm

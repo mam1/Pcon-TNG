@@ -346,18 +346,16 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
         /* print day header */
         for (day=0;day<_DAYS_PER_WEEK;day++)
             printf("%s         ",day_names_short[day]);
-        printf("\n");
+        printf("\n\r");
 
         /* figure the maximum number of transitions per day */
         mrcnt = 0;
         for(day=0;day<_DAYS_PER_WEEK;day++)
         {
             rcnt[day] = *(get_schedule(sch,day,channel));
-            printf("rcnt[%i] = %i\n\r",day,rcnt[day]);
             if(rcnt[day] > mrcnt)
                 mrcnt = rcnt[day];        //max number of records for the week
         }
-        printf("mrcnt %i\n\r",mrcnt);
 
         /* Print the daily schedules */
         for(i=0;i<mrcnt;i++)
@@ -367,7 +365,6 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
             {
                 rec_ptr = get_schedule(sch,day+1,channel);
                 rec_ptr += (i+1);
-                // printf("XXXXXX\n");
                 if(*get_schedule(sch, day+1,channel) <= i)
                     strcpy(time_state,"         ");
                 else
@@ -376,9 +373,9 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
                 printf("%s   ",time_state);
 
             }
-            printf("\n");
+            printf("\n\r");
         }
-        printf("\n");
+        printf("\n\r");
      } 
 
     return;  
