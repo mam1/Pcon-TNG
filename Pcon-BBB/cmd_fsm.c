@@ -205,8 +205,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 11  edit     */  { c_7,  c_0,  c_0,  c_0, c_28,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 13  zero     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_22,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 15  off      */  { c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 14  on       */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_7, c_22,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 15  off      */  { c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_7, c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 16  system   */  {c_14, c_14, c_14,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 17  status   */  { c_6,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 18  time     */  { c_0, c_11,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -505,15 +505,18 @@ int c_6(CMD_FSM_CB *cb)
 int c_7(CMD_FSM_CB *cb)
 {
     char        numstr[2];
+    char        hold_prompt[_PROMPT_BUFFER_SIZE];
     /* build prompt */
+    strcpy(hold_prompt,cb->prompt_buffer);
     strcpy(cb->prompt_buffer,"'");
     strcat(cb->prompt_buffer,cb->token);
     strcat(cb->prompt_buffer,"' is not a valid command in state ");
     sprintf(numstr, "%d", cb->state);
     strcat(cb->prompt_buffer,numstr);
-    strcat(cb->prompt_buffer,"\n\r> ");
+    strcat(cb->prompt_buffer,"\n\r");
+    strcat(cb->prompt_buffer,hold_prompt);
 
-    return 0;
+    return 1;
 }
 /* command is not recognized */
 int c_8(CMD_FSM_CB *cb)
@@ -521,7 +524,7 @@ int c_8(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"'");
     strcat(cb->prompt_buffer,cb->token);
     strcat(cb->prompt_buffer,"' is not a valid command\n\r> ");
-    return 0;
+    return 1;
 }
 /* set channel control mode to manual and turn channel on */
 int c_9(CMD_FSM_CB *cb)
@@ -1056,7 +1059,7 @@ void cmd_fsm(CMD_FSM_CB *cb)
     }         //transition to next state
     else
     {
-        // printf("*** error returned from action routine\n");
+        while(pop_cmd_q(cmd_fsm_cb.token));  //empty command queue
     }
     return;
 }
