@@ -47,6 +47,9 @@ void disp_sys(void) {
 	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version,
 	_minor_revision);
 	printf(" input buffer size: %d characters\n\r", _INPUT_BUFFER_SIZE);
+	printf(" system schedule size: %d bytes\r\n",sizeof(cmd_fsm_cb.sdat_ptr->sch));
+	printf(" stored schedule templates: %i\r\n",sdat.schlib_index);
+										
 	return;
 }
 /* prompt for user input */
@@ -80,13 +83,8 @@ int main(void) {
 	if (trace_flag == false)
 		printf(" program trace disabled\n");
 
-	/************************ initializations ****************************/
+/************************ initializations ****************************/
 	printf("\033\143"); //clear the terminal screen, preserve the scroll back
-	disp_sys();	        //display system info on serial terminal
-
-	/* open UART1 to connect to BBB */
-	bbb = s_open();
-	printf(" serial device opened handle = %d\r\n",bbb);
 
 	/* load data from file on sd card */
 	load_channel_data(_SYSTEM_DATA_FILE,&sdat);
@@ -105,6 +103,12 @@ int main(void) {
 		}
 		c = fgetc(stdin);	// get rid of trailing CR
 	}
+
+	disp_sys();	        //display system info on serial terminal
+
+	/* open UART1 to connect to BBB */
+	bbb = s_open();
+	printf(" serial device opened handle = %d\r\n",bbb);
 
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm controll block to allow acces to system data
@@ -135,9 +139,10 @@ int main(void) {
 	printf("\r\ninitialization complete\r\n\n");
 	/* set initial prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer,"enter a command\r\n> ");
-	/************************************************************/
-	/**************** start main processing loop ****************/
-	/************************************************************/
+
+/************************************************************/
+/**************** start main processing loop ****************/
+/************************************************************/
 	while (1){
         /* check the token stack */
         while(pop_cmd_q(cmd_fsm_cb.token))

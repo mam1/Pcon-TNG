@@ -597,8 +597,12 @@ int c_14(CMD_FSM_CB *cb)
 {
 
     disp_sys();
-    c_31(cb);
-    strcpy(cb->prompt_buffer,"\r\n> ");
+    printf("\r\nsystem schedule\r\n");
+    disp_all_schedules(cb,(uint32_t *)cb->sdat_ptr->sch_ptr);
+    printf("\r\nworking schedule\r\n");
+    disp_all_schedules(cb,(uint32_t *)cb->w_sch);
+
+    // strcpy(cb->prompt_buffer,"\r\n> ");
 
     return 0;
 }
@@ -785,16 +789,19 @@ int c_25(CMD_FSM_CB *cb)
 {
     int             i, index,hit;
     // char            sbuf[20];  //max number of digits for a int
-
+    printf("indec = %i\r\n",cb->sdat_ptr->schlib_index);
     hit = 0;
-    for(i=0;i<_MAX_SCHLIB_SCH;i++){
+    for(i=0;i<cb->sdat_ptr->schlib_index;i++){
         if(strcmp(cb->sdat_ptr->s_data[i].name,(char *)cb->w_schedule_name) == 0)
-            hit = 1;                              
+            index = (cb->sdat_ptr->schlib_index);    //overwrie existing template
+        else{
+            index = ++(cb->sdat_ptr->schlib_index);  // add new templates
+            break;
+        }
     }
-    if(hit)
-        index = (cb->sdat_ptr->schlib_index);    //overwrie existing template
-    else
-        index = (cb->sdat_ptr->schlib_index++);  // add new template
+    printf("indec = %i\r\n", cb->sdat_ptr->schlib_index);
+    printf("index = %i\r\n", index);
+
 
     strcpy(cb->sdat_ptr->s_data[index].name, (char *)cb->w_schedule_name);      //copy name
     for(i=0;i<_SCHEDULE_SIZE;i++){
@@ -857,6 +864,7 @@ int c_27(CMD_FSM_CB *cb)
     int             i;
 
     cb->w_template_index = cb->token_value;
+    strcpy(cb->w_schedule_name, cb->sdat_ptr->s_data[cb->w_template_index].name);
 
     for(i=0;i<_SCHEDULE_SIZE;i++){
         cb->w_schedule[i]  = cb->sdat_ptr->s_data[cb->w_template_index].schedule[i];   //load schedule
@@ -887,7 +895,7 @@ int c_28(CMD_FSM_CB *cb)
     printf("editing system schedule\r\n\ntemplate library\r\n");
     for(i=0;i<cb->sdat_ptr->schlib_index;i++)
       printf("    %i - %s  %s\r\n",i,cb->sdat_ptr->s_data[i].name,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
-    printf("\r\n*copy of the system schedule\r\n");
+    printf("\r\ncopy of the system schedule\r\n");
     disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
     /* build prompt */
@@ -947,6 +955,8 @@ int c_33(CMD_FSM_CB *cb)
     // int              i, ii, iii;
 
     template = cb->w_template_num;
+    day - cb->w_day;
+    channel = cb->w_channel;
     if(cb->w_channel == _ALL_CHANNELS)
       printf("  setting all channels ");
     else{

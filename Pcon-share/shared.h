@@ -31,7 +31,7 @@
 // #define _BYTES_PER_WORKING_SET		_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE
 
 /* general */
-#define _DAYS_PER_WEEK 			7
+#define _DAYS_PER_WEEK 				7
 #define	_BYTES_PER_INT 				4
 
 #endif
