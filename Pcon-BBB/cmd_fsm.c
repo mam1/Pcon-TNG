@@ -181,8 +181,9 @@ int c_30(CMD_FSM_CB *); /* set working day */
 int c_31(CMD_FSM_CB *); /* set working channel to all */
 int c_32(CMD_FSM_CB *); /* set working day to all */
 int c_33(CMD_FSM_CB *); /* build new schedule */
-int c_34(CMD_FSM_CB *); /*  */
+int c_34(CMD_FSM_CB *); /* state 0 prompt */
 int c_35(CMD_FSM_CB *); /* set working template number */
+int c_36(CMD_FSM_CB *); /* append state 0 prompt to prompt buffer*/
 
 
 
@@ -199,8 +200,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  5  schedule */  {c_28,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  6  ping     */  { c_2,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  7  clock    */  { c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  8  done     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  9  back     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  8  done     */  { c_0, c_34,  c_0,  c_0, c_34,  c_0, c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  9  back     */  { c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 10  new      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  edit     */  { c_7,  c_0,  c_0,  c_0, c_28,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -405,7 +406,7 @@ int c_1(CMD_FSM_CB *cb)
         }
     }
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\n> ");
+    c_34(cb);  // state 0 prompt
     return 0;    
 }
 /* ping BBB */
@@ -484,7 +485,8 @@ int c_5(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"name set for channel ");
     sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
-    strcat(cb->prompt_buffer,"\n\r> ");
+    strcat(cb->prompt_buffer,"\r\n");
+    c_36(cb);   //append state 0 prompt to prompt buffer
     return 0;
 }
 /* display channel data */
@@ -492,13 +494,13 @@ int c_6(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-        printf("state <%i>\r\n",sdat.c_data[i].c_state);
+        // printf("state <%i>\r\n",sdat.c_data[i].c_state);
         printf("  %s - %i %s - %s",onoff[sdat.c_data[i].c_state],i,c_mode[sdat.c_data[i].c_mode],sdat.c_data[i].name);
         if((sdat.c_data[i].c_mode) == 3)
             printf(" (%i:%i)",sdat.c_data[i].on_sec,sdat.c_data[i].off_sec);      
         printf("\r\n");
     }
-    strcpy(cb->prompt_buffer,"\n\r> ");
+    c_34(cb);  // state 0 prompt
     return 0;
 }
 /* command is not valid in current state */
@@ -537,7 +539,9 @@ int c_9(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
-    strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n> ");
+    strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n");
+    c_36(cb);   //append state 0 prompt to prompt buffer
+
     return 0;
 }
 /* set channel control mode to manual and turn channel off */
@@ -551,7 +555,9 @@ int c_10(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
-    strcat(cb->prompt_buffer, " turned off and mode set to manual\r\n> ");
+    strcat(cb->prompt_buffer, " turned off and mode set to manual\r\n");
+    c_36(cb);   //append state 0 prompt to prompt buffer
+
     return 0;
 }
 /* set channel control mode to time */
@@ -563,7 +569,9 @@ int c_11(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
-    strcat(cb->prompt_buffer, " mode set to time\r\n> ");
+    strcat(cb->prompt_buffer, " mode set to time\r\n");
+    c_36(cb);   //append state 0 prompt to prompt buffer
+
     return 0;
 }
 /* set channel control mode to time and sensor */
@@ -575,7 +583,8 @@ int c_12(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
-    strcat(cb->prompt_buffer, " mode set to time & sensor\r\n> ");
+    strcat(cb->prompt_buffer, " mode set to time & sensor\r\n");
+    c_36(cb);   //append state 0 prompt to prompt buffer
     return 0;
 }
 /* set channel control mode to cycle */
@@ -598,12 +607,11 @@ int c_14(CMD_FSM_CB *cb)
 
     disp_sys();
     printf("\r\nsystem schedule\r\n");
-    disp_all_schedules(cb,(uint32_t *)cb->sdat_ptr->sch_ptr);
-    printf("\r\nworking schedule\r\n");
-    disp_all_schedules(cb,(uint32_t *)cb->w_sch);
+    // disp_all_schedules(cb,(uint32_t *)cb->sdat_ptr->sch_ptr);
+    // printf("\r\nworking schedule\r\n");
+    // disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
-    // strcpy(cb->prompt_buffer,"\r\n> ");
-
+    c_34(cb);   // state 0 prompt
     return 0;
 }
 /* move back to previous state */
@@ -787,19 +795,22 @@ int c_24(CMD_FSM_CB *cb)
 /* save schedule template */
 int c_25(CMD_FSM_CB *cb)
 {
-    int             i, index,hit;
+    int             i, index;
     // char            sbuf[20];  //max number of digits for a int
-    printf("indec = %i\r\n",cb->sdat_ptr->schlib_index);
-    hit = 0;
-    for(i=0;i<cb->sdat_ptr->schlib_index;i++){
-        if(strcmp(cb->sdat_ptr->s_data[i].name,(char *)cb->w_schedule_name) == 0)
-            index = (cb->sdat_ptr->schlib_index);    //overwrie existing template
+
+    for(i=0;i<cb->sdat_ptr->schlib_index + 1;i++){
+        if(strcmp(cb->sdat_ptr->s_data[i].name,(char *)cb->w_schedule_name) == 0){
+            index = cb->sdat_ptr->schlib_index;    //overwrie existing template
+            printf("**overwrite \r\n");
+        }
         else{
-            index = ++(cb->sdat_ptr->schlib_index);  // add new templates
+            index = cb->sdat_ptr->schlib_index;  // add new templates
+            index = index + 1;    
+            cb->sdat_ptr->schlib_index += 1;
             break;
         }
     }
-    printf("indec = %i\r\n", cb->sdat_ptr->schlib_index);
+    printf("cb->sdat_ptr->schlib_index = %i\r\n", cb->sdat_ptr->schlib_index);
     printf("index = %i\r\n", index);
 
 
@@ -991,14 +1002,13 @@ int c_33(CMD_FSM_CB *cb)
     return 0;
 }
 
-/*  */
+/* state 0 prompt */
 int c_34(CMD_FSM_CB *cb)
 {
-    printf("**************************\r\n");
-    cb->w_day = _ALL_DAYS;
+
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\n  enter template number  > ");
+    strcpy(cmd_fsm_cb.prompt_buffer,"\r\nenter a command\r\n> ");
     return 0;
 }
 
@@ -1014,21 +1024,16 @@ int c_35(CMD_FSM_CB *cb)
     strcpy(cb->prompt_buffer,"\r\n  enter template number  > ");
     return 0;
 }
-// /* display keyword list */
-// int c_31(CMD_FSM_CB *cb)
-// {
-//         int             i;
-//         char             temp[200];
 
-//     /* build prompt */
-//     strcpy(cb->prompt_buffer,"Keyword list\r\n");
-//     for(i=0;i<_CMD_TOKENS;i++){
-//         sprintf(temp, "  %i - %d\r\n", i, cb->w_channel);
-//         strcat(cb->prompt_buffer, temp); 
-//     }
-//     strcpy(cb->prompt_buffer,"\r\n  > ");
-//     return 0;
-// }
+/* appenf state 0 prompt to prompt buffer */
+int c_36(CMD_FSM_CB *cb)
+{
+
+
+    /* build prompt */
+    strcat(cmd_fsm_cb.prompt_buffer,"\r\nenter a command\r\n> ");
+    return 0;
+}
 
 /**************** end command fsm action routines ******************/
 

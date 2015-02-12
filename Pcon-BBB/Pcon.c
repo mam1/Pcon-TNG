@@ -44,8 +44,7 @@ char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 /***************************** support routines ********************************/
 /* write system info to stdout */
 void disp_sys(void) {
-	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version,
-	_minor_revision);
+	printf(" Pcon  %d.%d.%d \n\r", _major_version, _minor_version,_minor_revision);
 	printf(" input buffer size: %d characters\n\r", _INPUT_BUFFER_SIZE);
 	printf(" system schedule size: %d bytes\r\n",sizeof(cmd_fsm_cb.sdat_ptr->sch));
 	printf(" stored schedule templates: %i\r\n",sdat.schlib_index);
@@ -66,7 +65,7 @@ int main(void) {
 	int	char_state;			//current state of the character processing fsm
 	int prompted = false;	//has a prompt been sent
 	int i;
-	// FILE *sd_card;	
+
 	/************************* setup trace *******************************/
 #ifdef _TRACE
 	trace_flag = true;
@@ -85,6 +84,8 @@ int main(void) {
 
 /************************ initializations ****************************/
 	printf("\033\143"); //clear the terminal screen, preserve the scroll back
+	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version,
+	_minor_revision);
 
 	/* load data from file on sd card */
 	load_channel_data(_SYSTEM_DATA_FILE,&sdat);
@@ -103,8 +104,6 @@ int main(void) {
 		}
 		c = fgetc(stdin);	// get rid of trailing CR
 	}
-
-	disp_sys();	        //display system info on serial terminal
 
 	/* open UART1 to connect to BBB */
 	bbb = s_open();
@@ -137,6 +136,8 @@ int main(void) {
 	trace(_TRACE_FILE_NAME,"Pcon",char_state,NULL,"starting main event loop\n",trace_flag);
 #endif
 	printf("\r\ninitialization complete\r\n\n");
+	disp_sys();	        //display system info on serial terminal
+	printf("\r\n\n");
 	/* set initial prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer,"enter a command\r\n> ");
 
