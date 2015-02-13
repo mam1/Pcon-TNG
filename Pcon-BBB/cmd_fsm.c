@@ -606,10 +606,10 @@ int c_14(CMD_FSM_CB *cb)
 {
 
     disp_sys();
-    printf("\r\nsystem schedule\r\n");
-    // disp_all_schedules(cb,(uint32_t *)cb->sdat_ptr->sch_ptr);
-    // printf("\r\nworking schedule\r\n");
-    // disp_all_schedules(cb,(uint32_t *)cb->w_sch);
+    printf("\r\nsystem schedule ***********************************************************\r\n");
+    disp_all_schedules(cb,(uint32_t *)cb->sdat_ptr->sch_ptr);
+    printf("\r\nworking schedule **********************************************************\r\n");
+    disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
     c_34(cb);   // state 0 prompt
     return 0;
@@ -796,23 +796,23 @@ int c_24(CMD_FSM_CB *cb)
 int c_25(CMD_FSM_CB *cb)
 {
     int             i, index;
-    // char            sbuf[20];  //max number of digits for a int
 
-    for(i=0;i<cb->sdat_ptr->schlib_index + 1;i++){
-        if(strcmp(cb->sdat_ptr->s_data[i].name,(char *)cb->w_schedule_name) == 0){
-            index = cb->sdat_ptr->schlib_index;    //overwrie existing template
-            printf("**overwrite \r\n");
-        }
-        else{
-            index = cb->sdat_ptr->schlib_index;  // add new templates
-            index = index + 1;    
-            cb->sdat_ptr->schlib_index += 1;
-            break;
-        }
+    
+    if(cb->sdat_ptr->schlib_index ==  0){
+        index = 0;
+        cb->sdat_ptr->schlib_index += 1;
     }
-    printf("cb->sdat_ptr->schlib_index = %i\r\n", cb->sdat_ptr->schlib_index);
-    printf("index = %i\r\n", index);
-
+    else
+        for(i=0;i<cb->sdat_ptr->schlib_index + 1;i++){
+            if(strcmp(cb->sdat_ptr->s_data[i].name,(char *)cb->w_schedule_name) == 0){
+                index = i;
+                break;
+            }
+        }
+    if((index != 0) && (index != i)){
+        index = cb->sdat_ptr->schlib_index;
+        cb->sdat_ptr->schlib_index += 1;
+    } 
 
     strcpy(cb->sdat_ptr->s_data[index].name, (char *)cb->w_schedule_name);      //copy name
     for(i=0;i<_SCHEDULE_SIZE;i++){
