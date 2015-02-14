@@ -604,11 +604,16 @@ int c_13(CMD_FSM_CB *cb)
 /* display system data */
 int c_14(CMD_FSM_CB *cb)
 {
+    char            temp_buf[128];
 
     disp_sys();
-    printf("\r\nsystem schedule ***********************************************************\r\n");
+    printf("\r\n******* schedule templates ********************************************************\r\n");
+    strcpy(cb->prompt_buffer,"\0");
+    make_lib_list(temp_buf, cb);
+    printf("%s",temp_buf);
+    printf("\r\n******* system schedule ***********************************************************\r\n");
     disp_all_schedules(cb,(uint32_t *)cb->sdat_ptr->sch_ptr);
-    printf("\r\nworking schedule **********************************************************\r\n");
+    printf("\r\n******* working schedule **********************************************************\r\n");
     disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
     c_34(cb);   // state 0 prompt
