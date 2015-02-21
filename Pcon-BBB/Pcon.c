@@ -169,7 +169,7 @@ int main(void) {
 				work_buffer[i] = '\0';
 			char_fsm_reset();						//reset char fsm
 			prompted = false;						//force a prompt
-			strcpy(cmd_fsm_cb.prompt_buffer,"command processor reset\r\n> ");
+			strcpy(cmd_fsm_cb.prompt_buffer,"command processor reset\r\n\nenter a command\r\n> ");
 			break;
 
 /* CR */	case _CR:

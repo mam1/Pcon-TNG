@@ -200,8 +200,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  5  schedule */  {c_28,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  6  ping     */  { c_2,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  7  clock    */  { c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  8  done     */  { c_0, c_34,  c_0,  c_0, c_34,  c_0, c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  9  back     */  { c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  8  done     */  { c_0, c_34,  c_0,  c_0, c_34,  c_0, c_18, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  9  back     */  { c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 10  new      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  edit     */  { c_7,  c_0,  c_0,  c_0, c_28,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -674,7 +674,7 @@ int c_18(CMD_FSM_CB *cb)
 {
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"schedule template maintenance\r\n");
+    strcpy(cb->prompt_buffer,"schedule template maintenance\r\n\ntemplate library\r\n");
     make_lib_list(cb->prompt_buffer, cb);
     return 0;
 }
@@ -905,12 +905,25 @@ int c_27(CMD_FSM_CB *cb)
 /* enter schedule build mode */
 int c_28(CMD_FSM_CB *cb)
 {
-    int           i;
-    char          buf[128];
+    int             i, ii;
+    int             max_name_size;       
+    char            buf[128];
+    char            pad[_SCHEDULE_NAME_SIZE];
+    int             pad_size;
+
+    max_name_size = 0;
+    for(i=0;i<cb->sdat_ptr->schlib_index;i++)
+        if(max_name_size < strlen(cb->sdat_ptr->s_data[i].name))
+            max_name_size = strlen(cb->sdat_ptr->s_data[i].name);
 
     printf("editing system schedule\r\n\ntemplate library\r\n");
-    for(i=0;i<cb->sdat_ptr->schlib_index;i++)
-      printf("    %i - %s  %s\r\n",i,cb->sdat_ptr->s_data[i].name,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
+    for(i=0;i<cb->sdat_ptr->schlib_index;i++){
+        pad_size = max_name_size - strlen(cb->sdat_ptr->s_data[i].name);
+        pad[0] = '\0';
+        for(ii=0;ii<pad_size;ii++)
+            strcat(pad," ");
+        printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->s_data[i].name,pad,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
+    }
     printf("\r\ncopy of the system schedule\r\n");
     disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
