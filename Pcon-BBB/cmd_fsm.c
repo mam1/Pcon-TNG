@@ -55,19 +55,19 @@ char    *keyword[_CMD_TOKENS] = {
 /*  1 */    "STR",                                                                                                                              
 /*  2 */    "OTHER",                                                                                                            
 /*  3 */    "*",                                                                                                                                
-/*  4 */    "q",
+/*  4 */    "q",        //
 /*  5 */    "schedule",                                                                                                 
 /*  6 */    "ping",                                                                                 
 /*  7 */    "xxxx",
-/*  8 */    "done",
-/*  9 */    "back",
+/*  8 */    "done",     //
+/*  9 */    "back",     //
 /* 10 */    "xxxx",
 /* 11 */    "edit",
 /* 12 */    "delete",
 /* 13 */    "zero",
 /* 14 */    "on",
 /* 15 */    "off",
-/* 16 */    "system",
+/* 16 */    "system",   //
 /* 17 */    "status",
 /* 18 */    "time",
 /* 19 */    "t&s",
@@ -79,7 +79,7 @@ char    *keyword[_CMD_TOKENS] = {
 /* 25 */    "channel",
 /* 26 */    "load",
 /* 27 */    "help",
-/* 28 */    "?"  };
+/* 28 */    "?"  };     //
 
 /* command definitions */
 char    *keyword_defs[_CMD_TOKENS] = {
@@ -112,6 +112,31 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /* 26 */    "load",
 /* 27 */    "display all valid commands",
 /* 28 */    "display all valid commands"  };
+
+/* state specific command definitions for INT */
+char    *INT_def[_CMD_STATES] = {
+/*  0 */    "channel number",
+/*  1 */    "",   
+/*  2 */    "on seconds",
+/*  3 */    "off seconds",
+/*  4 */    "template number",
+/*  5 */    "",
+/*  6 */    "hour",
+/*  7 */    "day number",
+/*  8 */    "channel number",
+/*  9 */    "template number",
+/* 10 */    "",
+/* 11 */    "minute",
+/* 12 */    "",
+/* 13 */    "hour",
+/* 14 */    "minute",
+/* 15 */    "second",
+/* 16 */    "day of the week",
+/* 17 */    "date",
+/* 18 */    "month",
+/* 19 */    "year",
+/* 20 */    "",
+/* 21 */    "" };
 
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
@@ -380,9 +405,9 @@ int c_1(CMD_FSM_CB *cb)
 
     // printf("sizeofkeyword %i\n\r",(sizeof(keyword)/4));
 
-    printf("\r\n ESC . reset command processor\r\n");
-    printf(" ? ... display current state and list all valid commands\r\n");
-    printf(" q ... terminate the application\r\n");
+    printf("\r\nvalid commands any state\r\n  ESC . reset command processor\r\n");
+    printf("  ? ... display current state and list all valid commands\r\n");
+    printf("  q ... terminate the application\r\n");
     printf("       -------------------------------------\r\n");
 
     for(i=0;i<_CMD_TOKENS;i++){
@@ -402,7 +427,11 @@ int c_1(CMD_FSM_CB *cb)
             for(ii=0;ii<((dots + 2)- strlen(keyword[i]));ii++){
                 printf(".");
             }
-            printf(" %s\r\n",keyword_defs[i]);
+            printf(" %s",keyword_defs[i]);
+            if(i==0)
+                printf(" (%s)",INT_def[i]);
+            printf("\r\n");
+
         }
     }
     /* build prompt */
