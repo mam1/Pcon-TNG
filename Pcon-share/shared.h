@@ -4,7 +4,7 @@
 /* version info */
 #define _major_version 			2
 #define _minor_version 			2
-#define _minor_revision 		6
+#define _minor_revision 		7
 
 /* shared bone-C3 commands */
 #define _PING         	27
