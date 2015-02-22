@@ -11,7 +11,7 @@
 #define _MAX_TOKEN_SIZE			128
 
 /* command parser fsm */
-#define _CMD_TOKENS     		29
+#define _CMD_TOKENS     		34
 #define _CMD_STATES     		22 
 
 #define _MAX_SCHLIB_SCH			20
