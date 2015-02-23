@@ -381,7 +381,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return;  
  }
 
- void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   // load schedule buffer with 0 - _SCHEDULE_BUFFER
+ void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   // load schedule buffer w
  {
     int         i;
     uint32_t    *start_schedule;
