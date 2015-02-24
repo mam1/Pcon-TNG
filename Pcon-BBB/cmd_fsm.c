@@ -176,7 +176,7 @@ char    *STR_def[_CMD_STATES] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21*/
-/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9, 10,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  2  $        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -250,7 +250,7 @@ int c_34(CMD_FSM_CB *); /* state 0 prompt */
 int c_35(CMD_FSM_CB *); /* set working template number */
 int c_36(CMD_FSM_CB *); /* append state 0 prompt to prompt buffer */
 int c_37(CMD_FSM_CB *); /* display debug data */
-
+int c_38(CMD_FSM_CB *); /* state 7 prompt */
 
 
 
@@ -288,7 +288,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 27  OTHER    */  { c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 28  ?        */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
 /* 29  q        */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_0,  c_0,  c_0,  c_0},
-/* 30  done     */  { c_0, c_34,  c_0,  c_0, c_34,  c_0, c_18, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 30  done     */  { c_0, c_34,  c_0,  c_0, c_34,  c_0, c_18, c_34, c_34, c_34, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 31  back     */  { c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 32  system   */  {c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14},
 /* 33  debug    */  {c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37}};
@@ -583,8 +583,8 @@ int c_4(CMD_FSM_CB *cb)
 {
     if (cb->token_value < _NUMBER_OF_CHANNELS){
         cb->w_channel = cb->token_value;
-       cb->w_minutes = 0;
-       cb->w_hours = 0;
+       	cb->w_minutes = 0;
+       	cb->w_hours = 0;
         strcpy(cb->prompt_buffer,"enter action for channel ");
         strcat(cb->prompt_buffer,cb->token);
         strcat(cb->prompt_buffer,"\n\r> ");
@@ -1075,13 +1075,18 @@ int c_29(CMD_FSM_CB *cb)
 /* set working day */
 int c_30(CMD_FSM_CB *cb)
 {
-
-    // printf("editing system schedule\r\n");
-    cb->w_day = cb->token_value - 1;
+    if ((cb->token_value > 0) && (cb->token_value < _DAYS_PER_WEEK + 1)){
+ 		cb->w_day = cb->token_value - 1;
+        return 0;
+    }
+    strcpy(cb->prompt_buffer,"\r\n  day number must be 1 to 7 > ");
+    return 1;
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\n  >");
+    strcpy(cb->prompt_buffer,"\r\n  enter day number or * > ");
+
     return 0;
+
 }
 
 /* set working channel to all */
@@ -1198,6 +1203,21 @@ int c_37(CMD_FSM_CB *cb)
 
     c_34(cb);   // state 0 prompt
     return 0;
+}
+
+/* reset work variables and display state 7 prompt */ 
+int c_38(CMD_FSM_CB *cb)
+{
+    // char            temp_buf[128];
+
+   cb->w_channel = 0;
+   cb->w_channel = 0;
+   cb->w_template_num = 0;
+
+   /* build prompt */
+   c_27(cb);
+   
+   return 0; 
 }
 /**************** end command fsm action routines ******************/
 
