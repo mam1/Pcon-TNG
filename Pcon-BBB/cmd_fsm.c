@@ -1166,8 +1166,6 @@ int c_34(CMD_FSM_CB *cb)
 /* set working template number */
 int c_35(CMD_FSM_CB *cb)
 {
-
-
     cb->w_template_num = cb->token_value;
     c_33(cb);
 
