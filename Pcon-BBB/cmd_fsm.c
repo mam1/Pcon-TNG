@@ -176,7 +176,7 @@ char    *STR_def[_CMD_STATES] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21*/
-/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9, 10,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  2  $        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -1123,7 +1123,7 @@ int c_33(CMD_FSM_CB *cb)
       printf("  setting all channels ");
     else{
       channel = cb->w_channel;
-      printf("setting channel %i ", cb->w_channel);
+      printf("  setting channel %i ", cb->w_channel);
     }
     if(cb->w_day == _ALL_DAYS)
       printf("all days to schedule template %i\r\n",cb->w_template_num);
@@ -1149,7 +1149,7 @@ int c_33(CMD_FSM_CB *cb)
     disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\n    > ");
+    strcpy(cb->prompt_buffer,"\r\n  enter channel{N(0...7)|*},day{N(1...7)|*},template{N}  > ");
     return 0;
 }
 
@@ -1172,7 +1172,7 @@ int c_35(CMD_FSM_CB *cb)
     c_33(cb);
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"\r\n  enter template number  > ");
+    strcpy(cb->prompt_buffer,"\r\n  enter channel{N(0...7)|*},day{N(1...7)|*},template{N}  > ");
     return 0;
 }
 
