@@ -6,9 +6,6 @@
 /*      is the number of records in the schedule the following int      */
 /*      indicate a time and state transition for each channel.          */                                                       
 /*                                                                      */
-/*      Functions with support                                           */
-/*      buffer to a sd card also CRUD for schedule records              */
-/*                                                                      */
 /*      A schedule record is a unsigned 32 bit value.  The high bit     */ 
 /*      indicated the state (on or off) the lower bits contain the      */
 /*                                                                      */
@@ -340,10 +337,11 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
 
     for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
-    /* print channel header */        
+        /* print channel header */        
         printf("\r\nchannel %i <%s>\r\n",channel,cb->sdat_ptr->c_data[channel].name);
 
         /* print day header */
+        printf("   ");
         for (day=0;day<_DAYS_PER_WEEK;day++)
             printf("%s         ",day_names_short[day]);
         printf("\n\r");
@@ -360,12 +358,12 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
         /* Print the daily schedules */
         for(i=0;i<mrcnt;i++)
         {
-            printf("         ");
+            // printf("         ");
             for(day=0;day<_DAYS_PER_WEEK;day++)
             {
-                rec_ptr = get_schedule(sch,day+1,channel);
+                rec_ptr = get_schedule(sch,day,channel);
                 rec_ptr += (i+1);
-                if(*get_schedule(sch, day+1,channel) <= i)
+                if(*get_schedule(sch, day,channel) <= i)
                     strcpy(time_state,"         ");
                 else
                     sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);
@@ -381,6 +379,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return;  
  }
 
+/*  */
  void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   // load schedule buffer w
  {
     int         i;
@@ -392,20 +391,25 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return;
  }
 
-uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to  a schedule
+uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to a schedule for a (day,channel)
  {
     // int         i;
     uint32_t    *start_schedule;
 
+    // day = day + 1;
+    // printf("day = %i channel = %i\r\n",day,channel);
+
     start_schedule = sch;
-    while(day > 0){
+    while(day > 0){         //move day pointer to the requested day
         start_schedule += _BYTES_PER_DAY;
         day--;
     }
-    while(channel > 0){
+    while(channel > 0){     //move channel pointer to the requested channel
         start_schedule += _SCHEDULE_SIZE;
-        channel--;    }               //move channel pointer to the requested channel
+        channel--;    
+    }               
 
     return (uint32_t *)start_schedule;
+    // return sch;
  }
 
