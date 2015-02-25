@@ -57,7 +57,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     return sd;
 }
 
-void save_channel_data(char *fname,SYS_DAT *cdat){
+void save_system_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
     sd = sd_open(fname,cdat);
     if(fwrite(cdat, sizeof(*cdat), 1, sd) != 1){
@@ -68,7 +68,7 @@ void save_channel_data(char *fname,SYS_DAT *cdat){
     fclose(sd);
     return;
 }
-void load_channel_data(char *fname,SYS_DAT *cdat){
+void load_system_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
     int     rtn;
     sd = sd_open(fname,cdat);

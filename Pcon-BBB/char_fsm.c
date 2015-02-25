@@ -4,7 +4,7 @@
 #include <ctype.h> 		//isalnum, tolower
 #include <stdint.h>		//uint_8, uint_16, uint_32, etc.
 #include <stdlib.h>
-// #include <malloc.h>
+ // #include <malloc.h>
 #include "Pcon.h"
 #include "typedefs.h"
 #include "char_fsm.h"

@@ -186,7 +186,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  7  $        */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  8  $        */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  9  $        */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 10  $        */  { 0,  1,  2,  3,  5,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 10  replace  */  { 0,  1,  2,  3,  5,  5,  6,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 11  edit     */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 12  delete   */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 13  zero     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -199,7 +199,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 20  cycle    */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 21  startup  */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 22  reboot   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 23  save     */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 23  save     */  { 0,  1,  2,  3,  4,  5,  4,  5,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 24  template */  { 4,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 25  channel  */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 26  load     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -601,7 +601,7 @@ int c_5(CMD_FSM_CB *cb)
     char        numstr[2];
 
     strcpy(sdat.c_data[cb->w_channel].name,dequote(cb->token));
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
     /* build prompt */
     strcpy(cb->prompt_buffer,"name set for channel ");
     sprintf(numstr, "%d", cb->w_channel);
@@ -655,7 +655,7 @@ int c_9(CMD_FSM_CB *cb)
     char        numstr[2];
     sdat.c_data[cb->w_channel].c_mode = 0;
     sdat.c_data[cb->w_channel].c_state = 1;
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
     /* build prompt */
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
@@ -672,7 +672,7 @@ int c_10(CMD_FSM_CB *cb)
     sdat.c_data[cb->w_channel].c_mode = 0;
     sdat.c_data[cb->w_channel].c_state = 0;
     /* build prompt */
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
@@ -686,7 +686,7 @@ int c_11(CMD_FSM_CB *cb)
 {
     char        numstr[2];
     sdat.c_data[cb->w_channel].c_mode = 1;
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
@@ -700,7 +700,7 @@ int c_12(CMD_FSM_CB *cb)
 {
     char        numstr[2];
     sdat.c_data[cb->w_channel].c_mode = 2;
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);
@@ -714,7 +714,7 @@ int c_13(CMD_FSM_CB *cb)
     char        sbuf[20];
 
     sdat.c_data[cb->w_channel].c_mode = 3;
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
 
     strcpy(cb->prompt_buffer,"  setting cycle mode for channel ");
     sprintf(sbuf, "%d", cb->w_channel);
@@ -753,7 +753,7 @@ int c_16(CMD_FSM_CB *cb)
     char            sbuf[20];  //max number of digits for a int
 
     sdat.c_data[cb->w_channel].on_sec = cb->token_value;
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
 
     /* build prompt */    
     strcpy(cb->prompt_buffer,"  setting cycle mode for channel ");
@@ -772,7 +772,7 @@ int c_17(CMD_FSM_CB *cb)
     char            sbuf[20];  //max number of digits for a int
 
     sdat.c_data[cb->w_channel].off_sec = cb->token_value;
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
 
     /* build prompt */
     strcpy(cb->prompt_buffer,"  channel ");
@@ -943,7 +943,7 @@ int c_25(CMD_FSM_CB *cb)
         cb->sdat_ptr->s_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
         cb->w_schedule[i] = '\0';                                       //clear working shcedule
     }
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
     
     /* build prompt */
     strcpy(cb->prompt_buffer,"\r\nschedule template: ");
@@ -985,7 +985,7 @@ int c_26(CMD_FSM_CB *cb)
 
     }
     cb->w_template_index = cb->w_template_index - 1;
-    save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);
 
 /* build prompt */
     strcpy(cb->prompt_buffer,"\r\nschedule template: ");
@@ -1232,10 +1232,11 @@ int c_39(CMD_FSM_CB *cb)
     // char            temp_buf[128];
 
        memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr,cmd_fsm_cb.w_sch_ptr,sizeof(cmd_fsm_cb.w_sch));
-       printf("system schedule replaced\r\n");
+       save_system_data(_SYSTEM_DATA_FILE,&sdat);
+       printf("\r\n*** system schedule replaced ***\r\n");
 
    /* build prompt */
-   c_38(cb);
+   c_34(cb);
    
    return 0; 
 }

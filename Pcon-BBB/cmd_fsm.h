@@ -13,7 +13,7 @@ int cmd_type(char *);
 char *build_prompt(char *, int);
 void reset_active(void);
 void reset_edit(void);
-void save_channel_data(char *, SYS_DAT *);
-void load_channel_data(char *, SYS_DAT *);
+void save_system_data(char *, SYS_DAT *);
+void load_system_data(char *, SYS_DAT *);
 
 #endif

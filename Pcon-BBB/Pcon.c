@@ -88,7 +88,7 @@ int main(void) {
 	_minor_revision);
 
 	/* load data from file on sd card */
-	load_channel_data(_SYSTEM_DATA_FILE,&sdat);
+	load_system_data(_SYSTEM_DATA_FILE,&sdat);
 	printf(" system data loaded from %s\r\n",_SYSTEM_DATA_FILE);
 	if((sdat.major_version!=_major_version ) | (sdat.minor_version!=_minor_version) | (sdat.minor_revision!=_minor_revision)){
 		printf("*** versions do not match\r\n");
@@ -99,7 +99,7 @@ int main(void) {
 			sdat.major_version = _major_version;
 			sdat.minor_version = _minor_version;
 			sdat.minor_revision = _minor_revision;
-			save_channel_data(_SYSTEM_DATA_FILE,&sdat);
+			save_system_data(_SYSTEM_DATA_FILE,&sdat);
 			printf("  system data file updated\r\n");
 		}
 		c = fgetc(stdin);	// get rid of trailing CR

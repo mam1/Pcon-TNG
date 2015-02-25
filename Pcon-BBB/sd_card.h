@@ -3,8 +3,8 @@
 
 #include "typedefs.h"
 
-void load_channel_data(char *, SYS_DAT *);
-void load_channel_data(char *, SYS_DAT *);
+void load_system_data(char *, SYS_DAT *);
+void load_system_data(char *, SYS_DAT *);
 
 
 
