@@ -23,5 +23,6 @@ void    s_close(int);
 void    s_rbyte(int, int *);
 void    s_wbyte(int, int *);
 void    s_error(int);
+int 	s_ping(int);
 
 #endif /* SERIAL_IO_H_ */

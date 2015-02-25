@@ -12,10 +12,7 @@
 
 /* shared codes, bone and prop */
 #include "../Pcon-share/shared.h"
-
-
-
- 
+// #include "../Pcon-share/shared.h"
 
 /* functions */
 void disp_sys(void);

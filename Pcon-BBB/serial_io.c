@@ -18,6 +18,9 @@
 #include <sys/ioctl.h>
 #include "Pcon.h"
 #include "serial_io.h"
+#include "typedefs.h"
+
+extern int        bbb;
 
 static struct termios oldtio, newtio;
 
@@ -111,21 +114,17 @@ void s_rbyte(int fd, int *byte){
   int    ret;
   int     i;
 
-  printf("before read fd = %d, byte = <%u>\r\n",fd,*byte);
-
-  // ret = read(fd,byte,1);
-  // printf("\r\n  return <%d> byte <%u>\r\n",ret, *byte);
-  // return;
   i =0;
   while(1){
     ret = read(fd,byte,1);
-    if((ret < 0) && (i++ == READ_TRYS)){
+    if((ret == 0) && (i++ > READ_TRYS)){
       perror("\n*** serial read error ");
       s_error(fd);
     }
     if(ret > 0)
       return;
-    usleep(10);
+    usleep(20);
+    // printf("loop .....\r\n");
   }
   perror("\n*** serial read error no records read ");
   s_error(fd);
@@ -150,3 +149,42 @@ void s_error(int fd){
   return;
 }
 
+/* send schedule data to the C3 */
+int s_send_schedule(CMD_FSM_CB *cb){
+  int         send_bytes;
+  int         wsch = _WRITE_SCH;
+  uint32_t    *sch_ptr;
+
+  send_bytes = _SCHEDULE_SIZE * _BYTES_PER_INT;
+  sch_ptr = cb->sdat_ptr->sch_ptr;
+
+  s_wbyte(bbb,&wsch);
+
+  // while(send_bytes-- > 0){
+  //   s_wbyte(bbb,sch_ptr++);
+  // }
+
+
+  return 0;
+}
+
+/* get the state of the relays from the C3 */
+int s_get_status(){
+
+  return 0;
+}
+
+/* ping the C3 */
+int s_ping(int fd){
+  int             ping = _PING;
+  int             ret = '\0';
+
+  s_wbyte(fd,&ping);
+  s_rbyte(fd,&ret);
+  if(ret == _ACK)
+    return 0;
+  else
+      return 1;
+
+  return ret;
+}

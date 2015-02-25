@@ -533,46 +533,16 @@ int c_1(CMD_FSM_CB *cb)
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-    // int             i, ii, iii, iiii;
- //  int             i;
-	// int             cmd = _PING;
- //  int             ret = '\0';
- //  int             *size;
- //  uint8_t         s[4];
-  // int             s;
+	int 		i;
 
- //  // size = sizeof(cb->sdat_ptr->sch);
-	// printf("  sending ping <%u> to C3 \r\n",cmd);
-	// s_wbyte(bbb,&cmd);
- //    // printf("  ping <%u> sent\r\n",cmd);
- //  s_rbyte(bbb,&ret);
- //    // printf("<%u> returned from read\n", ret);
- //  if(ret == _ACK){
- //      printf("  BBB acknowledge received <%u>\n\r",ret);
- //      printf("  send WRITE_CMD <%u> \r\n",_WRITE_SCH);
- //      cmd = _WRITE_SCH;
- //      s_wbyte(bbb,&cmd);
- //      printf("  sending schedule size <%i>\n\r",*size);
- //      for(i=0;i<4;i++){
- //          s_wbyte(bbb,(int *)&s[i]);
-      // }
-        // printf("sending schedule\r\n");
-        // iiii=0;
-        // for(i=0;i<_DAYS_PER_WEEK;i++)
-        //     for(ii=0;ii<_NUMBER_OF_CHANNELS;ii++)
-        //         for(iii=0;iii<(_SCHEDULE_SIZE);iii++){
-        //             cb->sdat_ptr->sch[i][ii][iii] = iiii++;
-        //         }
-
-        // cb->sch_ptr = (uint32_t *)cb->sdat_ptr->sch;
-        // for(i=0;i<*size;i++){
-        //     s_wbyte(bbb,(int *)cb->sch_ptr++);
-        // }
-        // return 0;
-
-    // }
-  // printf("  BBB  received <%u>\n\r",ret);
-	return 1;
+	for(i=0;i<10;i++){
+		if(s_ping(bbb))
+			printf("\r  failed\r\n\n");
+		else
+			printf("\r  sucess\r\n\n");
+	}
+	c_34(cb);
+	return 0;
 }
 /* terminate program */
 int c_3(CMD_FSM_CB *cb)
@@ -1229,11 +1199,11 @@ int c_38(CMD_FSM_CB *cb)
 /* replace system schedule */ 
 int c_39(CMD_FSM_CB *cb)
 {
-    // char            temp_buf[128];
-
        memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr,cmd_fsm_cb.w_sch_ptr,sizeof(cmd_fsm_cb.w_sch));
        save_system_data(_SYSTEM_DATA_FILE,&sdat);
        printf("\r\n*** system schedule replaced ***\r\n");
+       s_send_schedule(cb);
+       printf("   revised schedule sent to C3\r\n");
 
    /* build prompt */
    c_34(cb);

@@ -31,19 +31,21 @@
 /***************************** externals ******************************/
 
 int main(int argc, char *argv[]){
-    fdserial             *C3port;
-    int             C3byte;
-    int             out_byte;
-    int             *size;
-    uint8_t          s[4];
-    int              sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1];
+    fdserial            *C3port;
+    int                 C3byte;
+    int                 out_byte;
+    int                 *size;
+    uint8_t             s[4];
+    uint32_t            sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE], *sch_ptr;
 
-    int             i;
+    int             i, get_bytes;
     int             c;
 
     sleep(1);
     printf("\033\143"); //clear the terminal screen, preserve the scroll back
     disp_sys();
+
+    sch_ptr = sch;
 
     printf("schedule size %i bytes\r\n",sizeof(sch));
     size = &s[0];
@@ -52,10 +54,7 @@ int main(int argc, char *argv[]){
     printf("C3port = %i\n",C3port);
     fdserial_rxFlush(C3port);           // flush input buffer
     fdserial_txFlush(C3port);           // flush input buffer
-    // out_byte = PING;
-    // printf("out byte <%u>\n",out_byte);
-    // fdserial_txChar(C3port, out_byte);
-    // printf("byte sent \n");
+
     while(1){
         printf("wait for anything from the bone\n");
         while (fdserial_rxReady(C3port) == 0);      //wait for something to show up in the buffer
@@ -63,24 +62,30 @@ int main(int argc, char *argv[]){
         printf("got a <%u> from the bone\n",C3byte);
         switch(C3byte){
             case _PING:
-                out_byte = ACK;
-                printf("sending ACK <%u>\n",out_byte);
+                printf("recieved a _PING, sending ACK <%u>\n\n",out_byte);
+                out_byte = _ACK;
                 fdserial_txChar(C3port, out_byte); 
                 break;
             case _WRITE_SCH:
-                for(i=0;i<4;i++){
-                    while (fdserial_rxReady(C3port) == 0);      //wait for something to show up in the buffer
-                    s[i] = fdserial_rxChar(C3port);           //grab a byte 
-                    printf("read <%u> from the bone\r\n",s[i]);
+                get_bytes = sizeof(sch);
+                printf("recieved a _WRITE_SCH, reading %i bytes from the bone\r\n",get_bytes);
+                printf("recieved a _WRITE_SCH, reading %i bytes from the bone\r\n",get_bytes);
+                out_byte = _ACK;
+                fdserial_txChar(C3port, out_byte);
+                while(get_bytes-- > 0){
+                    while (fdserial_rxReady(C3port) == 0){
+                        pause(20);
+                        printf(".");
+                    }                             //wait for something to show up in the buffer
+                    *sch_ptr = fdserial_rxChar(C3port);         //grab a byte
+                    sch_ptr++;
+                    printf("\n\rbyte written\n\r"); 
                 }
-                printf("*** received a size of %i\n",*size);
-                for(i=0;i<*size;i++){
-                    c = fdserial_rxChar(C3port); 
-                    printf("%i\r\n",(int)c);      
-                }
+                printf("schedule recieved from the bone\n\r");
                 break;
 
             case _PUSH_STATS:
+                break;
             default:
                 printf("unknown command received from the bone <%u>\n",C3byte);
         }
