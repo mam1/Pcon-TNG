@@ -152,17 +152,25 @@ void s_error(int fd){
 /* send schedule data to the C3 */
 int s_send_schedule(CMD_FSM_CB *cb){
   int         send_bytes;
-  int         wsch = _WRITE_SCH;
+  int         wsch = _WRITE_SCH, ret;
   uint32_t    *sch_ptr;
+  int         tb = _ACK;
 
-  send_bytes = _SCHEDULE_SIZE * _BYTES_PER_INT;
+  send_bytes = sizeof(cb->w_sch);
+  printf("sending %i bytes\r\n",send_bytes);
   sch_ptr = cb->sdat_ptr->sch_ptr;
 
   s_wbyte(bbb,&wsch);
-
-  // while(send_bytes-- > 0){
-  //   s_wbyte(bbb,sch_ptr++);
-  // }
+  ret = 0;
+  // s_rbyte(bbb,&ret);
+  // if(ret == _ACK)
+  while(send_bytes-- > 0){
+    while(ret != _ACK)
+      s_rbyte(bbb,&ret);
+    s_wbyte(bbb,sch_ptr++);
+    printf("writting send_bytes %i\r\n",send_bytes);
+    usleep(10000);
+  }
 
 
   return 0;

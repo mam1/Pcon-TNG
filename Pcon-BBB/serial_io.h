@@ -18,11 +18,14 @@
 #define SREAD			1
 #define SWRITE			0
 
+#include "typedefs.h"
+
 int     s_open(void);
 void    s_close(int);
 void    s_rbyte(int, int *);
 void    s_wbyte(int, int *);
 void    s_error(int);
 int 	s_ping(int);
+int 	s_send_schedule(CMD_FSM_CB *);
 
 #endif /* SERIAL_IO_H_ */

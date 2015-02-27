@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
     C3port = fdserial_open(RX, TX, MODE, BAUD); //open io port to C3
     printf("C3port = %i\n",C3port);
     fdserial_rxFlush(C3port);           // flush input buffer
-    fdserial_txFlush(C3port);           // flush input buffer
+    fdserial_txFlush(C3port);           // flush transmit buffer
 
     while(1){
         printf("wait for anything from the bone\n");
@@ -69,17 +69,22 @@ int main(int argc, char *argv[]){
             case _WRITE_SCH:
                 get_bytes = sizeof(sch);
                 printf("recieved a _WRITE_SCH, reading %i bytes from the bone\r\n",get_bytes);
-                printf("recieved a _WRITE_SCH, reading %i bytes from the bone\r\n",get_bytes);
+
                 out_byte = _ACK;
                 fdserial_txChar(C3port, out_byte);
+
                 while(get_bytes-- > 0){
+                    out_byte = _ACK;
+                    fdserial_txChar(C3port, out_byte);
                     while (fdserial_rxReady(C3port) == 0){
-                        pause(20);
-                        printf(".");
-                    }                             //wait for something to show up in the buffer
+                        // pause(20);
+                    };                            
                     *sch_ptr = fdserial_rxChar(C3port);         //grab a byte
-                    sch_ptr++;
-                    printf("\n\rbyte written\n\r"); 
+
+                    printf("<%u> recieved\r\n", *sch_ptr);
+                    sch_ptr++;                    
+                    printf("\n\rbyte written\n\rget_bytes = %i\r\n",get_bytes);
+
                 }
                 printf("schedule recieved from the bone\n\r");
                 break;
