@@ -81,9 +81,9 @@ int main(int argc, char *argv[]){
                     };                            
                     *sch_ptr = fdserial_rxChar(C3port);         //grab a byte
 
-                    printf("<%u> recieved\r\n", *sch_ptr);
+                    // printf("<%u> recieved\r\n", *sch_ptr);
                     sch_ptr++;                    
-                    printf("\n\rbyte written\n\rget_bytes = %i\r\n",get_bytes);
+                    // printf("\n\rbyte written\n\rget_bytes = %i\r\n",get_bytes);
 
                 }
                 printf("schedule recieved from the bone\n\r");
