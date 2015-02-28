@@ -53,7 +53,7 @@ extern char *c_mode[4];
 char    *keyword[_CMD_TOKENS] = {
 /*  0 */    "INT",                                                                                                                        
 /*  1 */    "STR",                                                                                                                              
-/*  2 */    "",    //                                                                                                            
+/*  2 */    "current",                                                                                                               
 /*  3 */    "*",                                                                                                                                
 /*  4 */    "",        //
 /*  5 */    "schedule",                                                                                                 
@@ -90,7 +90,7 @@ char    *keyword[_CMD_TOKENS] = {
 char    *keyword_defs[_CMD_TOKENS] = {
 /*  0 */    "valid integer",
 /*  1 */    "alpha numeric string",
-/*  2 */    "",
+/*  2 */    "currently runing system schedule",
 /*  3 */    "wild card match",
 /*  4 */    "",
 /*  5 */    "edit the system schedule",
@@ -135,7 +135,7 @@ char    *INT_def[_CMD_STATES] = {
 /*  7 */    "day number",
 /*  8 */    "channel number",
 /*  9 */    "template number",
-/* 10 */    "",
+/* 10 */    "schedule number",
 /* 11 */    "minute",
 /* 12 */    "",
 /* 13 */    "hour",
@@ -160,7 +160,7 @@ char    *STR_def[_CMD_STATES] = {
 /*  7 */    "",
 /*  8 */    "",
 /*  9 */    "",
-/* 10 */    "",
+/* 10 */    "schedule name",
 /* 11 */    "",
 /* 12 */    "",
 /* 13 */    "",
@@ -176,9 +176,9 @@ char    *STR_def[_CMD_STATES] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21*/
-/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/*  2  $        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  7, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  2  current  */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  4  $        */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  5  schedule */  { 7,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -202,13 +202,13 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 23  save     */  { 0,  1,  2,  3,  4,  5,  4,  5,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 24  template */  { 4,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 25  channel  */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 26  load     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 26  load     */  { 0,  1,  2,  3,  4,  5,  6, 10,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 27  OTHER    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0,  0},
 /* 28  ?        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21},
 /* 29  q        */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 30  done     */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 31  back     */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 32  system   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21},
+/* 32  system   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  7, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21},
 /* 33  debug    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21}};
 
 /*cmd processor functions */
@@ -240,7 +240,7 @@ int c_24(CMD_FSM_CB *); /* delete schedule record */
 int c_25(CMD_FSM_CB *); /* save schedule template */
 int c_26(CMD_FSM_CB *); /* delete schedule template */
 int c_27(CMD_FSM_CB *); /* edit template */
-int c_28(CMD_FSM_CB *); /* enter schedule maintenance mode */
+int c_28(CMD_FSM_CB *); /* enter system schedule maintenance mode */
 int c_29(CMD_FSM_CB *); /* set working channel */
 int c_30(CMD_FSM_CB *); /* set working day */
 int c_31(CMD_FSM_CB *); /* set working channel to all */
@@ -252,6 +252,8 @@ int c_36(CMD_FSM_CB *); /* append state 0 prompt to prompt buffer */
 int c_37(CMD_FSM_CB *); /* display debug data */
 int c_38(CMD_FSM_CB *); /* state 7 prompt */
 int c_39(CMD_FSM_CB *); /* replace system schedule */
+int c_40(CMD_FSM_CB *); /* set prompt to loading schedule buffer */
+int c_41(CMD_FSM_CB *); /* load buffer from system schedule */
 
 
 
@@ -262,7 +264,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21  */
 /*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30, c_35, c_33, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  2  $        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  2  current  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0, c_41,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  3  *        */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0, c_31, c_32,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  4  $        */  { c_0,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_0,  c_0,  c_0,  c_0},
 /*  5  schedule */  {c_28,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -286,7 +288,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 23  save     */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_25,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 24  template */  {c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 25  channel  */  { c_8,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 26  load     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 26  load     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_40,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 27  OTHER    */  { c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 28  ?        */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
 /* 29  q        */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_0,  c_0,  c_0,  c_0},
@@ -416,29 +418,29 @@ char *make_lib_list(char *buf, CMD_FSM_CB *cb){
     int             pad_size;
     char            sbuf[128];
 
-    if(cb->sdat_ptr->schlib_index == 0){
+    if(cb->sdat_ptr->templib_index == 0){
         strcat(cb->prompt_buffer,
             "  no schedule templates defined\r\n  enter name, in quotes, to create a new template\r\n  > "); 
         return buf;
     }
 
     // hit = 0;
-    for(i=0;i<cb->sdat_ptr->schlib_index+1;i++){
-        if(cb->sdat_ptr->s_data[i].name[0] != '\0'){
+    for(i=0;i<cb->sdat_ptr->templib_index+1;i++){
+        if(cb->sdat_ptr->t_data[i].name[0] != '\0'){
             // hit = 1;
 
             max_name_size = 0;
-            for(i=0;i<cb->sdat_ptr->schlib_index;i++)
-                if(max_name_size < strlen(cb->sdat_ptr->s_data[i].name))
-                    max_name_size = strlen(cb->sdat_ptr->s_data[i].name);
+            for(i=0;i<cb->sdat_ptr->templib_index;i++)
+                if(max_name_size < strlen(cb->sdat_ptr->t_data[i].name))
+                    max_name_size = strlen(cb->sdat_ptr->t_data[i].name);
 
-            for(i=0;i<cb->sdat_ptr->schlib_index;i++){
-                pad_size = max_name_size - strlen(cb->sdat_ptr->s_data[i].name);
+            for(i=0;i<cb->sdat_ptr->templib_index;i++){
+                pad_size = max_name_size - strlen(cb->sdat_ptr->t_data[i].name);
                 pad[0] = '\0';
                 for(ii=0;ii<pad_size;ii++)
                     strcat(pad," ");
-                // printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->s_data[i].name,pad,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
-                sprintf(&cb->prompt_buffer[strlen(cb->prompt_buffer)],"    %i - %s%s  %s\r\n",i,cb->sdat_ptr->s_data[i].name,pad,sch2text2(cb->sdat_ptr->s_data[i].schedule,sbuf));
+                // printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->t_data[i].name,pad,sch2text2(cb->sdat_ptr->t_data[i].schedule,buf));
+                sprintf(&cb->prompt_buffer[strlen(cb->prompt_buffer)],"    %i - %s%s  %s\r\n",i,cb->sdat_ptr->t_data[i].name,pad,sch2text2(cb->sdat_ptr->t_data[i].schedule,sbuf));
             }
         }
     }
@@ -459,16 +461,16 @@ void print_tlist(CMD_FSM_CB *cb){
     char            buf[128];
 
     max_name_size = 0;
-    for(i=0;i<cb->sdat_ptr->schlib_index;i++)
-        if(max_name_size < strlen(cb->sdat_ptr->s_data[i].name))
-            max_name_size = strlen(cb->sdat_ptr->s_data[i].name);
+    for(i=0;i<cb->sdat_ptr->templib_index;i++)
+        if(max_name_size < strlen(cb->sdat_ptr->t_data[i].name))
+            max_name_size = strlen(cb->sdat_ptr->t_data[i].name);
 
-    for(i=0;i<cb->sdat_ptr->schlib_index;i++){
-        pad_size = max_name_size - strlen(cb->sdat_ptr->s_data[i].name);
+    for(i=0;i<cb->sdat_ptr->templib_index;i++){
+        pad_size = max_name_size - strlen(cb->sdat_ptr->t_data[i].name);
         pad[0] = '\0';
         for(ii=0;ii<pad_size;ii++)
             strcat(pad," ");
-        printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->s_data[i].name,pad,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
+        printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->t_data[i].name,pad,sch2text2(cb->sdat_ptr->t_data[i].schedule,buf));
     }
 
     return;
@@ -892,25 +894,25 @@ int c_25(CMD_FSM_CB *cb)
     int             i, index;
 
     
-    if(cb->sdat_ptr->schlib_index ==  0){
+    if(cb->sdat_ptr->templib_index ==  0){
         index = 0;
-        cb->sdat_ptr->schlib_index += 1;
+        cb->sdat_ptr->templib_index += 1;
     }
     else
-        for(i=0;i<cb->sdat_ptr->schlib_index + 1;i++){
-            if(strcmp(cb->sdat_ptr->s_data[i].name,(char *)cb->w_schedule_name) == 0){
+        for(i=0;i<cb->sdat_ptr->templib_index + 1;i++){
+            if(strcmp(cb->sdat_ptr->t_data[i].name,(char *)cb->w_schedule_name) == 0){
                 index = i;
                 break;
             }
         }
     if((index != 0) && (index != i)){
-        index = cb->sdat_ptr->schlib_index;
-        cb->sdat_ptr->schlib_index += 1;
+        index = cb->sdat_ptr->templib_index;
+        cb->sdat_ptr->templib_index += 1;
     } 
 
-    strcpy(cb->sdat_ptr->s_data[index].name, (char *)cb->w_schedule_name);      //copy name
+    strcpy(cb->sdat_ptr->t_data[index].name, (char *)cb->w_schedule_name);      //copy name
     for(i=0;i<_SCHEDULE_SIZE;i++){
-        cb->sdat_ptr->s_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
+        cb->sdat_ptr->t_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
         cb->w_schedule[i] = '\0';                                       //clear working shcedule
     }
     save_system_data(_SYSTEM_DATA_FILE,&sdat);
@@ -933,25 +935,25 @@ int c_26(CMD_FSM_CB *cb)
     int                i,ii;
 
     // printf("wipe out w index %i\r\n",cb->w_template_index);
-    // printf("wipe out d index %i\r\n",cb->sdat_ptr->schlib_index);
+    // printf("wipe out d index %i\r\n",cb->sdat_ptr->templib_index);
 
-    if(cb->w_template_index == (cb->sdat_ptr->schlib_index - 1)){                                    //delete high entry
-        cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index -1;                                 //back down index
-        memset(cb->sdat_ptr->s_data[cb->w_template_index].name,'\0',
-            sizeof(cb->sdat_ptr->s_data[cb->w_template_index].name));                               //wipe name          
-        memset(cb->sdat_ptr->s_data[cb->w_template_index].schedule,'\0',
-            sizeof(cb->sdat_ptr->s_data[cb->w_template_index].schedule));                           //wipe schedule
-        // cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index -1;                                 //back down index
+    if(cb->w_template_index == (cb->sdat_ptr->templib_index - 1)){                                    //delete high entry
+        cb->sdat_ptr->templib_index = cb->sdat_ptr->templib_index -1;                                 //back down index
+        memset(cb->sdat_ptr->t_data[cb->w_template_index].name,'\0',
+            sizeof(cb->sdat_ptr->t_data[cb->w_template_index].name));                               //wipe name          
+        memset(cb->sdat_ptr->t_data[cb->w_template_index].schedule,'\0',
+            sizeof(cb->sdat_ptr->t_data[cb->w_template_index].schedule));                           //wipe schedule
+        // cb->sdat_ptr->templib_index = cb->sdat_ptr->templib_index -1;                                 //back down index
 
     }
     else{
-        for(i = cb->w_template_index;i < (cb->sdat_ptr->schlib_index); i++){
-            strcpy(cb->sdat_ptr->s_data[i].name, cb->sdat_ptr->s_data[i+1].name);                   //copy name
+        for(i = cb->w_template_index;i < (cb->sdat_ptr->templib_index); i++){
+            strcpy(cb->sdat_ptr->t_data[i].name, cb->sdat_ptr->t_data[i+1].name);                   //copy name
             for(ii=0;ii<_SCHEDULE_SIZE;ii++){
-                cb->sdat_ptr->s_data[i].schedule[ii] = cb->sdat_ptr->s_data[ii+1].schedule[ii];     //copy schedule
+                cb->sdat_ptr->t_data[i].schedule[ii] = cb->sdat_ptr->t_data[ii+1].schedule[ii];     //copy schedule
             }
         }
-        cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index -1;                                 //back down index
+        cb->sdat_ptr->templib_index = cb->sdat_ptr->templib_index -1;                                 //back down index
 
     }
     cb->w_template_index = cb->w_template_index - 1;
@@ -975,12 +977,12 @@ int c_27(CMD_FSM_CB *cb)
     int             i;
 
     cb->w_template_index = cb->token_value;
-    strcpy((char *)cb->w_schedule_name, cb->sdat_ptr->s_data[cb->w_template_index].name);
+    strcpy((char *)cb->w_schedule_name, cb->sdat_ptr->t_data[cb->w_template_index].name);
 
     for(i=0;i<_SCHEDULE_SIZE;i++){
-        cb->w_schedule[i]  = cb->sdat_ptr->s_data[cb->w_template_index].schedule[i];   //load schedule
+        cb->w_schedule[i]  = cb->sdat_ptr->t_data[cb->w_template_index].schedule[i];   //load schedule
     }
-    strcpy((char *)cb->w_schedule_name, cb->sdat_ptr->s_data[cb->w_template_index].name);      //load name
+    strcpy((char *)cb->w_schedule_name, cb->sdat_ptr->t_data[cb->w_template_index].name);      //load name
 
 
 
@@ -1007,17 +1009,17 @@ int c_28(CMD_FSM_CB *cb)
     int             pad_size;
 
     max_name_size = 0;
-    for(i=0;i<cb->sdat_ptr->schlib_index;i++)
-        if(max_name_size < strlen(cb->sdat_ptr->s_data[i].name))
-            max_name_size = strlen(cb->sdat_ptr->s_data[i].name);
+    for(i=0;i<cb->sdat_ptr->templib_index;i++)
+        if(max_name_size < strlen(cb->sdat_ptr->t_data[i].name))
+            max_name_size = strlen(cb->sdat_ptr->t_data[i].name);
 
     printf("\r\nediting system schedule\r\n\ntemplate library\r\n");
-    for(i=0;i<cb->sdat_ptr->schlib_index;i++){
-        pad_size = max_name_size - strlen(cb->sdat_ptr->s_data[i].name);
+    for(i=0;i<cb->sdat_ptr->templib_index;i++){
+        pad_size = max_name_size - strlen(cb->sdat_ptr->t_data[i].name);
         pad[0] = '\0';
         for(ii=0;ii<pad_size;ii++)
             strcat(pad," ");
-        printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->s_data[i].name,pad,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
+        printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->t_data[i].name,pad,sch2text2(cb->sdat_ptr->t_data[i].schedule,buf));
     }
 
     /* load working schedule from system schedule */
@@ -1105,7 +1107,7 @@ int c_33(CMD_FSM_CB *cb)
     }
 
     // printf("loadinf schedule for day %i channel %i with %i\r\n", cb->w_day, cb->w_channel, cb->w_template_num);
-     // load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[cb->w_template_num].schedule, cb->w_day, cb->w_channel);   //(schedule data, template, day, channel)
+     // load_schedule(cb->w_sch_ptr, cb->sdat_ptr->t_data[cb->w_template_num].schedule, cb->w_day, cb->w_channel);   //(schedule data, template, day, channel)
 
 
 
@@ -1113,16 +1115,16 @@ int c_33(CMD_FSM_CB *cb)
     if((cb->w_channel == _ALL_CHANNELS) && (cb->w_day == _ALL_DAYS)){
       for(day = 0;day < _DAYS_PER_WEEK; day++)
         for(channel = 0;channel < _NUMBER_OF_CHANNELS; channel++)
-          load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[template].schedule, day, channel);   // load schedule buffer
+          load_schedule(cb->w_sch_ptr, cb->sdat_ptr->t_data[template].schedule, day, channel);   // load schedule buffer
     }
     else if(cb->w_day == _ALL_DAYS)
         for(day = 0;day < _DAYS_PER_WEEK; day++)
-          load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[template].schedule, day, channel);   // load schedule buffer 
+          load_schedule(cb->w_sch_ptr, cb->sdat_ptr->t_data[template].schedule, day, channel);   // load schedule buffer 
     else if(cb->w_channel == _ALL_CHANNELS)
         for(channel = 0;channel < _NUMBER_OF_CHANNELS; channel++)
-          load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[template].schedule, day, channel);   // load schedule buffer
+          load_schedule(cb->w_sch_ptr, cb->sdat_ptr->t_data[template].schedule, day, channel);   // load schedule buffer
     else
-     load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[template].schedule, day, channel);   // load schedule buffer 
+     load_schedule(cb->w_sch_ptr, cb->sdat_ptr->t_data[template].schedule, day, channel);   // load schedule buffer 
  
     disp_all_schedules(cb,(uint32_t *)cb->w_sch);
 
@@ -1210,6 +1212,32 @@ int c_39(CMD_FSM_CB *cb)
    
    return 0; 
 }
+
+/* enter schedule load mode */
+int c_40(CMD_FSM_CB *cb)
+{
+
+    /* build prompt */
+    strcpy(cb->prompt_buffer,"load work buffer\r\n\schedule library\r\n");
+    // make_lib_list(cb->prompt_buffer, cb);
+    return 0;
+}
+
+/* load buffer from system schedule */
+int c_41(CMD_FSM_CB *cb)
+{
+
+    /* load working schedule from system schedule */
+    printf(" size of schedule buffer = %i\r\n",sizeof(cmd_fsm_cb.w_sch));
+    memcpy(cmd_fsm_cb.w_sch_ptr,cmd_fsm_cb.sdat_ptr->sch_ptr,sizeof(cmd_fsm_cb.w_sch));
+    printf(" system schedule copied to buffer\r\n");
+
+    /* build prompt */
+    c_38(cb);
+    // make_lib_list(cb->prompt_buffer, cb);
+    return 0;
+}
+
 /**************** end command fsm action routines ******************/
 
 /* cycle state machine */

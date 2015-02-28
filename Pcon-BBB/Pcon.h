@@ -15,6 +15,7 @@
 #define _CMD_STATES     		22 
 
 #define _MAX_SCHLIB_SCH			20
+#define _MAX_TMPLLIB_SCH		20
 
 /* buffers */
 #define _INPUT_BUFFER_SIZE		128

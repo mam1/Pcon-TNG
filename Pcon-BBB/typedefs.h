@@ -20,17 +20,24 @@ typedef struct {
 	uint32_t		schedule[_SCHEDULE_SIZE];
 } TMPL_DAT;
 
+/* schedules */
+typedef struct {
+	char 			name[_SCHEDULE_NAME_SIZE];
+	uint32_t		schedule[_SCHEDULE_SIZE];
+} SCH_DAT;
+
 /* system data - saved and restored at restart */
 typedef	struct {
     int         major_version;
     int         minor_version;
     int         minor_revision;	
-    // int 		template_id[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];			// map each (day,channel) to a template id
-    int 		schlib_index;												// points to the next available record (maybe)
+    int 		templib_index;												// points to the next available template record 
+    int			schlib_index;												// points to the next available system schedule record
     uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
     uint32_t	*sch_ptr;   												// pointer to system schedule
     CHN_DAT     c_data[_NUMBER_OF_CHANNELS];								// channel persistent data
-    TMPL_DAT	s_data[_MAX_SCHLIB_SCH];									// schedule template library
+    TMPL_DAT	t_data[_MAX_TMPLLIB_SCH];									// schedule template library
+    SCH_DAT		s_data[_MAX_SCHLIB_SCH];									// schedule library							
 } SYS_DAT;
 
 /* cmd_fsm control block */

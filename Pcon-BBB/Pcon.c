@@ -47,7 +47,7 @@ void disp_sys(void) {
 	printf(" Pcon  %d.%d.%d \n\r", _major_version, _minor_version,_minor_revision);
 	printf(" input buffer size: %d characters\n\r", _INPUT_BUFFER_SIZE);
 	printf(" system schedule size: %d bytes\r\n",sizeof(cmd_fsm_cb.sdat_ptr->sch));
-	printf(" stored schedule templates: %i\r\n",sdat.schlib_index);
+	printf(" stored schedule templates: %i\r\n",sdat.templib_index);
 										
 	return;
 }
@@ -113,11 +113,6 @@ int main(void) {
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm controll block to allow acces to system data
 	cmd_fsm_cb.w_sch_ptr = (uint32_t *)cmd_fsm_cb.w_sch;
 	cmd_fsm_cb.sdat_ptr->sch_ptr = (uint32_t *)cmd_fsm_cb.sdat_ptr->sch;
-
-    /* load working schedule from system schedule */
-    printf(" size of schedule buffer = %i\r\n",sizeof(cmd_fsm_cb.w_sch));
-    memcpy(cmd_fsm_cb.w_sch_ptr,cmd_fsm_cb.sdat_ptr->sch_ptr,sizeof(cmd_fsm_cb.w_sch));
-    printf(" system schedule copied to buffer\r\n");
 
 	/* initialize state machines */
 	work_buffer_ptr = (char *)work_buffer;  //initialize work buffer pointer
