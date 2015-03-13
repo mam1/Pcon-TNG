@@ -12,6 +12,9 @@
 
 /* shared codes, bone and prop */
 #include "../Pcon-share/shared.h"
+#include "../Pcon-share/schedule.h"
+#include "../Pcon-share/typedefs.h"
+
 // #include "../Pcon-share/shared.h"
 
 /* functions */
