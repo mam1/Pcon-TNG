@@ -162,14 +162,13 @@ int s_send_schedule(CMD_FSM_CB *cb){
 
   s_wbyte(bbb,&wsch);
   ret = 0;
-  // s_rbyte(bbb,&ret);
-  // if(ret == _ACK)
+
   while(send_bytes-- > 0){
     while(ret != _ACK)
       s_rbyte(bbb,&ret);
     s_wbyte(bbb,sch_ptr++);
     printf("writting send_bytes %i\r\n",send_bytes);
-    usleep(10000);
+    // usleep(10000);
   }
 
 
@@ -195,4 +194,76 @@ int s_ping(int fd){
       return 1;
 
   return ret;
+}
+
+/* send system data to the C3 */
+int send_sys(CMD_FSM_CB *cb){
+  int         send_bytes;
+  int         cmd = _RECEIVE_SYS_DAT, ret;
+  uint8_t    *ptr;
+  int         tb = _ACK;
+
+  send_bytes = sizeof(*cb->sdat_ptr);
+  printf("sending %i bytes\r\n",send_bytes);
+  ptr = (char *)cb->sdat_ptr;
+  s_wbyte(bbb,&cmd);
+  ret = 0;
+  while(send_bytes-- > 0){
+    while(ret != _ACK) s_rbyte(bbb,&ret);   // wait for an ACK
+    s_wbyte(bbb,ptr++);                     // write the byte
+    usleep(10);
+  }          
+
+  return 0;
+}
+/* recieve a byte from the C3 */
+int receive_byte(int fd, uint8_t byte){
+  int    ret;
+  int     i;
+
+  i =0;
+  while(1){
+    ret = read(fd,&ret,1);
+    if((ret == 0) && (i++ > READ_TRYS)){
+      perror("\n*** serial read error ");
+      s_error(fd);
+    }
+    if(ret > 0)
+      return ret;
+    usleep(20);
+    // printf("loop .....\r\n");
+  }
+  perror("\n*** serial read error no records read ");
+  s_error(fd);
+  return;
+  return 0;
+}
+
+/* send a byte to the C3 */
+int send_byte(int fd){
+  return 0;
+}
+
+/* receive an int from the C3 */
+int receive_int(int fd){
+  return o;
+}
+
+/* send an int to the C3 */
+int send_int(int fd){
+  return 0;
+}
+
+/* sent a block of data to the C3 */
+int send_block(int fd, uint8_t *byte, int nbytes){
+  int         bytes_sent, bytes_recieved;
+
+
+
+  return 0;
+}
+
+/* recieve a block of data from the C3 */
+int receive_block(int fd){
+  return 0;
 }

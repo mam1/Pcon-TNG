@@ -16,7 +16,7 @@ ifeq ($(UNAME_S),Darwin)
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
 else
-	program_INCLUDE_DIRS := 
+	program_INCLUDE_DIRS := ../Pcon-share
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
 endif

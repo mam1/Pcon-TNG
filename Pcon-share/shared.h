@@ -13,6 +13,7 @@
 #define _READ_CMD		2
 #define _WRITE_SCH		3
 #define _PUSH_STATS		4
+#define _RECEIVE_SYS_DAT	5
 
 /* channel parameters */
 #define _NUMBER_OF_CHANNELS 	8
@@ -66,14 +67,5 @@
 
 /* general */
 #define _DAYS_PER_WEEK 				7
-
-/***************** global code to text conversion ********************/
-char *day_names_long[7] = {
-     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-char *onoff[2] = {"off"," on"};
-char *con_mode[3] = {"manual","  time","time & sensor"};
-char *sch_mode[2] = {"day","week"};
-char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
 #endif

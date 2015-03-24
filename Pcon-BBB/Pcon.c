@@ -25,20 +25,29 @@ int 			bbb;								//UART1 file descriptor
 SYS_DAT 		sdat;								//system data structure
 CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 
+/***************** global code to text conversion ********************/
+const char *day_names_long[7] = {
+     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+const char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+const char *onoff[2] = {"off"," on"};
+const char *con_mode[3] = {"manual","  time","time & sensor"};
+const char *sch_mode[2] = {"day","week"};
+const char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
+
 
 
 char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
 
 uint8_t cmd_state,char_state;
-/***************** global code to text conversion ********************/
-char *day_names_long[7] = {
-     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-char *onoff[2] = {"off"," on"};
-char *con_mode[3] = {"manual","  time","time & sensor"};
-char *sch_mode[2] = {"day","week"};
-char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
+// /***************** global code to text conversion ********************/
+// char *day_names_long[7] = {
+//      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+// char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+// char *onoff[2] = {"off"," on"};
+// char *con_mode[3] = {"manual","  time","time & sensor"};
+// char *sch_mode[2] = {"day","week"};
+// char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
 
 /***************************** support routines ********************************/
@@ -174,7 +183,7 @@ int main(void) {
 			fputc(_CR, stdout);						//make the scree look right
 			fputc(_NL, stdout);
 			*work_buffer_ptr = c;					// load the CR into the work buffer
-			work_buffer_ptr = work_buffer;			// reset pointer
+			work_buffer_ptr = (char *)work_buffer;			// reset pointer
 			char_fsm_reset();
 			while(*work_buffer_ptr != '\0')			//send the work buffer content to the fsm
 				char_fsm(char_type(*work_buffer_ptr),&char_state,work_buffer_ptr++);  //cycle fsm

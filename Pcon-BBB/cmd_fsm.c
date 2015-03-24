@@ -543,6 +543,7 @@ int c_2(CMD_FSM_CB *cb)
 		else
 			printf("\r  sucess\r\n\n");
 	}
+	send_sys(cb);
 	c_34(cb);
 	return 0;
 }
@@ -1218,7 +1219,7 @@ int c_40(CMD_FSM_CB *cb)
 {
 
     /* build prompt */
-    strcpy(cb->prompt_buffer,"load work buffer\r\n\schedule library\r\n");
+    strcpy(cb->prompt_buffer,"load work buffer\r\nschedule library\r\n");
     // make_lib_list(cb->prompt_buffer, cb);
     return 0;
 }

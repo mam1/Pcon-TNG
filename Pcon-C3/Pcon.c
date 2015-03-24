@@ -11,6 +11,7 @@
 #include <stdint.h>		//uint_8, uint_16, uint_32, etc.
 #include "propeller.h"
 #include "Pcon.h"
+#include "../Pcon-share/schedule.h"
 // #include "test.h"
 #include "simpletools.h"                      // Include simple tools
 #include "simpletext.h"
@@ -22,6 +23,15 @@
 #define BAUD                 9600
 #define SERIAL_BUFFER_SIZE    128
 #define START_COMMAND         27
+
+/***************** global code to text conversion ********************/
+const char *day_names_long[7] = {
+     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+const char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+const char *onoff[2] = {"off"," on"};
+const char *con_mode[3] = {"manual","  time","time & sensor"};
+const char *sch_mode[2] = {"day","week"};
+const char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
 // /*************************** drivers  ********************************/
 // extern _Driver _FullDuplexSerialDriver;
@@ -35,8 +45,9 @@ int main(int argc, char *argv[]){
     int                 C3byte;
     int                 out_byte;
     int                 *size;
-    uint8_t             s[4];
+    uint8_t             s[4], *load_byte;
     uint32_t            sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE], *sch_ptr;
+    SYS_DAT             sys_dat;
 
     int             i, get_bytes;
     int             c;
@@ -62,13 +73,29 @@ int main(int argc, char *argv[]){
         printf("got a <%u> from the bone\n",C3byte);
         switch(C3byte){
             case _PING:
-                printf("recieved a _PING, sending ACK <%u>\n\n",out_byte);
+                printf("received a _PING, sending ACK <%u>\n\n",out_byte);
                 out_byte = _ACK;
                 fdserial_txChar(C3port, out_byte); 
                 break;
+            case _RECEIVE_SYS_DAT:
+                get_bytes = sizeof(sys_dat);
+                load_byte = (uint8_t *)&sys_dat;
+                printf("received a _RECIEVE_SYS_DAT, reading %i bytes from the bone\r\n",get_bytes);
+                out_byte = _ACK;
+                fdserial_txChar(C3port, out_byte);
+
+                while(get_bytes-- > 0){
+                    out_byte = _ACK;
+                    fdserial_txChar(C3port, out_byte);
+                    while (fdserial_rxReady(C3port) == 0);                            
+                    *load_byte = fdserial_rxChar(C3port);         //grab a byte
+                    load_byte++;                    
+                }
+                printf("system data %i.%i.%i loaded\n",sys_dat.major_version, sys_dat.minor_version, sys_dat.minor_revision);
+                break;
             case _WRITE_SCH:
                 get_bytes = sizeof(sch);
-                printf("recieved a _WRITE_SCH, reading %i bytes from the bone\r\n",get_bytes);
+                printf("received a _WRITE_SCH, reading %i bytes from the bone\r\n",get_bytes);
 
                 out_byte = _ACK;
                 fdserial_txChar(C3port, out_byte);
@@ -86,7 +113,8 @@ int main(int argc, char *argv[]){
                     // printf("\n\rbyte written\n\rget_bytes = %i\r\n",get_bytes);
 
                 }
-                printf("schedule recieved from the bone\n\r");
+                printf("schedule received from the bone\n\r");
+                // disp_all_schedules(CMD_FSM_CB *cb,uint32_t *sch)
                 break;
 
             case _PUSH_STATS:

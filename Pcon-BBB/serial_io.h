@@ -27,5 +27,6 @@ void    s_wbyte(int, int *);
 void    s_error(int);
 int 	s_ping(int);
 int 	s_send_schedule(CMD_FSM_CB *);
+int 	send_sys(CMD_FSM_CB *);
 
 #endif /* SERIAL_IO_H_ */

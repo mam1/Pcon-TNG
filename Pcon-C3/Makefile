@@ -16,7 +16,7 @@ NM = propeller-elf-nm
 #
 
 NAME = Pcon
-OBJS = Pcon.o schedule.o
+OBJS = Pcon.o ../Pcon-share/schedule.o
 
 all: $(NAME).elf
 
