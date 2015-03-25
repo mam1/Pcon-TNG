@@ -219,11 +219,12 @@ int send_sys(CMD_FSM_CB *cb){
 /* recieve a byte from the C3 */
 int receive_byte(int fd, uint8_t byte){
   int    ret;
+  int     bytes_read;
   int     i;
 
   i =0;
   while(1){
-    ret = read(fd,&ret,1);
+    bytes_read = read(fd,&ret,1);
     if((ret == 0) && (i++ > READ_TRYS)){
       perror("\n*** serial read error ");
       s_error(fd);
@@ -231,7 +232,6 @@ int receive_byte(int fd, uint8_t byte){
     if(ret > 0)
       return ret;
     usleep(20);
-    // printf("loop .....\r\n");
   }
   perror("\n*** serial read error no records read ");
   s_error(fd);
@@ -240,25 +240,63 @@ int receive_byte(int fd, uint8_t byte){
 }
 
 /* send a byte to the C3 */
-int send_byte(int fd){
-  return 0;
+int send_byte(int fd, byte){
+  int    ret;
+
+  ret = write(fd,&byte,1);
+  if(ret < 0){
+    perror("\n*** serial write error in send_byte");
+    s_error(fd);
+  }
+
+  return 1;
 }
 
 /* receive an int from the C3 */
 int receive_int(int fd){
-  return o;
+  int         data;
+  int         bytes_read;
+  int         i;
+
+  i = 0;
+  while(1){
+    bytes_read = read(fd,&data,2);
+    if((bytes_read == 0) && (i++ > READ_TRYS)){
+      perror("\n*** serial read error in receive_int");
+      s_error(fd);
+    }
+    if(bytes_read == 2)
+      return data;
+    usleep(20);
+  }
+  perror("\n*** serial read error no records read in receive_int");
+  s_error(fd);
+  return 1;
 }
 
+
 /* send an int to the C3 */
-int send_int(int fd){
+int send_int(int fd, int num){
+  int           ret;
+
+  ret = write(fd,&num,2);
+  if(ret != 2){
+    perror("\n*** serial write error in send_int");
+    s_error(fd);
+  }
+
   return 0;
 }
 
-/* sent a block of data to the C3 */
-int send_block(int fd, uint8_t *byte, int nbytes){
-  int         bytes_sent, bytes_recieved;
+/* send a block of data to the C3 */
+int send_block(int fd, uint8_t *start_block, int nbytes){
+  int         bytes_sent;
 
-
+  bytes_sent = write(fd,start_block,nbytes);
+  if(bytes_sent != nbytes){
+    perror("\n*** serial write error in send_int");
+    s_error(fd);
+  }
 
   return 0;
 }
