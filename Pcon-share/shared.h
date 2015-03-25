@@ -14,6 +14,9 @@
 #define _WRITE_SCH		3
 #define _PUSH_STATS		4
 #define _RECEIVE_SYS_DAT	5
+#define _BLOCK			7
+#define _INT 			8
+#define _SYSTEM			9
 
 /* channel parameters */
 #define _NUMBER_OF_CHANNELS 	8
@@ -45,6 +48,9 @@
 #define _INPUT_BUFFER_SIZE		128
 #define _TOKEN_BUFFER_SIZE		60
 #define _PROMPT_BUFFER_SIZE		200
+
+/* files */
+#define _BLOCKING				512
 
 // #define _TIME_STRING_BUFFER     40
 // #define _VCMD_BUFFER            128

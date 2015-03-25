@@ -116,7 +116,21 @@ int main(void) {
 
 	/* open UART1 to connect to BBB */
 	bbb = s_open();
-	printf(" serial device opened handle = %d\r\n",bbb);
+	printf(" serial device C3 opened, handle = %d\r\n",bbb);
+
+	/* see if the C3 is there */
+	printf(" pinging the C3 - ");
+	if(s_ping(bbb))
+			printf("failure\n");
+	else
+			printf("success\n");
+
+	/* copy system data to C3 */
+	send_byte(bbb,_SYSTEM);
+	printf(" size of systems data file %i\n",sizeof(sdat));
+	send_int(bbb,sizeof(sdat));
+	send_block(bbb,(void *)&sdat,sizeof(sdat));
+	printf(" system data copied to C3\n");
 
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm controll block to allow acces to system data

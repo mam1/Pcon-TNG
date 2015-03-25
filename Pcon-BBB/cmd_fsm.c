@@ -539,11 +539,13 @@ int c_2(CMD_FSM_CB *cb)
 
 	for(i=0;i<10;i++){
 		if(s_ping(bbb))
-			printf("\r  failed\r\n\n");
+			printf("\r  failed\r\n");
 		else
-			printf("\r  sucess\r\n\n");
+			printf("\r  sucess\r\n");
 	}
-	send_sys(cb);
+	send_int(bbb,6123);
+
+	// send_sys(cb);
 	c_34(cb);
 	return 0;
 }

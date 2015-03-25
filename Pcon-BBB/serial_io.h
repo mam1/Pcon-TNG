@@ -29,4 +29,8 @@ int 	s_ping(int);
 int 	s_send_schedule(CMD_FSM_CB *);
 int 	send_sys(CMD_FSM_CB *);
 
+int 	send_byte(int, uint8_t);
+int 	send_int(int, int);
+int 	send_block(int, uint8_t *, int);
+
 #endif /* SERIAL_IO_H_ */

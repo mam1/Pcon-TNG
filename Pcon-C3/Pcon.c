@@ -51,15 +51,17 @@ int main(int argc, char *argv[]){
 
     int             i, get_bytes;
     int             c;
+    uint8_t             *buf_ptr;
+    int                 int_buf;
 
     sleep(1);
     printf("\033\143"); //clear the terminal screen, preserve the scroll back
     disp_sys();
 
-    sch_ptr = sch;
+    sch_ptr = (uint32_t *)sch;
 
     printf("schedule size %i bytes\r\n",sizeof(sch));
-    size = &s[0];
+    size = (int *)&s[0];
     printf("open serial port\n");
     C3port = fdserial_open(RX, TX, MODE, BAUD); //open io port to C3
     printf("C3port = %i\n",C3port);
@@ -116,13 +118,34 @@ int main(int argc, char *argv[]){
                 printf("schedule received from the bone\n\r");
                 // disp_all_schedules(CMD_FSM_CB *cb,uint32_t *sch)
                 break;
+            case _INT:
+                get_bytes = 4;
+                buf_ptr = (uint8_t *)&int_buf;
+                printf("received a _INT, reading %i bytes from the bone\r\n",get_bytes);
+                while(get_bytes-- > 0){
+                    *buf_ptr++ = fdserial_rxTime(C3port, 200);  //grab a byte
+                    if(*buf_ptr == -1){
+                        printf("*** read time out in receiving int\n");
+                        *buf_ptr = '\0';
+                    }                           
+                }
+                printf("received %i\n",int_buf);
+                break;
+            case _SYSTEM:
+                printf("received a request to reload local copy of system data from the bone\n");
+                int_buf = get_int(C3port);
+                printf("bone sending %i bytes\n",int_buf);
+                get_block(C3port,&sys_dat, int_buf);
+                printf("system data %i.%i.%i loaded\n",sys_dat.major_version, sys_dat.minor_version, sys_dat.minor_revision);
 
+                break;
             case _PUSH_STATS:
                 break;
             default:
                 printf("unknown command received from the bone <%u>\n",C3byte);
         }
     }
+
 
     printf("\nnormal termination\n");
     return 0;
@@ -131,6 +154,37 @@ int main(int argc, char *argv[]){
 void disp_sys(void) {
 	printf("\n*** Pcon  %d.%d.%d ***\n\n", _major_version, _minor_version, _minor_revision);
 	return;
+}
+
+
+/* get an int from the bone */
+int get_int(fdserial *fd){
+    int         get_bytes = 4;
+    int         int_buf = 0;
+    uint8_t     *buf_ptr;
+
+    buf_ptr = (uint8_t *)&int_buf;
+    // printf("receiving a _INT, reading %i bytes from the bone\r\n",get_bytes);
+    while(get_bytes-- > 0){
+        *buf_ptr = fdserial_rxTime(fd, 200);  //grab a byte
+        if(*buf_ptr == -1){
+            printf("*** read time out in get_int\n");
+            *buf_ptr = '\0';
+        }
+        // printf("received <%u>",*buf_ptr);
+        buf_ptr++;                           
+    }
+    // printf("received %i\n",int_buf);    
+    return int_buf;
+}
+
+/* get a block of data from the bone */
+void get_block(fdserial *fd,uint8_t *buf_ptr,int count){ 
+   while(count-- > 0){ 
+        while (fdserial_rxReady(fd) == 0);      //wait for something to show up in the buffer
+        *buf_ptr++ = fdserial_rxChar(fd);       //grab a byte
+    }
+    return;
 }
 
 // void term(FdSerial_t *fd){
