@@ -2,8 +2,8 @@
 #define _SHARE_H_
 
 /* version info */
-#define _major_version 			2
-#define _minor_version 			3
+#define _major_version 			3
+#define _minor_version 			0
 #define _minor_revision 		0
 
 /* shared bone-C3 commands */
