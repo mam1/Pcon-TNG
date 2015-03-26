@@ -1,16 +1,3 @@
-# scan directory 
-program_NAME := Pcon
-program_C_SRCS := $(wildcard *.c)
-# program_C_SRCS += ../Pcon-share/schedule.c
-program_CXX_SRCS := $(wildcard *.cpp)
-program_C_OBJS := ${program_C_SRCS:.c=.o}
-program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
-program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
-
-# get the development machine OS
-UNAME_S := $(shell uname -s)
-UNAME_P := $(shell uname -p)
-
 # set directories
 ifeq ($(UNAME_S),Darwin)
 	program_INCLUDE_DIRS := ../Pcon-share/
@@ -51,26 +38,10 @@ else
 	OBJCOPY := $(PREFIX)objcopy
 endif
 
-.PHONY: all clean distclean
-
-all: $(program_NAME)
-
-$(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
-
-# move the directory to the bone
-ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/Pcon-BBB/ root@192.168.254.34:/home/rsync-OSX
-else
-	rsync -avz  /home/mam1/Git/Pcon-TNG/Pcon-BBB/ root@192.168.254.34:/home/rsync-Mint	
-endif
-
-# clean up
-	@- $(RM) -v $(program_NAME)
-	@- $(RM) -v $(program_OBJS)
+all: schedule
+schedule: 
+	$(CC) -Wall -c ../schedule.c 
+	$(AR) rcs bone-lib.a schedule.o
 
 clean:
-	@- $(RM) -v $(program_NAME)
-	@- $(RM) -v $(program_OBJS)
-
-distclean: clean
+	rm  -v *.o
