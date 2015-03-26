@@ -40,6 +40,15 @@ const char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
 /***************************** externals ******************************/
 
+/* get a block of data from the bone */
+void get_block(fdserial *fd,uint8_t *buf_ptr,int count){ 
+   while(count-- > 0){ 
+        while (fdserial_rxReady(fd) == 0);      //wait for something to show up in the buffer
+        *buf_ptr++ = fdserial_rxChar(fd);       //grab a byte
+    }
+    return;
+}
+
 int main(int argc, char *argv[]){
     fdserial            *C3port;
     int                 C3byte;
@@ -135,7 +144,7 @@ int main(int argc, char *argv[]){
                 printf("received a request to reload local copy of system data from the bone\n");
                 int_buf = get_int(C3port);
                 printf("bone sending %i bytes\n",int_buf);
-                get_block(C3port,&sys_dat, int_buf);
+                get_block(C3port,(uint8_t *)&sys_dat, int_buf);
                 printf("system data %i.%i.%i loaded\n",sys_dat.major_version, sys_dat.minor_version, sys_dat.minor_revision);
 
                 break;
@@ -178,14 +187,7 @@ int get_int(fdserial *fd){
     return int_buf;
 }
 
-/* get a block of data from the bone */
-void get_block(fdserial *fd,uint8_t *buf_ptr,int count){ 
-   while(count-- > 0){ 
-        while (fdserial_rxReady(fd) == 0);      //wait for something to show up in the buffer
-        *buf_ptr++ = fdserial_rxChar(fd);       //grab a byte
-    }
-    return;
-}
+
 
 // void term(FdSerial_t *fd){
 //     s_close(fd);
