@@ -47,7 +47,7 @@ LIBS= /home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletool
 LIBS+=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libfdserial/lmm/libfdserial.a
 LIBS+=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/TextDevices/libsimpletext/lmm/libsimpletext.a
 LIBS+=/home/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Protocol/libsimplei2c/lmm/libsimplei2c.a
-LIBNAME = 
+LIBNAME = /home/mam1/Git/Pcon-TNG/Pcon-share/prop-lib/bone-lib
 endif
 
 # where we installed the propeller binaries and libraries
