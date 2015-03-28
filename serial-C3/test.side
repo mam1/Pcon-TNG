@@ -1,8 +1,8 @@
 test.c
 fds.c
 >compiler=C
->memtype=cmm main ram compact
+>memtype=xmmc external flash code main ram data
 >optimize=-Os
 >-fno-exceptions
 >defs::-std=c99
->BOARD::GENERIC
+>BOARD::C3F

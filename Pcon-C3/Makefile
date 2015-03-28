@@ -6,7 +6,7 @@ LDFLAGS = -I /Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsi
 NM = propeller-elf-nm
 # MODEL = xmmc
 MODEL = lmm
-BOARD =  QUICKSTART
+BOARD =  C3F
 
 
 #CFLAGS = -Os -mlmm
