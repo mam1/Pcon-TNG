@@ -6,6 +6,7 @@ program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
+program_OBJS += $(program_OBJS)
 
 # get the development machine OS
 UNAME_S := $(shell uname -s)
@@ -16,12 +17,12 @@ ifeq ($(UNAME_S),Darwin)
 	program_INCLUDE_DIRS := ../Pcon-share/
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
-	LD_LIBRARY_PATH := 
+	LD_LIBRARY_PATH := bone-lib.a
 else
 	program_INCLUDE_DIRS := ../Pcon-share
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
-	LD_LIBRARY_PATH := /home/mam1/Git/Pcon-TNG/Pcon-share/bone-lib
+	LD_LIBRARY_PATH := ../Pcon-share/bone-lib
 endif
 
 # set parameters
@@ -49,6 +50,8 @@ else
 	AS  := $(PREFIX)as
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
+	LD_LIBRARY_PATH := /home/mam1/Git/Pcon-TNG/Pcon-share/bone-lib
+
 endif
 
 .PHONY: all clean distclean
@@ -56,7 +59,7 @@ endif
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
+	$(LINK.cc) $(program_OBJS) -lbone -o $(program_NAME)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)

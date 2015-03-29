@@ -41,4 +41,5 @@ endif
 all: schedule
 schedule: 
 	$(CC) -Wall -c ../lib-sources/schedule.c 
-	$(AR) rcs bone-lib.a schedule.o
+	$(AR) rcs libbone.a schedule.o
+	ranlib bone-lib.a
