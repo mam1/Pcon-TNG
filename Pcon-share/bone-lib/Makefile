@@ -1,3 +1,7 @@
+
+# get the development machine OS
+UNAME_S := $(shell uname -s)
+
 # set directories
 ifeq ($(UNAME_S),Darwin)
 	program_INCLUDE_DIRS := ../Pcon-share/
@@ -38,8 +42,9 @@ else
 	OBJCOPY := $(PREFIX)objcopy
 endif
 
-all: schedule
-schedule: 
+all:
 	$(CC) -Wall -c ../lib-sources/schedule.c 
-	$(AR) rcs libbone.a schedule.o
-	ranlib bone-lib.a
+	$(AR) -cvr libbone.a schedule.o
+	# curret library contents
+	$(AR) -t libbone.a
+	ranlib libbone.a

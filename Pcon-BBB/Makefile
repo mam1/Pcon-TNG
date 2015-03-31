@@ -10,19 +10,18 @@ program_OBJS += $(program_OBJS)
 
 # get the development machine OS
 UNAME_S := $(shell uname -s)
-UNAME_P := $(shell uname -p)
 
 # set directories
 ifeq ($(UNAME_S),Darwin)
 	program_INCLUDE_DIRS := ../Pcon-share/
-	program_LIBRARY_DIRS := 
-	program_LIBRARIES := 
-	LD_LIBRARY_PATH := bone-lib.a
+	program_LIBRARY_DIRS := ../Pcon-share/bone-lib
+	program_LIBRARIES := bone
+	# LD_LIBRARY_PATH := ../Pcon-share/bone-lib
 else
 	program_INCLUDE_DIRS := ../Pcon-share
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
-	LD_LIBRARY_PATH := ../Pcon-share/bone-lib
+	# LD_LIBRARY_PATH := ../Pcon-share/bone-lib
 endif
 
 # set parameters
@@ -32,6 +31,7 @@ LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 CFLAGS  += -Wall
 CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti 
+
 
 # set locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
@@ -50,7 +50,7 @@ else
 	AS  := $(PREFIX)as
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
-	LD_LIBRARY_PATH := /home/mam1/Git/Pcon-TNG/Pcon-share/bone-lib
+	
 
 endif
 
@@ -59,7 +59,7 @@ endif
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS) -lbone -o $(program_NAME)
+	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
