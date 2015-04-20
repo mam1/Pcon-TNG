@@ -156,7 +156,8 @@ run: $(NAME).elf
 ifeq ($(UNAME_S),Darwin)
 	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -p /dev/cu.usbserial-A4009G3O
 else
-	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -p /dev/ttyUSB0
+#	$(LOADER) $(BOARDFLAG) $(NAME).elf -r -t -p /dev/ttyUSB0
+	$(LOADER) -Dreset=dtr -I /opt/parallax/propeller-load/ $(BOARDFLAG) $(NAME).elf -r -p /dev/ttyUSB0
 endif
 run2: $(NAME).elf
 	$(LOADER2) $(NAME).elf -t

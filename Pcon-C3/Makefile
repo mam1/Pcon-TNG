@@ -5,7 +5,7 @@ CFLAGS = -Os -m32bit-doubles -Wall -std=c99
 LDFLAGS = -I /Users/mam1/Documents/SimpleIDE/Learn/SimpleLibraries/Utility/libsimpletools 
 NM = propeller-elf-nm
 # MODEL = xmmc
-MODEL = lmm
+MODEL = xmmc
 BOARD =  C3F
 
 

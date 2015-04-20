@@ -11,7 +11,20 @@ program_OBJS += $(program_OBJS)
 # get the development machine OS
 UNAME_S := $(shell uname -s)
 
-# set directories
+# set locations for basic gnu tools based on the deveopment machine OS
+ifeq ($(UNAME_S),Darwin)
+	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
+else
+	PREFIX := /usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
+endif
+CC  := $(PREFIX)gcc
+CXX := $(PREFIX)g++
+LD  := $(PREFIX)ld
+AS  := $(PREFIX)as
+AR  := $(PREFIX)ar
+OBJCOPY := $(PREFIX)objcopy
+
+# set directories & libs
 ifeq ($(UNAME_S),Darwin)
 	program_INCLUDE_DIRS := ../Pcon-share/
 	program_LIBRARY_DIRS := ../Pcon-share/bone-lib
@@ -32,34 +45,15 @@ CFLAGS  += -Wall
 CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti 
 
-
-# set locations for basic gnu tools
-ifeq ($(UNAME_S),Darwin)
-	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
-	CC  := $(PREFIX)gcc
-	CXX := $(PREFIX)g++
-	LD  := $(PREFIX)ld
-	AS  := $(PREFIX)as
-	AR  := $(PREFIX)ar
-	OBJCOPY := $(PREFIX)objcopy
-else
-	PREFIX := /usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
-	CC  := $(PREFIX)gcc
-	CXX := $(PREFIX)g++
-	LD  := $(PREFIX)ld
-	AS  := $(PREFIX)as
-	AR  := $(PREFIX)ar
-	OBJCOPY := $(PREFIX)objcopy
-	
-
-endif
-
 .PHONY: all clean distclean
 
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
 	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
+
+# build daemon
+	cd ../propd $(MAKE)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
