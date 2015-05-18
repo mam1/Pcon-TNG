@@ -14,9 +14,8 @@
 fdserial          *pktport;
 _packet           g_packet,r_packet;
 _schedule_frame   s_frame, s_frame_read; 
-
-
 uint32_t          sch[_SCHEDULE_SIZE];
+uint32_t          w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
   
 int main(int argc, char *argv[])
 {
