@@ -18,23 +18,27 @@ _schedule_frame   s_frame, s_frame_read;
 
 uint32_t          sch[_SCHEDULE_SIZE];
   
-
-int main(void)
+int main(int argc, char *argv[])
 {
   uint8_t         *byte_ptr;
   int               i;
   
-  printi("\n***********************\ncomtest 2.0\n***********************\n\n");
+  sleep(1);
+  //printf("\033\143"); //clear the terminal screen, preserve the scroll back
+  	printf("\n*** Pcon  %d.%d.%d ***\n\n",_major_version,_minor_version,_minor_revision);
+
   pktport = fdserial_open(PROD_RX, PROD_TX, PROD_MODE, PROD_BAUD);
   if(pktport == 0){
     printi("*** packet port open error\n");
     return 1;
   }    
   
-  sch[0] = 3;
+  sch[0] = 4;
   sch[1] = 1000877;
   sch[2] = 128274849;
   sch[3] = 183838533;
+  sch[4] = 111111111;
+
   
   printi("packet port opened\n");
   printi("starting packet processing cog ..... ");
@@ -76,6 +80,7 @@ int main(void)
           case _SCHEDULE_P:                       // schedule frame
             printi("recieved a schedule frame\n");
             unpack_schedule_frame(byte_ptr,&s_frame_read);
+            replace_schedule(s_frame_read.day,s_frame_read.channel,s_frame_read.rcnt,s_frame_read.rec);
             schedule_frame_print(&s_frame_read);
             break;
           default:
