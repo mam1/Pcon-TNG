@@ -1,21 +1,33 @@
-/**
- * This is the main comtest2 program file.
+/*
+ * Pcon.c
+ *
+ *  Created on: Nov 28, 2014
+ *      Author: mam1
  */
 
-
-//#include <string.h>
+#include <unistd.h>		//sleep
+#include <stdint.h>		//uint_8, uint_16, uint_32, etc.
+#include <propeller.h>
+#include "Pcon.h"
 #include "simpletext.h"
 #include "fdserial.h"
 #include "packet.h"
-#include <stdlib.h>
-//#include <strings.h>
-#include <unistd.h>
+#include "schedule.h"
 
 fdserial          *pktport;
 _packet           g_packet,r_packet;
 _schedule_frame   s_frame, s_frame_read; 
 uint32_t          sch[_SCHEDULE_SIZE];
 uint32_t          w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
+
+/***************** global code to text conversion ********************/
+const char *day_names_long[7] = {
+     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+const char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+const char *onoff[2] = {"off"," on"};
+const char *con_mode[3] = {"manual","  time","time & sensor"};
+const char *sch_mode[2] = {"day","week"};
+const char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
   
 int main(int argc, char *argv[])
 {
@@ -24,7 +36,7 @@ int main(int argc, char *argv[])
   
   sleep(1);
   //printf("\033\143"); //clear the terminal screen, preserve the scroll back
-  	printf("\n*** Pcon  %d.%d.%d ***\n\n",_major_version,_minor_version,_minor_revision);
+  	printi("\n*** Pcon  %d.%d.%d ***\n\n",_major_version,_minor_version,_minor_revision);
 
   pktport = fdserial_open(PROD_RX, PROD_TX, PROD_MODE, PROD_BAUD);
   if(pktport == 0){
@@ -49,7 +61,7 @@ int main(int argc, char *argv[])
 //  printi("number of schedule records = %d\n",sch[0]);
 //  printi("packet length = %d\n",sch[0]*4+8);
   
-  if(make_schedule_frame(&g_packet,(uint8_t *)&s_frame,sizeof(s_frame),6,7,sch)){
+  if(make_schedule_frame(&g_packet,(uint8_t *)&s_frame,sizeof(s_frame),1,1,sch)){
     printi("*** make_schedule_frame error\n");
     return 1;
   }
@@ -60,7 +72,7 @@ int main(int argc, char *argv[])
   sch[2] = 88888888;
   sch[3] = 77777777; 
     
-  if(make_schedule_frame(&g_packet,(uint8_t *)&s_frame,sizeof(s_frame),6,7,sch)){
+  if(make_schedule_frame(&g_packet,(uint8_t *)&s_frame,sizeof(s_frame),1,2,sch)){
     printi("*** make_schedule_frame error\n");
     return 1;
   }
@@ -76,10 +88,12 @@ int main(int argc, char *argv[])
         byte_ptr++;                               // set pointer to start of packet data
         switch(*byte_ptr)                         // unpack frame based on frame type
         {
-          case _SCHEDULE_P:                       // schedule frame
+          case _SCHEDULE_F:                       // schedule frame
             printi("recieved a schedule frame\n");
             unpack_schedule_frame(byte_ptr,&s_frame_read);
-            replace_schedule(s_frame_read.day,s_frame_read.channel,s_frame_read.rcnt,s_frame_read.rec);
+            disp_all_schedules((uint32_t *)w_sch);
+            load_schedule((uint32_t *)w_sch, &s_frame_read.rec[0], s_frame_read.day, s_frame_read.channel);  	//(schedule data, template, day, channel)
+            disp_all_schedules((uint32_t *)w_sch);
             schedule_frame_print(&s_frame_read);
             break;
           default:

@@ -17,10 +17,10 @@
  #include <string.h>
  #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
  #include <unistd.h>
- #include "../Pcon.h"
- #include "../schedule.h"
- #include "../bitlit.h"
- #include "../typedefs.h" 
+ #include "Pcon.h"
+ #include "schedule.h"
+ #include "bitlit.h"
+ #include "typedefs.h" 
 
 /****************************** externals *******************************/
 
@@ -326,7 +326,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return NULL;
  }
 
- void disp_all_schedules(CMD_FSM_CB *cb,uint32_t *sch)
+ void disp_all_schedules(uint32_t *sch)
  {
     uint32_t        *rec_ptr;
     int             i;
@@ -338,13 +338,13 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
         /* print channel header */        
-        printf("\r\nchannel %i <%s>\r\n",channel,cb->sdat_ptr->c_data[channel].name);
+        printf("\r\nchannel %i\n",channel);
 
         /* print day header */
         printf("   ");
         for (day=0;day<_DAYS_PER_WEEK;day++)
             printf("%s         ",day_names_short[day]);
-        printf("\n\r");
+        printf("\n");
 
         /* figure the maximum number of transitions per day */
         mrcnt = 0;
@@ -371,9 +371,9 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
                 printf("%s   ",time_state);
 
             }
-            printf("\n\r");
+            printf("\n");
         }
-        printf("\n\r");
+        //printf("\n");
      } 
 
     return;  

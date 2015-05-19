@@ -15,13 +15,17 @@
 #define      nak  0x15
 #define      syn  0x16
 
-/* packet types */
-#define _SCHEDULE_P   10 //schedule packet
+/* frame types */
+#define _SCHEDULE_F   	1	// replace a working schedule with schedule in frame, send ack to sender
+#define _CHANNEL_F    	2 	// replace channel data with channel data in frame, send channel data back to sender
+#define _TIME_F       	3 	// set real time clock to the time/date in frame, send ack to sender
+#define _PING			4 	// request for ping, send ping data in frame back to sender	
+#define _
 
 #define CONS_RX 0
 #define CONS_TX 1
 #define CONS_MODE 0
-#define CONS_BAUD 9600   //115200
+#define CONS_BAUD 115200
 
 #define PROD_RX 1
 #define PROD_TX 0

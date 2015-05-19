@@ -156,7 +156,7 @@ int make_schedule_frame(_packet *pkt,uint8_t *data,int len,int day,int channel,u
     int     i,ii;
     _packed N;
 
-    data[0] = _SCHEDULE_P;
+    data[0] = _SCHEDULE_F;
     data[1] = (uint8_t)day;
     data[2] = (uint8_t)channel;
     data[3] = (uint8_t)*sch;
