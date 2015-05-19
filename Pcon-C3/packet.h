@@ -19,7 +19,7 @@
 #define _SCHEDULE_F   	1	// replace a working schedule with schedule in frame, send ack to sender
 #define _CHANNEL_F    	2 	// replace channel data with channel data in frame, send channel data back to sender
 #define _TIME_F       	3 	// set real time clock to the time/date in frame, send ack to sender
-#define _PING			4 	// request for ping, send ping data in frame back to sender	
+#define _PING__			4 	// request for ping, send ping data in frame back to sender	
 #define _
 
 #define CONS_RX 0

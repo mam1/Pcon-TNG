@@ -2,6 +2,7 @@
 #define _TYPEDEFS_H_
 
 #include "Pcon.h"
+
 // #include "cmd_fsm.h"
 
 /* channel data */

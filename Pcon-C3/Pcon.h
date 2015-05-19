@@ -13,9 +13,9 @@
 #define reboot() __builtin_propeller_clkset(0x80)
 
 /* shared codes, bone and prop */
-//#include "../Pcon-share/shared.h"
+#include "shared.h"
 //#include "../Pcon-share/schedule.h"
-//#include "../Pcon-share/typedefs.h"
+#include "typedefs.h"
 
 // #include "../Pcon-share/shared.h"
 

@@ -3,9 +3,9 @@ packet.h
 packet.c
 schedule.c
 schedule.h
-typedefs.h -> ../Pcon-share/typedefs.h
 Pcon.h
 bitlit.h
+-I ./../Pcon-share
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
