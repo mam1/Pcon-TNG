@@ -21,8 +21,7 @@ The state of up to 8 channels can be controlled by:
 * AQY212GH PhotoMOS relays, Newark
 * MID400 AC Line Monitor, Newark
 
-Development Environment
-
+####Development Environment:
 I want to be able to share data structures and possibly some code between the C3 and the Bone. Since there are GCC cross compiles available for both platforms that would seem to make C the obvious choice for a language. The C3 does not have an OS, it is pretty much bare metal. The Bone comes with Debian (Wheezy) installed.
 
 I work on this project from two locations. At one site I have a MacMini running Linux Mint 17.1 and at the other I have have an iMac running OS X 10.10.1. There is a clone of this directory on both machines. The Bone is connected to my network. I can access it from either site using ssh. I use rsync to move the binaries from the development machines to the Bone. The C3 is physically connected (USB) to the Linux machine. Currently I need to be on the Linux machine to load the C3. I need to figure out how to load the C3 from the Bone. The Pcon-BBB directory holds the Bone code and Pcon-C3 holds the C3 code. My Makefiles check the OS and do the appropriate things, allowing me to build from either site.
