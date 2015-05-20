@@ -21,7 +21,25 @@ The state of up to 8 channels can be controlled by:
 * AQY212GH PhotoMOS relays, Newark
 * MID400 AC Line Monitor, Newark
 
-######see the project wiki for more information on the hardware environment
+Development Environment
+
+I want to be able to share data structures and possibly some code between the C3 and the Bone. Since there are GCC cross compiles available for both platforms that would seem to make C the obvious choice for a language. The C3 does not have an OS, it is pretty much bare metal. The Bone comes with Debian (Wheezy) installed.
+
+I work on this project from two locations. At one site I have a MacMini running Linux Mint 17.1 and at the other I have have an iMac running OS X 10.10.1. There is a clone of this directory on both machines. The Bone is connected to my network. I can access it from either site using ssh. I use rsync to move the binaries from the development machines to the Bone. The C3 is physically connected (USB) to the Linux machine. Currently I need to be on the Linux machine to load the C3. I need to figure out how to load the C3 from the Bone. The Pcon-BBB directory holds the Bone code and Pcon-C3 holds the C3 code. My Makefiles check the OS and do the appropriate things, allowing me to build from either site.
+OS X
+C3
+
+I tried to build propgcc. I put a little effort into it before I gave up and downloaded the OS X version of SimpleIDE which installed the propgcc binaries. SimpleIDE worked with no tweaking. SimpleIDE is somewhere between Eclipse and Sublime Text in functionality. It is aimed a specific platform which does not make it work well for my application. I have used Eclipse for J2EE development. Once you get it configured, it is very powerful, but it seemed to be to heavy for this project. I decided to go with Sublime Text, which meant I needed to learn a little about make files.
+BBB
+
+When cross compiling for the Bone on OS X I am using a tool chain i got from http://will-tm.com/cross-compiling-mac-os-x-mavericks. The only thing I needed to do was to create a case sensitive partition before copying the files from the .dmg file.
+Linux
+C3
+
+Even after installing the "correct" version of textifno I had no luck building propgcc, although it did get much further after I downgraded textinfo. I installed the Linux version of SimpleIDE to get the binaries and to give me a tool to work with the C3 while I tried to figure out make file.
+BBB
+
+I tried installing installing a cross compile tool chain using the Mint software manager and experienced a lot of problems. After spending a lot of time dealing with missing files I gave up and installed the xxxx tool chain and it worked on the first try.
 
 ####Language
 * C
