@@ -14,13 +14,10 @@
 
 /* shared codes, bone and prop */
 #include "shared.h"
-//#include "../Pcon-share/schedule.h"
 #include "typedefs.h"
 
-// #include "../Pcon-share/shared.h"
 
 /* functions */
 //void disp_sys(void);
-// void term(FdSerial_t *);
 
 #endif /* PCON_H_ */
