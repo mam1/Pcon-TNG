@@ -1,7 +1,8 @@
 Pcon-TNG
 ========
 - - - - - - - - - 
-#####Random thoughts - under construction and not stable.
+*** under construction and not stable ***
+These are my notes on developing a multi channel programmable controller application which is distributed across a BeagleBone Black and a Parallax C3. The BeagleBone handles the user interface and the C3 deals with interacting with the physical devices. Initial versions of this application run on a single C3. It works, however, the complexity of the command processor is pushing the limits of the C3. Moving the command processor to the BeagleBone allows the user interface to be more user friendly.
 - - - - - - - - -
 ###Pcon - multi channel programmable controller
 The state of up to 8 channels can be controlled by:
