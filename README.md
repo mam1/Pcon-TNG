@@ -3,7 +3,7 @@ Pcon-TNG
 - - - - - - - - - 
 ###*** under construction and not stable ***
 
-These are my notes on developing a multi channel programmable controller application which is distributed across a BeagleBone Black and a Parallax C3. The BeagleBone handles the user interface and the C3 deals with interacting with the physical devices. Initial versions of this application run on a single C3. It works, however, the complexity of the command processor is pushing the limits of the C3. Moving the command processor to the BeagleBone allows the user interface to be more user friendly.
+These are my notes on developing a multi channel programmable controller application which is distributed across a BeagleBone Black and a Parallax C3. The BeagleBone handles the user interface and the C3 deals with interacting with the physical devices. Initial versions of this application ran on a single C3. they work, however, the complexity of the command processor is pushing the limits of the C3. Moving the command processor to the BeagleBone allows the user interface to be more user friendly.  It is easer to use the bone get date from the ESP8266 based wireless humidity/temperature sensors that I am using.  
 - - - - - - - - -
 ###Pcon - multi channel programmable controller
 The state of up to 8 channels can be controlled by:
@@ -32,6 +32,18 @@ BBB ------------------ C3
 Tx P9_24 ----------> Rx 1
 
 Rx P9_26 <---------- Tx 0
+
+Communication is packet based.  A packet starts with a 2 byte header followed by byte that contains the number of following data bytes.
+    <packet header><packet length><packet data>
+An independent process is running which watches the byte stream from the sender and parses the byte steam into packets. When a complete packet is received it is is placed on the packet queue and other process can dequeue it as required.
+
+Packet data is a frame where the first byte sets the frame type and the fame type determines the action of the receiver.  It also determines how the remaining frame data will be marshaled.
+    <frame type><frame data>
+    <_SCHEDULE_F><day><channel><number of schedule records><schedule>
+    <_PING_F><ping data>
+    <_REBOOT_F>
+    <_ACK-F><frame type>
+
 
 #####Serial connection between C3 and DIOB
 C3 ------------------ DIOB (serial)
