@@ -1,40 +1,24 @@
 # scan directory 
 program_NAME := Pcon
 program_C_SRCS := $(wildcard *.c)
-# program_C_SRCS += ../Pcon-share/schedule.c
 program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
 program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
 program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
-program_OBJS += $(program_OBJS)
 
 # get the development machine OS
 UNAME_S := $(shell uname -s)
+UNAME_P := $(shell uname -p)
 
-# set locations for basic gnu tools based on the deveopment machine OS
-ifeq ($(UNAME_S),Darwin)
-	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
-else
-	PREFIX := /usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
-endif
-CC  := $(PREFIX)gcc
-CXX := $(PREFIX)g++
-LD  := $(PREFIX)ld
-AS  := $(PREFIX)as
-AR  := $(PREFIX)ar
-OBJCOPY := $(PREFIX)objcopy
-
-# set directories & libs
+# set directories
 ifeq ($(UNAME_S),Darwin)
 	program_INCLUDE_DIRS := ../Pcon-share/
-	program_LIBRARY_DIRS := ../Pcon-share/bone-lib
-	program_LIBRARIES := bone
-	# LD_LIBRARY_PATH := ../Pcon-share/bone-lib
+	program_LIBRARY_DIRS := 
+	program_LIBRARIES := 
 else
 	program_INCLUDE_DIRS := ../Pcon-share
 	program_LIBRARY_DIRS := 
 	program_LIBRARIES := 
-	# LD_LIBRARY_PATH := ../Pcon-share/bone-lib
 endif
 
 # set parameters
@@ -45,15 +29,31 @@ CFLAGS  += -Wall
 CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti 
 
+# set locations for basic gnu tools
+ifeq ($(UNAME_S),Darwin)
+	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
+	CC  := $(PREFIX)gcc
+	CXX := $(PREFIX)g++
+	LD  := $(PREFIX)ld
+	AS  := $(PREFIX)as
+	AR  := $(PREFIX)ar
+	OBJCOPY := $(PREFIX)objcopy
+else
+	PREFIX := /usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
+	CC  := $(PREFIX)gcc
+	CXX := $(PREFIX)g++
+	LD  := $(PREFIX)ld
+	AS  := $(PREFIX)as
+	AR  := $(PREFIX)ar
+	OBJCOPY := $(PREFIX)objcopy
+endif
+
 .PHONY: all clean distclean
 
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
-
-# build daemon
-	cd ../propd $(MAKE)
+	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)

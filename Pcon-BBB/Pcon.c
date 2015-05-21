@@ -120,17 +120,10 @@ int main(void) {
 
 	/* see if the C3 is there */
 	printf(" pinging the C3 - ");
-	if(s_ping(bbb)){
-		printf("failure\n");
-		usleep(40);
-		if(s_ping(bbb)){
+	if(s_ping(bbb))
 			printf("failure\n");
-			printf("can't find the C3\n\n");
-			printf("program terminated\n");
-			return 1;
-		}
-	}
-	printf("success\n");
+	else
+			printf("success\n");
 
 	/* copy system data to C3 */
 	send_byte(bbb,_SYSTEM);

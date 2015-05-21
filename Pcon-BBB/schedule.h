@@ -1,9 +1,9 @@
 #ifndef SCHEDULE_H_
 #define SCHEDULE_H_
-#include "../Pcon-share/typedefs.h"
+#include "typedefs.h"
 
 /* routines that work with a pointer to the full schedule data structure */
- void disp_all_schedules(uint32_t *);		//(schedule data)
+ void disp_all_schedules(CMD_FSM_CB *,uint32_t *);		//(fsm control block,schedule data)
  														//dump the entrire schedule data structure
 
  void load_schedule(uint32_t *,uint32_t *, int, int);  	//(schedule data, template, day, channel) 
