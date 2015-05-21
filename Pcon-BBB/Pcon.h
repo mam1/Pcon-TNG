@@ -4,7 +4,7 @@
 #define _TRACE
 #define _SYSTEM_DATA_FILE		"/media/Pcon-data/Pcon.dat" //sd card file
 #include "../Pcon-share/shared.h"
-#include "../Pcon-share/schedule.h"
+// #include "../Pcon-share/schedule.h"
 #include "../Pcon-share/typedefs.h"
 
 
