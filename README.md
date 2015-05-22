@@ -27,7 +27,8 @@ A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to
 #####Serial connection between the C3 and BeagleBone
 The C3 is running fdserial on pins 0 & 1. They are connected through 1k resistors to UART1 on the BBB.
 
-    BBB ------------------ C3
+      BBB                 C3
+    -—-----------------------
     Tx P9_24 ----------> Rx 1
     Rx P9_26 <---------- Tx 0
 
