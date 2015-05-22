@@ -33,7 +33,7 @@ Tx P9_24 ----------> Rx 1
 
 Rx P9_26 <---------- Tx 0
 
-The BeagleBone initiates all communications.  Communication is packet based.  A packet starts with a 2 byte header followed by byte that contains the number of following data bytes.  The last byte is a checksum.
+The BeagleBone initiates all communications.  The C3 has a cog monitoring the serial connection.  Communication is packet based.  A packet starts with a 2 byte header followed by byte that contains the number of following data bytes.  The last byte is a checksum.  The BeagleBone sends a packet which contains a frame.  The frame type determines the action the C3 takes.  The C3 ends the conversation by sending the BeagleBone an ACK frame type.
 
     <packet header><packet length><packet data><checksum>
 
