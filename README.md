@@ -33,11 +33,11 @@ Tx P9_24 ----------> Rx 1
 
 Rx P9_26 <---------- Tx 0
 
-The BeagleBone initiates all communications.  The C3 has a cog monitoring the serial connection.  Communication is packet based.  A packet starts with a 2 byte header followed by byte that contains the number of following data bytes.  The last byte is a checksum.  The BeagleBone sends a packet which contains a frame.  The frame type determines the action the C3 takes.  The C3 ends the conversation by sending the BeagleBone an ACK frame type.
+The BeagleBone initiates all communications.  Communication is packet based.  A packet starts with a 2 byte header followed by byte that contains the number of following data bytes.  The last byte is a checksum.  The BeagleBone sends a packet which contains a frame.  The frame type determines the action the C3 takes.  The C3 ends the conversation by sending the BeagleBone an ACK frame.
 
     <packet header><packet length><packet data><checksum>
 
-An independent process is running which watches the byte stream from the sender and parses the byte steam into packets. When a complete packet is received it is is placed on the packet queue and other process can dequeue it as required.
+The C3 has a cog monitoring the serial connection.  This independent process watches the byte stream from the BeagleBone  and parses the byte steam into packets. When a complete packet is received it is is placed on the packet queue and other process can dequeue it as required.
 
 Packet data is a frame where the first byte sets the frame type and the fame type determines the action of the receiver.  It also determines how the following frame data will be marshaled.
 
