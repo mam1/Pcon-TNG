@@ -33,11 +33,12 @@ Tx P9_24 ----------> Rx 1
 
 Rx P9_26 <---------- Tx 0
 
-Communication is packet based.  A packet starts with a 2 byte header followed by byte that contains the number of following data bytes.
+The BeagleBone initiates all communications.  Communication is packet based.  A packet starts with a 2 byte header followed by byte that contains the number of following data bytes.  The last byte is a checksum.
     <packet header><packet length><packet data><checksum>
 An independent process is running which watches the byte stream from the sender and parses the byte steam into packets. When a complete packet is received it is is placed on the packet queue and other process can dequeue it as required.
 
-Packet data is a frame where the first byte sets the frame type and the fame type determines the action of the receiver.  It also determines how the remaining frame data will be marshaled.
+Packet data is a frame where the first byte sets the frame type and the fame type determines the action of the receiver.  It also determines how the following frame data will be marshaled.
+
     <frame type><frame data>
     <_SCHEDULE_F><day><channel><number of schedule records><schedule>
     <_PING_F><ping data>
