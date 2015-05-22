@@ -1,4 +1,4 @@
-Pcon-TNG
+IPcon-TNG
 ========
 - - - - - - - - - 
 ###*** under construction and not stable ***
@@ -27,11 +27,9 @@ A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to
 #####Serial connection between the C3 and BeagleBone
 The C3 is running fdserial on pins 0 & 1. They are connected through 1k resistors to UART1 on the BBB.
 
-BBB ------------------ C3
-
-Tx P9_24 ----------> Rx 1
-
-Rx P9_26 <---------- Tx 0
+  BBB ------------------ C3
+  Tx P9_24 ----------> Rx 1
+  Rx P9_26 <---------- Tx 0
 
 The BeagleBone initiates all communications.  Communication is packet based.  A packet starts with a 2 byte header followed by byte that contains the number of following data bytes.  The last byte is a checksum.  The BeagleBone sends a packet which contains a frame.  The frame type determines the action the C3 takes.  The C3 ends the conversation by sending the BeagleBone an ACK frame.
 
