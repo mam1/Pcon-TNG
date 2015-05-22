@@ -44,9 +44,15 @@ The packet contains a frame.  The first byte of the frame defines the frame type
     _SCHEDULE_F
        <day><channel><number of schedule records><schedule>
        load the schedule fromm the frame into the C3 working schedule
-    <_PING_F><ping data>
-    <_REBOOT_F>
-    <_ACK-F><frame type>
+    _PING_F>
+       <ping data>
+       sent the ping data back to the BeagleBone
+    _REBOOT_F
+       <>
+       reboot the C3
+    _ACK-F
+       <ack data>
+       send the ack data to the BeagleBone
 
 
 #####Serial connection between C3 and DIOB
