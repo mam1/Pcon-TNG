@@ -36,11 +36,11 @@ The BeagleBone initiates all communications.  Communication is packet based.  A 
 
     <packet header><packet length><packet data><checksum>
 
-The C3 has a cog monitoring the serial connection.  This independent process watches the byte stream from the BeagleBone  and parses the byte steam into packets. When a complete packet is received it is is placed on the packet queue and other process can dequeue it as required.
+The C3 has a cog monitoring the serial connection.  This independent process watches the byte stream from the BeagleBone and parses it into packets. When a complete packet is received it is placed on the packet queue.  A different cog is watching the packet queue.  When a packet is ready this cog dequeues the packet and takes an action dependent on the frame type (the first byte of the frame data).
 
-Packet data is a frame where the first byte sets the frame type and the fame type determines the action of the receiver.  It also determines how the following frame data will be marshaled.
+The packet contains a frame.  The first byte of the frame defines the frame type and the frame type determines the action of the receiver and how the following frame data will be marshaled.
 
-    <frame type><frame data>
+    _FRAME <frame type><frame data>
     <_SCHEDULE_F><day><channel><number of schedule records><schedule>
     <_PING_F><ping data>
     <_REBOOT_F>
