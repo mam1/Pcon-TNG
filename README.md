@@ -40,8 +40,10 @@ The C3 has a cog monitoring the serial connection.  This independent process wat
 
 The packet contains a frame.  The first byte of the frame defines the frame type and the frame type determines the action of the receiver and how the following frame data will be marshaled.
 
-    _FRAME <frame type><frame data>
-    <_SCHEDULE_F><day><channel><number of schedule records><schedule>
+    <frame type><frame data>
+    _SCHEDULE_F
+       <day><channel><number of schedule records><schedule>
+       load the schedule fromm the frame into the C3 working schedule
     <_PING_F><ping data>
     <_REBOOT_F>
     <_ACK-F><frame type>
