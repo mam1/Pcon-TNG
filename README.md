@@ -27,7 +27,7 @@ A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to
 #####Serial connection between the C3 and BeagleBone
 The C3 is running fdserial on pins 0 & 1. They are connected through 1k resistors to UART1 on the BBB.
 
-      BBB                 C3
+      BBB                C3
     -—-----------------------
     Tx P9_24 ----------> Rx 1
     Rx P9_26 <---------- Tx 0
@@ -48,17 +48,14 @@ The packet contains a frame.  The first byte of the frame defines the frame type
 
 
 #####Serial connection between C3 and DIOB
-C3 ------------------ DIOB (serial)
 
-pin 4 ..................... DATA_RLY
-
-pin 5 ..................... SCLK_IN
-
-pin 5 ..................... SCLK_RLY
-
-pin 6 ..................... LOAD_IN
-
-pin 7 ..................... LAT_RLY
+     C3 ------------------ DIOB (serial)
+   -----------------------------------
+   pin 4 ..................... DATA_RLY
+   pin 5 ..................... SCLK_IN
+   pin 5 ..................... SCLK_RLY
+   pin 6 ..................... LOAD_IN
+   pin 7 ..................... LAT_RLY
 
 ####Development Environment:
 I want to be able to share data structures and possibly some code between the C3 and the Bone. Since there are GCC cross compiles available for both platforms that would seem to make C the obvious choice for a language. The C3 does not have an OS, it is pretty much bare metal. The Bone comes with Debian (Wheezy) installed.
