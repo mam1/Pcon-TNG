@@ -50,12 +50,13 @@ The packet contains a frame.  The first byte of the frame defines the frame type
 #####Serial connection between C3 and DIOB
 
      C3 ------------------ DIOB (serial)
-   -----------------------------------
-   pin 4 ..................... DATA_RLY
-   pin 5 ..................... SCLK_IN
-   pin 5 ..................... SCLK_RLY
-   pin 6 ..................... LOAD_IN
-   pin 7 ..................... LAT_RLY
+    -------------------------------------
+    pin 4 ..................... DATA_RLY
+    pin 5 ..................... SCLK_IN
+    pin 5 ..................... SCLK_RLY
+    pin 6 ..................... LOAD_IN
+    pin 7 ..................... LAT_RLY
+
 
 ####Development Environment:
 I want to be able to share data structures and possibly some code between the C3 and the Bone. Since there are GCC cross compiles available for both platforms that would seem to make C the obvious choice for a language. The C3 does not have an OS, it is pretty much bare metal. The Bone comes with Debian (Wheezy) installed.
