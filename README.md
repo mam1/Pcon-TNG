@@ -21,7 +21,7 @@ The state of up to 8 channels can be controlled by:
 * AQY212GH PhotoMOS relays, Newark
 * MID400 AC Line Monitor, Newark
  
-#####2c connection between the C3 and DS3231 real time clock module
+#####I2c connection between the C3 and DS3231 real time clock module 
 A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, headers and terminals for the external connections are mounted on an additional board connected to the C3.
 
 #####Serial connection between the C3 and BeagleBone
@@ -34,7 +34,7 @@ Tx P9_24 ----------> Rx 1
 Rx P9_26 <---------- Tx 0
 
 Communication is packet based.  A packet starts with a 2 byte header followed by byte that contains the number of following data bytes.
-    <packet header><packet length><packet data>
+    <packet header><packet length><packet data><checksum>
 An independent process is running which watches the byte stream from the sender and parses the byte steam into packets. When a complete packet is received it is is placed on the packet queue and other process can dequeue it as required.
 
 Packet data is a frame where the first byte sets the frame type and the fame type determines the action of the receiver.  It also determines how the remaining frame data will be marshaled.
