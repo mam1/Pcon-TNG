@@ -8,6 +8,8 @@
 #ifndef SERIAL_IO_H_
 #define SERIAL_IO_H_
 
+#include <stdint.h>		//uint_8, uint_16, uint_32, etc.
+
 
 #define BAUDRATE B9600   			//Change as needed, keep B
 #define MODEMDEVICE "/dev/ttyO1"	//Beaglebone Black serial port
@@ -26,7 +28,7 @@ void    s_rbyte(int, int *);
 void    s_wbyte(int, int *);
 void    s_error(int);
 int 	s_ping(int);
-int 	s_send_schedule(CMD_FSM_CB *);
+int 	s_send_schedule(int,int,uint32_t *);
 int 	send_sys(CMD_FSM_CB *);
 
 int 	send_byte(int, uint8_t);

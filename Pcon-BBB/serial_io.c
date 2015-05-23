@@ -150,7 +150,7 @@ void s_error(int fd){
 }
 
 /* send schedule data to the C3 */
-int s_send_schedule(CMD_FSM_CB *cb){
+int s_send_schedule(int day, int channel, uint32_t *sch){
 //   int         send_bytes;
 //   int         wsch = _WRITE_SCH, ret;
 //   uint32_t    *sch_ptr;

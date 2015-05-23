@@ -1204,10 +1204,12 @@ int c_38(CMD_FSM_CB *cb)
 /* replace system schedule */ 
 int c_39(CMD_FSM_CB *cb)
 {
+	uint32_t		*s,x;
+		s =&x;
        memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr,cmd_fsm_cb.w_sch_ptr,sizeof(cmd_fsm_cb.w_sch));
        save_system_data(_SYSTEM_DATA_FILE,&sdat);
        printf("\r\n*** system schedule replaced ***\r\n");
-       s_send_schedule(cb);
+       s_send_schedule(1,1,x);
        printf("   revised schedule sent to C3\r\n");
 
    /* build prompt */
