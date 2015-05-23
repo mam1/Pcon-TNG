@@ -38,22 +38,29 @@ The BeagleBone initiates all communications.  Communication is packet based.  A 
 
 The C3 has a cog monitoring the serial connection.  This independent process watches the byte stream from the BeagleBone and parses it into packets. When a complete packet is received it is placed on the packet queue.  A different cog is watching the packet queue.  When a packet is ready this cog dequeues the packet and takes an action dependent on the frame type (the first byte of the frame data).
 
-The packet contains a frame.  The first byte of the frame defines the frame type and the frame type determines the action of the receiver and how the following frame data will be marshaled.
+The incoming packet contains a frame.  The first byte of the frame defines the frame type and the frame type determines the action taken by the C3 and how the following frame data will be marshaled.  The command processor running on the BeagleBone can sent the following frames to the C3.
 
     <frame type><frame data>
-    _SCHEDULE_F
-       <day><channel><number of schedule records><schedule>
-       load the schedule fromm the frame into the C3 working schedule
-    _PING_F>
-       <ping data>
-       sent the ping data back to the BeagleBone
-    _REBOOT_F
-       <>
-       reboot the C3
-    _ACK-F
-       <ack data>
-       send the ack data to the BeagleBone
 
+    <_SCHEDULE_F><day><channel><number of schedule records><schedule>
+       load the schedule from the frame into the C3 schedule buffer
+       send an _ACK_F to the BeagleBone
+    <_CHANNEL_F><channel number><state><control mode><on time><off time><sensor value>
+        load channel data into the C3 channel buffer
+        send an _ACK_F to the BeagleBone
+    <_GET_CHANNEL_F><>
+        send channel data to BeagleBone
+    <_TIME_F><hour><minute><second><year><month><date><dow>
+        set the RTC to the time/date in the frame
+        send an _ACK_F to the BeagleBone
+    <_GET_TIME_F><>
+        send time data to the BeagleBone    
+    <_PING_F><number of bytes><ping bytes>
+       sent the ping data back to the BeagleBone
+    <_REBOOT_F><>
+       reboot the C3
+
+The C3 uses the same packet structure when sending data to the BeagleBone.  The C3 only sends data to the BagleBone when it get a request.  If more than an ACK is required data is marshaled into the packet.  Since the beagleBone initiated the conversation it should know what to expect.
 
 #####Serial connection between C3 and DIOB
 
