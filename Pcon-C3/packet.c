@@ -269,3 +269,26 @@ int unpack_schedule_frame(uint8_t *byte_ptr, _schedule_frame *sf_ptr){
     }               
     return 0;
 }  
+
+/************************************************************/
+
+int send_ack(_packet *pkt,fdserial *pktport){
+   pkt->length = 1;
+   pkt->data[0] = _ACK;
+   packet_send(pktport,pkt);
+  return 0;
+} 
+
+int send_PING(_packet *pkt,fdserial *pktport,uint8_t *ping_data){
+  /*
+  int       i;
+  pkt->length = 1;
+  
+  for(i=0;i<size 
+  pkt->data[0] = 1;
+  pkt->data[1] = _Ping;
+  packet_send(pktport,&g_packet); 
+  */
+  
+  return 0;
+  }    

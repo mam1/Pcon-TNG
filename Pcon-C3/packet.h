@@ -19,7 +19,7 @@
 #define _SCHEDULE_F   	1	// replace a working schedule with schedule in frame, send ack to sender
 #define _CHANNEL_F    	2 	// replace channel data with channel data in frame, send channel data back to sender
 #define _TIME_F       	3 	// set real time clock to the time/date in frame, send ack to sender
-#define _PING__			4 	// request for ping, send ping data in frame back to sender	
+#define _PING_F			  4 	// request for ping, send ping data in frame back to sender	
 #define _
 
 #define CONS_RX 0
@@ -55,6 +55,11 @@ typedef struct {
   uint8_t       rcnt;
   uint32_t      rec[_MAX_SCHEDULE_RECS];
 } _schedule_frame;
+
+typedef struct {
+  uint8_t     f_type;
+  uint8_t     ack_byte;
+} _ack_frame;  
 
 typedef union {uint32_t MyLong; uint8_t MyByte[4]; } _packed;
     

@@ -59,8 +59,14 @@ The incoming packet contains a frame.  The first byte of the frame defines the f
        sent the ping data back to the BeagleBone
     <_REBOOT_F><>
        reboot the C3
+    <_START_F>
+        start the C3 cog the controls the channel states
 
-The C3 uses the same packet structure when sending data to the BeagleBone.  The C3 only sends data to the BagleBone when it get a request.  If more than an ACK is required data is marshaled into the packet.  Since the beagleBone initiated the conversation it should know what to expect.
+The C3 uses the same packet structure when sending data to the BeagleBone.  The C3 only sends data to the BagleBone when it get a request.  If more than an ACK is required data is marshaled into the packet.  Since the beagleBone initiated the conversation it should know what to expect.  The C3 can send the following frames to the BeagleBone.
+
+    <_ACK><>
+    <_CHANNEL><channel number><state><on time><off time>
+    <_TIME><hour><minute><second><year><month><date><dow>
 
 #####Serial connection between C3 and DIOB
 
