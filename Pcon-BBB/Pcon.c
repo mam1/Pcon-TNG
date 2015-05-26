@@ -40,14 +40,6 @@ char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
 
 uint8_t cmd_state,char_state;
-// /***************** global code to text conversion ********************/
-// char *day_names_long[7] = {
-//      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-// char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-// char *onoff[2] = {"off"," on"};
-// char *con_mode[3] = {"manual","  time","time & sensor"};
-// char *sch_mode[2] = {"day","week"};
-// char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
 
 /***************************** support routines ********************************/

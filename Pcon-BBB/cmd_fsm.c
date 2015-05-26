@@ -535,7 +535,9 @@ int c_1(CMD_FSM_CB *cb)
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-	int 		i;
+	int 		i, pingback;
+
+	pingback = s_ping(bbb);	
 
 	for(i=0;i<10;i++){
 		if(s_ping(bbb))
