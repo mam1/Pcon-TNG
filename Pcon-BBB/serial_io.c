@@ -116,7 +116,7 @@ void s_rbyte(int fd, int *byte){
 
   i =0;
   while(1){
-    ret = read(fd,byte,1);
+    ret = read(fd,byte,sizeof(*byte));
     if((ret == 0) && (i++ > READ_TRYS)){
       perror("\n*** serial read error ");
       s_error(fd);
@@ -134,7 +134,7 @@ void s_rbyte(int fd, int *byte){
 void s_wbyte(int fd, int *byte){
   int    ret;
 
-  ret = write(fd,byte,1);
+  ret = write(fd,byte,sizeof(*byte));
   if(ret < 0){
     perror("\n*** serial write error ");
     s_error(fd);
@@ -319,6 +319,7 @@ int receive_block(int fd){
 int s_ping(int fd){
 
   send_byte(fd,_PING);
+  
   if(receive_byte(fd) == _ACK)
     return 0;
   else
