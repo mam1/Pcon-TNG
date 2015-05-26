@@ -17,7 +17,13 @@
 fdserial          *pktport;
 _packet           g_packet,r_packet;
 
-_ack_frame        a_frame ={.f_type=_ACK};
+_packet           pkt;
+_ack_frame        ack_frame ={.f_type=_ACK_F, .ack_byte=_ACK};
+_schedule_frame   sch_frame ={.f_type=_SCHEDULE_F};
+_channel_frame    chn_frame ={.f_type=_CHANNEL_F};
+
+uint8_t           schedule_buffer[];
+_channel_data     channel_buffer;
 
 _schedule_frame   s_frame, s_frame_read; 
 uint32_t          sch[_SCHEDULE_SIZE];
@@ -40,46 +46,14 @@ int main(int argc, char *argv[])
   sleep(1);
   //printf("\033\143"); //clear the terminal screen, preserve the scroll back
   	printi("\n*** Pcon  %d.%d.%d ***\n\n",_major_version,_minor_version,_minor_revision);
-
   pktport = fdserial_open(PROD_RX, PROD_TX, PROD_MODE, PROD_BAUD);
   if(pktport == 0){
     printi("*** packet port open error\n");
     return 1;
-  }    
-  
-  // sch[0] = 4;
-  // sch[1] = 1000877;
-  // sch[2] = 128274849;
-  // sch[3] = 183838533;
-  // sch[4] = 111111111;
-
-  
+  }     
   printi("packet port opened\n");
   printi("starting packet processing cog ..... ");
-  packet_start(pktport);
-//  printi("g_packet size = %d\n",sizeof(g_packet));
-//  printi("s_frame size = %d\n",sizeof(s_frame));
-//  printi("size of header = %d\n", 4);
-//  printi("size of schedule = %d\n",4+(sch[0]*4));
-//  printi("number of schedule records = %d\n",sch[0]);
-//  printi("packet length = %d\n",sch[0]*4+8);
-  
-  // if(make_schedule_frame(&g_packet,(uint8_t *)&s_frame,sizeof(s_frame),1,1,sch)){
-  //   printi("*** make_schedule_frame error\n");
-  //   return 1;
-  // }
-  // packet_send(pktport,&g_packet);
-
-  // sch[0] = 3;
-  // sch[1] = 99999999;
-  // sch[2] = 88888888;
-  // sch[3] = 77777777; 
-    
-  // if(make_schedule_frame(&g_packet,(uint8_t *)&s_frame,sizeof(s_frame),1,2,sch)){
-  //   printi("*** make_schedule_frame error\n");
-  //   return 1;
-  // }
-  // packet_send(pktport,&g_packet);
+  packet_start(pktport);  
   printi("\nloop waiting for a packet to appear on queue\n");    
   printi("******************************************************\n");
   for(;;){
@@ -98,21 +72,35 @@ int main(int argc, char *argv[])
             load_schedule((uint32_t *)w_sch, &s_frame_read.rec[0], s_frame_read.day, s_frame_read.channel);  	//(schedule data, template, day, channel)
             disp_all_schedules((uint32_t *)w_sch);
             schedule_frame_print(&s_frame_read);
-            send_ack(&g_packet,pktport);
+            send_ack(&pkt,pktport,&ack_frame);
             break;
           case _PING_F:
             printi("recieved a ping frame\n");
-            send_ack(&g_packet,pktport);
+            send_ack(&pkt,pktport,&ack_frame);
+            printi("sent an ACK\n");
+            break;
+          case _REBOOT_F:
+            reboot();
             break;
           default:
             printi("*** unknown frame type <%2x>\n",*byte_ptr); 
         }                  
 //        packet_print(&r_packet); 
       }
-      sleep(1);
+      sleep(5);
 //      packet_send(pktport,&g_packet);
   }      
    
   return 0;
 }
 
+// sch[0] = 3;
+  // sch[1] = 99999999;
+  // sch[2] = 88888888;
+  // sch[3] = 77777777; 
+    
+  // if(make_schedule_frame(&g_packet,(uint8_t *)&s_frame,sizeof(s_frame),1,2,sch)){
+  //   printi("*** make_schedule_frame error\n");
+  //   return 1;
+  // }
+  // packet_send(pktport,&g_packet);

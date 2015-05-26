@@ -272,10 +272,9 @@ int unpack_schedule_frame(uint8_t *byte_ptr, _schedule_frame *sf_ptr){
 
 /************************************************************/
 
-int send_ack(_packet *pkt,fdserial *pktport){
-   pkt->length = 1;
-   pkt->data[0] = _ACK;
-   packet_send(pktport,pkt);
+int send_ack(_packet *pkt, fdserial *pktport, _ack_frame *ack_ptr){
+  packet_make(pkt,(uint8_t *)ack_ptr,sizeof(*ack_ptr));
+  packet_send(pktport,pkt);
   return 0;
 } 
 

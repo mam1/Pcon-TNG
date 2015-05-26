@@ -20,7 +20,8 @@
 #define _CHANNEL_F    	2 	// replace channel data with channel data in frame, send channel data back to sender
 #define _TIME_F       	3 	// set real time clock to the time/date in frame, send ack to sender
 #define _PING_F			  4 	// request for ping, send ping data in frame back to sender	
-#define _
+#define _ACK_F         5 //
+#define _REBOOT_F      6 // reboot the C3, program load from EEPROM 
 
 #define CONS_RX 0
 #define CONS_TX 1
@@ -57,6 +58,21 @@ typedef struct {
 } _schedule_frame;
 
 typedef struct {
+	uint8_t		f_type;
+	uint8_t		state;
+	uint8_t		mode;
+	int			on_time;
+	int 		off_time;		
+} _channel_frame;
+
+typedef struct {
+	uint8_t		state;
+	uint8_t		mode;
+	int			on_time;
+	int 		off_time;
+} _channel_data;  
+
+typedef struct {
   uint8_t     f_type;
   uint8_t     ack_byte;
 } _ack_frame;  
@@ -81,6 +97,8 @@ void PackLong(uint8_t *p, _packed N);
 uint32_t UnPackLong(uint8_t *p);
 int pack_schedule_frame(_schedule_frame *);
 int unpack_schedule_frame(uint8_t *byte_ptr, _schedule_frame *sf_ptr);
+
+int send_ack(_packet *pkt, fdserial *pktport, _ack_frame *ack_ptr);
   
   
 #endif
