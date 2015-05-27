@@ -16,6 +16,8 @@
 #include "trace.h"
 #include "serial_io.h"
 
+ typedef unsigned char Byte;
+
 // #include "cmd_fsm.h"
 
 /******************************** globals **************************************/
@@ -34,12 +36,15 @@ const char *con_mode[3] = {"manual","  time","time & sensor"};
 const char *sch_mode[2] = {"day","week"};
 const char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
-
+/*************************** globals *********************************************/
 
 char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
 
-uint8_t cmd_state,char_state;
+int           	Port;
+uint8_t			pkt[254];
+
+uint8_t 		cmd_state,char_state;
 
 
 /***************************** support routines ********************************/
@@ -66,6 +71,14 @@ int main(void) {
 	int	char_state;			//current state of the character processing fsm
 	int prompted = false;	//has a prompt been sent
 	int i;
+
+	typedef struct 
+	{
+	uint8_t			f_type;
+	uint8_t			ping_data;	
+	} _ping_frame;
+
+	_ping_frame			ping_frame = {.f_type = 4};
 
 	/************************* setup trace *******************************/
 #ifdef _TRACE
@@ -107,22 +120,45 @@ int main(void) {
 	}
 
 	/* open UART1 to connect to BBB */
-	bbb = s_open();
-	printf(" serial device C3 opened, handle = %d\r\n",bbb);
+	//bbb = s_open();
+	Port = SerialInit("/dev/ttyO1", 9600);
+	printf(" serial connection C3 opened\r\n");
 
 	/* see if the C3 is there */
-	printf(" pinging the C3 - ");
-	if(s_ping(bbb))
-			printf("failure\n");
-	else
-			printf("success\n");
+	void ShoPkt(Byte N, unsigned char *pkt );
+	void BuildPkt(Byte N, unsigned char *pkt);
+	void SndPacket( Byte N, unsigned char *pkt );
+	int packet_print(uint8_t *pkt);
+
+	printf(" pinging the C3 - \r\n");
+
+	//packet_print(pkt)
+	ShoPkt(sizeof(*pkt),pkt);
+	BuildPkt(sizeof(*pkt),pkt);
+	ShoPkt(sizeof(*pkt),pkt);
+	
+
+	packet_print(pkt);
+	
+	printf("size of ping_frame = %i\n",sizeof(ping_frame));
+	int iii;
+	uint8_t *ppp;
+	ppp = (uint8_t *)&ping_frame;
+	for(iii = 0; iii<sizeof(ping_frame);iii++)
+		printf("  <%2x>\n\r",*ppp++);
+	SndPacket(sizeof(ping_frame), (uint8_t *)&ping_frame);
+	// if(s_ping(bbb))
+	// 		printf("failure\n");
+	// else
+	// 		printf("success\n");
+	
 
 	/* copy system data to C3 */
-	send_byte(bbb,_SYSTEM);
-	printf(" size of systems data file %i\n",sizeof(sdat));
-	send_int(bbb,sizeof(sdat));
-	send_block(bbb,(void *)&sdat,sizeof(sdat));
-	printf(" system data copied to C3\n");
+	// send_byte(bbb,_SYSTEM);
+	// printf(" size of systems data file %i\n",sizeof(sdat));
+	// send_int(bbb,sizeof(sdat));
+	// send_block(bbb,(void *)&sdat,sizeof(sdat));
+	// printf(" system data copied to C3\n");
 
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm controll block to allow acces to system data

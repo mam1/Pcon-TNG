@@ -57,10 +57,11 @@ int main(int argc, char *argv[])
   printi("\nloop waiting for a packet to appear on queue\n");    
   printi("******************************************************\n");
   for(;;){
-      printi("checking for packets\n");
+  //    printi("checking for packets\n");
       if(packet_ready()){                         // see if there is a packet ready
         printi(">>>> packet ready\n");
         packet_read(&r_packet);                   // dequeue a packet
+        packet_print(&r_packet);
         byte_ptr = (uint8_t *)&r_packet;
         byte_ptr++;                               // set pointer to start of packet data
         switch(*byte_ptr)                         // unpack frame based on frame type
@@ -87,7 +88,7 @@ int main(int argc, char *argv[])
         }                  
 //        packet_print(&r_packet); 
       }
-      sleep(5);
+ //     sleep(5);
 //      packet_send(pktport,&g_packet);
   }      
    
