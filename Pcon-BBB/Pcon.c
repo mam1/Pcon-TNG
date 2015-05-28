@@ -16,6 +16,14 @@
 #include "trace.h"
 #include "serial_io.h"
 
+/* frame types */
+#define _SCHEDULE_F     1 // replace a working schedule with schedule in frame, send ack to sender
+#define _CHANNEL_F      2   // replace channel data with channel data in frame, send channel data back to sender
+#define _TIME_F         3   // set real time clock to the time/date in frame, send ack to sender
+#define _PING_F     	4   // request for ping, send ping data in frame back to sender 
+#define _ACK_F         	5 //
+#define _REBOOT_F      	6 // reboot the C3, program load from EEPROM 
+
  typedef unsigned char Byte;
 
 // #include "cmd_fsm.h"
@@ -78,7 +86,7 @@ int main(void) {
 	uint8_t			ping_data;	
 	} _ping_frame;
 
-	_ping_frame			ping_frame = {.f_type = 4};
+	_ping_frame			ping_frame = {.f_type = _PING_F};
 
 	/************************* setup trace *******************************/
 #ifdef _TRACE
@@ -121,23 +129,24 @@ int main(void) {
 
 	/* open UART1 to connect to BBB */
 	//bbb = s_open();
+	int SerialInit(char *device, int bps);
 	Port = SerialInit("/dev/ttyO1", 9600);
 	printf(" serial connection C3 opened\r\n");
 
 	/* see if the C3 is there */
 	void ShoPkt(Byte N, unsigned char *pkt );
-	void BuildPkt(Byte N, unsigned char *pkt);
+	void BuildPkt(Byte, unsigned char *, unsigned char *);
 	void SndPacket( Byte N, unsigned char *pkt );
 	int packet_print(uint8_t *pkt);
 
 	printf(" pinging the C3 - \r\n");
 
 	//packet_print(pkt)
-	ShoPkt(sizeof(*pkt),pkt);
-	BuildPkt(sizeof(*pkt),pkt);
-	ShoPkt(sizeof(*pkt),pkt);
-	
 
+	//ShoPkt(sizeof(ping_frame), &ping_frame, &pkt);
+
+
+	BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, (uint8_t *)&pkt);
 	packet_print(pkt);
 	
 	printf("size of ping_frame = %i\n",sizeof(ping_frame));
@@ -264,13 +273,13 @@ int main(void) {
 	return 0;
 }
 int term(int t){
-	s_close(bbb);
+	// s_close(bbb);
 	switch(t){
 	case 1:
 		system("/bin/stty cooked");			//switch to buffered iput
 		system("/bin/stty echo");			//turn on terminal echo
-		printf("*** normal termination\n\n");
-		exit(-1);
+		printf("*** normal termination\n\n\r");
+		exit(0);
 		break;
 	case 2:
 		system("/bin/stty cooked");			//switch to buffered iput

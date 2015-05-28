@@ -1,52 +1,4 @@
-/******************************************************************************************
 
-
-                ##### RIVAL - RASPBERRY PI and PROPELLER ROBOT #####
-                            Ray Tracy Feb 2015
-
-   This is Rival.c the CGI command processor, it runs on the Raspberry Pi processor.
-   Rival.spin is the firmware, it runs on the Parallax Propeller microprocessor.
-
-     *** This version of the bot does not have an arm.
-
-   The intent of this software is to kinda mimic the operation of the Mars rovers.
-   Operationally a set of commands are sent to the rover which then carrys out that set
-   of commands communicates the results and then waits for further instructions.
-
-   HARDWARE:
-     The P8X32A propeller microprocessor provides:
-     interfaces to the LCD display, a WS2812 based LED display, three pings, motors and wheels 
-     equiped with QME-01 encoders.
-
-     The RASPBERRY PI is equiped with a wireless network interface, the camera and the
-     pan/tilt servo controller and interface to the propeller P8X32A.
-
-
-   FIRMWARE:
-     The firmware (on the P8X32A) provides two way packet based communication between the
-     Propeller and the RPI, and the low level interfaces to all hardware, Move and Turn
-     routines utilizing a PID drive subsystem are part of the firmware as well.
-     On the RPI side: There is a packet based communications subsystem which provides two 
-     way communications with the P8X32A, an web based html control panel and CGI interface
-     routines to each of the subsystems is provided. 
-
-                             WS2812 COLOR TABLE
-                COLOR           VALUE     INDEX         WHEEL POSITION
-                red           $FF_00_00     1          000 degrees north
-                orange        $FF_7F_00     2          030
-                yellow        $FF_FF_00     3          060
-                GreenYellow   $7F_FF_00     4          090 degrees east
-                green         $00_FF_00     5          120
-                greencyan     $00_FF_7F     6          150
-                cyan          $00_FF_FF     7          180 degrees south
-                bluecyan      $00_7F_FF     8          210
-                blue          $00_00_FF     9          240
-                bluemagenta   $7F_00_FF     10         270 degrees west
-                magenta       $FF_00_FF     11         300
-                redmagenta    $FF_00_7F     12         330
-
-
-**********************************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -57,7 +9,7 @@
 #include <sys/fcntl.h>
 #include <stdint.h>   //uint_8, uint_16, uint_32, etc.
 
-char version[]="---Rival.c  V1.65---";
+//char version[]="---Rival.c  V1.65---";
 
 // ======<< Ascii control Characters >>=====
 #define      soh  0x01
@@ -68,36 +20,56 @@ char version[]="---Rival.c  V1.65---";
 #define      nak  0x15
 #define      syn  0x16
 
+/* frame types */
+#define _SCHEDULE_F     1 // replace a working schedule with schedule in frame, send ack to sender
+#define _CHANNEL_F      2   // replace channel data with channel data in frame, send channel data back to sender
+#define _TIME_F         3   // set real time clock to the time/date in frame, send ack to sender
+#define _PING_F     4   // request for ping, send ping data in frame back to sender 
+#define _ACK_F         5 //
+#define _REBOOT_F      6 // reboot the C3, program load from EEPROM 
+
 #define      False 0
 #define      True 1
 #define      baudrate   B9600               // B57600 B115200  B230400 
 #define      usbPort    "/dev/ttyUSB"
 #define      uartPort   "/dev/ttyO1"       // For use with GPIO pins
 
+void SerialError (int,struct termios *);
+
 typedef unsigned char Byte;
-typedef enum ledclr leds;
+// typedef enum ledclr leds;
 typedef union { unsigned int MyLong; unsigned char MyByte[4]; } packed;
 int           Port ;
-Byte SndPkt[100];
-Byte RcvPkt[100];
+Byte SndPkt[254];
+Byte RcvPkt[254];
 
 // ***** POST DATA VARIABLES *****
-char String[25];
-int  Command, Number;
+// char String[25];
+// int  Command, Number;
 
 /************************************
  **       UTILITY ROUTINES         **
  ************************************/
-void BuildPkt(Byte N, unsigned char *pkt) {
+void BuildPkt(Byte N, unsigned char *frame, unsigned char *pkt) {
    Byte i;
-   for (i=0; i<N; i++) { *pkt = (i + 0x40); pkt++; }
+   *pkt++ = N + 1;
+   for (i=0; i<N; i++) {
+//     *pkt = (i + 0x40);
+    *pkt++ = *frame++; 
+   }
+   return;
 }
 
 void ShoPkt(Byte N, unsigned char *pkt ) {
    int i,ck;
-   printf("SndPkt: [%x]",N);
-   for (i=0; i<N; i++) { printf(" %x",*pkt); ck+=*pkt; pkt++; }   // Packet data
+   // printf("SndPkt length: [%x]",N);
+   for (i=0; i<N; i++) {
+      printf(" %x",*pkt); 
+      ck+=*pkt; 
+      pkt++; 
+   }   // Packet data
    printf(" {%x}\n",(ck%256));
+   return;
 }
 
 void delay(ms) { usleep(ms*1000); return;}
@@ -166,6 +138,7 @@ void SndPacket( Byte N, unsigned char *pkt ) {
    PutByte(soh);                        // Send start of packet
    PutByte(stx);                        // Send start of packet
    PutByte( N );                        // Send packet size
+   PutByte(_PING_F);
    Ck1 = 0;                             // Clear the checksum
    for (i=0; i<N; i++) {
        PutByte( *pkt );                 // Send the next data character 
@@ -211,38 +184,38 @@ int WaitAck() {
 /***************************
  **    GET POST DATA      **
  ***************************/
-void GetPostData() {
- char   postdata[300], *lenstr;
- char   s[2] = "&";
- char   *T1, *T2, *Tok00, *Tok01, *Tok02;
- long   len;
+// void GetPostData() {
+//  char   postdata[300], *lenstr;
+//  char   s[2] = "&";
+//  char   *T1, *T2, *Tok00, *Tok01, *Tok02;
+//  long   len;
 
-lenstr = getenv("CONTENT_LENGTH");
-printf("lenstr = %i\n",lenstr);
-if(lenstr == NULL) { printf("<P>***Error*** Cannot fetch POST string."); }
-else {
-   sscanf(lenstr, "%ld", &len);
-   fgets(postdata, len+1, stdin);
-   postdata[len+2] = 0;
-// POST data string --> Parameter1=Value&parameter2=value&...&parameterN=value
-//   printf("<p>POSTDATA:<br> %s</p>",postdata);
-   Tok00    = strtok( postdata, s );  //Command      Seperate Post parameters into individual tokens
-   Tok01    = strtok( NULL, s );   //Distance
-   Tok02    = strtok( NULL, s );   //String
-// Get Command 
-   T1    = strtok( Tok00, s);    // Name
-   T2    = strtok( NULL, s);    // value (still an ascii string)
-   Command = atoi( T2 );        // convert to integer and save
-// Get number
-   T1    = strtok( Tok01, s);
-   T2    = strtok( NULL, s);
-   Number = atoi( T2 );
-// Get String   
-   T1     = strtok( Tok02, s);    // Name
-   T2     = strtok( NULL, s);     // value - fixed length string
-   strncpy(String,T2,20);
-   }
-}
+// lenstr = getenv("CONTENT_LENGTH");
+// printf("lenstr = %i\n",lenstr);
+// if(lenstr == NULL) { printf("<P>***Error*** Cannot fetch POST string."); }
+// else {
+//    sscanf(lenstr, "%ld", &len);
+//    fgets(postdata, len+1, stdin);
+//    postdata[len+2] = 0;
+// // POST data string --> Parameter1=Value&parameter2=value&...&parameterN=value
+// //   printf("<p>POSTDATA:<br> %s</p>",postdata);
+//    Tok00    = strtok( postdata, s );  //Command      Seperate Post parameters into individual tokens
+//    Tok01    = strtok( NULL, s );   //Distance
+//    Tok02    = strtok( NULL, s );   //String
+// // Get Command 
+//    T1    = strtok( Tok00, s);    // Name
+//    T2    = strtok( NULL, s);    // value (still an ascii string)
+//    Command = atoi( T2 );        // convert to integer and save
+// // Get number
+//    T1    = strtok( Tok01, s);
+//    T2    = strtok( NULL, s);
+//    Number = atoi( T2 );
+// // Get String   
+//    T1     = strtok( Tok02, s);    // Name
+//    T2     = strtok( NULL, s);     // value - fixed length string
+//    strncpy(String,T2,20);
+//    }
+// }
 
 /************************************************************************************
                    ******************************
@@ -258,11 +231,30 @@ else {
         };
 ************************************************************************************/
 int SerialInit(char *device, int bps) { 
-    struct termios options;
-    int Serial;
+    struct termios    options, oldtio;
+    int               Serial;
+    int               ret,fd;
+
+
+
+  /* Load the pin configuration */
+    ret  = system("echo uart1 > /sys/devices/bone_capemgr.9/slots");
+    if(ret < 0){
+      perror("echo uart1 > /sys/devices/bone_capemgr.9/slots");
+      SerialError(-1, &oldtio);
+    }
 
     Serial = open(device, O_RDWR | O_NOCTTY ); //Open device in read/write mode
-    if (Serial == -1) { printf("Error - Unable to open '%s'.\n", device); exit(1); }
+    if (Serial == -1) {
+      printf("Error - Unable to open '%s'.\n", device);
+      exit(1); 
+    }
+    ret = tcgetattr(Serial, &oldtio); //save old tremios settings
+    if (ret < 0) {
+      printf("*** problem saving old tremios settings\r\n");
+      // s_close(fd);
+      SerialError(Serial, &oldtio);
+    }
     tcgetattr(Serial, &options);
     options.c_cflag = bps | CS8 | CLOCAL | CREAD;
     options.c_iflag = IGNPAR;
@@ -274,6 +266,17 @@ int SerialInit(char *device, int bps) {
     tcsetattr(Serial, TCSANOW, &options);
     return Serial;     
 }
+
+void SerialError (int fd, struct termios *oldtio){
+    system("/bin/stty cooked");     //switch to buffered iput
+    system("/bin/stty echo");     //turn on terminal echo
+    if(fd != -1){
+      tcsetattr(fd, TCSANOW, oldtio);  //restore old tremios settings
+      close(fd);
+  }
+    printf("*** application terminated\r\n\n");
+    exit(-1);
+  }
 /******************************************************************************/
 
 int packet_print(uint8_t *pkt)
