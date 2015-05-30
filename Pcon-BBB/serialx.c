@@ -133,19 +133,22 @@ void waitstart() {             // This waits for soh and then stx in that order
  ***************************************/
 void SndPacket( Byte N, unsigned char *pkt ) {
    int  i;
-   Byte Ck1;
+   Byte Ck1, three = 3;
+
+   pkt++;
 
    PutByte(soh);                        // Send start of packet
    PutByte(stx);                        // Send start of packet
-   PutByte( N );                        // Send packet size
+   PutByte(*pkt++);                   // Send packet size
    PutByte(_PING_F);
    Ck1 = 0;                             // Clear the checksum
-   for (i=0; i<N; i++) {
+   for (i=0; i<3; i++) {
        PutByte( *pkt );                 // Send the next data character 
        Ck1 += *pkt;                     // Accumulate the checksum
        pkt++;                           // next byte
    }
    Ck1 %= 256;
+   *pkt = Ck1;
    PutByte( Ck1 );                      // Send the checksum
 }
 

@@ -13,6 +13,8 @@
 #include "fdserial.h"
 #include "packet.h"
 #include "schedule.h"
+#include "simpletools.h"                    // Library include
+
 
 fdserial          *pktport;
 _packet           g_packet,r_packet;
@@ -44,51 +46,58 @@ int main(int argc, char *argv[])
   int               i;
   
   sleep(1);
+    print("Cog 0 has the Talking Stick first... \n");   
+
+  simpleterm_close(); 
+  
+  
   //printf("\033\143"); //clear the terminal screen, preserve the scroll back
-  	printi("\n*** Pcon  %d.%d.%d ***\n\n",_major_version,_minor_version,_minor_revision);
+//  	printi("\n*** Pcon  %d.%d.%d ***\n\n",_major_version,_minor_version,_minor_revision);
   pktport = fdserial_open(PROD_RX, PROD_TX, PROD_MODE, PROD_BAUD);
   if(pktport == 0){
-    printi("*** packet port open error\n");
+//    printi("*** packet port open error\n");
     return 1;
   }     
-  printi("packet port opened\n");
-  printi("starting packet processing cog ..... ");
+//  printi("packet port opened\n");
+//  printi("starting packet processing cog ..... ");
   packet_start(pktport);  
-  printi("\nloop waiting for a packet to appear on queue\n");    
-  printi("******************************************************\n");
+//  printi("\nloop waiting for a packet to appear on queue\n");    
+//  printi("******************************************************\n");
   for(;;){
-  //    printi("checking for packets\n");
+//      printi("checking for packets\n");
       if(packet_ready()){                         // see if there is a packet ready
-        printi(">>>> packet ready\n");
+//      printi(">>>> packet ready\n");
         packet_read(&r_packet);                   // dequeue a packet
-        packet_print(&r_packet);
+        packet_print(&r_packet);      
         byte_ptr = (uint8_t *)&r_packet;
+        if(*byte_ptr < 1) continue;
         byte_ptr++;                               // set pointer to start of packet data
         switch(*byte_ptr)                         // unpack frame based on frame type
         {
           case _SCHEDULE_F:                       // schedule frame
-            printi("recieved a schedule frame\n");
+//            printi("recieved a schedule frame\n");
             unpack_schedule_frame(byte_ptr,&s_frame_read);
-            disp_all_schedules((uint32_t *)w_sch);
+//            disp_all_schedules((uint32_t *)w_sch);
             load_schedule((uint32_t *)w_sch, &s_frame_read.rec[0], s_frame_read.day, s_frame_read.channel);  	//(schedule data, template, day, channel)
-            disp_all_schedules((uint32_t *)w_sch);
+//            disp_all_schedules((uint32_t *)w_sch);
             schedule_frame_print(&s_frame_read);
             send_ack(&pkt,pktport,&ack_frame);
             break;
           case _PING_F:
-            printi("recieved a ping frame\n");
+//            printi("recieved a ping frame\n");
             send_ack(&pkt,pktport,&ack_frame);
-            printi("sent an ACK\n");
+//            printi("sent an ACK\n");
             break;
           case _REBOOT_F:
             reboot();
             break;
           default:
-            printi("*** unknown frame type <%2x>\n",*byte_ptr); 
+            break;
+//            printi("*** unknown frame type <%2x>\n",*byte_ptr); 
         }                  
 //        packet_print(&r_packet); 
       }
- //     sleep(5);
+      sleep(1);
 //      packet_send(pktport,&g_packet);
   }      
    

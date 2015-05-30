@@ -26,7 +26,7 @@
 #define CONS_RX 0
 #define CONS_TX 1
 #define CONS_MODE 0
-#define CONS_BAUD 115200
+#define CONS_BAUD 9600
 
 #define PROD_RX 1
 #define PROD_TX 0

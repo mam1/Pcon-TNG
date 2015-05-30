@@ -86,7 +86,7 @@ int main(void) {
 	uint8_t			ping_data;	
 	} _ping_frame;
 
-	_ping_frame			ping_frame = {.f_type = _PING_F};
+	_ping_frame			ping_frame = {.f_type = _PING_F, .ping_data = _PING};
 
 	/************************* setup trace *******************************/
 #ifdef _TRACE
@@ -131,7 +131,7 @@ int main(void) {
 	//bbb = s_open();
 	int SerialInit(char *device, int bps);
 	Port = SerialInit("/dev/ttyO1", 9600);
-	printf(" serial connection C3 opened\r\n");
+	printf(" serial connection C3 opened on port %d\r\n", Port);
 
 	/* see if the C3 is there */
 	void ShoPkt(Byte N, unsigned char *pkt );
@@ -147,15 +147,11 @@ int main(void) {
 
 
 	BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, (uint8_t *)&pkt);
+	printf("packet size before send <%i>\n",pkt[0]);
+	SndPacket(pkt[0], (uint8_t *)&pkt);
 	packet_print(pkt);
-	
-	printf("size of ping_frame = %i\n",sizeof(ping_frame));
-	int iii;
-	uint8_t *ppp;
-	ppp = (uint8_t *)&ping_frame;
-	for(iii = 0; iii<sizeof(ping_frame);iii++)
-		printf("  <%2x>\n\r",*ppp++);
-	SndPacket(sizeof(ping_frame), (uint8_t *)&ping_frame);
+
+
 	// if(s_ping(bbb))
 	// 		printf("failure\n");
 	// else

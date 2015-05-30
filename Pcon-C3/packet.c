@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include "simpletools.h"                    // Library include
 #include "packet.h"
 
 static volatile _packet     queue[PACKET_QLEN];
@@ -23,7 +24,7 @@ void packet_start(fdserial *rec)
 {
     grec = rec;
     gcog = cogstart(packet_cog, 0, packet_stack, sizeof(packet_stack));
-    printi("packet cog started, stack %d bytes, running on cog %d\n", sizeof(packet_stack), gcog);
+//    printi("packet cog started, stack %d bytes, running on cog %d\n", sizeof(packet_stack), gcog);
 }
 
 
@@ -46,17 +47,24 @@ void packet_cog(void *parm)
     uint8_t c1,c2;
     
     volatile _packet *pkt = 0;
+    simpleterm_open();                        // Open SimpleIDE Terminal for this core
+    print("comm from the cog\n");
     
     for (;;) { // for (ever)
         /* got a char? */
-        if (fdserial_rxReady((fdserial*)grec)) {
-
+        sleep(1);
+        print("test for input\n");
+        print("<%x>\n",fdserial_rxPeek((fdserial *)grec)	); 	
+        if (fdserial_rxReady((fdserial *)grec)) {
+            print("got a byte\n");
             /* look for the start of a packet */
+            print("c1 <%x>,  c2 <%x>\n", c1, c2);
             while ((c1!=_SOH) || (c2!=_STX)) { 
               c1 = c2;
               c2 = fdserial_rxTime((fdserial*)grec,10);
-            }
-            
+              print(" c2 <%x>\n",c2); 
+            };
+            print("found a packet header\n");
             /* read packet length */
             len = fdserial_rxChar((fdserial*)grec);
             if (len > -1) {
