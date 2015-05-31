@@ -1,7 +1,4 @@
 
-
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
@@ -13,14 +10,14 @@
 #include "../shared/shared.h"
 
 /* globals */
-struct tremios 		options, oldtio;
-int 				Serial;
 
-void SerialError (void){
-    system("/bin/stty cooked");     		//switch to buffered input
-    system("/bin/stty echo");     			//turn on terminal echo
-    if(Serial != -1){						//if we have a valid handle
-      tcsetattr(Serial, TCSANOW, &oldtio);  //restore old tremios settings
+
+/*************************  serial io routines *********************************/
+void SerialError (int Serial, struct tremios *oldtio){
+    system("/bin/stty cooked");     		     //switch to buffered input
+    system("/bin/stty echo");     			     //turn on terminal echo
+    if(Serial != -1){						             //if we have a valid handle
+      tcsetattr(Serial, TCSANOW, oldtio);    //restore old tremios settings
       close(Serial);
   }
     printf("*** application terminated\r\n\n");
@@ -28,9 +25,11 @@ void SerialError (void){
   }
 
 /* initialize UART */  
-int SerialInit(char *device, int bps) { 
+int SerialInit(char *device, int bps, struct tremios *oldtio) { 
 
     int               ret;
+    int               Serial = -1;
+
 	/* Load the pin configuration */
     ret  = system("echo uart1 > /sys/devices/bone_capemgr.9/slots");
     if(ret < 0){
@@ -44,11 +43,12 @@ int SerialInit(char *device, int bps) {
       printf("Error - Unable to open '%s'.\n", device);
       exit(1); 
     }
-    ret = tcgetattr(Serial, &oldtio); //save old tremios settings
+    ret = tcgetattr(Serial, oldtio);            //save old tremios settings
     if (ret < 0) {
       printf("*** problem saving old tremios settings\r\n");
       SerialError();
     }
+    bzero(&options, sizeof(options)); // clear struct for new port settings 
     tcgetattr(Serial, &options);
     options.c_cflag = bps | CS8 | CLOCAL | CREAD;
     options.c_iflag = IGNPAR;
@@ -63,8 +63,11 @@ int SerialInit(char *device, int bps) {
 
 int main(void){
 
+  struct tremios            oldtio;
+  int                       Serial;
+
 	printf("\n\nstart test of sending a serial stream to bone UART1 \ninitializing UART1\n");
-	SerialInit("/dev/tty01",9600);
+	Serial = SerialInit("/dev/tty01",B9600,&oldtio);
 	printf("UART1 initialized");
 
 
