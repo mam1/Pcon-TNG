@@ -57,7 +57,7 @@ $(program_NAME): $(program_OBJS)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/Pcon-BBB/ root@192.168.254.34:/home/rsync-OSX
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/serial-test/bone/ root@192.168.254.34:/home/rsync-OSX
 else
 	rsync -avz  /home/mam1/Git/Pcon-TNG/serial-test/bone/ root@192.168.254.34:/home/rsync-Mint	
 endif

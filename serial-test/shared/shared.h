@@ -11,4 +11,7 @@
 #define      _NAK  0x15
 #define      _SYN  0x16
 
+#define _MODEMDEVICE "/dev/ttyO1"	//Beaglebone Black serial port
+
+
 #endif
