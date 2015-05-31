@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
   
   //printf("\033\143"); //clear the terminal screen, preserve the scroll back
 //  	printi("\n*** Pcon  %d.%d.%d ***\n\n",_major_version,_minor_version,_minor_revision);
-  pktport = fdserial_open(PROD_RX, PROD_TX, PROD_MODE, PROD_BAUD);
+  pktport = fdserial_open(PROP_RX, PROP_TX, _MODE, _BAUD);
   if(pktport == 0){
 //    printi("*** packet port open error\n");
     return 1;

@@ -54,7 +54,7 @@ void packet_cog(void *parm)
         /* got a char? */
         sleep(1);
         print("test for input\n");
-        print("<%x>\n",fdserial_rxPeek((fdserial *)grec)	); 	
+ //       print("<%x>\n",fdserial_rxPeek((fdserial *)grec)	); 	
         if (fdserial_rxReady((fdserial *)grec)) {
             print("got a byte\n");
             /* look for the start of a packet */

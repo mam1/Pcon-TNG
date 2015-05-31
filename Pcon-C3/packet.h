@@ -23,17 +23,12 @@
 #define _ACK_F         5 //
 #define _REBOOT_F      6 // reboot the C3, program load from EEPROM 
 
-#define CONS_RX 0
-#define CONS_TX 1
-#define CONS_MODE 0
-#define CONS_BAUD 9600
+#define PROP_RX 0
+#define PROP_TX 1
+#define _MODE 0
+#define _BAUD 9600
 
-#define PROD_RX 1
-#define PROD_TX 0
-#define PROD_MODE 0
-#define PROD_BAUD CONS_BAUD
-
-#define PACKET_DLEN 128
+#define PACKET_DLEN 254
 #define PACKET_QLEN 16 // power of 2 for queue
 #define PACKET_QMASK (PACKET_QLEN-1)
 
