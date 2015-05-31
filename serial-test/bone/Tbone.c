@@ -15,7 +15,7 @@ typedef struct termios _TERMIOS;
 
 /* globals */
 _TERMIOS                  oldtio;
-_TERMIOS                  options;
+_TERMIOS                  newtio;
 int                       Serial;
   
 /*************************  serial io routines *********************************/
@@ -53,37 +53,73 @@ int SerialInit(char *device, int bps, _TERMIOS *old) {
       printf("*** problem saving old tremios settings\r\n");
       SerialError(Serial,&oldtio);
     }
-    bzero(&options, sizeof(options)); // clear struct for new port settings 
-    tcgetattr(Serial, &options);
-    options.c_cflag = bps | CS8 | CLOCAL | CREAD;
-    options.c_iflag = IGNPAR;
-    options.c_oflag = 0;
-    options.c_lflag = 0;
-    options.c_cc[VTIME] = 0;
-    options.c_cc[VMIN] = 1;
+    bzero(&newtio, sizeof(newtio)); // clear struct for new port settings 
+    tcgetattr(Serial, &newtio);
+    newtio.c_cflag = bps | CS8 | CLOCAL | CREAD;
+    newtio.c_iflag = IGNPAR;
+    newtio.c_oflag = 0;
+    newtio.c_lflag = 0;
+    newtio.c_cc[VTIME] = 0;
+    newtio.c_cc[VMIN] = 1;
     tcflush(Serial, TCIFLUSH);
-    tcsetattr(Serial, TCSANOW, &options);
+    tcsetattr(Serial, TCSANOW, &newtio);
     return 5;     
 }
 
 
 int main(void){
 
+  int          c, cc;
 
   printf("\n*****************************************************************************\n\n");
 	printf("start test of sending a serial stream to bone UART1 \ninitializing UART1\n");
 	Serial = SerialInit(_MODEMDEVICE,B9600,&oldtio);
 	printf("UART1 initialized\n");
 
+  // /* set up unbuffered io */
+  // fflush(stdout);
+  // system("stty -echo");         //turn off terminal echo
+  // system("/bin/stty raw");        // use system call to make terminal send all keystrokes directly to stdin
+  // int flags = fcntl(STDOUT_FILENO, F_GETFL);
+  // fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
 
 
+  printf("\n  s - send _SOH to UART1\n");
+  printf("  r - recieve a byte from UART1\n");
+  printf("  q - terminate program\n\n> ");
+  for(;;){
+    while((c = getchar()) == '\n');                   //eat newlines
+    switch(c){
+      case 'q':
+        /* cleanup and teriminate */
+        // system("/bin/stty cooked");             //switch to buffered input
+        // system("/bin/stty echo");               //turn on terminal echo
+        if(Serial != -1){                       //if we have a valid handle
+          tcsetattr(Serial, TCSANOW, &oldtio);  //restore old tremios settings
+          close(Serial);
+        }
+        printf("\nnormal termination\r\n\n");
+        return 0;
+        break;
+      case 's':
+        cc = _SOH;
+        printf("sending <%02x> to UART1\n> ",cc);
+        break;
+      case 'r':
+        printf("receive char from UART1\n> ");
+        break;
+      default:
+        printf("what ?\n> ");
+    }
+  }
 
-  system("/bin/stty cooked");              //switch to buffered input
-  system("/bin/stty echo");                //turn on terminal echo
-  if(Serial != -1){                         //if we have a valid handle
-    tcsetattr(Serial, TCSANOW, &oldtio);    //restore old tremios settings
+/* cleanup and teriminate */
+  // system("/bin/stty cooked");             //switch to buffered input
+  // system("/bin/stty echo");               //turn on terminal echo
+  if(Serial != -1){                       //if we have a valid handle
+    tcsetattr(Serial, TCSANOW, &oldtio);  //restore old tremios settings
     close(Serial);
   }
-  printf("\n normal termination\r\n\n");
+  printf("\n*** abnormal termination\r\n\n");
 	return 0;
 }
