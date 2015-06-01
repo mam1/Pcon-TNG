@@ -1,7 +1,4 @@
-Tprop.c
-packet.c
-packet.h
-shared.h -> ../shared/shared.h
+prop-echo.c
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
@@ -9,4 +6,4 @@ shared.h -> ../shared/shared.h
 >-Wall
 >-fno-exceptions
 >defs::-std=c99
->BOARD::C3
+>BOARD::GENERIC

@@ -14,10 +14,51 @@
 /* typedefs */
 typedef struct termios _TERMIOS;
 
+// typedef struct {
+//     uint8_t length; // total packet length including length and checksum byte
+//     uint8_t data[254]; // add 1 for checksum
+// } _packet;
+
+// typedef struct {
+//   uint8_t       f_type;
+//   uint8_t       day;
+//   uint8_t       channel;
+//   uint8_t       rcnt;
+//   uint32_t      rec[_MAX_SCHEDULE_RECS];
+// } _schedule_frame;
+
+// typedef struct {
+//   uint8_t   f_type;
+//   uint8_t   state;
+//   uint8_t   mode;
+//   int     on_time;
+//   int     off_time;   
+// } _channel_frame;
+
+// typedef struct {
+//   uint8_t   state;
+//   uint8_t   mode;
+//   int     on_time;
+//   int     off_time;
+// } _channel_data;  
+
+// typedef struct {
+//   uint8_t     f_type;
+//   uint8_t     ack_byte;
+// } _ack_frame;
+
+typedef struct {
+  uint8_t         f_type;
+  uint8_t         ping;
+} _ping_frame;
+
 /* globals */
 _TERMIOS                  oldtio;
 _TERMIOS                  newtio;
 int                       Serial;
+uint8_t                   pkt[254];
+_ping_frame               ping_frame = {.f_type = _PING_F, .ping = _PING};
+
   
 /*************************  serial io routines *********************************/
 void SerialError (int S, _TERMIOS *old){
@@ -31,11 +72,10 @@ void SerialError (int S, _TERMIOS *old){
     exit(-1);
   }
 
-// /* initialize UART */  
+/* initialize UART */  
 int SerialInit(char *device, int bps, _TERMIOS *old) { 
 
     int               ret;
-    // int               v24;
 
 	/* Load the pin configuration */
     ret  = system("echo uart1 > /sys/devices/bone_capemgr.9/slots");
@@ -82,16 +122,64 @@ uint8_t GetByte(int Port){
   char x;  
   read (Port, &x, sizeof(x) ); 
   return x; 
-}  
+}
+
 uint8_t PutByte(int Port, unsigned char c){
   write(Port, &c, sizeof(c));
   return -1;
 }
 
+void BuildPkt(uint8_t N, unsigned char *frame, unsigned char *pkt) {
+   uint8_t i;
+   *pkt++ = N+1;
+   for (i=0; i<N-1; i++) {
+    *pkt++ = *frame++; 
+   }
+   return;
+}
+
+void PrintPkt(unsigned char *pkt){
+  int         i,plen;
+  plen = *pkt;
+  printf("packet length %i  ",plen);
+  for(i=0; i<plen; i++) printf("<%02x>", *pkt++);
+  printf("\n");
+  return;
+}
+
+void SndPacket(int Port, unsigned char *pkt ) {
+   int  i,len;
+   uint8_t Ck1;
+   len = *pkt;
+   PutByte(Port,_SOH);               // Send start of packet
+   PutByte(Port,_STX);               // Send start of packet
+   PutByte(Port,*pkt++);             // Send packet size   
+   Ck1 = 0;                          // Clear the checksum
+   for (i=0; i<len-1; i++) {
+       PutByte(Port,*pkt);           // Send the next data character 
+       Ck1 += *pkt;                  // Accumulate the checksum
+       pkt++;                        // next byte
+   }
+   Ck1 %= 256;
+   *pkt = Ck1;
+   PutByte(Port, Ck1 );               // Send the checksum
+}
+
+
+
 
 int main(void){
 
   int          c, cc;
+
+  uint8_t       *p;
+
+  p = pkt;
+  // *p++ = _SOH;
+  // *p++ = _STX;
+  *p++ = 2;
+  *p++ = _PING_F;
+  *p++ = _PING;
 
   printf("\n*****************************************************************************\n\n");
 	printf("start test of sending a serial stream to bone UART1 <%s>\ninitializing UART1\n", _MODEMDEVICE);
@@ -126,7 +214,19 @@ int main(void){
         return 0;
         break;
       case 's':
-        cc = _SOH;
+        cc = 'a';
+        printf("sending <%02x> to UART1\n> ",cc);
+        PutByte(Serial,cc);
+        cc = 'b';
+        printf("sending <%02x> to UART1\n> ",cc);
+        PutByte(Serial,cc);
+        cc = 'c';
+        printf("sending <%02x> to UART1\n> ",cc);
+        PutByte(Serial,cc);
+        cc = 'd';
+        printf("sending <%02x> to UART1\n> ",cc);
+        PutByte(Serial,cc);
+        cc = 'e';
         printf("sending <%02x> to UART1\n> ",cc);
         PutByte(Serial,cc);
         break;
@@ -139,14 +239,9 @@ int main(void){
         PutByte(Serial,cc);
         break;
       case 'p':
-        // printf("sending ping packe frame to UART\n");
-        PutByte(Serial,_SOH);
-        PutByte(Serial,_STX);
-        cc = 3;
-        // printf("sending <%02x> to UART1\n> ",cc);
-        PutByte(Serial,cc);
-        PutByte(Serial,_PING_F);
-        PutByte(Serial,_PING);
+        BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, pkt);
+        PrintPkt(pkt);
+        SndPacket(Serial, pkt);
         printf("ping frame sent to UART1\n> ");
         break;
       case 'r':

@@ -1,0 +1,43 @@
+!_TAG_FILE_FORMAT	1	/original ctags format/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CONS_BAUD	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	13
+CONS_MODE	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	12
+CONS_RX	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	10
+CONS_TX	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	11
+PACKET_DLEN	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	21
+PACKET_QLEN	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	23
+PACKET_QMASK	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	24
+PROD_BAUD	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	19
+PROD_MODE	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	18
+PROD_RX	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	16
+PROD_TX	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	17
+Serial	/home/mam1/Git/Pcon-TNG/serial-test/prop/Tprop.c	/^fdserial 			*Serial;$/
+_BAUD	/home/mam1/Git/Pcon-TNG/serial-test/prop/Tprop.c	14
+_MODE	/home/mam1/Git/Pcon-TNG/serial-test/prop/Tprop.c	13
+_RX	/home/mam1/Git/Pcon-TNG/serial-test/prop/Tprop.c	11
+_TX	/home/mam1/Git/Pcon-TNG/serial-test/prop/Tprop.c	12
+__PACKET_H__	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	7
+data	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	/^    uint8_t data[PACKET_DLEN+1]; \/\/ add 1 for checksum$/
+gcog	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^static int gcog;$/
+grec	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^static volatile fdserial *grec;$/
+length	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	/^    uint8_t length; \/\/ total packet length including length and checksum byte$/
+main	/home/mam1/Git/Pcon-TNG/serial-test/prop/Tprop.c	/^int main(void)$/
+packet_cog	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^void packet_cog(void *parm)$/
+packet_make	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^int packet_make(packet_st *pkt, char *s, int len)$/
+packet_print	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^int packet_print(packet_st *pkt)$/
+packet_read	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^int packet_read(packet_st *rxpkt)$/
+packet_ready	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^int packet_ready(void)$/
+packet_send	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^int packet_send(fdserial *port, packet_st *pkt)$/
+packet_st	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	/^} packet_st;$/
+packet_stack	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^static char packet_stack[sizeof(_thread_state_t)+20*sizeof(int)];$/
+packet_start	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^void packet_start(fdserial *rec)$/
+packet_stop	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^void packet_stop(void)$/
+packet_struct	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.h	/^typedef struct packet_struct {$/
+qcount	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^static volatile int qcount = 0;$/
+qhead	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^static volatile int qhead = 0;$/
+qtail	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^static volatile int qtail = 0;$/
+queue	/home/mam1/Git/Pcon-TNG/serial-test/prop/packet.c	/^static volatile packet_st queue[PACKET_QLEN];$/
