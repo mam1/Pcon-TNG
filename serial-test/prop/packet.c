@@ -8,27 +8,27 @@
 #include "packet.h"
 #include "shared.h"
 
-static volatile packet_st queue[PACKET_QLEN];
+static volatile _packet queue[PACKET_QLEN];
 static volatile int qhead = 0;
 static volatile int qtail = 0;
 static volatile int qcount = 0;
 
 static volatile fdserial *grec;
-static char packet_stack[sizeof(_thread_state_t)+20*sizeof(int)];
+static char _packetack[sizeof(_thread_state_t)+20*sizeof(int)];
 
-static int gcog;
+static int          gcog; 
 
-void packet_start(fdserial *rec)
+void _packetart(fdserial *rec)
 {
     grec = rec;
-    gcog = cogstart(packet_cog, 0, packet_stack, sizeof(packet_stack)); 
-    //debug("packet_start %d cog %d\n", sizeof(packet_stack), gcog);
+    gcog = cogstart(packet_cog, 0, _packetack, sizeof(_packetack)); 
+    //debug("_packetart %d cog %d\n", sizeof(_packetack), gcog);
 }
 
-void packet_stop(void)
+void _packetop(void)
 {
     if (gcog > 0) {
-        //debug("packet_stop %d\n", gcog);
+        //debug("_packetop %d\n", gcog);
         cogstop(gcog);
         gcog = 0;
     }    
@@ -40,10 +40,8 @@ void packet_cog(void *parm)
     int         byte = 0;
     int         n = 0;
     int         sum = 0;
-
-    uint8_t     c1, c2;     
-    
-    volatile packet_st *pkt = 0;
+    uint8_t     c1, c2;       
+    volatile _packet *pkt = 0;
     
     for (;;) { // for (ever)
         // got a char?
@@ -96,36 +94,39 @@ void packet_cog(void *parm)
 }
 
 
-int packet_make(packet_st *pkt, char *s, int len)
+int packet_make(_packet *pkt, char *s, int len)
 {
     int n = 0;
     int sum = 0;
+
     
     pkt->length = len+1;
-    printi("packet length set by packet_make to %d\n",pkt->length);
+//    printi("packet length set by packet_make to %d\n",pkt->length);
     
     for (n = 0; n < len && n < PACKET_DLEN; n++) {
         pkt->data[n] = s[n];
-        if (n < len-1) sum += s[n];
+        sum += s[n];
     }        
     sum &= 0xff;
+    sum %= 256;
     pkt->data[n] = sum;
     //packet_print(pkt);
+
     return n;
 }
 
 
-int packet_send(fdserial *port, packet_st *pkt)
+int packet_send(fdserial *port, _packet *pkt)
 {
     int n;
-    packet_print(pkt);
+    writeChar(port,_SOH);
+    writeChar(port,_STX);
     writeChar(port, pkt->length);
     for (n = 0; n < pkt->length; n++) {
         writeChar(port, pkt->data[n]);
     }
     return 0;        
 }
-
 
 int packet_ready(void)
 {
@@ -134,18 +135,16 @@ int packet_ready(void)
     return rc; 
 }
 
-
-int packet_read(packet_st *rxpkt)
+int packet_read(_packet *rxpkt)
 {
-    packet_st *pkt = (packet_st*) &queue[qtail];
-    memcpy((void*)rxpkt, (void*)pkt, sizeof(packet_st));
+    _packet *pkt = (_packet*) &queue[qtail];
+    memcpy((void*)rxpkt, (void*)pkt, sizeof(_packet));
     qtail++;
     qtail &= PACKET_QMASK;
     return pkt->length;
 }
 
-
-int packet_print(packet_st *pkt)
+int packet_print(_packet *pkt)
 {
     int n;
     int len = pkt->length;
@@ -156,3 +155,11 @@ int packet_print(packet_st *pkt)
     printi("\n");
     return 0;
 }
+
+void send_ack(fdserial *port, _ack_frame *f, _packet *p){
+  packet_make(p,f,sizeof(*f));
+  printi("*******\n");
+  packet_print(p);
+  packet_send(port,p);
+  return;
+}  

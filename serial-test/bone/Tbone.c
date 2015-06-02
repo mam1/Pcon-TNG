@@ -58,7 +58,7 @@ _TERMIOS                  newtio;
 int                       Serial;
 uint8_t                   pkt[_MAX_PACKET];
 uint8_t                   RcvPkt[_MAX_PACKET];
-static _ping_frame        ping_frame = {.f_type = _PING_F, .ping = 255};
+ _ping_frame              ping_frame = {.f_type = _PING_F, .ping = _ACK};
 
   
 /*************************  serial io routines *********************************/
@@ -169,24 +169,35 @@ uint8_t RcvPacket(int port, uint8_t *pkt) {
    uint8_t  Ck1, Ck2, N, i;
   
    waitstart(port);                          // Wait for start
+//   printf("got a packet header\n");
    N = GetByte(port);                        // Get the packet size
+//   printf("packet size = %i\n", N);
    Ck1 = 0;                              // Start with checksum at zero
-   for (i=0; i<N; i++) {
+   for (i=0; i<N-1; i++) {
       *pkt = GetByte(port);                  // Get next byte, save it in Packet buffer
+//      printf("got byte <%02x>\n", *pkt);
       Ck1 += *pkt;                       // Accumulate running checksum
       pkt++;                             // next byte
    }
    Ck2 = GetByte(port);                      // Get the senders checksum
-   Ck1 %= 256;                           // Finish the checksum calculation
+
+//   printf("Ck1 - calculated chcksum = %i, Ck2 - checksum from packet = %i\n", Ck1, Ck2);  
+                            // Finish the checksum calculation
+   Ck1 &= 0xff;
+   Ck1 %= 256;
+
+//   printf("Ck1 - calculated chcksum = %i, Ck2 - checksum from packet = %i\n", Ck1, Ck2);                           // Finish the checksum calculation
    if (Ck1 == Ck2) { return N; } else { return 0; }
 }
 
 
 int WaitAck(int port) {
     uint8_t PSize;
+
     PSize = RcvPacket(port, RcvPkt);                    // Receive Packet
+//    printf("back from RcvPacket\n");
     if ((PSize == 0) || (RcvPkt[0]==_NAK)) {
-       printf("Cmd Failed\n");
+       printf("Cmd Failed\n> ");
        return False;
     }
     return True;
@@ -266,10 +277,13 @@ int main(void){
         PutByte(Serial,cc);
         break;
       case 'p':
+        printf("build packet from ping frame\n");
         BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, pkt);
         PrintPkt(pkt);
         SndPacket(Serial, pkt);
         printf("ping frame sent to UART1\n> ");
+        if(WaitAck(Serial))
+            printf("recieved ack from the prop\n");
         break;
       case 'r':
         printf("receive char from UART1 - ");

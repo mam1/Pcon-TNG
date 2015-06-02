@@ -37,5 +37,11 @@
 #define      False 0
 #define      True 1
 
+/*
+typedef struct {
+  uint8_t     f_type;
+  uint8_t     ack_byte;
+} _ack_frame;
+*/
 
 #endif

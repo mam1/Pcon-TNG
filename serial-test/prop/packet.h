@@ -26,23 +26,59 @@
 #include <stdint.h>
 #include "simpletext.h"
 #include "fdserial.h"
+#include "shared.h"
 
 
-typedef struct packet_struct {
+//typedef struct _packetruct {
+//    uint8_t length; // total packet length including length and checksum byte
+//    uint8_t data[PACKET_DLEN+1]; // add 1 for checksum
+//} _packet;
+
+typedef struct {
     uint8_t length; // total packet length including length and checksum byte
     uint8_t data[PACKET_DLEN+1]; // add 1 for checksum
-} packet_st;
+} _packet;
+/*
+typedef struct {
+  uint8_t       f_type;
+  uint8_t       day;
+  uint8_t       channel;
+  uint8_t       rcnt;
+  uint32_t      rec[_MAX_SCHEDULE_RECS];
+} _schedule_frame;
+
+typedef struct {
+	uint8_t		f_type;
+	uint8_t		state;
+	uint8_t		mode;
+	int			on_time;
+	int 		off_time;		
+} _channel_frame;
+
+typedef struct {
+	uint8_t		state;
+	uint8_t		mode;
+	int			on_time;
+	int 		off_time;
+} _channel_data;  
+*/
+typedef struct {
+  uint8_t     f_type;
+  uint8_t     ack_byte;
+} _ack_frame;  
 
 void packet_cog(void *parm);
     
-void packet_start(fdserial *rec);
-void packet_stop(void);
+void _packetart(fdserial *rec);
+void _packetop(void);
     
-int packet_make(packet_st *pkt, char *s, int len);
-int packet_send(text_t *port, packet_st *pkt);
+int packet_make(_packet *pkt, char *s, int len);
+int packet_send(text_t *port, _packet *pkt);
 int packet_ready(void);
-int packet_read(packet_st *pkt);
-int packet_print(packet_st *pkt);
+int packet_read(_packet *pkt);
+int packet_print(_packet *pkt);
+
+void send_ack(fdserial *port, _ack_frame *f, _packet *p);
 
 
 #endif

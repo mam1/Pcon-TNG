@@ -35,11 +35,10 @@
 #include <stdint.h>
 #include "simpletext.h"
 #include "fdserial.h"
-#include "packet.h"
 #include "shared.h"
 
 
-typedef struct _packetruct {
+typedef struct {
     uint8_t length; // total packet length including length and checksum byte
     uint8_t data[PACKET_DLEN+1]; // add 1 for checksum
 } _packet;
@@ -67,21 +66,19 @@ typedef struct {
 	int 		off_time;
 } _channel_data;  
 
-typedef struct {
+typedef arp 5trt struct {
   uint8_t     f_type;
   uint8_t     ack_byte;
 } _ack_frame;  
 
 typedef union {uint32_t MyLong; uint8_t MyByte[4]; } _packed;
     
-//void _packetart(fdserial *rec);
-//void _packetop(void);
-
 void packet_start(fdserial *rec);
 void packet_stop(void);
     
 int packet_make(_packet *pkt, uint8_t *data, int len);
 int make_schedule_frame(_packet *pkt,uint8_t *data,int len,int day,int channel,uint32_t *sch);
+//int make_ack_frame(_packet *pkt,uint8_t *data,int len,int day,int channel,uint32_t *sch);
 int packet_send(text_t *port, _packet *pkt);
 int packet_ready(void);
 int packet_read(_packet *pkt);
