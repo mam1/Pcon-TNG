@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include "packet.h"
+#include "shared.h"
 
 static volatile packet_st queue[PACKET_QLEN];
 static volatile int qhead = 0;
@@ -35,16 +36,25 @@ void packet_stop(void)
         
 void packet_cog(void *parm)
 {
-    int len = 0;
-    int byte = 0;
-    int n = 0;
-    int sum = 0;
+    int         len = 0;
+    int         byte = 0;
+    int         n = 0;
+    int         sum = 0;
+
+    uint8_t     c1, c2;     
     
     volatile packet_st *pkt = 0;
     
     for (;;) { // for (ever)
         // got a char?
         if (fdserial_rxReady((fdserial*)grec)) {
+
+            // wait for a packet header
+            while ((c1!=_SOH) || (c2!=_STX)) { 
+              c1 = c2;
+              c2 = fdserial_rxTime((fdserial*)grec,10);
+            };
+
             // read length
             len = fdserial_rxChar((fdserial*)grec);
             if (len > -1) {

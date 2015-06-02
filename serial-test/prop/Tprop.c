@@ -22,8 +22,9 @@ int main(void)
 {
   int             i, c; 
   Serial = fdserial_open(_RX,_TX,_MODE,_BAUD);
-  printi("Serial = <%d>\n",Serial); 
-  packet_start(Serial);		
+  printi("serial port opened\n"); 
+  packet_start(Serial);
+  printi("	serial 	
   printi("\nstarting prop echo\n");
   for(;;){
     if (packet_ready()) {
