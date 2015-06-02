@@ -24,13 +24,18 @@
 
 /* frame types */
 #define _SCHEDULE_F     1 // replace a working schedule with schedule in frame, send ack to sender
-#define _CHANNEL_F      2   // replace channel data with channel data in frame, send channel data back to sender
-#define _TIME_F         3   // set real time clock to the time/date in frame, send ack to sender
-#define _PING_F     4   // request for ping, send ping data in frame back to sender 
-#define _ACK_F         5 //
-#define _REBOOT_F      6 // reboot the C3, program load from EEPROM 
+#define _CHANNEL_F      2 // replace channel data with channel data in frame, send channel data back to sender
+#define _TIME_F         3 // set real time clock to the time/date in frame, send ack to sender
+#define _PING_F     	4 // request for ping, send ping data in frame back to sender 
+#define _ACK_F         	5 //
+#define _REBOOT_F      	6 // reboot the C3, program load from EEPROM 
 
 #define _MODEMDEVICE "/dev/ttyO1"	//Beaglebone Black serial port
+
+#define _MAX_PACKET	254
+
+#define      False 0
+#define      True 1
 
 
 #endif

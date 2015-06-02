@@ -24,8 +24,8 @@ int main(void)
   Serial = fdserial_open(_RX,_TX,_MODE,_BAUD);
   printi("serial port opened\n"); 
   packet_start(Serial);
-  printi("	serial 	
-  printi("\nstarting prop echo\n");
+  printi("starting cog to monitor serial connection to the BeagleBone\n"); 	
+  printi("\n*************************************\n\n");
   for(;;){
     if (packet_ready()) {
         packet_read(&pkt);
@@ -35,6 +35,8 @@ int main(void)
         switch(pkt.data[i++]){
           case _PING_F:
             printi("received a ping frame \n");
+            fdserial_txChar(Serial,_ACK);
+            printi("sent an ack to bone\n");           
             break;
           default: 
             printi("*** error *** unknown packet type\n");

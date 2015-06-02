@@ -56,8 +56,9 @@ typedef struct {
 _TERMIOS                  oldtio;
 _TERMIOS                  newtio;
 int                       Serial;
-uint8_t                   pkt[254];
-_ping_frame               ping_frame = {.f_type = _PING_F, .ping = _PING};
+uint8_t                   pkt[_MAX_PACKET];
+uint8_t                   RcvPkt[_MAX_PACKET];
+static _ping_frame        ping_frame = {.f_type = _PING_F, .ping = 255};
 
   
 /*************************  serial io routines *********************************/
@@ -73,10 +74,8 @@ void SerialError (int S, _TERMIOS *old){
   }
 
 /* initialize UART */  
-int SerialInit(char *device, int bps, _TERMIOS *old) { 
-
+int SerialInit(char *device, int bps, _TERMIOS *old) {
     int               ret;
-
 	/* Load the pin configuration */
     ret  = system("echo uart1 > /sys/devices/bone_capemgr.9/slots");
     if(ret < 0){
@@ -107,14 +106,6 @@ int SerialInit(char *device, int bps, _TERMIOS *old) {
     tcflush(Serial, TCIFLUSH);
     tcsetattr(Serial, TCSANOW, &newtio);
 
-    // /* Set ready to read/write */
-    // v24 = TIOCM_DTR | TIOCM_RTS;
-    // ret = ioctl(Serial, TIOCMBIS, &v24);
-    // if (ret < 0) {
-    //   perror("ioctl(TIOCMBIS)");
-    //   SerialError(Serial,&oldtio);
-    // }
-
     return Serial;     
 }
 
@@ -132,7 +123,7 @@ uint8_t PutByte(int Port, unsigned char c){
 void BuildPkt(uint8_t N, unsigned char *frame, unsigned char *pkt) {
    uint8_t i;
    *pkt++ = N+1;
-   for (i=0; i<N-1; i++) {
+   for (i=0; i<N; i++) {
     *pkt++ = *frame++; 
    }
    return;
@@ -163,6 +154,42 @@ void SndPacket(int Port, unsigned char *pkt ) {
    Ck1 %= 256;
    *pkt = Ck1;
    PutByte(Port, Ck1 );               // Send the checksum
+}
+
+void waitstart(int port) {             // This waits for soh and then stx in that order
+  uint8_t c1,c2=0;
+  while ((c1!=_SOH) || (c2!=_STX)){
+    c1 = c2; 
+    c2 = GetByte(port);
+  }
+  return; 
+}
+
+uint8_t RcvPacket(int port, uint8_t *pkt) {
+   uint8_t  Ck1, Ck2, N, i;
+  
+   waitstart(port);                          // Wait for start
+   N = GetByte(port);                        // Get the packet size
+   Ck1 = 0;                              // Start with checksum at zero
+   for (i=0; i<N; i++) {
+      *pkt = GetByte(port);                  // Get next byte, save it in Packet buffer
+      Ck1 += *pkt;                       // Accumulate running checksum
+      pkt++;                             // next byte
+   }
+   Ck2 = GetByte(port);                      // Get the senders checksum
+   Ck1 %= 256;                           // Finish the checksum calculation
+   if (Ck1 == Ck2) { return N; } else { return 0; }
+}
+
+
+int WaitAck(int port) {
+    uint8_t PSize;
+    PSize = RcvPacket(port, RcvPkt);                    // Receive Packet
+    if ((PSize == 0) || (RcvPkt[0]==_NAK)) {
+       printf("Cmd Failed\n");
+       return False;
+    }
+    return True;
 }
 
 
@@ -214,10 +241,10 @@ int main(void){
         return 0;
         break;
       case 's':
-        cc = 'a';
+        cc = 255;
         printf("sending <%02x> to UART1\n> ",cc);
         PutByte(Serial,cc);
-        cc = 'b';
+        cc = 255;
         printf("sending <%02x> to UART1\n> ",cc);
         PutByte(Serial,cc);
         cc = 'c';
@@ -245,7 +272,8 @@ int main(void){
         printf("ping frame sent to UART1\n> ");
         break;
       case 'r':
-        printf("receive char from UART1\n> ");
+        printf("receive char from UART1 - ");
+        printf("<%02x>\n",GetByte(Serial));
         break;
       default:
         printf("what ?\n> ");
