@@ -19,7 +19,7 @@ fdserial 			*Serial;
 _packet       pkt;
 _ack_frame    ack_frame = {.f_type = _ACK_F, .ack_byte = _ACK};  
 
-int main(void)
+int main(int argc, char *argv[])
 {
   int             i, c; 
   Serial = fdserial_open(_RX,_TX,_MODE,_BAUD);

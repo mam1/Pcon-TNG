@@ -3,7 +3,6 @@
  * Packet utilities.
  */
 
-
 #include <stdio.h>
 #include "packet.h"
 #include "shared.h"
@@ -15,7 +14,6 @@ static volatile int qcount = 0;
 
 static volatile fdserial *grec;
 static char _packetack[sizeof(_thread_state_t)+20*sizeof(int)];
-
 static int          gcog; 
 
 void _packetart(fdserial *rec)
@@ -24,7 +22,6 @@ void _packetart(fdserial *rec)
     gcog = cogstart(packet_cog, 0, _packetack, sizeof(_packetack)); 
     //debug("_packetart %d cog %d\n", sizeof(_packetack), gcog);
 }
-
 void _packetop(void)
 {
     if (gcog > 0) {
@@ -32,8 +29,7 @@ void _packetop(void)
         cogstop(gcog);
         gcog = 0;
     }    
-}
-        
+}        
 void packet_cog(void *parm)
 {
     int         len = 0;
@@ -52,7 +48,6 @@ void packet_cog(void *parm)
               c1 = c2;
               c2 = fdserial_rxTime((fdserial*)grec,10);
             };
-
             // read length
             len = fdserial_rxChar((fdserial*)grec);
             if (len > -1) {
@@ -61,7 +56,6 @@ void packet_cog(void *parm)
                 pkt = &queue[qhead];
                 pkt->length = len;
                 sum = 0;
-  
                 // wait for packet              
                 waitcnt(CNT+CNT/100);
                 // get bytes while valid
@@ -72,10 +66,8 @@ void packet_cog(void *parm)
                     if (n < len-1) sum += byte;
                     pkt->data[n] = byte; // last byte is sum
                 }
-                
                 sum  &= 0xff;
                 byte &= 0xff;
-                
                 // if valid length and sum increment queue head
                 // otherwise recycle queue entry.
                 if (n > len-2) {
@@ -92,14 +84,11 @@ void packet_cog(void *parm)
     }        
     // don't exit function
 }
-
-
 int packet_make(_packet *pkt, char *s, int len)
 {
     int n = 0;
     int sum = 0;
-
-    
+   
     pkt->length = len+1;
 //    printi("packet length set by packet_make to %d\n",pkt->length);
     
@@ -114,8 +103,6 @@ int packet_make(_packet *pkt, char *s, int len)
 
     return n;
 }
-
-
 int packet_send(fdserial *port, _packet *pkt)
 {
     int n;
@@ -127,14 +114,12 @@ int packet_send(fdserial *port, _packet *pkt)
     }
     return 0;        
 }
-
 int packet_ready(void)
 {
     int rc = 0;
     if (qhead != qtail) rc = 1;
     return rc; 
 }
-
 int packet_read(_packet *rxpkt)
 {
     _packet *pkt = (_packet*) &queue[qtail];
@@ -143,7 +128,6 @@ int packet_read(_packet *rxpkt)
     qtail &= PACKET_QMASK;
     return pkt->length;
 }
-
 int packet_print(_packet *pkt)
 {
     int n;
@@ -155,11 +139,10 @@ int packet_print(_packet *pkt)
     printi("\n");
     return 0;
 }
-
 void send_ack(fdserial *port, _ack_frame *f, _packet *p){
   packet_make(p,f,sizeof(*f));
-  printi("*******\n");
-  packet_print(p);
+//  printi("sending ;");
+//  packet_print(p);
   packet_send(port,p);
   return;
 }  

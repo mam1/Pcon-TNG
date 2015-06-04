@@ -1,10 +1,7 @@
 Pcon.c
-packet.h
-packet.c
-schedule.c
-schedule.h
-Pcon.h
--I ./../Pcon-share
+packet.c -> ../serial-test/prop/packet.c
+packet.h -> ../serial-test/prop/packet.h
+shared.h -> ../serial-test/shared/shared.h
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
