@@ -3,8 +3,8 @@
 
 /* version info */
 #define _major_version 			4
-#define _minor_version 			0
-#define _minor_revision 		1
+#define _minor_version 			1
+#define _minor_revision 		0
 
 /* shared bone-C3 commands */
 #define _PING         	27
