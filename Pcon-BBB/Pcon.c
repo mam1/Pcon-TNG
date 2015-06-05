@@ -9,12 +9,13 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
+#include <termios.h>
 #include "Pcon.h"
 #include "typedefs.h"
 #include "char_fsm.h"
 #include "cmd_fsm.h"
 #include "trace.h"
-#include "serial_io.h"
+#include "packet.h"
 
 /* frame types */
 #define _SCHEDULE_F     1 // replace a working schedule with schedule in frame, send ack to sender
@@ -34,6 +35,7 @@ int				trace_flag;							//control program trace
 int 			bbb;								//UART1 file descriptor
 SYS_DAT 		sdat;								//system data structure
 CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
+struct termios	oldtio;								//a place to store the existing terminal settings
 
 /***************** global code to text conversion ********************/
 const char *day_names_long[7] = {
@@ -129,17 +131,8 @@ int main(void) {
 
 	/* open UART1 to connect to BBB */
 	//bbb = s_open();
-	int SerialInit(char *device, int bps);
-	Port = SerialInit("/dev/ttyO1", 9600);
+	Port = SerialInit("/dev/ttyO1",_BAUD ,&oldtio);
 	printf(" serial connection C3 opened on port %d\r\n", Port);
-
-/******************** move to packet.c *************************************/
-	void ShoPkt(Byte N, unsigned char *pkt );
-	void BuildPkt(Byte, unsigned char *, unsigned char *);
-	void SndPacket( Byte N, unsigned char *pkt );
-	int packet_print(uint8_t *pkt);
-/****************************************************************************/
-
 	printf(" pinging the C3 - \r\n");
 
 	//packet_print(pkt)
@@ -149,9 +142,9 @@ int main(void) {
 	/* see if the C3 is there */
 	BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, (uint8_t *)&pkt);
 	printf("packet size before send <%i>\n\r",pkt[0]);
-	packet_print(pkt);
-	SndPacket(*pkt, (uint8_t *)pkt);
-	packet_print(pkt);
+//	packet_print(pkt);
+//	SndPacket(*pkt, (uint8_t *)pkt);
+//	packet_print(pkt);
 
 
 	// if(s_ping(bbb))
@@ -264,7 +257,7 @@ int main(void) {
 	/* do suff while waiting or the keyboard */	
 
 	};
-	s_close(bbb);
+	// s_close(bbb);
 	system("/bin/stty cooked");			//switch to buffered iput
 	system("/bin/stty echo");			//turn on terminal echo
 	printf("\f\n***normal termination -  but should not happen\n\n");

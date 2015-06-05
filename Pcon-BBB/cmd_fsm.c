@@ -18,7 +18,7 @@
 #include "char_fsm.h"
 #include "cmd_fsm.h"
 #include "trace.h"
-#include "serial_io.h"
+#include "packet.h"
 #include "schedule.h"
 
 
@@ -537,15 +537,15 @@ int c_2(CMD_FSM_CB *cb)
 {
 	int 		i, pingback;
 
-	pingback = s_ping(bbb);	
+	// pingback = s_ping(bbb);	
 
-	for(i=0;i<10;i++){
-		if(s_ping(bbb))
-			printf("\r  failed\r\n");
-		else
-			printf("\r  sucess\r\n");
-	}
-	send_int(bbb,6123);
+	// for(i=0;i<10;i++){
+	// 	if(s_ping(bbb))
+	// 		printf("\r  failed\r\n");
+	// 	else
+	// 		printf("\r  sucess\r\n");
+	// }
+	// send_int(bbb,6123);
 
 	// send_sys(cb);
 	c_34(cb);
@@ -1211,7 +1211,7 @@ int c_39(CMD_FSM_CB *cb)
        memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr,cmd_fsm_cb.w_sch_ptr,sizeof(cmd_fsm_cb.w_sch));
        save_system_data(_SYSTEM_DATA_FILE,&sdat);
        printf("\r\n*** system schedule replaced ***\r\n");
-       s_send_schedule(1,1,x);
+       // s_send_schedule(1,1,x);
        printf("   revised schedule sent to C3\r\n");
 
    /* build prompt */
