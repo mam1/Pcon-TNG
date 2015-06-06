@@ -11,10 +11,21 @@
 #include <termios.h>
 #include <sys/fcntl.h>	//file io
 #include <stdint.h>   //uint_8, uint_16, uint_32, etc.
+
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/select.h>
+
 // #include <sys/ioctl.h>
 // #include "../shared/shared.h"
 #include "packet.h"
 #include "../Pcon-share/shared.h"
+
+
+    fd_set                set;
+    struct timeval        timeout;
 
 
 /*************************  serial io routines *********************************/
@@ -39,9 +50,12 @@ void SerialError (int port, struct termios *old){
 
 /* initialize UART */  
 int SerialInit(char *device, int bps, struct termios *old) {
-    int               ret;
-    int               sport;
-    struct termios          newtio;
+    int                   ret;    //value returned from system call
+    int                   sport;  //serial port
+    struct termios        newtio; //buffer for new terminal settings
+
+
+
 	/* Load the pin configuration */
     ret  = system("echo uart1 > /sys/devices/bone_capemgr.9/slots");
     if(ret < 0){
@@ -55,6 +69,13 @@ int SerialInit(char *device, int bps, struct termios *old) {
       printf("Error - Unable to open '%s'.\n", device);
       exit(1); 
     }
+
+    FD_ZERO(&set); /* clear the set */
+    FD_SET(sport, &set); /* add our file descriptor to the set */
+
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+
     ret = tcgetattr(sport, old);            //save old tremios settings
     if (ret < 0) {
       printf("*** problem saving old tremios settings\r\n");
@@ -74,9 +95,23 @@ int SerialInit(char *device, int bps, struct termios *old) {
     return sport;     
 }
 
-uint8_t GetByte(int Port){
-  char x;  
-  read (Port, &x, sizeof(x) ); 
+uint8_t GetByte(int Port,struct termios *old){
+    char                  x;
+    int                   rv;
+
+    rv = select(Port + 1, &set, NULL, NULL, &timeout);
+    // printf("/n    rv = %i\n\r", rv);
+    if(rv == -1){
+      perror("select"); /* an error accured */
+      SerialError(Port, old);
+    }
+    else if(rv == 0){
+      printf("read timeout\n\r"); /* a timeout occured */
+      SerialError(Port, old);
+    }
+    else
+      read(Port, &x, sizeof(x)); /* there was data to read */
+
   return x; 
 }
 
@@ -112,39 +147,39 @@ void SndPacket(int Port, unsigned char *pkt ) {
    PutByte(Port, Ck1 );               // Send the checksum
 }
 
-uint8_t RcvPacket(int port, uint8_t *pkt) {
+uint8_t RcvPacket(int port, uint8_t *pkt, struct termios *old) {
    uint8_t  Ck1, Ck2, N, i;
   
-   waitstart(port);                          // Wait for start
-   N = GetByte(port);                        // Get the packet size
+   waitstart(port, old);                          // Wait for start
+   N = GetByte(port, old);                        // Get the packet size
    Ck1 = 0;                              // Start with checksum at zero
    for (i=0; i<N-1; i++) {
-      *pkt = GetByte(port);                  // Get next byte, save it in Packet buffer
+      *pkt = GetByte(port, old);                  // Get next byte, save it in Packet buffer
       Ck1 += *pkt;                       // Accumulate running checksum
       pkt++;                             // next byte
    }
-   Ck2 = GetByte(port);                      // Get the senders checksum                        
+   Ck2 = GetByte(port, old);                      // Get the senders checksum                        
    Ck1 &= 0xff;
    Ck1 %= 256;
    if (Ck1 == Ck2) { return N; } else { return 0; }
 }
 
-void waitstart(int port) {             // This waits for soh and then stx in that order
+void waitstart(int port, struct termios *old) {             // This waits for soh and then stx in that order
   uint8_t c1,c2=0;
   while ((c1!=_SOH) || (c2!=_STX)){
     c1 = c2; 
-    c2 = GetByte(port);
+    c2 = GetByte(port, old);
   }
   return; 
 }
 
-int WaitAck(int port,uint8_t *pac) {
+int WaitAck(int port,uint8_t *pac, struct termios *old) {
     uint8_t PSize;
 
-    PSize = RcvPacket(port, pac);                    // Receive Packet
+    PSize = RcvPacket(port, pac, old);                    // Receive Packet
 //    printf("back from RcvPacket\n");
     if ((PSize == 0) || (pac[0]==_NAK)) {
-       printf("Cmd Failed\n> ");
+       printf("*** Cmd Failed\n> ");
        return False;
     }
     return True;

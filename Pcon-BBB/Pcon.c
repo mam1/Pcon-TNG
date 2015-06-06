@@ -50,10 +50,8 @@ const char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
 char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
-
-int           	Port;
-uint8_t			pkt[254];
-
+int           	Port = -1;
+uint8_t			SndPkt[_MAX_PACKET], RcvPkt[_MAX_PACKET];
 uint8_t 		cmd_state,char_state;
 
 
@@ -130,21 +128,29 @@ int main(void) {
 	}
 
 	/* open UART1 to connect to BBB */
-	//bbb = s_open();
-	Port = SerialInit("/dev/ttyO1",_BAUD ,&oldtio);
-	printf(" serial connection C3 opened on port %d\r\n", Port);
-	printf(" pinging the C3 - \r\n");
+	Port = SerialInit(_MODEMDEVICE,B9600,&oldtio);
 
-	//packet_print(pkt)
-
-	//ShoPkt(sizeof(ping_frame), &ping_frame, &pkt);
+	printf(" serial connection to the C3 opened on port %d\r\n", Port);
+	// printf(" pinging the C3 - ");
 
 	/* see if the C3 is there */
-	BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, (uint8_t *)&pkt);
-	printf("packet size before send <%i>\n\r",pkt[0]);
-//	packet_print(pkt);
-//	SndPacket(*pkt, (uint8_t *)pkt);
-//	packet_print(pkt);
+    // printf("build packet from ping frame\n");
+    BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, SndPkt);
+    // PrintPkt(SndPkt);
+    SndPacket(Port, SndPkt);
+    printf(" ping frame sent to UART1 - ");
+    if(WaitAck(Port,RcvPkt,&oldtio))
+        printf(" received ack from the prop\n\r");
+    else {
+    	printf("*** can not detect a prop\n\r");
+    	printf("\napplication terminated\n\n\r");
+    	return -1;
+    }
+
+
+//	packet_print(SndPkt);
+//	SndPacket(*SndPkt, (uint8_t *)SndPkt);
+//	packet_print(SndPkt);
 
 
 	// if(s_ping(bbb))

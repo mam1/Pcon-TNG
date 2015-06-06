@@ -19,13 +19,13 @@ typedef struct {
 void SerialClose(int port, struct termios *old);
 void SerialError (int port, struct termios *old);
 int SerialInit(char *device, int bps, struct termios *old);
-uint8_t GetByte(int Port);
+uint8_t GetByte(int Port, struct termios *old);
 uint8_t PutByte(int Port, unsigned char c);
 void BuildPkt(uint8_t N, unsigned char *frame, unsigned char *pkt);
 void SndPacket(int Port, unsigned char *pkt );
-uint8_t RcvPacket(int port, uint8_t *pkt);
-void waitstart(int port);
-int WaitAck(int port,uint8_t *pac);
+uint8_t RcvPacket(int port, uint8_t *pkt, struct termios *old);
+void waitstart(int port, struct termios *old);
+int WaitAck(int port,uint8_t *pac, struct termios *old);
 void PrintPkt(unsigned char *pkt);
 
 #endif
