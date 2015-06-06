@@ -4,7 +4,7 @@
 /* version info */
 #define _major_version 			4
 #define _minor_version 			1
-#define _minor_revision 		0
+#define _minor_revision 		1
 
 // ======<< Ascii control Characters >>=====
 #define      _SOH  0x01
