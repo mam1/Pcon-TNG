@@ -11,6 +11,8 @@
  
  uint32_t *get_schedule(uint32_t *,int,int); 			//(schedule data,day,channel) 
  														//return pointer to a schedule
+ /* routines that work with a single shecdule */
+ 
 
 /* routines to work with individual schedule records */
  int  get_key(uint32_t);          			//extract key (lower 31 bits) from a uint32_t

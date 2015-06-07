@@ -15,9 +15,10 @@
 #define _BAUD 9600
 
 /*  globals */
-fdserial 			*Serial;
-_packet       pkt;
-_ack_frame    ack_frame = {.f_type = _ACK_F, .ack_byte = _ACK};  
+fdserial 			      *Serial;
+_packet             pkt;
+_ack_frame          ack_frame = {.f_type = _ACK_F, .ack_byte = _ACK};
+-_schedule_frame    schedule_frame;  
 
 int main(void)
 {
@@ -37,6 +38,11 @@ int main(void)
         switch(pkt.data[i++]){
           case _PING_F:
             printi("received a ping frame \n");
+            send_ack(Serial,&ack_frame,&pkt);
+            printi("sent an ack to bone\n");           
+            break;
+          case _SCHEDULE_F:
+            printi("received a schedule frame \n");
             send_ack(Serial,&ack_frame,&pkt);
             printi("sent an ack to bone\n");           
             break;

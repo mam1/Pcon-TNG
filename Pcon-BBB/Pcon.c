@@ -16,6 +16,7 @@
 #include "cmd_fsm.h"
 #include "trace.h"
 #include "packet.h"
+#include "schedule.h"
 
 /* frame types */
 #define _SCHEDULE_F     1 // replace a working schedule with schedule in frame, send ack to sender
@@ -23,7 +24,7 @@
 #define _TIME_F         3   // set real time clock to the time/date in frame, send ack to sender
 #define _PING_F     	4   // request for ping, send ping data in frame back to sender 
 #define _ACK_F         	5 //
-#define _REBOOT_F      	6 // reboot the C3, program load from EEPROM 
+// #define _REBOOT_F      	6 // reboot the C3, program load from EEPROM 
 
  typedef unsigned char Byte;
 
@@ -79,6 +80,7 @@ int main(void) {
 	int	char_state;			//current state of the character processing fsm
 	int prompted = false;	//has a prompt been sent
 	int i;
+	int 		day, channel;
 
 	typedef struct 
 	{
@@ -87,6 +89,7 @@ int main(void) {
 	} _ping_frame;
 
 	_ping_frame			ping_frame = {.f_type = _PING_F, .ping_data = _PING};
+	_schedule_frame		schedule_frame;
 
 	/************************* setup trace *******************************/
 #ifdef _TRACE
@@ -129,14 +132,10 @@ int main(void) {
 
 	/* open UART1 to connect to BBB */
 	Port = SerialInit(_MODEMDEVICE,B9600,&oldtio);
-
 	printf(" serial connection to the C3 opened on port %d\r\n", Port);
-	// printf(" pinging the C3 - ");
 
 	/* see if the C3 is there */
-    // printf("build packet from ping frame\n");
     BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, SndPkt);
-    // PrintPkt(SndPkt);
     SndPacket(Port, SndPkt);
     printf(" ping frame sent to UART1 - ");
     if(WaitAck(Port,RcvPkt,&oldtio))
@@ -147,9 +146,19 @@ int main(void) {
     	return -1;
     }
 
+    /* send schedules to C3 */
+     for(day = 1;day < _DAYS_PER_WEEK +1; day++)
+     	for(channel = 0; channel < _NUMBER_OF_CHANNELS; channel++){
+     		make_schedule_frame(SndPkt,&schedule_frame,sizeof(schedule_frame),2,3,get_schedule(sdat.sch,2,3));
+     		SndPacket(Port, &SndPkt);
+     		if(WaitAck(Port,RcvPkt,&oldtio))
+    			printf(" received ack from the prop\n\r");
+    		else {
+    			printf("*** schedule length from frame and secheduel do not match\n\r");
+    			printf("\napplication terminated\n\n\r");
+    			return -1;
+     	}
 
-//	packet_print(SndPkt);
-//	SndPacket(*SndPkt, (uint8_t *)SndPkt);
 //	packet_print(SndPkt);
 
 

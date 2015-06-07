@@ -22,6 +22,7 @@
 // #include "../shared/shared.h"
 #include "packet.h"
 #include "../Pcon-share/shared.h"
+#include "../Pcon-share/typedefs.h"
 
 
     fd_set                set;
@@ -73,7 +74,7 @@ int SerialInit(char *device, int bps, struct termios *old) {
     FD_ZERO(&set); /* clear the set */
     FD_SET(sport, &set); /* add our file descriptor to the set */
 
-    timeout.tv_sec = 1;
+    timeout.tv_sec = 2;
     timeout.tv_usec = 0;
 
     ret = tcgetattr(sport, old);            //save old tremios settings
@@ -178,7 +179,7 @@ int WaitAck(int port,uint8_t *pac, struct termios *old) {
 
     PSize = RcvPacket(port, pac, old);                    // Receive Packet
 //    printf("back from RcvPacket\n");
-    if ((PSize == 0) || (pac[0]==_NAK)) {
+    if ((PSize == 0) || (pac[0]==_NACK)) {
        printf("*** Cmd Failed\n> ");
        return False;
     }
@@ -192,4 +193,43 @@ void PrintPkt(unsigned char *pkt){
   for(i=0; i<plen; i++) printf("<%02x>", *pkt++);
   printf("\n");
   return;
+}
+
+int make_schedule_frame(uint8_t *pkt,uint8_t *data,int len,int day,int channel,uint32_t *sch){
+    int     i,ii;
+    _packed N;
+
+    data[0] = _SCHEDULE_F;
+    data[1] = (uint8_t)day;
+    data[2] = (uint8_t)channel;
+    data[3] = (uint8_t)*sch;
+    ii = 4;
+    for(i = data[3]+1; i > 0; i--){
+      N.MyLong = *sch++;
+      PackLong(&data[ii], N);
+      ii += 4;
+    }
+    BuildPkt(ii, data,pkt);    
+//    packet_make(pkt,data,ii);
+    return 0;
+  }    
+
+/********************************************************
+ **              Pack / UnPack  Routines               ** 
+ **  Insert / remove propeller long from the Packet    **
+ ********************************************************/
+void PackLong( char* p, _packed N ) { // N - 4 byte long,   p - insertion point
+    *p = N.MyByte[0];  p++;
+    *p = N.MyByte[1];  p++;
+    *p = N.MyByte[2];  p++;
+    *p = N.MyByte[3];  p++;
+}
+
+int UnPackLong( char* p ) {   // p pointer to start of 4 byte long
+    _packed N; 
+    N.MyByte[0] = *p;  p++;
+    N.MyByte[1] = *p;  p++;
+    N.MyByte[2] = *p;  p++;
+    N.MyByte[3] = *p;  p++;
+    return N.MyLong;
 }

@@ -1,10 +1,10 @@
 Pcon.c
-packet.h
 packet.c
-schedule.c
+packet.h
+shared.h -> ../Pcon-share/shared.h
+typedefs.h -> ../Pcon-share/typedefs.h
 schedule.h
-Pcon.h
--I ./../Pcon-share
+schedule.c
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
@@ -12,4 +12,4 @@ Pcon.h
 >-Wall
 >-fno-exceptions
 >defs::-std=c99
->BOARD::C3
+>BOARD::GENERIC

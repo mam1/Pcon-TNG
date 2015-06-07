@@ -8,13 +8,10 @@
 
 
 #include <termios.h>
+#include "../Pcon-share/typedefs.h"
 
 // typedef struct termios _TERMIOS; 
 
-typedef struct {
-  uint8_t         f_type;
-  uint8_t         ping;
-} _ping_frame;
 
 void SerialClose(int port, struct termios *old);
 void SerialError (int port, struct termios *old);
@@ -27,5 +24,9 @@ uint8_t RcvPacket(int port, uint8_t *pkt, struct termios *old);
 void waitstart(int port, struct termios *old);
 int WaitAck(int port,uint8_t *pac, struct termios *old);
 void PrintPkt(unsigned char *pkt);
+int make_schedule_frame(uint8_t *pkt,uint8_t *data,int len,int day,int channel,uint32_t *sch);
+void PackLong( char* p, _packed N );  // N - 4 byte long,   p - insertion point
+int UnPackLong( char* p );    // p pointer to start of 4 byte long
+ 
 
 #endif

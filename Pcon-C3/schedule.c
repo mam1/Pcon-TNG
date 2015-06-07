@@ -21,15 +21,19 @@
  #include "schedule.h"
  #include "bitlit.h"
  #include "typedefs.h" 
+ 
+ /***************** global code to text conversion ********************/
+const char *day_names_long[7] = {
+     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+const char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
+const char *onoff[2] = {"off"," on"};
+const char *con_mode[3] = {"manual","  time","time & sensor"};
+const char *sch_mode[2] = {"day","week"};
+const char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
 /****************************** externals *******************************/
 
-/******************** global code to text conversion ********************/
- extern char *day_names_long[7];     
- extern char *day_names_short[7];
- extern char *onoff[2];
- extern char *con_mode[3];
- extern char *sch_mode[2];
+
 /************************** edit state variable *************************/
  extern int     edit_channel,edit_day,edit_hour,edit_minute,edit_key;
 /***************************** globals **********************************/
@@ -271,8 +275,13 @@ int add_sch_rec(uint32_t *sch, int k, int s)    // add or change a schedule reco
             break; 
         sch++;      
     } 
-    while(end >= sch)
-        *(end+1) = *(end--);
+//    while(end >= sch)
+//        *(end+1) = *(end--);
+          
+    while(end >= sch){
+        *(end+1) = *end;
+        end--;
+    }    
     put_state(sch,s);
     put_key(sch,k);
     return 0;      
@@ -325,6 +334,8 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     }
     return NULL;
  }
+ 
+ 
 
  void disp_all_schedules(uint32_t *sch)
  {
@@ -380,7 +391,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
  }
 
 /*  */
- void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   // load schedule buffer w
+ void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   // load schedule buffer 
  {
     int         i;
     uint32_t    *start_schedule;
@@ -412,4 +423,16 @@ uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to a
     return (uint32_t *)start_schedule;
     // return sch;
  }
+ 
+  void dump_sch(uint32_t *sbuf)
+  {
+     int         i;
+     printf("\n");
+     for(i=0;i<_MAX_SCHEDULE_RECS+1;i++)
+     {
+         printf("%08x ",*sbuf++);
+     } 
+     printf("\n");    
+     return;
+  }     
 

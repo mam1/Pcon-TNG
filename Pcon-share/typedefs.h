@@ -2,6 +2,8 @@
 #define _TYPEDEFS_H_
 
 #include "Pcon.h"
+#include <stdint.h>		//uint_8, uint_16, uint_32, etc.
+
 
 // #include "cmd_fsm.h"
 
@@ -69,6 +71,33 @@ typedef struct {
 /* action routine definitions */
 typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
 typedef int (*CHAR_ACTION_PTR)(char *);
+
+typedef union { unsigned int MyLong; unsigned char MyByte[4]; } _packed;
+
+typedef struct {
+  uint8_t         f_type;
+  uint8_t         ping;
+} _ping_frame;
+
+typedef struct {
+  uint8_t       f_type;
+  uint8_t       day;
+  uint8_t       channel;
+  uint8_t       rcnt;
+  uint32_t      rec[_MAX_SCHEDULE_RECS];
+} _schedule_frame;
+
+typedef struct {
+  uint8_t     f_type;
+  uint8_t     ack_byte;
+} _ack_frame;  
+
+typedef struct {
+  uint8_t     f_type;
+  uint8_t     ack_byte;
+} _nack_frame;  
+
+
 
 /************************************************************************************/
 /************************************************************************************/

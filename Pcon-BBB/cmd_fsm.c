@@ -535,7 +535,7 @@ int c_1(CMD_FSM_CB *cb)
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-	int 		i, pingback;
+	// int 		i, pingback;
 
 	// pingback = s_ping(bbb);	
 
@@ -1206,8 +1206,8 @@ int c_38(CMD_FSM_CB *cb)
 /* replace system schedule */ 
 int c_39(CMD_FSM_CB *cb)
 {
-	uint32_t		*s,x;
-		s =&x;
+	// uint32_t		x;
+		// s =&x;
        memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr,cmd_fsm_cb.w_sch_ptr,sizeof(cmd_fsm_cb.w_sch));
        save_system_data(_SYSTEM_DATA_FILE,&sdat);
        printf("\r\n*** system schedule replaced ***\r\n");
