@@ -2,6 +2,7 @@
  * @file packet.h
  */
 #include "typedefs.h"
+#include "shared.h"
 
 #ifndef __PACKET_H__
 #define __PACKET_H__
@@ -10,7 +11,7 @@
 #define CONS_RX 0
 #define CONS_TX 1
 #define CONS_MODE 0
-#define CONS_BAUD 115200
+#define CONS_BAUD _BAUD
 
 
 #define PROD_RX 1
@@ -86,9 +87,9 @@ int packet_print(_packet *pkt);
 
 void send_ack(fdserial *port, _ack_frame *f, _packet *p);
 void send_nack(fdserial *port, _nack_frame *f, _packet *p);
-int marshal_schedule(uint8_t *f,uint32_t *sch);
-void PackLong( char* p, _packed N );
-int UnPackLong( char* p );
+int marshal_schedule(uint8_t *f,uint32_t *);
+void PackLong( uint8_t* p, _packed N );
+int UnPackLong( uint8_t* p );
 
 
 #endif

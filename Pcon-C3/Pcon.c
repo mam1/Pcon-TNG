@@ -14,7 +14,7 @@
 #define _RX 1
 #define _TX 0
 #define _MODE 0
-#define _BAUD 9600
+//#define _BAUD 14400
 
 #define      _NACK            0x15
 #define      _NACK_F         	6 //
@@ -53,15 +53,15 @@ int main(void)
           case _SCHEDULE_F:
             printi("received a schedule frame \n");
             printi("system schedule befor marshing\n");
-            disp_all_schedules(sch);
-            if(marshal_schedule(pkt.data,sch)){
+ //           disp_all_schedules(sch);
+            if(marshal_schedule(pkt.data,&sch[0][0][0])){
               send_nack(Serial,&nack_frame,&pkt);  // marshal failed
               printi("marshal failed\nsent an nack to bone\n");
             }
             else{
               send_ack(Serial,&ack_frame,&pkt);   // marshal suceeded
               printi("marshal complete\nsent an ack to bone\n");
-              disp_all_schedules(sch);
+ //             disp_all_schedules(sch);
             }            
             break;
           default: 

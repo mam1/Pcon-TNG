@@ -74,7 +74,7 @@ int SerialInit(char *device, int bps, struct termios *old) {
     FD_ZERO(&set); /* clear the set */
     FD_SET(sport, &set); /* add our file descriptor to the set */
 
-    timeout.tv_sec = 2;
+    timeout.tv_sec = 30;
     timeout.tv_usec = 0;
 
     ret = tcgetattr(sport, old);            //save old tremios settings

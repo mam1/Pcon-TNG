@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include "packet.h"
+#include "schedule.h"
 #include "shared.h"
 
 static volatile _packet queue[PACKET_QLEN];
@@ -171,14 +172,14 @@ void send_nack(fdserial *port, _nack_frame *f, _packet *p){
   return;
 }
 
-void PackLong( char* p, _packed N ) { // N - 4 byte long,   p - insertion point
+void PackLong( uint8_t* p, _packed N ) { // N - 4 byte long,   p - insertion point
     *p = N.MyByte[0];  p++;
     *p = N.MyByte[1];  p++;
     *p = N.MyByte[2];  p++;
     *p = N.MyByte[3];  p++;
 }
 
-int UnPackLong( char* p ) {   // p pointer to start of 4 byte long
+int UnPackLong( uint8_t* p ) {   // p pointer to start of 4 byte long
     _packed N; 
     N.MyByte[0] = *p;  p++;
     N.MyByte[1] = *p;  p++;
@@ -190,7 +191,7 @@ int UnPackLong( char* p ) {   // p pointer to start of 4 byte long
 int marshal_schedule(uint8_t *f,uint32_t *sch){
   int     day, channel, slen_frame, slen_schedule;
   uint8_t   *byt;
-  uint32_t  temp_sch[_SCHEDULE_SIZE], *srec_ptr;
+  uint32_t  *srec_ptr;
   
   byt = (uint8_t *)f;
   printf("frame type = %02x\n",*byt);

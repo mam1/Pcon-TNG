@@ -12,7 +12,7 @@
 #define      _ETX  0x03
 #define      _EOT  0x04
 #define      _ACK  0x06
-#define      _NACK  0x15
+#define      _NACK 0x15
 #define      _SYN  0x16
 
 /* frame types */

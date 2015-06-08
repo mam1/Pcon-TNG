@@ -73,6 +73,7 @@ typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
 typedef int (*CHAR_ACTION_PTR)(char *);
 
 typedef union { unsigned int MyLong; unsigned char MyByte[4]; } _packed;
+//typedef uint8_t sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE]; _SCHEDULE;
 
 typedef struct {
   uint8_t         f_type;

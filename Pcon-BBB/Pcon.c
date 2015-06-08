@@ -147,17 +147,21 @@ int main(void) {
     }
 
     /* send schedules to C3 */
-     for(day = 1;day < _DAYS_PER_WEEK +1; day++)
+    printf("sending schedules to C3\n\r");
+     for(day = 1;day < _DAYS_PER_WEEK +1; day++){
      	for(channel = 0; channel < _NUMBER_OF_CHANNELS; channel++){
-     		make_schedule_frame(SndPkt,&schedule_frame,sizeof(schedule_frame),2,3,get_schedule(sdat.sch,2,3));
-     		SndPacket(Port, &SndPkt);
+     		printf("sending day %i cahnnel %i\n\r",day, channel);
+     		make_schedule_frame(SndPkt,(uint8_t*)&schedule_frame,sizeof(schedule_frame),day,channel,get_schedule((uint32_t *)sdat.sch,day,channel));
+     		SndPacket(Port, SndPkt);
      		if(WaitAck(Port,RcvPkt,&oldtio))
     			printf(" received ack from the prop\n\r");
     		else {
     			printf("*** schedule length from frame and secheduel do not match\n\r");
     			printf("\napplication terminated\n\n\r");
     			return -1;
-     	}
+    		}
+    	}
+     }
 
 //	packet_print(SndPkt);
 
@@ -272,14 +276,12 @@ int main(void) {
 	/* do suff while waiting or the keyboard */	
 
 	};
-	// s_close(bbb);
 	system("/bin/stty cooked");			//switch to buffered iput
 	system("/bin/stty echo");			//turn on terminal echo
 	printf("\f\n***normal termination -  but should not happen\n\n");
 	return 0;
 }
 int term(int t){
-	// s_close(bbb);
 	switch(t){
 	case 1:
 		system("/bin/stty cooked");			//switch to buffered iput
