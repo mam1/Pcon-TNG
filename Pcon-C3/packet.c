@@ -115,19 +115,24 @@ int packet_make(_packet *pkt, uint8_t *frame, int len)
     return n;
 }
 
-
 int packet_send(fdserial *port, _packet *pkt)
 {
     int n;
-    writeChar(port,_SOH);
-    writeChar(port,_STX);
-    writeChar(port, pkt->length);
+    printi(" packet_send\n");
+    fdserial_txChar(port,_SOH);                                                                          
+    printi("   first packet header byte sent\n");
+    fdserial_txChar(port,_STX);
+    printi("   second packet header byte sent\n");
+    fdserial_txChar(port, pkt->length);
+    printi("   packet length %d sent\n",pkt->length);
     for (n = 0; n < pkt->length; n++) {
-        writeChar(port, pkt->data[n]);
+        fdserial_txChar(port, pkt->data[n]);
+//        usleep(1000);             
     }
+    printi("   packet data sent\n");
     return 0;        
 }
-
+                                                                                                                                                            
 int packet_ready(void)
 {
     int rc = 0;
@@ -157,17 +162,18 @@ int packet_print(_packet *pkt)
 }
 
 void send_ack(fdserial *port, _ack_frame *f, _packet *p){
+  printi("\n  before make_packet\n");
   packet_make(p,(uint8_t *)f,sizeof(*f));
-  printi("*******\n");
-  packet_print(p);
+  printi("  after make_packet\n");
   packet_send(port,p);
+  printi("# packet sent\n");  
   return;
 }  
 
 void send_nack(fdserial *port, _nack_frame *f, _packet *p){
   packet_make(p,(uint8_t *)f,sizeof(*f));
-  printi("*******\n");
-  packet_print(p);
+//  printi("*******\n");
+// packet_print(p);
   packet_send(port,p);
   return;
 }
@@ -194,29 +200,33 @@ int marshal_schedule(uint8_t *f,uint32_t *sch){
   uint32_t  *srec_ptr;
   
   byt = (uint8_t *)f;
-  printf("frame type = %02x\n",*byt);
+//  printf("frame type = %02x\n",*byt);
   byt++;
   day = (int)*byt++;
   channel = (int)*byt++;
-  printf("data from schedule frame:\n");
-  printf("   channel = %i  day = %i\n",channel, day);
+//  printf("data from schedule frame:\n");
+  printi("  channel = %d  day = %d\n",channel, day);
   slen_frame = (int)*byt++;
-  printf("   %i schedule records from frame\n", slen_frame);
+//  printf("   %i schedule records from frame\n", slen_frame);
   slen_schedule = UnPackLong(byt);
   byt += 4; //move pointer to next long
-  printf("   %i schedule records form schedule\n",slen_schedule);
+//  printf("   %i schedule records form schedule\n",slen_schedule);
   if( slen_schedule != slen_frame){
-    printf("*** length from frame does not match length from schedule\n");
+    printi("*** length from frame does not match length from schedule\n");
     return -1;
   }
-
   srec_ptr = get_schedule(sch,day,channel);
+  printi("  get_schedule returned <%x>\n",(int)srec_ptr);
+
   *srec_ptr++ = slen_schedule;
+  printi("\n  unpacking data ");
   while(slen_schedule-- > 0){ 
     *srec_ptr++ = UnPackLong(byt);
-    byt += 4; //move pointer to next long     
+    byt += 4; //move pointer to next long
+    printi(".");     
   }    
- 
+   printi("\n");
+
  // load_schedule(&sch, uint32_t *template, int day, int channel)
   
   return 0;

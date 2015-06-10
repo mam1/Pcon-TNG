@@ -7,27 +7,20 @@
 #include <stdlib.h>   //system calls
 #include <strings.h>
 #include <unistd.h>		//sleep
-// #include <string.h>
 #include <termios.h>
 #include <sys/fcntl.h>	//file io
 #include <stdint.h>   //uint_8, uint_16, uint_32, etc.
-
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/select.h>
-
-// #include <sys/ioctl.h>
-// #include "../shared/shared.h"
 #include "packet.h"
 #include "../Pcon-share/shared.h"
 #include "../Pcon-share/typedefs.h"
 
-
-    fd_set                set;
-    struct timeval        timeout;
-
+/**************************** globals ******************************************/
+fd_set                set;
+struct timeval        timeout;
 
 /*************************  serial io routines *********************************/
 
@@ -55,8 +48,6 @@ int SerialInit(char *device, int bps, struct termios *old) {
     int                   sport;  //serial port
     struct termios        newtio; //buffer for new terminal settings
 
-
-
 	/* Load the pin configuration */
     ret  = system("echo uart1 > /sys/devices/bone_capemgr.9/slots");
     if(ret < 0){
@@ -70,14 +61,11 @@ int SerialInit(char *device, int bps, struct termios *old) {
       printf("Error - Unable to open '%s'.\n", device);
       exit(1); 
     }
-
-    FD_ZERO(&set); /* clear the set */
-    FD_SET(sport, &set); /* add our file descriptor to the set */
-
-    timeout.tv_sec = 30;
-    timeout.tv_usec = 0;
-
-    ret = tcgetattr(sport, old);            //save old tremios settings
+    FD_ZERO(&set);                    // clear the set 
+    FD_SET(sport, &set);              // add file descriptor to the set 
+    timeout.tv_sec = _TIMEOUT_SEC;    // set read time out
+    timeout.tv_usec = _TIMEOUT_USEC;
+    ret = tcgetattr(sport, old);       // save old tremios settings
     if (ret < 0) {
       printf("*** problem saving old tremios settings\r\n");
       SerialError(sport,old);
@@ -107,7 +95,17 @@ uint8_t GetByte(int Port,struct termios *old){
       SerialError(Port, old);
     }
     else if(rv == 0){
-      printf("read timeout\n\r"); /* a timeout occured */
+      printf("\n*** read timeout\n\r"); /* a timeout occured */
+      rv = select(Port + 1, &set, NULL, NULL, &timeout);
+      if(rv == 0){
+        printf("\n*** read timeout\n\r"); /* a timeout occured */
+        SerialError(Port, old);
+      }
+      if(rv == -1){
+        perror("select"); /* an error accured */
+        SerialError(Port, old);
+      }
+      read(Port, &x, sizeof(x)); /* there was data to read */
       SerialError(Port, old);
     }
     else
@@ -177,10 +175,13 @@ void waitstart(int port, struct termios *old) {             // This waits for so
 int WaitAck(int port,uint8_t *pac, struct termios *old) {
     uint8_t PSize;
 
-    PSize = RcvPacket(port, pac, old);                    // Receive Packet
-//    printf("back from RcvPacket\n");
-    if ((PSize == 0) || (pac[0]==_NACK)) {
-       printf("*** Cmd Failed\n> ");
+    PSize = RcvPacket(port, pac, old);                   
+    if (PSize == 0) {
+       printf("*** Zero length packet\n> ");
+       return False;
+    }                
+    if (pac[2]==_NACK) {
+       printf("*** Received a nack from the C3\n> ");
        return False;
     }
     return True;
@@ -218,14 +219,14 @@ int make_schedule_frame(uint8_t *pkt,uint8_t *data,int len,int day,int channel,u
  **              Pack / UnPack  Routines               ** 
  **  Insert / remove propeller long from the Packet    **
  ********************************************************/
-void PackLong( char* p, _packed N ) { // N - 4 byte long,   p - insertion point
+void PackLong(uint8_t *p, _packed N) { // N - 4 byte long,   p - insertion point
     *p = N.MyByte[0];  p++;
     *p = N.MyByte[1];  p++;
     *p = N.MyByte[2];  p++;
     *p = N.MyByte[3];  p++;
 }
 
-int UnPackLong( char* p ) {   // p pointer to start of 4 byte long
+int UnPackLong(uint8_t *p) {   // p pointer to start of 4 byte long
     _packed N; 
     N.MyByte[0] = *p;  p++;
     N.MyByte[1] = *p;  p++;

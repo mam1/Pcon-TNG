@@ -27,45 +27,50 @@ _ack_frame          ack_frame = {.f_type = _ACK_F, .ack_byte = _ACK};
 _nack_frame         nack_frame = {.f_type = _NACK_F, .ack_byte = _NACK};
 _schedule_frame     schedule_frame;
 
-uint32_t            sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];  
+uint32_t            sch[_DAYS_PER_WEEK * _NUMBER_OF_CHANNELS * _SCHEDULE_SIZE];  
 
 int main(void)
 {
-  int             i; 
+//  int             i; 
+
+  printi("schedule buffer %d bytes starting at %x\n",sizeof(sch),(int)sch);
   Serial = fdserial_open(_RX,_TX,_MODE,_BAUD);
   printi("serial port opened\n"); 
   _packetart(Serial);
-  printi("starting cog to monitor serial connection to the BeagleBone\n"); 	
+  printi("cog to monitor serial connection to the BeagleBone started\n"); 	
   printi("\n*************************************\n\n");
   for(;;){
     if (packet_ready()) {
-        packet_print(&pkt);
         packet_read(&pkt);
-        printi("\nPacket dequeued");
-        packet_print(&pkt);
-        i = 0;
-        switch(pkt.data[i++]){
+        switch(*pkt.data){
           case _PING_F:
             printi("received a ping frame \n");
             send_ack(Serial,&ack_frame,&pkt);
-            printi("sent an ack to bone\n");           
+            printi("sent an ack to bone\n\n");           
             break;
           case _SCHEDULE_F:
             printi("received a schedule frame \n");
-            printi("system schedule befor marshing\n");
+ //           printi("system schedule befor marshing\n");
  //           disp_all_schedules(sch);
-            if(marshal_schedule(pkt.data,&sch[0][0][0])){
+ //       int holdit;
+ //       holdit = marshal_schedule(pkt.data,sch);
+ //       printi("marshal returned <%d>\n",marshal_schedule(pkt.data,sch));
+            if(marshal_schedule(pkt.data,sch)){
               send_nack(Serial,&nack_frame,&pkt);  // marshal failed
-              printi("marshal failed\nsent an nack to bone\n");
+              printi("*** marshal failed\nsent an nack to bone\n");
             }
             else{
+              printi("about to send ack");
               send_ack(Serial,&ack_frame,&pkt);   // marshal suceeded
-              printi("marshal complete\nsent an ack to bone\n");
+              printi("  marshal complete\n  ack sent to bone\n\n");
+ //             usleep(1000);
  //             disp_all_schedules(sch);
             }            
             break;
           default: 
-            printi("*** error *** unknown packet type\n");
+            printi("*** error *** unknown packet type <%d>\n", *pkt.data);              
+            send_nack(Serial,&nack_frame,&pkt);  // marshal failed
+            printi("sent an nack to bone\n");
           }            
     }                  	
   }    

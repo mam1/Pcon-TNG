@@ -25,8 +25,8 @@ void waitstart(int port, struct termios *old);
 int WaitAck(int port,uint8_t *pac, struct termios *old);
 void PrintPkt(unsigned char *pkt);
 int make_schedule_frame(uint8_t *pkt,uint8_t *data,int len,int day,int channel,uint32_t *sch);
-void PackLong( char* p, _packed N );  // N - 4 byte long,   p - insertion point
-int UnPackLong( char* p );    // p pointer to start of 4 byte long
+void PackLong(uint8_t *p, _packed N);  // N - 4 byte long,   p - insertion point
+int UnPackLong(uint8_t *p);    // p pointer to start of 4 byte long
  
 
 #endif

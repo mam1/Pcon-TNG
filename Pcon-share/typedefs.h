@@ -36,8 +36,8 @@ typedef	struct {
     int         minor_revision;	
     int         templib_index;											// points to the next available template record 
     int         schlib_index;											  // points to the next available system schedule record
-    uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
-    uint32_t	   *sch_ptr;   												// pointer to system schedule
+    uint32_t    sch[_DAYS_PER_WEEK * _NUMBER_OF_CHANNELS * _SCHEDULE_SIZE];	// system schedule
+    uint32_t	*sch_ptr;   												// pointer to system schedule
     CHN_DAT     c_data[_NUMBER_OF_CHANNELS];		    // channel persistent data
     TMPL_DAT    t_data[_MAX_TMPLLIB_SCH];               // schedule template library
     SCH_DAT     s_data[_MAX_SCHLIB_SCH];					    // schedule library							
@@ -51,7 +51,7 @@ typedef struct {
 	int				token_type;
 	int				token_value;
 	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
-	uint32_t        w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
+	uint32_t        w_sch[_DAYS_PER_WEEK * _NUMBER_OF_CHANNELS * _SCHEDULE_SIZE];
 	uint32_t		*w_sch_ptr;
 	int             w_channel;                      //working channel number
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
@@ -74,6 +74,13 @@ typedef int (*CHAR_ACTION_PTR)(char *);
 
 typedef union { unsigned int MyLong; unsigned char MyByte[4]; } _packed;
 //typedef uint8_t sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE]; _SCHEDULE;
+
+
+typedef struct {
+    uint8_t length; // total packet length including length and checksum byte
+    uint8_t data[_MAX_PACKET]; // add 1 for checksum
+} _packet;
+
 
 typedef struct {
   uint8_t         f_type;

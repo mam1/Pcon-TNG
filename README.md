@@ -36,11 +36,11 @@ The BeagleBone initiates all communications.  Communication is packet based.  A 
 
     <packet header><packet length><packet data><checksum>
 
-The C3 has a cog monitoring the serial connection.  This independent process watches the byte stream from the BeagleBone and parses it into packets. When a complete packet is received it is placed on the packet queue.  A different cog is watching the packet queue.  When a packet is ready this cog dequeues the packet and takes an action dependent on the frame type (the first byte of the frame data).
+The C3 has a cog monitoring the serial connection.  This independent process watches the byte stream from the BeagleBone and parses it into packets. When a complete packet is received it is placed on the packet queue.  A different cog is watching the packet queue.  When a packet is ready this cog dequeues the packet.  The first byte of the frame defines the frame type and the frame type determines the action taken by the C3 and how the following frame data will be marshaled.
 
-The incoming packet contains a frame.  The first byte of the frame defines the frame type and the frame type determines the action taken by the C3 and how the following frame data will be marshaled.  The command processor running on the BeagleBone can sent the following frames to the C3.
+    <packet header><packet length><frame type><frame data><checksum>
 
-    <frame type><frame data>
+The command processor running on the BeagleBone can sent the following frames to the C3.
 
     <_SCHEDULE_F><day><channel><number of schedule records><schedule>
        load the schedule from the frame into the C3 schedule buffer
@@ -62,11 +62,12 @@ The incoming packet contains a frame.  The first byte of the frame defines the f
     <_START_F>
         start the C3 cog the controls the channel states
 
-The C3 uses the same packet structure when sending data to the BeagleBone.  The C3 only sends data to the BagleBone when it get a request.  If more than an ACK is required data is marshaled into the packet.  Since the beagleBone initiated the conversation it should know what to expect.  The C3 can send the following frames to the BeagleBone.
+The C3 uses the same packet structure when sending data to the BeagleBone.  The C3 only sends data to the BeagleBone when it get a request.  If more than an ACK is required data is marshaled into the packet.  Since the beagleBone initiated the conversation it should know what to expect.  The C3 can send the following frames to the BeagleBone.
 
-    <_ACK><>
-    <_CHANNEL><channel number><state><on time><off time>
-    <_TIME><hour><minute><second><year><month><date><dow>
+    <_ACK_F><_ACK>
+    <_NACK_F><_NACK>
+    <_CHANNEL_STATUS_F><channel number><state><on time><off time>
+    <_TIME_F><hour><minute><second><year><month><date><dow>
 
 #####Serial connection between C3 and DIOB
 
@@ -145,7 +146,7 @@ will result in the channel being off between 1:00 - 13:00. It will be on at any 
 
 will result in the channel turning on at 1:00, off at 13:00 and on at 18:00.  If the current time is between 1:00 and 13:00 the channel will be on, between 13:00 and 18:00 it will be off, between 18:00 and 0:0 it will be on and between 0:0 and 13:00 it will also be on.  
 
-A schedule is implemented as a vector of 32 bit unsigned integers. The length is configured by the preprocessor variable *_MAX_SCHEDULE_RECS* .  These are fixed length vectors. I have an alternate implementation using linked lists but his approach is much simpler and has less chance of memory leaks. Since I am already using xmmc size is not a big deal.
+A schedule is implemented as a vector of 32 bit unsigned integers. The length is configured by the preprocessor variable *_MAX_SCHEDULE_RECS*.  These are fixed length vectors. 
 
 The first 32 bits of the vector contain the number of active records in the schedule. The following 32 bit "records" are interpreted as:
 

@@ -393,11 +393,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
 
 uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to a schedule for a (day,channel)
  {
-    // int         i;
     uint32_t    *start_schedule;
-
-    // day = day + 1;
-    // printf("day = %i channel = %i\r\n",day,channel);
 
     start_schedule = sch;
     while(day > 0){         //move day pointer to the requested day
@@ -408,8 +404,6 @@ uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to a
         start_schedule += _SCHEDULE_SIZE;
         channel--;    
     }               
-
     return (uint32_t *)start_schedule;
-    // return sch;
  }
 

@@ -12,7 +12,7 @@
 #define      _ETX  0x03
 #define      _EOT  0x04
 #define      _ACK  0x06
-#define      _NACK 0x15
+#define      _NACK  0x15
 #define      _SYN  0x16
 
 /* frame types */
@@ -38,7 +38,9 @@
 /* serial communication bone / prop */
 #define _MODEMDEVICE   "/dev/ttyO1"	//Beaglebone Black serial port
 #define _BAUD			9600
-#define _MAX_PACKET		254
+#define _MAX_PACKET		253
+#define _TIMEOUT_USEC	0
+#define _TIMEOUT_SEC 	30
 
 /* channel parameters */
 #define _NUMBER_OF_CHANNELS 	8

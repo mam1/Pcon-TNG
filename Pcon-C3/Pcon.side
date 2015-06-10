@@ -12,4 +12,4 @@ schedule.c
 >-Wall
 >-fno-exceptions
 >defs::-std=c99
->BOARD::GENERIC
+>BOARD::C3
