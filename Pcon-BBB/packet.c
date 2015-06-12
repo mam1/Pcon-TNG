@@ -84,7 +84,7 @@ int SerialInit(char *device, int bps, struct termios *old) {
     return sport;     
 }
 
-uint8_t GetByte(int Port,struct termios *old){
+uint8_t GetByte(int Port,struct termios *old,int *error_code){
     char                  x;
     int                   rv;
 
@@ -99,18 +99,21 @@ uint8_t GetByte(int Port,struct termios *old){
       rv = select(Port + 1, &set, NULL, NULL, &timeout);
       if(rv == 0){
         printf("\n*** read timeout\n\r"); /* a timeout occured */
-        SerialError(Port, old);
+        *error_code = 1;
+        // SerialError(Port, old);
       }
       if(rv == -1){
         perror("select"); /* an error accured */
-        SerialError(Port, old);
+        *error_code = 2;
+        // SerialError(Port, old);
       }
       read(Port, &x, sizeof(x)); /* there was data to read */
+      *error_code = 0;
       SerialError(Port, old);
     }
     else
       read(Port, &x, sizeof(x)); /* there was data to read */
-
+  *error_code = 0;
   return x; 
 }
 
@@ -148,28 +151,47 @@ void SndPacket(int Port, unsigned char *pkt ) {
 
 uint8_t RcvPacket(int port, uint8_t *pkt, struct termios *old) {
    uint8_t  Ck1, Ck2, N, i;
+   int      err;
   
-   waitstart(port, old);                          // Wait for start
-   N = GetByte(port, old);                        // Get the packet size
+   if(waitstart(port, old)) return 0;                          // Wait for start
+
+   N = GetByte(port, old, &err);                        // Get the packet size
+      if(err){
+        printf("g1 err = %i\n",err);
+        return 0; 
+      }
    Ck1 = 0;                              // Start with checksum at zero
    for (i=0; i<N-1; i++) {
-      *pkt = GetByte(port, old);                  // Get next byte, save it in Packet buffer
+      *pkt = GetByte(port, old, &err);                  // Get next byte, save it in Packet buffer
+      if(err){
+        printf("g2 err = %i\n",err);
+        return 0; 
+      } 
       Ck1 += *pkt;                       // Accumulate running checksum
       pkt++;                             // next byte
    }
-   Ck2 = GetByte(port, old);                      // Get the senders checksum                        
+   Ck2 = GetByte(port, old, &err);                      // Get the senders checksum                        
+      if(err){
+        printf("g3 err = %i\n",err);
+        return 0; 
+      }
    Ck1 &= 0xff;
    Ck1 %= 256;
    if (Ck1 == Ck2) { return N; } else { return 0; }
 }
 
-void waitstart(int port, struct termios *old) {             // This waits for soh and then stx in that order
+int waitstart(int port, struct termios *old) {             // This waits for soh and then stx in that order
   uint8_t c1,c2=0;
+  int       err;
   while ((c1!=_SOH) || (c2!=_STX)){
     c1 = c2; 
-    c2 = GetByte(port, old);
+    c2 = GetByte(port, old, &err);
+      if(err){
+        printf("g10 err = %i\n",err);
+        return -1; 
+      }
   }
-  return; 
+  return 0; 
 }
 
 int WaitAck(int port,uint8_t *pac, struct termios *old) {
@@ -178,13 +200,13 @@ int WaitAck(int port,uint8_t *pac, struct termios *old) {
     PSize = RcvPacket(port, pac, old);                   
     if (PSize == 0) {
        printf("*** Zero length packet\n> ");
-       return False;
+       return 0;
     }                
     if (pac[2]==_NACK) {
        printf("*** Received a nack from the C3\n> ");
        return False;
     }
-    return True;
+    return -1;
 }
 
 void PrintPkt(unsigned char *pkt){

@@ -37,6 +37,8 @@ int 			bbb;								//UART1 file descriptor
 SYS_DAT 		sdat;								//system data structure
 CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 struct termios	oldtio;								//a place to store the existing terminal settings
+_ping_frame		ping_frame = {.f_type = _PING_F, .ping_data = _PING};
+_schedule_frame	schedule_frame;
 
 /***************** global code to text conversion ********************/
 const char *day_names_long[7] = {
@@ -72,6 +74,21 @@ void prompt(void){
 	return;
 }
 
+int ping_prop(void){
+	/* see if the C3 is there */
+    BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, SndPkt);
+    SndPacket(Port, SndPkt);
+    printf(" ping frame sent to UART1 - ");
+    if(WaitAck(Port,RcvPkt,&oldtio))
+        printf(" received ack from the prop\n\r");
+    else {
+    	printf("*** can not detect a prop\n\r");
+    	printf("\napplication terminated\n\n\r");
+    	return -1;
+    }
+return 0;
+
+}
 /********************************************************************/
 /************************** start main  *****************************/
 /********************************************************************/
@@ -83,14 +100,14 @@ int main(void) {
 	int 		day, channel;
 	uint32_t		*sch_ptr;
 
-	typedef struct 
-	{
-	uint8_t			f_type;
-	uint8_t			ping_data;	
-	} _ping_frame;
+	// typedef struct 
+	// {
+	// uint8_t			f_type;
+	// uint8_t			ping_data;	
+	// } _ping_frame;
 
-	_ping_frame			ping_frame = {.f_type = _PING_F, .ping_data = _PING};
-	_schedule_frame		schedule_frame;
+	// _ping_frame			ping_frame = {.f_type = _PING_F, .ping_data = _PING};
+	// _schedule_frame		schedule_frame;
 
 	/************************* setup trace *******************************/
 #ifdef _TRACE
@@ -136,33 +153,44 @@ int main(void) {
 	printf(" serial connection to the C3 opened on port %d\r\n", Port);
 
 	/* see if the C3 is there */
-    BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, SndPkt);
-    SndPacket(Port, SndPkt);
-    printf(" ping frame sent to UART1 - ");
-    if(WaitAck(Port,RcvPkt,&oldtio))
-        printf(" received ack from the prop\n\r");
-    else {
-    	printf("*** can not detect a prop\n\r");
-    	printf("\napplication terminated\n\n\r");
-    	return -1;
-    }
+	if(ping_prop()){
+		printf("\n *** ping failed\n");
+		printf("\napplication terminated\n\n\r");
+	 	return -1;
+	 }
 
     /* send schedules to C3 */
     printf(" sending schedules to C3\n\r");
      for(day = 0;day < _DAYS_PER_WEEK; day++){
      	for(channel = 0; channel < _NUMBER_OF_CHANNELS; channel++){
+ //    		sleep(1);
      		printf("    sending day %i channel %i ....",day, channel);
      		sch_ptr = get_schedule((uint32_t *)sdat.sch,day,channel);
      		make_schedule_frame(SndPkt,(uint8_t*)&schedule_frame,sizeof(schedule_frame),day,channel,sch_ptr);
      		SndPacket(Port, SndPkt);
      		if(WaitAck(Port,RcvPkt,&oldtio)){
     			printf(" received ack from the prop\n\r");
-    			// sleep(1);
      		}
+
     		else {
+    			// sleep(1);
     			printf(" received nack from the prop\n\r");
     			printf("\napplication terminated\n\n\r");
-    			return -1;
+    			if(ping_prop()){
+					printf("\n *** ping failed\n");
+					printf("\napplication terminated\n\n\r");
+	 				return -1;
+	 			}
+	 		else {
+	 				printf("    sending day %i channel %i ....",day, channel);
+     				sch_ptr = get_schedule((uint32_t *)sdat.sch,day,channel);
+     				make_schedule_frame(SndPkt,(uint8_t*)&schedule_frame,sizeof(schedule_frame),day,channel,sch_ptr);
+     				SndPacket(Port, SndPkt);
+     				if(WaitAck(Port,RcvPkt,&oldtio)){
+    					printf(" received ack from the prop\n\r");
+     				}
+    				else return -1;
+	 			}
     		}
     	}
      }

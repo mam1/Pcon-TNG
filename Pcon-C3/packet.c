@@ -51,7 +51,7 @@ void packet_cog(void *parm)
             // wait for a packet header
             while ((c1!=_SOH) || (c2!=_STX)) { 
               c1 = c2;
-              c2 = fdserial_rxTime((fdserial*)grec,10);
+              c2 = fdserial_rxTime((fdserial*)grec,100);
             };
 
             // read length
@@ -64,7 +64,7 @@ void packet_cog(void *parm)
                 sum = 0;
   
                 // wait for packet              
-                waitcnt(CNT+CNT/100);
+                waitcnt(CNT+CNT/10);
                 // get bytes while valid
                 for (n = 0; n < len; n++) {
                     byte = fdserial_rxTime((fdserial*)grec,10);
@@ -205,7 +205,7 @@ int marshal_schedule(uint8_t *f,uint32_t *sch){
   day = (int)*byt++;
   channel = (int)*byt++;
 //  printf("data from schedule frame:\n");
-  printi("  channel = %d  day = %d\n",channel, day);
+  printi("  day = %d  channel = %d\n",day, channel);
   slen_frame = (int)*byt++;
 //  printf("   %i schedule records from frame\n", slen_frame);
   slen_schedule = UnPackLong(byt);

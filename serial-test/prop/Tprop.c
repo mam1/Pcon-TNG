@@ -18,7 +18,7 @@
 fdserial 			      *Serial;
 _packet             pkt;
 _ack_frame          ack_frame = {.f_type = _ACK_F, .ack_byte = _ACK};
--_schedule_frame    schedule_frame;  
+//_schedule_frame    schedule_frame;  
 
 int main(void)
 {

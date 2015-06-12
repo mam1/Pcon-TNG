@@ -81,10 +81,10 @@ typedef struct {
     uint8_t data[_MAX_PACKET]; // add 1 for checksum
 } _packet;
 
-
-typedef struct {
-  uint8_t         f_type;
-  uint8_t         ping;
+typedef struct 
+{
+uint8_t			f_type;
+uint8_t			ping_data;	
 } _ping_frame;
 
 typedef struct {
@@ -96,9 +96,27 @@ typedef struct {
 } _schedule_frame;
 
 typedef struct {
+	uint8_t			hb1;
+	uint8_t			hb2;
+	uint8_t			length;
+	uint8_t			f_type;
+	uint8_t			data[20];
+	uint8_t			checksum;
+} _schedule_packet;
+
+typedef struct {
   uint8_t     f_type;
   uint8_t     ack_byte;
-} _ack_frame;  
+} _ack_frame;
+
+typedef struct {
+	uint8_t			hb1;
+	uint8_t			hb2;
+	uint8_t			length;
+	uint8_t			f_type;
+	uint8_t			f_b1;
+	uint8_t			checksum;
+} _ack_packet;
 
 typedef struct {
   uint8_t     f_type;

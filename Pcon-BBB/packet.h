@@ -16,12 +16,12 @@
 void SerialClose(int port, struct termios *old);
 void SerialError (int port, struct termios *old);
 int SerialInit(char *device, int bps, struct termios *old);
-uint8_t GetByte(int Port, struct termios *old);
+uint8_t GetByte(int Port, struct termios *old,int *error_code);
 uint8_t PutByte(int Port, unsigned char c);
 void BuildPkt(uint8_t N, unsigned char *frame, unsigned char *pkt);
 void SndPacket(int Port, unsigned char *pkt );
 uint8_t RcvPacket(int port, uint8_t *pkt, struct termios *old);
-void waitstart(int port, struct termios *old);
+int waitstart(int port, struct termios *old);
 int WaitAck(int port,uint8_t *pac, struct termios *old);
 void PrintPkt(unsigned char *pkt);
 int make_schedule_frame(uint8_t *pkt,uint8_t *data,int len,int day,int channel,uint32_t *sch);
