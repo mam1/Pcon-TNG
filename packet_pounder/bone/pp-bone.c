@@ -86,7 +86,7 @@ int main(void){
 	printf("start test of sending a serial stream to bone UART1 <%s>\ninitializing UART1\n", _MODEMDEVICE);
 	Serial = SerialInit(_MODEMDEVICE,B9600,&oldtio);
 	printf("UART1 initialized\n");
-  printf("\n  s - send _SOH to UART1\n");
+  printf("\n  s - send schedule packet to UART1\n");
   printf("  h - send packet header to UART1\n");
   printf("  p - send ping packet to UART1\n");
   printf("  r - recieve a byte from UART1\n");
@@ -100,21 +100,32 @@ int main(void){
         return 0;
         break;
       case 's':
-        cc = 255;
-        printf("sending <%02x> to UART1\n> ",cc);
-        PutByte(Serial,cc);
-        cc = 255;
-        printf("sending <%02x> to UART1\n> ",cc);
-        PutByte(Serial,cc);
-        cc = 'c';
-        printf("sending <%02x> to UART1\n> ",cc);
-        PutByte(Serial,cc);
-        cc = 'd';
-        printf("sending <%02x> to UART1\n> ",cc);
-        PutByte(Serial,cc);
-        cc = 'e';
-        printf("sending <%02x> to UART1\n> ",cc);
-        PutByte(Serial,cc);
+        b = &
+        for(i=0; i<sizeof(schedul_packet); i++){
+          PutByte(Serial, *b++);
+        }
+
+
+
+
+
+
+
+        // cc = 255;
+        // printf("sending <%02x> to UART1\n> ",cc);
+        // PutByte(Serial,cc);
+        // cc = 255;
+        // printf("sending <%02x> to UART1\n> ",cc);
+        // PutByte(Serial,cc);
+        // cc = 'c';
+        // printf("sending <%02x> to UART1\n> ",cc);
+        // PutByte(Serial,cc);
+        // cc = 'd';
+        // printf("sending <%02x> to UART1\n> ",cc);
+        // PutByte(Serial,cc);
+        // cc = 'e';
+        // printf("sending <%02x> to UART1\n> ",cc);
+        // PutByte(Serial,cc);
         break;
       case 'h':
         cc = _SOH;
