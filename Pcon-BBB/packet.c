@@ -131,9 +131,28 @@ void BuildPkt(uint8_t N, unsigned char *frame, unsigned char *pkt) {
    return;
 }
 
-void SndPacket(int Port, unsigned char *pkt ) {
-   int  i,len;
-   uint8_t Ck1;
+void SndPacket(int Port, unsigned char *pkt,struct termios *old ) {
+    int       trys;
+
+    trys = _RETRY;
+    while(trys >0){
+      if(Snd_P(Port, pkt, old))
+        trys -= 1;
+      else 
+        return;
+      }
+    }
+    printf("*** problem sending packet\n");
+    printf("    no scucess after %d trys\n", _RETRY);
+    printf("application terminated\n");
+    exit(-1);
+    return;
+}
+
+int Snd_P(int Port, unsigned char *pkt, struct termios *old ) {
+   int            i,len;
+   uint8_t        Ck1;
+   uint8_t        RcvPkt[_MAX_PACKET];
    len = *pkt;
    PutByte(Port,_SOH);               // Send start of packet
    PutByte(Port,_STX);               // Send start of packet
@@ -147,7 +166,10 @@ void SndPacket(int Port, unsigned char *pkt ) {
    Ck1 %= 256;
    *pkt = Ck1;
    PutByte(Port, Ck1 );               // Send the checksum
+   RcvPacket(Port,&RcvPkt,old)
+   return;
 }
+
 
 uint8_t RcvPacket(int port, uint8_t *pkt, struct termios *old) {
    uint8_t  Ck1, Ck2, N, i;

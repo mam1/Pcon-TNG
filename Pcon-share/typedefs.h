@@ -76,6 +76,11 @@ typedef union { unsigned int MyLong; unsigned char MyByte[4]; } _packed;
 //typedef uint8_t sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE]; _SCHEDULE;
 
 
+
+//typedef union { unsigned int Mbyt[_MAX_PACKET]; _packet *Mpkt; } spack;
+
+
+
 typedef struct {
     uint8_t length; // total packet length including length and checksum byte
     uint8_t data[_MAX_PACKET]; // add 1 for checksum

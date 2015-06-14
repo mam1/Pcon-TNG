@@ -20,6 +20,7 @@ uint8_t GetByte(int Port, struct termios *old,int *error_code);
 uint8_t PutByte(int Port, unsigned char c);
 void BuildPkt(uint8_t N, unsigned char *frame, unsigned char *pkt);
 void SndPacket(int Port, unsigned char *pkt );
+int Snd_P(int Port, unsigned char *pkt );
 uint8_t RcvPacket(int port, uint8_t *pkt, struct termios *old);
 int waitstart(int port, struct termios *old);
 int WaitAck(int port,uint8_t *pac, struct termios *old);

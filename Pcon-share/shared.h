@@ -41,6 +41,7 @@
 #define _MAX_PACKET		253
 #define _TIMEOUT_USEC	0
 #define _TIMEOUT_SEC 	30
+#define _RETRY			6
 
 /* channel parameters */
 #define _NUMBER_OF_CHANNELS 	8

@@ -167,32 +167,9 @@ int main(void) {
      		printf("    sending day %i channel %i ....",day, channel);
      		sch_ptr = get_schedule((uint32_t *)sdat.sch,day,channel);
      		make_schedule_frame(SndPkt,(uint8_t*)&schedule_frame,sizeof(schedule_frame),day,channel,sch_ptr);
-     		SndPacket(Port, SndPkt);
-     		if(WaitAck(Port,RcvPkt,&oldtio)){
-    			printf(" received ack from the prop\n\r");
-     		}
-
-    		else {
-    			// sleep(1);
-    			printf(" received nack from the prop\n\r");
-    			printf("\napplication terminated\n\n\r");
-    			if(ping_prop()){
-					printf("\n *** ping failed\n");
-					printf("\napplication terminated\n\n\r");
-	 				return -1;
-	 			}
-	 		else {
-	 				printf("    sending day %i channel %i ....",day, channel);
-     				sch_ptr = get_schedule((uint32_t *)sdat.sch,day,channel);
-     				make_schedule_frame(SndPkt,(uint8_t*)&schedule_frame,sizeof(schedule_frame),day,channel,sch_ptr);
-     				SndPacket(Port, SndPkt);
-     				if(WaitAck(Port,RcvPkt,&oldtio)){
-    					printf(" received ack from the prop\n\r");
-     				}
-    				else return -1;
-	 			}
-    		}
-    	}
+     		SndPacket(Port, SndPkt,&oldtio);
+    		printf(" received ack from the prop\n\r");
+     	}
      }
 
 	/* setup control block pointers */
