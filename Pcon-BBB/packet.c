@@ -150,24 +150,28 @@ void SndPacket(int Port, unsigned char *pkt,struct termios *old ) {
 }
 
 int Snd_P(int Port, unsigned char *pkt, struct termios *old ) {
-   int            i,len;
-   uint8_t        Ck1;
-   uint8_t        RcvPkt[_MAX_PACKET];
-   len = *pkt;
-   PutByte(Port,_SOH);               // Send start of packet
-   PutByte(Port,_STX);               // Send start of packet
-   PutByte(Port,*pkt++);             // Send packet size   
-   Ck1 = 0;                          // Clear the checksum
-   for (i=0; i<len-1; i++) {
-       PutByte(Port,*pkt);           // Send the next data character 
-       Ck1 += *pkt;                  // Accumulate the checksum
-       pkt++;                        // next byte
-   }
-   Ck1 %= 256;
-   *pkt = Ck1;
-   PutByte(Port, Ck1 );               // Send the checksum
-   RcvPacket(Port,&RcvPkt,old)
-   return;
+     int            i,len;
+     uint8_t        Ck1;
+     uint8_t        RcvPkt[_MAX_PACKET];
+     len = *pkt;
+     PutByte(Port,_SOH);               // Send start of packet
+     PutByte(Port,_STX);               // Send start of packet
+     PutByte(Port,*pkt++);             // Send packet size   
+     Ck1 = 0;                          // Clear the checksum
+     for (i=0; i<len-1; i++) {
+         PutByte(Port,*pkt);           // Send the next data character 
+         Ck1 += *pkt;                  // Accumulate the checksum
+         pkt++;                        // next byte
+     }
+     Ck1 %= 256;
+     *pkt = Ck1;
+     PutByte(Port, Ck1 );               // Send the checksum
+     len = RcvPacket(Port,&RcvPkt,old)  // look for a response from the C3
+     if( len != 3)
+        return -1;
+    if(RcPkt[1] == _ACK_F)
+        return 0;
+    return -1;
 }
 
 
