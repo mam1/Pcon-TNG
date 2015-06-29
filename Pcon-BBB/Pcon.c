@@ -77,16 +77,14 @@ void prompt(void){
 int ping_prop(void){
 	/* see if the C3 is there */
     BuildPkt(sizeof(ping_frame), (uint8_t *)&ping_frame, SndPkt);
-    SndPacket(Port, SndPkt);
     printf(" ping frame sent to UART1 - ");
-    if(WaitAck(Port,RcvPkt,&oldtio))
-        printf(" received ack from the prop\n\r");
-    else {
-    	printf("*** can not detect a prop\n\r");
+    if(Snd_P(Port, SndPkt, &oldtio)){
+    	printf("cannot detect a prop\n\r");
     	printf("\napplication terminated\n\n\r");
     	return -1;
     }
-return 0;
+    printf(" received ack from the prop\n\r");
+	return 0;
 
 }
 /********************************************************************/
@@ -149,7 +147,7 @@ int main(void) {
 	}
 
 	/* open UART1 to connect to BBB */
-	Port = SerialInit(_MODEMDEVICE,B9600,&oldtio);
+	Port = SerialInit(_MODEMDEVICE,B115200,&oldtio);
 	printf(" serial connection to the C3 opened on port %d\r\n", Port);
 
 	/* see if the C3 is there */
@@ -160,20 +158,21 @@ int main(void) {
 	 }
 
     /* send schedules to C3 */
-    printf(" sending schedules to C3\n\r");
+    printf(" sending schedules to C3 - ");
      for(day = 0;day < _DAYS_PER_WEEK; day++){
      	for(channel = 0; channel < _NUMBER_OF_CHANNELS; channel++){
  //    		sleep(1);
-     		printf("    sending day %i channel %i ....",day, channel);
+ //    		printf("    sending day %i channel %i ....",day, channel);
      		sch_ptr = get_schedule((uint32_t *)sdat.sch,day,channel);
      		make_schedule_frame(SndPkt,(uint8_t*)&schedule_frame,sizeof(schedule_frame),day,channel,sch_ptr);
      		SndPacket(Port, SndPkt,&oldtio);
-    		printf(" received ack from the prop\n\r");
+ //   		printf(" received ack from the prop\n\r");
      	}
      }
+     printf(" schedules sent\n");
 
 	/* setup control block pointers */
-	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm controll block to allow acces to system data
+	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm control block to allow acces to system data
 	cmd_fsm_cb.w_sch_ptr = (uint32_t *)cmd_fsm_cb.w_sch;
 	cmd_fsm_cb.sdat_ptr->sch_ptr = (uint32_t *)cmd_fsm_cb.sdat_ptr->sch;
 

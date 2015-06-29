@@ -21,7 +21,7 @@
 #define _TIME_F         3 // set real time clock to the time/date in frame, send ack to sender
 #define _PING_F     	4 // request for ping, send ping data in frame back to sender 
 #define _ACK_F         	5 //
-#define _NACK_F         	6 //
+#define _NACK_F         6 //
 #define _REBOOT_F      	7 // reboot the C3, program load from EEPROM 
 
 /* shared bone-C3 commands */
@@ -37,7 +37,7 @@
 
 /* serial communication bone / prop */
 #define _MODEMDEVICE   "/dev/ttyO1"	//Beaglebone Black serial port
-#define _BAUD			9600
+#define _BAUD			115200
 #define _MAX_PACKET		253
 #define _TIMEOUT_USEC	0
 #define _TIMEOUT_SEC 	30

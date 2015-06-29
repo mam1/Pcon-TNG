@@ -44,17 +44,13 @@ void packet_cog(void *parm)
     volatile _packet *pkt = 0;
     
     for (;;) { // for (ever)
-        // got a char?
-        if (fdserial_rxReady((fdserial*)grec)) {
-
-            // wait for a packet header
-            while ((c1!=_SOH) || (c2!=_STX)) { 
+        if(fdserial_rxReady((fdserial*)grec)) {  // check for a something in buffer
+            while ((c1!=_SOH) || (c2!=_STX)) {    // wait for a packet header
               c1 = c2;
-              c2 = fdserial_rxTime((fdserial*)grec,10);
+              if(fdserial_rxReady((fdserial*)grec))
+                  c2 = fdserial_rxCheck((fdserial*)grec);
             };
-
-            // read length
-            len = fdserial_rxChar((fdserial*)grec);
+            len = fdserial_rxChar((fdserial*)grec); // read length
             if (len > -1) {
                 //OUTA |= LED2;
                 // read into packet packet
@@ -115,7 +111,6 @@ int packet_make(_packet *pkt, char *s, int len)
     return n;
 }
 
-
 int packet_send(fdserial *port, _packet *pkt)
 {
     int n;
@@ -148,18 +143,11 @@ int packet_print(_packet *pkt)
 {
     int n;
     int len = pkt->length;
-    printi("\npacket len %d : ", len);
+    printi("len %d :", len);
     for (n = 0; n < len; n++) {
         printi(" %02x", pkt->data[n]);
     }
     printi("\n");
     return 0;
 }
-
-void send_ack(fdserial *port, _ack_frame *f, _packet *p){
-  packet_make(p,f,sizeof(*f));
-  printi("*******\n");
-  packet_print(p);
-  packet_send(port,p);
-  return;
-}  
+ 

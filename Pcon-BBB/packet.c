@@ -71,7 +71,7 @@ int SerialInit(char *device, int bps, struct termios *old) {
       SerialError(sport,old);
     }
     bzero(&newtio, sizeof(newtio)); // clear struct for new port settings 
-    tcgetattr(sport, &newtio);
+    // tcgetattr(sport, &newtio);
     newtio.c_cflag = bps | CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR;
     newtio.c_oflag = 0;
@@ -94,27 +94,16 @@ uint8_t GetByte(int Port,struct termios *old,int *error_code){
       perror("select"); /* an error accured */
       SerialError(Port, old);
     }
+
     else if(rv == 0){
-      printf("\n*** read timeout\n\r"); /* a timeout occured */
-      rv = select(Port + 1, &set, NULL, NULL, &timeout);
-      if(rv == 0){
-        printf("\n*** read timeout\n\r"); /* a timeout occured */
+        printf("\n    read timeout\n\r"); /* a timeout occured */
         *error_code = 1;
-        // SerialError(Port, old);
-      }
-      if(rv == -1){
-        perror("select"); /* an error accured */
-        *error_code = 2;
-        // SerialError(Port, old);
-      }
-      read(Port, &x, sizeof(x)); /* there was data to read */
-      *error_code = 0;
-      SerialError(Port, old);
+        return 0;
     }
-    else
-      read(Port, &x, sizeof(x)); /* there was data to read */
-  *error_code = 0;
-  return x; 
+
+    read(Port, &x, sizeof(x)); /* there was data to read */
+    *error_code = 0;
+    return x; 
 }
 
 uint8_t PutByte(int Port, unsigned char c){
@@ -136,11 +125,14 @@ void SndPacket(int Port, unsigned char *pkt,struct termios *old ) {
 
     trys = _RETRY;
     while(trys >0){
-      if(Snd_P(Port, pkt, old))
+      if(Snd_P(Port, pkt, old)){
+        printf("    packet sent, try = %d\n",trys);
         trys -= 1;
+        sleep(2);
+        // WaitAck(Port,pkt, old);
+      }
       else 
         return;
-      }
     }
     printf("*** problem sending packet\n");
     printf("    no scucess after %d trys\n", _RETRY);
@@ -166,10 +158,15 @@ int Snd_P(int Port, unsigned char *pkt, struct termios *old ) {
      Ck1 %= 256;
      *pkt = Ck1;
      PutByte(Port, Ck1 );               // Send the checksum
-     len = RcvPacket(Port,&RcvPkt,old)  // look for a response from the C3
-     if( len != 3)
-        return -1;
-    if(RcPkt[1] == _ACK_F)
+     usleep(100);
+     len = RcvPacket(Port,RcvPkt,old);  // look for a response from the C3
+     if(len==0)
+      return -1;
+     // printf("received a %d byte packet from the C3\n",len);
+     // if( len != 3)
+     //    return -1;
+      // printf("packet type <%02x>\n",RcvPkt[1]);
+    if(RcvPkt[1] == _ACK_F)
         return 0;
     return -1;
 }
@@ -186,6 +183,7 @@ uint8_t RcvPacket(int port, uint8_t *pkt, struct termios *old) {
         printf("g1 err = %i\n",err);
         return 0; 
       }
+   *pkt++ = N;
    Ck1 = 0;                              // Start with checksum at zero
    for (i=0; i<N-1; i++) {
       *pkt = GetByte(port, old, &err);                  // Get next byte, save it in Packet buffer
@@ -213,7 +211,8 @@ int waitstart(int port, struct termios *old) {             // This waits for soh
     c1 = c2; 
     c2 = GetByte(port, old, &err);
       if(err){
-        printf("g10 err = %i\n",err);
+        printf("    timeout in waitstart err = %i\n",err);
+        tcflush(port, TCIFLUSH);
         return -1; 
       }
   }

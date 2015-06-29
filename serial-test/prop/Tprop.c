@@ -12,42 +12,50 @@
 #define _RX 1
 #define _TX 0
 #define _MODE 0
-#define _BAUD 9600
+#define _BAUD 115200
 
 /*  globals */
 fdserial 			      *Serial;
 _packet             pkt;
 _ack_frame          ack_frame = {.f_type = _ACK_F, .ack_byte = _ACK};
+_nack_frame         nack_frame = {.f_type = _NACK_F, .nack_byte = _NACK};
+_packet             ack_packet;
+_packet             nack_packet;
+
+
 //_schedule_frame    schedule_frame;  
 
 int main(void)
 {
-  int             i, c; 
+  int             i;
+  
+  /* build reusable ack and nack packets */
+  packet_make(&ack_packet, (char *)&ack_frame, sizeof(ack_frame));
+  packet_make(&nack_packet, (char *)&nack_frame, sizeof(nack_frame));
+  /* open a fullduplex serial connection to the UART1 on the bone */
   Serial = fdserial_open(_RX,_TX,_MODE,_BAUD);
   printi("serial port opened\n"); 
-  _packetart(Serial);
+  _packetart(Serial); // start cog to monitor serial connection
   printi("starting cog to monitor serial connection to the BeagleBone\n"); 	
   printi("\n*************************************\n\n");
   for(;;){
     if (packet_ready()) {
-        packet_print(&pkt);
         packet_read(&pkt);
-        printi("\nPacket dequeued");
+        printi("Packet dequeued\n  ");
         packet_print(&pkt);
         i = 0;
         switch(pkt.data[i++]){
           case _PING_F:
-            printi("received a ping frame \n");
-            send_ack(Serial,&ack_frame,&pkt);
-            printi("sent an ack to bone\n");           
+            printi("  received a ping frame \n");
+            packet_send(Serial,&ack_packet);        
             break;
           case _SCHEDULE_F:
-            printi("received a schedule frame \n");
-            send_ack(Serial,&ack_frame,&pkt);
-            printi("sent an ack to bone\n");           
+            printi("  received a schedule frame \n");
+            packet_send(Serial,&ack_packet);        
             break;
           default: 
-            printi("*** error *** unknown packet type\n");
+            printi("  unknown packet type\n");
+            packet_send(Serial,&nack_packet);        
           }            
     }                  	
   }    

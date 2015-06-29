@@ -67,6 +67,11 @@ typedef struct {
   uint8_t     ack_byte;
 } _ack_frame;  
 
+typedef struct {
+  uint8_t     f_type;
+  uint8_t     nack_byte;
+} _nack_frame;
+
 void packet_cog(void *parm);
     
 void _packetart(fdserial *rec);
