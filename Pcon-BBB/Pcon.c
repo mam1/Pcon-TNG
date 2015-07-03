@@ -169,7 +169,7 @@ int main(void) {
  //   		printf(" received ack from the prop\n\r");
      	}
      }
-     printf(" schedules sent\n");
+     printf(" schedules downloaded\n");
 
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm control block to allow acces to system data

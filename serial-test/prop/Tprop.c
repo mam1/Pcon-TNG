@@ -51,7 +51,10 @@ int main(void)
             break;
           case _SCHEDULE_F:
             printi("  received a schedule frame \n");
-            packet_send(Serial,&ack_packet);        
+//            if(marshal_schedule(&pkt.data[i],))
+              packet_send(Serial,&ack_packet);
+//            else 
+//              packet_send(Serial,&nack_packet);                   
             break;
           default: 
             printi("  unknown packet type\n");
