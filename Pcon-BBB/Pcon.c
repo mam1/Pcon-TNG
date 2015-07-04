@@ -158,18 +158,18 @@ int main(void) {
 	 }
 
     /* send schedules to C3 */
-    printf(" sending schedules to C3 - ");
-     for(day = 0;day < _DAYS_PER_WEEK; day++){
+    printf(" sending schedules to C3\n");
+     for(day = 0;day < _DAYS_PER_WEEK; day++)
      	for(channel = 0; channel < _NUMBER_OF_CHANNELS; channel++){
  //    		sleep(1);
- //    		printf("    sending day %i channel %i ....",day, channel);
+    		// printf("    sending day %i channel %i ....",day, channel);
      		sch_ptr = get_schedule((uint32_t *)sdat.sch,day,channel);
      		make_schedule_frame(SndPkt,(uint8_t*)&schedule_frame,sizeof(schedule_frame),day,channel,sch_ptr);
      		SndPacket(Port, SndPkt,&oldtio);
+     		printf("  .\n");
  //   		printf(" received ack from the prop\n\r");
-     	}
      }
-     printf(" schedules downloaded\n");
+     printf("\n schedules downloaded\n");
 
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm control block to allow acces to system data

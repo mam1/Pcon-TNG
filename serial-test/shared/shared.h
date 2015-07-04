@@ -33,7 +33,7 @@
 
 #define _MODEMDEVICE "/dev/ttyO1"	//Beaglebone Black serial port
 
-#define _MAX_PACKET	254
+//#define _MAX_PACKET	254
 
 #define      False 0
 #define      True 1

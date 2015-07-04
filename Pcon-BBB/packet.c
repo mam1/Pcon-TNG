@@ -121,14 +121,15 @@ void BuildPkt(uint8_t N, unsigned char *frame, unsigned char *pkt) {
 }
 
 void SndPacket(int Port, unsigned char *pkt,struct termios *old ) {
-    int       trys;
+    int       trys, cnt;
 
     trys = _RETRY;
+    cnt = 1;
     while(trys > 0){
       if(Snd_P(Port, pkt, old)){
-        printf("\n  error from Snd_P, resenting packet, try = %d\n",trys);
+        printf("\n  error from Snd_P, resenting packet, try = %d\n",cnt++);
         trys -= 1;
-        sleep(1);
+        usleep(1000);
         // WaitAck(Port,pkt, old);
       }
       else 
@@ -146,8 +147,8 @@ int Snd_P(int Port, unsigned char *pkt, struct termios *old ) {
      uint8_t        Ck1;
      uint8_t        RcvPkt[_MAX_PACKET];
      len = *pkt;
-     printf("sending packet :");
-     PrintPkt(pkt);
+     // printf("\nsending packet :");
+     // PrintPkt(pkt);
      PutByte(Port,_SOH);               // Send start of packet
      PutByte(Port,_STX);               // Send start of packet
      PutByte(Port,*pkt++);             // Send packet size   
@@ -171,14 +172,14 @@ int Snd_P(int Port, unsigned char *pkt, struct termios *old ) {
      //    return -1;
       // printf("packet type <%02x>\n",RcvPkt[1]);
     if(RcvPkt[1] == _ACK_F){
-      printf("received an ack\n");
+      // printf("received an ack\n");
       return 0;
     }
       if(RcvPkt[1] == _NACK_F){
-      printf("received an nack\n");
+      // printf("received an nack\n");
       return 0;
     }
-    printf("received a fram type of <%02x>\n",RcvPkt[1]);
+    printf("??? received a frame type of <%02x>, expecting ack or nack\n",RcvPkt[1]);
     PrintPkt(RcvPkt);
     return -1;
 }

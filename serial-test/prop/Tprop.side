@@ -2,6 +2,9 @@ Tprop.c
 packet.c
 packet.h
 shared.h -> ../shared/shared.h
+typedefs.h -> ../../Pcon-share/typedefs.h
+schedule.c
+schedule.h
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os

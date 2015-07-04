@@ -125,7 +125,7 @@ typedef struct {
 
 typedef struct {
   uint8_t     f_type;
-  uint8_t     ack_byte;
+  uint8_t     nack_byte;
 } _nack_frame;  
 
 

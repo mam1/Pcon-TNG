@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include "packet.h"
 #include "shared.h"
+#include "typedefs.h"
+
+//_schedule_frame    schedule_frame;
 
 static volatile _packet queue[PACKET_QLEN];
 static volatile int qhead = 0;
@@ -150,4 +153,42 @@ int packet_print(_packet *pkt)
     printi("\n");
     return 0;
 }
+
+/********************************************************
+ **              Pack / UnPack  Routines               ** 
+ **  Insert / remove propeller long from the Packet    **
+ ********************************************************/
+void PackLong(uint8_t *p, _packed N) { // N - 4 byte long,   p - insertion point
+    *p = N.MyByte[0];  p++;
+    *p = N.MyByte[1];  p++;
+    *p = N.MyByte[2];  p++;
+    *p = N.MyByte[3];  p++;
+}
+
+int UnPackLong(uint8_t *p) {   // p pointer to start of 4 byte long
+    _packed N; 
+    N.MyByte[0] = *p;  p++;
+    N.MyByte[1] = *p;  p++;
+    N.MyByte[2] = *p;  p++;
+    N.MyByte[3] = *p;  p++;
+    return N.MyLong;
+}
+
+
+int marshal_schedule(uint8_t *ptr,_schedule_frame *sf){
+    int     i;
+  
+    sf->f_type = *ptr++;
+    sf->day = *ptr++;
+    sf->channel = *ptr++;
+    sf->rcnt = *ptr++;
  
+    for(i = sf->rcnt+1; i > 0; i--){
+      sf->rec[i] = UnPackLong(ptr); 
+      ptr += 4;
+    } 
+  return 0;
+} 
+
+
+    

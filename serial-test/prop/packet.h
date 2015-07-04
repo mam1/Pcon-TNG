@@ -27,6 +27,8 @@
 #include "simpletext.h"
 #include "fdserial.h"
 #include "shared.h"
+#include "typedefs.h"
+
 
 
 //typedef struct _packetruct {
@@ -34,10 +36,10 @@
 //    uint8_t data[PACKET_DLEN+1]; // add 1 for checksum
 //} _packet;
 
-typedef struct {
-    uint8_t length; // total packet length including length and checksum byte
-    uint8_t data[PACKET_DLEN+1]; // add 1 for checksum
-} _packet;
+//typedef struct {
+//    uint8_t length; // total packet length including length and checksum byte
+ //   uint8_t data[PACKET_DLEN+1]; // add 1 for checksum
+//} _packet;
 /*
 typedef struct {
   uint8_t       f_type;
@@ -62,16 +64,17 @@ typedef struct {
 	int 		off_time;
 } _channel_data;  
 */
+/*
 typedef struct {
   uint8_t     f_type;
   uint8_t     ack_byte;
-} _ack_frame;  
-
+} 
 typedef struct {
   uint8_t     f_type;
   uint8_t     nack_byte;
 } _nack_frame;
-
+_ack_frame;  
+*/
 void packet_cog(void *parm);
     
 void _packetart(fdserial *rec);
@@ -84,6 +87,9 @@ int packet_read(_packet *pkt);
 int packet_print(_packet *pkt);
 
 void send_ack(fdserial *port, _ack_frame *f, _packet *p);
+void send_nack(fdserial *port, _nack_frame *f, _packet *p);
+
+int marshal_schedule(uint8_t *ptr,_schedule_frame *sf);
 
 
 #endif
