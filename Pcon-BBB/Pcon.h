@@ -2,7 +2,7 @@
 #define PCON_H_
 
 #define _TRACE
-#define _SYSTEM_DATA_FILE		"/media/Pcon-data/Pcon.dat" //sd card file
+#define _SYSTEM_DATA_FILE		"/home/rsync-Mint/Pcon.dat" //sd card file
 #include "../Pcon-share/shared.h"
 
 /* character parser fsm */
