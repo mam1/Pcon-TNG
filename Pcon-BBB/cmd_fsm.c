@@ -45,6 +45,8 @@ extern char *c_mode[4];
 	char			trace_buf[128];
 #endif
 
+_tm 			tm;
+
 /***************************************/
 /*****  command  parser fsm start ******/
 /***************************************/
@@ -59,8 +61,8 @@ char    *keyword[_CMD_TOKENS] = {
 /*  5 */    "schedule",                                                                                                 
 /*  6 */    "ping",                                                                                 
 /*  7 */    "clock",
-/*  8 */    "",     //
-/*  9 */    "",     //
+/*  8 */    "yes",     //
+/*  9 */    "cancel",     //
 /* 10 */    "replace",
 /* 11 */    "edit",
 /* 12 */    "delete",
@@ -95,8 +97,8 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /*  4 */    "",
 /*  5 */    "edit the system schedule",
 /*  6 */    "send a ping to the C3",
-/*  7 */    "set the PCF8563 real tim clock",
-/*  8 */    "",
+/*  7 */    "build time date structure to set PCF8563 real tim clock",
+/*  8 */    "set PCF8563",
 /*  9 */    "",
 /* 10 */    "the system schedule with the contents of the edit buffer",
 /* 11 */    "edit system schedule",
@@ -184,8 +186,8 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  5  schedule */  { 7,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  6  ping     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  7  clock    */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21},
-/*  8  $        */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/*  9  $        */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  8  yes      */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  9  cancel   */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 10  replace  */  { 0,  1,  2,  3,  5,  5,  6,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 11  edit     */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 12  delete   */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -252,24 +254,30 @@ int c_36(CMD_FSM_CB *); /* append state 0 prompt to prompt buffer */
 int c_37(CMD_FSM_CB *); /* display debug data */
 int c_38(CMD_FSM_CB *); /* state 7 prompt */
 int c_39(CMD_FSM_CB *); /* replace system schedule */
-
-
-
+int c_40(CMD_FSM_CB *); /* set real time clock */
+int c_41(CMD_FSM_CB *); /* set real time clock hours */
+int c_42(CMD_FSM_CB *); /* set real time clock minutes */
+int c_43(CMD_FSM_CB *); /* set real time clock seconds */
+int c_44(CMD_FSM_CB *); /* set real time clock month */
+int c_45(CMD_FSM_CB *); /* set real time clock day */
+int c_46(CMD_FSM_CB *); /* set real time clock year */
+int c_47(CMD_FSM_CB *); /* set real time clock day of the week */
+int c_48(CMD_FSM_CB *); /* set PCF8563 */
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21  */
-/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30, c_35, c_33, c_21,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30, c_35, c_33, c_21,  c_0, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_0,  c_0},
 /*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2  $        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  3  *        */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0, c_31, c_32,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  4  $        */  { c_0,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_0,  c_0,  c_0,  c_0},
 /*  5  schedule */  {c_28,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  6  ping     */  { c_2,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  7  clock    */  { c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  8  $        */  { c_0, c_34,  c_0,  c_0, c_34,  c_0, c_18, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  9  $        */  { c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  6  ping     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+/*  7  clock    */  {c_40,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+/*  8  yes      */  { c_0, c_34,  c_0,  c_0, c_34,  c_0, c_18, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_48,  c_0},
+/*  9  cancel   */  { c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0, c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 10  replace  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_39,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  edit     */  { c_7,  c_0,  c_0,  c_0, c_28,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  delete   */  { c_7,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_7,  c_0,  c_0,  c_0,  c_0, c_24,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -278,7 +286,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 15  off      */  { c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_7,  c_7,  c_0,  c_0,  c_0,  c_7, c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 16  clear    */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 17  status   */  { c_6,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 18  time     */  { c_0, c_11,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 18  time     */  { c_2, c_11,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2},
 /* 19  t&s      */  { c_7, c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 20  cycle    */  { c_0, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 21  startup  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -530,7 +538,7 @@ int c_1(CMD_FSM_CB *cb)
     c_34(cb);  // state 0 prompt
     return 0;    
 }
-/* ping BBB */
+/* display time and date from PCF8563 */
 int c_2(CMD_FSM_CB *cb)
 {
     _tm         tm;
@@ -541,8 +549,8 @@ int c_2(CMD_FSM_CB *cb)
     /* read the clock */
     get_tm(rtc,&tm);
     sleep(1);
-    printf("         after set  %02i:%02i:%02i  %02i/%02i/%02i  dow %i\n",
-        tm.tm_hour,tm.tm_min,tm.tm_sec,tm.tm_mon,tm.tm_mday,tm.tm_year,tm.tm_wday);
+    printf("  %02i:%02i:%02i  %s %02i/%02i/%02i\n\n\r",
+        tm.tm_hour,tm.tm_min,tm.tm_sec,day_names_long[tm.tm_wday],tm.tm_mon,tm.tm_mday,tm.tm_year);
     close(rtc);
 
 	return 0;
@@ -1210,9 +1218,105 @@ int c_39(CMD_FSM_CB *cb)
 
    /* build prompt */
    c_34(cb);
-   
+
    return 0; 
 }
+
+/* set real time clock */ 
+int c_40(CMD_FSM_CB *cb)
+{
+
+   /* build prompt */
+   strcpy(cmd_fsm_cb.prompt_buffer,"\r\nenter time, date and day of the week -  <Hour>:<Min>:<Sec> <month><day><year> <dow>\r\n> ");
+   return 0; 
+}
+
+/* set real time clock hours */ 
+int c_41(CMD_FSM_CB *cb)
+{
+	tm.tm_hour = cb->token_value;
+
+	/* build prompt */
+   	strcpy(cmd_fsm_cb.prompt_buffer,"\r\nenter minutes\r\n> ");
+   	return 0; 
+}
+
+/* set real time clock minutes */ 
+int c_42(CMD_FSM_CB *cb)
+{
+	tm.tm_min = cb->token_value;   
+	/* build prompt */
+   	strcpy(cmd_fsm_cb.prompt_buffer,"\r\nenter seconds\r\n> ");
+   	return 0; 
+}
+
+/* set real time clock seconds */ 
+int c_43(CMD_FSM_CB *cb)
+{
+	tm.tm_sec = cb->token_value;   
+	/* build prompt */
+   	strcpy(cmd_fsm_cb.prompt_buffer,"\r\nenter month\r\n> ");
+   	return 0; 
+}
+
+/* set real time clock month */ 
+int c_44(CMD_FSM_CB *cb)
+{
+	tm.tm_mon = cb->token_value;   
+	/* build prompt */
+   	strcpy(cmd_fsm_cb.prompt_buffer,"\r\nenter day\r\n> ");
+   	return 0; 
+}
+
+/* set real time clock day */ 
+int c_45(CMD_FSM_CB *cb)
+{
+	tm.tm_mday = cb->token_value;   
+	/* build prompt */
+   	strcpy(cmd_fsm_cb.prompt_buffer,"\r\nenter year\r\n> ");
+   	return 0; 
+}
+
+/* set real time clock year */ 
+int c_46(CMD_FSM_CB *cb)
+{
+	tm.tm_year = cb->token_value;   
+	/* build prompt */
+   	strcpy(cmd_fsm_cb.prompt_buffer,"\r\nenter day of the week number <sun=0, mon=1, ...>\r\n> ");
+   	return 0; 
+}
+
+/* set real time clock day of the week */ 
+int c_47(CMD_FSM_CB *cb)
+{
+	tm.tm_wday = cb->token_value; 	
+	printf("  set real time clock to:  %02i:%02i:%02i  %s %02i/%02i/%02i\n\n\r",
+        tm.tm_hour,tm.tm_min,tm.tm_sec,day_names_long[tm.tm_wday],tm.tm_mon,tm.tm_mday,tm.tm_year);  
+	/* build prompt */
+   	strcpy(cmd_fsm_cb.prompt_buffer,"\r\n<yes><cancel>\r\n> ");
+   	return 0; 
+}
+
+/* set PCF8563  */ 
+int c_48(CMD_FSM_CB *cb)
+{
+	int         rtc;
+
+	/* Open the i2c-0 bus */
+	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);
+	/* read the clock */
+	set_tm(rtc,&tm);
+	close(rtc);
+
+	c_2(cb);
+
+	/* build prompt */
+   	c_34(cb);
+   	return 0; 
+}
+
+
+
 /**************** end command fsm action routines ******************/
 
 /* cycle state machine */
