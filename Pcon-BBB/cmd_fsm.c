@@ -196,7 +196,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 15  off      */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 16  clear    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 17  status   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 18  time     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21},
+/* 18  time     */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21},
 /* 19  t&s      */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 20  cycle    */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 21  startup  */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -220,7 +220,7 @@ int c_2(CMD_FSM_CB *); /* display time */
 int c_3(CMD_FSM_CB *); /* terminate program */
 int c_4(CMD_FSM_CB *); /* set working channel number*/
 int c_5(CMD_FSM_CB *); /* set channel name for working channel */
-int c_6(CMD_FSM_CB *); /* display channel data */
+int c_6(CMD_FSM_CB *); /* status - display channel data */
 int c_7(CMD_FSM_CB *); /* command not valid in current state */ 
 int c_8(CMD_FSM_CB *); /* command is not recognized */ 
 int c_9(CMD_FSM_CB *); /* set channel control mode to manual and turn channel on */ 
@@ -591,12 +591,12 @@ int c_5(CMD_FSM_CB *cb)
     c_36(cb);   //append state 0 prompt to prompt buffer
     return 0;
 }
-/* display channel data */
+/* status - display channel data */
 int c_6(CMD_FSM_CB *cb)
 {
     int         i;
     for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-        // printf("state <%i>\r\n",sdat.c_data[i].c_state);
+        printf("state <%i>\r\n",sdat.c_data[i].c_state);
         printf("  %s - %i %s - %s",onoff[sdat.c_data[i].c_state],i,c_mode[sdat.c_data[i].c_mode],sdat.c_data[i].name);
         if((sdat.c_data[i].c_mode) == 3)
             printf(" (%i:%i)",sdat.c_data[i].on_sec,sdat.c_data[i].off_sec);      
@@ -666,6 +666,8 @@ int c_10(CMD_FSM_CB *cb)
 int c_11(CMD_FSM_CB *cb)
 {
     char        numstr[2];
+
+    printf("cb->w_channel <%i>\n\r",cb->w_channel);
     sdat.c_data[cb->w_channel].c_mode = 1;
     save_system_data(_SYSTEM_DATA_FILE,&sdat);
     strcpy(cb->prompt_buffer,"channel ");

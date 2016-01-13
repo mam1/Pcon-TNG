@@ -36,6 +36,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     }
     /* write a null record */
     memset(&dummy, '\0', sizeof(dummy));
+    /* initialize record */
     dummy.major_version = _major_version;
     dummy.minor_version = _minor_version;
     dummy.minor_revision = _minor_revision;
