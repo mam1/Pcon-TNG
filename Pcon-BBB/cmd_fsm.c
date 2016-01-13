@@ -18,7 +18,7 @@
 #include "char_fsm.h"
 #include "cmd_fsm.h"
 #include "trace.h"
-#include "serial_io.h"
+#include "PCF8563.h"
 #include "schedule.h"
 
 
@@ -58,7 +58,7 @@ char    *keyword[_CMD_TOKENS] = {
 /*  4 */    "",        //
 /*  5 */    "schedule",                                                                                                 
 /*  6 */    "ping",                                                                                 
-/*  7 */    "",
+/*  7 */    "clock",
 /*  8 */    "",     //
 /*  9 */    "",     //
 /* 10 */    "replace",
@@ -95,7 +95,7 @@ char    *keyword_defs[_CMD_TOKENS] = {
 /*  4 */    "",
 /*  5 */    "edit the system schedule",
 /*  6 */    "send a ping to the C3",
-/*  7 */    "",
+/*  7 */    "set the PCF8563 real tim clock",
 /*  8 */    "",
 /*  9 */    "",
 /* 10 */    "the system schedule with the contents of the edit buffer",
@@ -176,14 +176,14 @@ char    *STR_def[_CMD_STATES] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21*/
-/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0},
 /*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  2  $        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  4  $        */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  5  schedule */  { 7,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  6  ping     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/*  7  $        */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/*  7  clock    */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21},
 /*  8  $        */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /*  9  $        */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 10  replace  */  { 0,  1,  2,  3,  5,  5,  6,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -194,7 +194,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 15  off      */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 16  clear    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 17  status   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-/* 18  time     */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+/* 18  time     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21},
 /* 19  t&s      */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 20  cycle    */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 /* 21  startup  */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -214,7 +214,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*cmd processor functions */
 int c_0(CMD_FSM_CB *); /* nop */
 int c_1(CMD_FSM_CB *); /* display all valid commands for the current state */
-int c_2(CMD_FSM_CB *); /* ping */
+int c_2(CMD_FSM_CB *); /* display time */
 int c_3(CMD_FSM_CB *); /* terminate program */
 int c_4(CMD_FSM_CB *); /* set working channel number*/
 int c_5(CMD_FSM_CB *); /* set channel name for working channel */
@@ -533,46 +533,19 @@ int c_1(CMD_FSM_CB *cb)
 /* ping BBB */
 int c_2(CMD_FSM_CB *cb)
 {
-    // int             i, ii, iii, iiii;
- //  int             i;
-	// int             cmd = _PING;
- //  int             ret = '\0';
- //  int             *size;
- //  uint8_t         s[4];
-  // int             s;
+    _tm         tm;
+    int         rtc;
 
- //  // size = sizeof(cb->sdat_ptr->sch);
-	// printf("  sending ping <%u> to C3 \r\n",cmd);
-	// s_wbyte(bbb,&cmd);
- //    // printf("  ping <%u> sent\r\n",cmd);
- //  s_rbyte(bbb,&ret);
- //    // printf("<%u> returned from read\n", ret);
- //  if(ret == _ACK){
- //      printf("  BBB acknowledge received <%u>\n\r",ret);
- //      printf("  send WRITE_CMD <%u> \r\n",_WRITE_SCH);
- //      cmd = _WRITE_SCH;
- //      s_wbyte(bbb,&cmd);
- //      printf("  sending schedule size <%i>\n\r",*size);
- //      for(i=0;i<4;i++){
- //          s_wbyte(bbb,(int *)&s[i]);
-      // }
-        // printf("sending schedule\r\n");
-        // iiii=0;
-        // for(i=0;i<_DAYS_PER_WEEK;i++)
-        //     for(ii=0;ii<_NUMBER_OF_CHANNELS;ii++)
-        //         for(iii=0;iii<(_SCHEDULE_SIZE);iii++){
-        //             cb->sdat_ptr->sch[i][ii][iii] = iiii++;
-        //         }
+    /* Open the i2c-0 bus */
+    rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);
+    /* read the clock */
+    get_tm(rtc,&tm);
+    sleep(1);
+    printf("         after set  %02i:%02i:%02i  %02i/%02i/%02i  dow %i\n",
+        tm.tm_hour,tm.tm_min,tm.tm_sec,tm.tm_mon,tm.tm_mday,tm.tm_year,tm.tm_wday);
+    close(rtc);
 
-        // cb->sch_ptr = (uint32_t *)cb->sdat_ptr->sch;
-        // for(i=0;i<*size;i++){
-        //     s_wbyte(bbb,(int *)cb->sch_ptr++);
-        // }
-        // return 0;
-
-    // }
-  // printf("  BBB  received <%u>\n\r",ret);
-	return 1;
+	return 0;
 }
 /* terminate program */
 int c_3(CMD_FSM_CB *cb)

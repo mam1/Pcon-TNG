@@ -14,7 +14,7 @@
 #include "char_fsm.h"
 #include "cmd_fsm.h"
 #include "trace.h"
-#include "serial_io.h"
+// #include "serial_io.h"
 
 // #include "cmd_fsm.h"
 
@@ -106,8 +106,8 @@ int main(void) {
 	}
 
 	/* open UART1 to connect to BBB */
-	bbb = s_open();
-	printf(" serial device opened handle = %d\r\n",bbb);
+	// bbb = s_open();
+	// printf(" serial device opened handle = %d\r\n",bbb);
 
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm controll block to allow acces to system data
@@ -211,14 +211,14 @@ int main(void) {
 	/* do suff while waiting or the keyboard */	
 
 	};
-	s_close(bbb);
+	// s_close(bbb);
 	system("/bin/stty cooked");			//switch to buffered iput
 	system("/bin/stty echo");			//turn on terminal echo
 	printf("\f\n***normal termination -  but should not happen\n\n");
 	return 0;
 }
 int term(int t){
-	s_close(bbb);
+	// s_close(bbb);
 	switch(t){
 	case 1:
 		system("/bin/stty cooked");			//switch to buffered iput
