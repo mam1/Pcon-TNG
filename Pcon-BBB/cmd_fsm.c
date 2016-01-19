@@ -20,17 +20,20 @@
 #include "trace.h"
 #include "PCF8563.h"
 #include "schedule.h"
+#include "ipc.h"
 
 
 /*********************** externals **************************/
  extern int             cmd_state,char_state;
  extern char            input_buffer[_INPUT_BUFFER_SIZE],*input_buffer_ptr;
  extern char            c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
- extern int 		    exit_flag;		              //exit man loop if TRUE
- extern int             trace_flag;                   //trace file is active
- extern int             bbb;				          //UART1 file descriptor
- extern CMD_FSM_CB      cmd_fsm_cb, *cmd_fsm_cb_ptr;  //cmd_fsm control block
- extern SYS_DAT         sdat;                         //system data structure
+ extern int 		    exit_flag;		              	//exit man loop if TRUE
+ extern int             trace_flag;                   	//trace file is active
+ extern int             bbb;				          	//UART1 file descriptor
+ extern CMD_FSM_CB      cmd_fsm_cb, *cmd_fsm_cb_ptr;  	//cmd_fsm control block
+ extern SYS_DAT         sdat;                         	//system data structure
+ extern IPC_DAT			ipc_dat;					  	//ipc data
+ extern void			*data; 							//pointer for shared memory
 
 
 /* code to text conversion */
@@ -40,7 +43,9 @@ extern char *onoff[2];
 extern char *con_mode[3];
 extern char *sch_mode[2];
 extern char *c_mode[4];
+
 /*********************** globals **************************/
+
 #ifdef _TRACE
 	char			trace_buf[128];
 #endif
@@ -634,9 +639,14 @@ int c_8(CMD_FSM_CB *cb)
 int c_9(CMD_FSM_CB *cb)
 {
     char        numstr[2];
+    ipc_dat.force_update = 1;					// update ipc data
+    ipc_dat.c_dat[cb->w_channel].c_mode = 0;	// update ipc data	
+    ipc_dat.c_dat[cb->w_channel].c_state = 1;	// update ipc data
+    memcpy(data,&ipc_dat,sizeof(ipc_dat));  	// move local data into shared memory
+
     sdat.c_data[cb->w_channel].c_mode = 0;
     sdat.c_data[cb->w_channel].c_state = 1;
-    save_system_data(_SYSTEM_DATA_FILE,&sdat);
+    save_system_data(_SYSTEM_DATA_FILE,&sdat);	// write data to disk
     /* build prompt */
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
@@ -650,10 +660,15 @@ int c_9(CMD_FSM_CB *cb)
 int c_10(CMD_FSM_CB *cb)
 {
     char        numstr[2];
+    ipc_dat.force_update = 1;					// update ipc data
+    ipc_dat.c_dat[cb->w_channel].c_mode = 0;	// update ipc data	
+    ipc_dat.c_dat[cb->w_channel].c_state = 0;	// update ipc data
+    memcpy(data,&ipc_dat,sizeof(ipc_dat));  	// move local data into shared memory
+
     sdat.c_data[cb->w_channel].c_mode = 0;
     sdat.c_data[cb->w_channel].c_state = 0;
-    /* build prompt */
     save_system_data(_SYSTEM_DATA_FILE,&sdat);
+    /* build prompt */
     strcpy(cb->prompt_buffer,"channel ");
     sprintf(numstr, "%d", cb->w_channel);
     strcat(cb->prompt_buffer,numstr);

@@ -6,16 +6,11 @@
 #define _minor_version 			0
 #define _minor_revision 		0
 
-/* shared bone-C3 commands */
-#define _PING         	27
-#define _ACK           	6
-#define _WRITE_CMD		1
-#define _READ_CMD		2
-#define _WRITE_SCH		3
-#define _PUSH_STATS		4
+/* sensor parameteres */
+#define _NUMBER_OF_SENSORS		10
 
 /* channel parameters */
-#define _NUMBER_OF_CHANNELS 	8
+#define _NUMBER_OF_CHANNELS 	16
 #define _CHANNEL_NAME_SIZE		20
 
 /* schedule parameters */

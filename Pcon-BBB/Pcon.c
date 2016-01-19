@@ -14,6 +14,8 @@
 #include "char_fsm.h"
 #include "cmd_fsm.h"
 #include "trace.h"
+#include "ipc.h"
+
 // #include "serial_io.h"
 
 // #include "cmd_fsm.h"
@@ -24,22 +26,21 @@ int				trace_flag;							//control program trace
 int 			bbb;								//UART1 file descriptor
 SYS_DAT 		sdat;								//system data structure
 CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
-
-
+IPC_DAT 		ipc_dat; 							//ipc data
+void			*data;								//pointer to ipc data
 
 char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
 
 uint8_t cmd_state,char_state;
+
 /***************** global code to text conversion ********************/
-char *day_names_long[7] = {
-     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+char *day_names_long[7] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
 char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 char *onoff[2] = {"off"," on"};
 char *con_mode[3] = {"manual","  time","time & sensor"};
 char *sch_mode[2] = {"day","week"};
 char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
-
 
 /***************************** support routines ********************************/
 /* write system info to stdout */
@@ -61,10 +62,12 @@ void prompt(void){
 /************************** start main  *****************************/
 /********************************************************************/
 int main(void) {
-	uint8_t c;       			//character typed on keyboard
-	int	char_state;			//current state of the character processing fsm
-	int prompted = false;	//has a prompt been sent
-	int i;
+	uint8_t 		c;       			//character typed on keyboard
+	int				char_state;			//current state of the character processing fsm
+	int 			prompted = false;	//has a prompt been sent
+	int 			i;
+	int 			fd;					//file descriptor for ipc data file
+				
 
 	/************************* setup trace *******************************/
 #ifdef _TRACE
@@ -110,7 +113,7 @@ int main(void) {
 	// printf(" serial device opened handle = %d\r\n",bbb);
 
 	/* setup control block pointers */
-	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm controll block to allow acces to system data
+	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm control block to allow acces to system data
 	cmd_fsm_cb.w_sch_ptr = (uint32_t *)cmd_fsm_cb.w_sch;
 	cmd_fsm_cb.sdat_ptr->sch_ptr = (uint32_t *)cmd_fsm_cb.sdat_ptr->sch;
 
@@ -118,6 +121,11 @@ int main(void) {
     printf(" size of schedule buffer = %i\r\n",sizeof(cmd_fsm_cb.w_sch));
     memcpy(cmd_fsm_cb.w_sch_ptr,cmd_fsm_cb.sdat_ptr->sch_ptr,sizeof(cmd_fsm_cb.w_sch));
     printf(" system schedule copied to buffer\r\n");
+
+    /* set up file mapped shared memory for inter process communication */
+    fd = ipc_open(_IPC_FILE);					// create/open ipc file
+	data = ipc_map(fd,ipc_size());				// map file to memory
+	memcpy(&ipc_dat,data,sizeof(ipc_dat));		// move shared memory data to local structure
 
 	/* initialize state machines */
 	work_buffer_ptr = (char *)work_buffer;  //initialize work buffer pointer

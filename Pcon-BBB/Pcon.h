@@ -3,6 +3,8 @@
 
 #define _TRACE
 #define _SYSTEM_DATA_FILE		"/home/rsync-Mint/Pcon.dat" //sd card file
+#define _IPC_FILE				"/home/rsync-OSX/ipc.dat"	//ipc file
+
 #include "shared.h"
 
 /* character parser fsm */
