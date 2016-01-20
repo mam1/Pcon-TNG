@@ -126,6 +126,8 @@ int main(void) {
     fd = ipc_open(_IPC_FILE);					// create/open ipc file
 	data = ipc_map(fd,ipc_size());				// map file to memory
 	memcpy(&ipc_dat,data,sizeof(ipc_dat));		// move shared memory data to local structure
+	// ipc_dat.force_update = 111;					// update ipc data
+ //    memcpy(data,&ipc_dat,sizeof(ipc_dat));  	// move local data into shared memory
 
 	/* initialize state machines */
 	work_buffer_ptr = (char *)work_buffer;  //initialize work buffer pointer
