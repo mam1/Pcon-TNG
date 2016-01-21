@@ -15,9 +15,7 @@
 #include "cmd_fsm.h"
 #include "trace.h"
 #include "ipc.h"
-
 // #include "serial_io.h"
-
 // #include "cmd_fsm.h"
 
 /******************************** globals **************************************/
@@ -68,7 +66,6 @@ int main(void) {
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
 				
-
 	/************************* setup trace *******************************/
 #ifdef _TRACE
 	trace_flag = true;
@@ -92,7 +89,7 @@ int main(void) {
 
 	/* load data from file on sd card */
 	load_system_data(_SYSTEM_DATA_FILE,&sdat);
-	printf(" system data loaded from %s\r\n",_SYSTEM_DATA_FILE);
+	printf("  Pcon: system data loaded from %s\r\n",_SYSTEM_DATA_FILE);
 	if((sdat.major_version!=_major_version ) | (sdat.minor_version!=_minor_version) | (sdat.minor_revision!=_minor_revision)){
 		printf("*** versions do not match\r\n");
 		printf("  version info from system data file - %d.%d.%d\r\n", sdat.major_version, sdat.minor_version,sdat.minor_revision);
@@ -103,14 +100,10 @@ int main(void) {
 			sdat.minor_version = _minor_version;
 			sdat.minor_revision = _minor_revision;
 			save_system_data(_SYSTEM_DATA_FILE,&sdat);
-			printf("  system data file updated\r\n");
+			printf("    Pcon: system data file updated\r\n");
 		}
 		c = fgetc(stdin);	// get rid of trailing CR
 	}
-
-	/* open UART1 to connect to BBB */
-	// bbb = s_open();
-	// printf(" serial device opened handle = %d\r\n",bbb);
 
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm control block to allow acces to system data
@@ -118,16 +111,16 @@ int main(void) {
 	cmd_fsm_cb.sdat_ptr->sch_ptr = (uint32_t *)cmd_fsm_cb.sdat_ptr->sch;
 
     /* load working schedule from system schedule */
-    printf(" size of schedule buffer = %i\r\n",sizeof(cmd_fsm_cb.w_sch));
+    printf("  Pcon: size of schedule buffer = %i\r\n",sizeof(cmd_fsm_cb.w_sch));
     memcpy(cmd_fsm_cb.w_sch_ptr,cmd_fsm_cb.sdat_ptr->sch_ptr,sizeof(cmd_fsm_cb.w_sch));
-    printf(" system schedule copied to buffer\r\n");
+    printf("  Pcon: system schedule copied to buffer\r\n");
 
-    /* set up file mapped shared memory for inter process communication */
+    /* set up file mapped shared memory for inter process communication */ 
     fd = ipc_open(_IPC_FILE);					// create/open ipc file
 	data = ipc_map(fd,ipc_size());				// map file to memory
-	memcpy(&ipc_dat,data,sizeof(ipc_dat));		// move shared memory data to local structure
-	// ipc_dat.force_update = 111;					// update ipc data
- //    memcpy(data,&ipc_dat,sizeof(ipc_dat));  	// move local data into shared memory
+	printf("map worked\n");
+	// memcpy(&ipc_dat,data,sizeof(ipc_dat));		// move shared memory data to local structure
+	printf("memcpy worked\n");
 
 	/* initialize state machines */
 	work_buffer_ptr = (char *)work_buffer;  //initialize work buffer pointer

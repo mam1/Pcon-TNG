@@ -16,14 +16,16 @@ int ipc_open(char *fname){
 	int 		fd;
 	mode_t 		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 
-    fd = open(fname, O_RDWR);
+    /* see if file exsits */
+
+    fd = open(fname, O_RDWR | O_CREAT);
     if(fd == -1){
-        printf("\n*** error opening system data file\r\n");
+        printf("\n*** error opening ipc data file, fd = %i\r\n",fd);
         perror(fname);
         printf("*** terminating program\n\n");
         exit(1);
     }
-	printf("file descriptor %i returned from open\n",fd);
+	printf("  ipc_open: file descriptor %i returned from open\n",fd);
 	return fd;
 }
 
@@ -36,7 +38,7 @@ void *ipc_map(int fd, int size){
         printf("*** terminating program\n\n");
         exit(1);
 	}
-	printf("file mapped to memory\n");
+	printf("  ipc_map: file mapped to memory\n");
 	return data;
 }
 
@@ -53,10 +55,12 @@ int ipc_size(void){
 
     long        page_size = sysconf (_SC_PAGESIZE);
     int         pages;
-
+    // printf("    ipc data size %i\n",sizeof(IPC_DAT));
     pages = sizeof(IPC_DAT) / page_size;
+    // printf("    1 -pages = %i\n",pages);
     if(pages < 1) pages = 1;
     else if(sizeof(IPC_DAT) % page_size != 0) pages += 1;
-    printf("pages = %i\n", pages);
+    // printf("    2 -pages = %i\n",pages);
+    printf("  ipc_size: system page size %i, ipc data %i, ipc data requires %i pages, %i bytes\n", page_size, sizeof(IPC_DAT), pages,pages * (int)page_size);
     return pages * (int)page_size;  
 }

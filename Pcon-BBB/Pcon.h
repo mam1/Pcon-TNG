@@ -2,8 +2,8 @@
 #define PCON_H_
 
 #define _TRACE
-#define _SYSTEM_DATA_FILE		"/home/rsync-Mint/Pcon.dat" //sd card file
-#define _IPC_FILE				"/home/rsync-OSX/ipc.dat"	//ipc file
+#define _SYSTEM_DATA_FILE		"/home/Pcon-data/Pcon.dat" 		// system data file
+#define _IPC_FILE				"/home/Pcon-data/ipc.dat"   	// memory mapped ipc file
 
 #include "shared.h"
 

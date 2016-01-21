@@ -30,7 +30,7 @@ FILE *sd_open(char *fname,SYS_DAT *cdat){
     /* file does not exist try and create it */
     sd = fopen(fname,"w");
     if(sd == NULL){
-        printf("\n*** error opening system data file\r\n");
+        printf("\n*** error opening system data file, file handle = %i\r\n",*sd);
         perror(fname);
         term1();
     }
@@ -62,7 +62,7 @@ void save_system_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
     sd = sd_open(fname,cdat);
     if(fwrite(cdat, sizeof(*cdat), 1, sd) != 1){
-        printf("\n*** error reading system data file %s\r\n",fname);
+        printf("\n*** error writing system data file %s, file handle %i\r\n",fname,*sd);
         perror(fname);
         term1();
     }
@@ -73,12 +73,13 @@ void load_system_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
     int     rtn;
     sd = sd_open(fname,cdat);
+    // printf("  file handle %i\n",sd);
     // printf("  size of sys_dat %i\r\n",(int)sizeof(*cdat));
     // printf("  read system data\r\n");
     rtn = fread(cdat, sizeof(*cdat), 1, sd);
     // printf("  fread returns %i\r\n",rtn);
     if(rtn != 1){
-        printf("\n*** error reading system data file\r\n");
+        printf("\n*** error reading system data\n  fread returned %i\r\n",rtn);
         perror(fname);
         term1();
     }
