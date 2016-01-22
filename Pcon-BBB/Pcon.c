@@ -65,6 +65,10 @@ int main(void) {
 	int 			prompted = false;	//has a prompt been sent
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
+
+	printf("\033\143"); //clear the terminal screen, preserve the scroll back
+	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version,
+	_minor_revision);
 				
 	/************************* setup trace *******************************/
 #ifdef _TRACE
@@ -83,9 +87,8 @@ int main(void) {
 		printf(" program trace disabled\n");
 
 /************************ initializations ****************************/
-	printf("\033\143"); //clear the terminal screen, preserve the scroll back
-	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version,
-	_minor_revision);
+	printf("ipc data allocated at <%x>\n",(uint32_t)&ipc_dat);
+	fflush(stdout);
 
 	/* load data from file on sd card */
 	load_system_data(_SYSTEM_DATA_FILE,&sdat);
@@ -116,10 +119,20 @@ int main(void) {
     printf("  Pcon: system schedule copied to buffer\r\n");
 
     /* set up file mapped shared memory for inter process communication */ 
+
     fd = ipc_open(_IPC_FILE);					// create/open ipc file
 	data = ipc_map(fd,ipc_size());				// map file to memory
 	printf("map worked\n");
-	// memcpy(&ipc_dat,data,sizeof(ipc_dat));		// move shared memory data to local structure
+	printf("ipc data still at <%x>\n",(uint32_t)&ipc_dat);
+	printf("mapped memory allocated at <%x>\n",(uint32_t)data);
+	printf("size of ipc data %i\n",sizeof(ipc_dat));
+	uint8_t *p1;
+	printf("assign pointers\n");
+	p1 = data;
+	printf("try to look at the first bute of data\n");
+	printf("the first bute of data <%x>\n",*p1 );
+	printf("try memcpy\n");
+	memcpy(&ipc_dat,data,sizeof(ipc_dat));		// move shared memory data to local structure
 	printf("memcpy worked\n");
 
 	/* initialize state machines */
