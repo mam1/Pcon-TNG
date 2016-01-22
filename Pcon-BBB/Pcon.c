@@ -25,7 +25,7 @@ int 			bbb;								//UART1 file descriptor
 SYS_DAT 		sdat;								//system data structure
 CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 IPC_DAT 		ipc_dat; 							//ipc data
-void			*data;								//pointer to ipc data
+void			*data = NULL;						//pointer to ipc data
 
 char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
@@ -128,8 +128,9 @@ int main(void) {
 	printf("size of ipc data %i\n",sizeof(ipc_dat));
 	uint8_t *p1;
 	printf("assign pointers\n");
-	p1 = data;
-	printf("try to look at the first bute of data\n");
+	p1 = (uint8_t *)data;
+	p1++;
+	printf("try to look at the first byte of data\n");
 	printf("the first bute of data <%x>\n",*p1 );
 	printf("try memcpy\n");
 	memcpy(&ipc_dat,data,sizeof(ipc_dat));		// move shared memory data to local structure
