@@ -123,13 +123,12 @@ int main(void) {
     fd = ipc_open(_IPC_FILE);					// create/open ipc file
 	data = ipc_map(fd,ipc_size());				// map file to memory
 	printf("map worked\n");
-	printf("ipc data still at <%x>\n",(uint32_t)&ipc_dat);
-	printf("mapped memory allocated at <%x>\n",(uint32_t)data);
+	printf("ipc data still at <%x>\n",(caddr_t)&ipc_dat);
+	printf("mapped memory allocated at <%x>\n",(caddr_t)data);
 	printf("size of ipc data %i\n",sizeof(ipc_dat));
 	uint8_t *p1;
 	printf("assign pointers\n");
 	p1 = (uint8_t *)data;
-	p1++;
 	printf("try to look at the first byte of data\n");
 	printf("the first bute of data <%x>\n",*p1 );
 	printf("try memcpy\n");
