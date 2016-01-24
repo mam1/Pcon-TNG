@@ -21,19 +21,15 @@
  #include "schedule.h"
  #include "bitlit.h"
  #include "typedefs.h" 
- 
- /***************** global code to text conversion ********************/
-const char *day_names_long[7] = {
-     "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-const char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-const char *onoff[2] = {"off"," on"};
-const char *con_mode[3] = {"manual","  time","time & sensor"};
-const char *sch_mode[2] = {"day","week"};
-const char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
 /****************************** externals *******************************/
 
-
+/******************** global code to text conversion ********************/
+ extern char *day_names_long[7];     
+ extern char *day_names_short[7];
+ extern char *onoff[2];
+ extern char *con_mode[3];
+ extern char *sch_mode[2];
 /************************** edit state variable *************************/
  extern int     edit_channel,edit_day,edit_hour,edit_minute,edit_key;
 /***************************** globals **********************************/
@@ -275,13 +271,8 @@ int add_sch_rec(uint32_t *sch, int k, int s)    // add or change a schedule reco
             break; 
         sch++;      
     } 
-//    while(end >= sch)
-//        *(end+1) = *(end--);
-          
-    while(end >= sch){
-        *(end+1) = *end;
-        end--;
-    }    
+    while(end >= sch)
+        *(end+1) = *(end--);
     put_state(sch,s);
     put_key(sch,k);
     return 0;      
@@ -334,10 +325,8 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     }
     return NULL;
  }
- 
- 
 
- void disp_all_schedules(uint32_t *sch)
+ void disp_all_schedules(CMD_FSM_CB *cb,uint32_t *sch)
  {
     uint32_t        *rec_ptr;
     int             i;
@@ -349,13 +338,13 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
         /* print channel header */        
-        printf("\r\nchannel %i\n",channel);
+        printf("\r\nchannel %i <%s>\r\n",channel,cb->sdat_ptr->c_data[channel].name);
 
         /* print day header */
         printf("   ");
         for (day=0;day<_DAYS_PER_WEEK;day++)
             printf("%s         ",day_names_short[day]);
-        printf("\n");
+        printf("\n\r");
 
         /* figure the maximum number of transitions per day */
         mrcnt = 0;
@@ -382,16 +371,16 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
                 printf("%s   ",time_state);
 
             }
-            printf("\n");
+            printf("\n\r");
         }
-        //printf("\n");
+        printf("\n\r");
      } 
 
     return;  
  }
 
 /*  */
- void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   // load schedule buffer 
+ void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   // load schedule buffer w
  {
     int         i;
     uint32_t    *start_schedule;
@@ -404,7 +393,11 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
 
 uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to a schedule for a (day,channel)
  {
+    // int         i;
     uint32_t    *start_schedule;
+
+    // day = day + 1;
+    // printf("day = %i channel = %i\r\n",day,channel);
 
     start_schedule = sch;
     while(day > 0){         //move day pointer to the requested day
@@ -414,19 +407,9 @@ uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to a
     while(channel > 0){     //move channel pointer to the requested channel
         start_schedule += _SCHEDULE_SIZE;
         channel--;    
-    }             
+    }               
+
     return (uint32_t *)start_schedule;
+    // return sch;
  }
- 
-  void dump_sch(uint32_t *sbuf)
-  {
-     int         i;
-     printf("\n");
-     for(i=0;i<_MAX_SCHEDULE_RECS+1;i++)
-     {
-         printf("%08x ",*sbuf++);
-     } 
-     printf("\n");    
-     return;
-  }     
 
