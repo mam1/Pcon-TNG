@@ -1,15 +1,64 @@
 # File:  Makefile (for library)
 #
-CC=gcc
-LIB=libPcon.a
-LIBDEST=./
 
-LIBSRC=abc.c def.c
+program_C_SRCS := $(wildcard *.c)
+program_C_SRCS := $(wildcard *.c)
+program_CXX_SRCS := $(wildcard *.cpp)
+program_C_OBJS := ${program_C_SRCS:.c=.o}
+program_CXX_OBJS := ${program_CXX_SRCS:.cpp=.o}
+program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
 
+# get the development machine OS
+UNAME_S := $(shell uname -s)
+UNAME_P := $(shell uname -p)
+
+# set directories
+ifeq ($(UNAME_S),Darwin)
+	program_INCLUDE_DIRS := include
+	program_LIBRARY_DIRS := lib
+	program_LIBRARIES := libPcon
+else
+	program_INCLUDE_DIRS := include
+	program_LIBRARY_DIRS := lib
+	program_LIBRARIES := libPcon
+endif
+
+# set parameters
+CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
+LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
+LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
+CFLAGS  += -Wall
+CXXFLAGS += $(CFLAGS)
+LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti 
+
+# set locations for basic gnu tools
+ifeq ($(UNAME_S),Darwin)
+	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
+	CC  := $(PREFIX)gcc
+	CXX := $(PREFIX)g++
+	LD  := $(PREFIX)ld
+	AS  := $(PREFIX)as
+	AR  := $(PREFIX)ar
+	OBJCOPY := $(PREFIX)objcopy
+else
+	PREFIX := /usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
+	CC  := $(PREFIX)gcc
+	CXX := $(PREFIX)g++
+	LD  := $(PREFIX)ld
+	AS  := $(PREFIX)as
+	AR  := $(PREFIX)ar
+	OBJCOPY := $(PREFIX)objcopy
+endif
+
+# set libarary
+LIB=lib
+LIBDEST=
+LIBSRC := $(lib/wildcard *.c)
 LIBOBJ=$(LIBSRC:.c=.o)
 
 install: $(LIB)
-	@echo lib Makefile - installing $(LIB)
+	@echo lib Makefile - installing  $(LIB)
+	@echo lib Makefile - into $(LIBDEST)
 	@install -m 444 $(LIB) $(LIBDEST)
 
 $(LIB): $(LIBOBJ)
@@ -20,47 +69,4 @@ $(LIB): $(LIBOBJ)
 	@echo lib Makefile - compiling $<
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-
-#-------------------------------------------------------
-
-
-# # source files.
-# SRC =  	file1.cpp file2.cpp file3.cpp
- 
-# OBJ = $(SRC:.cpp=.o)
- 
-# OUT = ../libutils.a
- 
-# # include directories
-# INCLUDES = -I. -I../include/ -I/usr/local/include
- 
-# # C++ compiler flags (-g -O2 -Wall)
-# CCFLAGS = -g
- 
-# # compiler
-# CCC = g++
- 
-# # library paths
-# LIBS = -L../ -L/usr/local/lib -lm
- 
-# # compile flags
-# LDFLAGS = -g
- 
-# .SUFFIXES: .cpp
- 
-# default: dep $(OUT)
- 
-# .cpp.o:
-# 	$(CCC) $(INCLUDES) $(CCFLAGS) -c $< -o $@
- 
-# $(OUT): $(OBJ)
-# 	ar rcs $(OUT) $(OBJ)
- 
-# depend: dep
- 
-# dep:
-# 	makedepend -- $(CFLAGS) -- $(INCLUDES) $(SRC)
- 
-# clean:
-# 	rm -f $(OBJ) $(OUT) Makefile.bak
 
