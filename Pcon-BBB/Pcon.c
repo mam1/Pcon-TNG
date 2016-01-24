@@ -15,8 +15,6 @@
 #include "cmd_fsm.h"
 #include "trace.h"
 #include "ipc.h"
-// #include "serial_io.h"
-// #include "cmd_fsm.h"
 
 /******************************** globals **************************************/
 int				trace_flag;							//control program trace
@@ -26,11 +24,11 @@ SYS_DAT 		sdat;								//system data structure
 CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 IPC_DAT 		ipc_dat; 							//ipc data
 void			*data = NULL;						//pointer to ipc data
-
+uint8_t 		cmd_state,char_state;				//fsm current state
 char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
 
-uint8_t cmd_state,char_state;
+
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -66,9 +64,10 @@ int main(void) {
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
 
-	printf("\033\143"); //clear the terminal screen, preserve the scroll back
-	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version,
-	_minor_revision);
+
+	/*********************** setup console *******************************/
+	printf("\033\143"); 				//clear the terminal screen, preserve the scroll back
+	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version,_minor_revision);
 				
 	/************************* setup trace *******************************/
 #ifdef _TRACE
@@ -88,7 +87,7 @@ int main(void) {
 
 /************************ initializations ****************************/
 	printf("ipc data allocated at <%x>\n",(uint32_t)&ipc_dat);
-	fflush(stdout);
+	// fflush(stdout);
 
 	/* load data from file on sd card */
 	load_system_data(_SYSTEM_DATA_FILE,&sdat);
@@ -122,13 +121,13 @@ int main(void) {
 
     fd = ipc_open(_IPC_FILE);					// create/open ipc file
 	data = ipc_map(fd,ipc_size());				// map file to memory
-	printf("map worked\n");
+
 	printf("ipc data still at <%x>\n",(caddr_t)&ipc_dat);
 	printf("mapped memory allocated at <%x>\n",(caddr_t)data);
 	printf("size of ipc data %i\n",sizeof(ipc_dat));
-	uint8_t *p1;
+	uint32_t *p1;
 	printf("assign pointers\n");
-	p1 = (uint8_t *)data;
+	p1 = (uint32_t *)data;
 	printf("try to look at the first byte of data\n");
 	printf("the first bute of data <%x>\n",*p1 );
 	printf("try memcpy\n");

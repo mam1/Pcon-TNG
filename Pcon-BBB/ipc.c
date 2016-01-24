@@ -1,3 +1,8 @@
+/************************************************************************/
+/*                                                                      */
+/*  ipc.c - support interprocess communication                          */
+/*                                                                      */
+/************************************************************************/
 
 #include <sys/types.h>
 #include <sys/mman.h>
@@ -14,40 +19,42 @@
 
 int ipc_open(char *fname){
 	int 		fd;
+    struct stat sb;
 	// mode_t 		mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
 
-    /* see if file exsits */
-
     fd = open(fname, O_RDWR | O_CREAT);
-    if(fd == -1){
-        printf("\n*** error opening ipc data file, fd = %i\r\n",fd);
-        perror(fname);
-        printf("*** terminating program\n\n");
-        exit(1);
-    }
+    if (fd == -1)
+        handle_error("open");
+
+    if (fstat(fd, &sb) == -1)           /* To obtain file size */
+        handle_error("fstat");
+
 	printf("  ipc_open: file descriptor %i returned from open\n",fd);
 	return fd;
 }
 
 void *ipc_map(int fd, int size){
 	void		*data;
-	data = mmap((caddr_t)0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-	if((caddr_t)data == (caddr_t)(-1)){
-        printf("\n*** error mapping ipc data file\r\n");
-        perror("mmap");
-        printf("*** terminating program\n\n");
-        exit(1);
-	}
+    int         pa_offset;
+
+    pa_offset = 0 & ~(sysconf(_SC_PAGE_SIZE) - 1);   // offset for mmap() must be page aligned
+    printf("page offset %i\n",pa_offset);
+
+	data = mmap((caddr_t)0, size + pa_offset, PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
+    if (data == MAP_FAILED)
+	// if((caddr_t)data == (caddr_t)(-1))
+        handle_error("mmap");
+  
 	printf("  ipc_map: file mapped to memory\n");
 	return data;
 }
 
 void ipc_close(int fd, void *data, int size){
-	if(munmap(data, size) == -1){
-        perror ("munmap");
-        exit(1);
-    }
+	if(munmap(data, size) == -1)
+        handle_error("munmap");
+
 	close(fd);
+    printf("  ipc_close: file unmapped\n");
 	return;
 }
 

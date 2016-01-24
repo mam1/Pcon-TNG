@@ -3,6 +3,9 @@
 
 #include "shared.h"
 
+#define handle_error(msg) \
+   do { perror(msg); exit(EXIT_FAILURE); } while (0)
+
 /* ipc data - memory mapped */
 typedef	struct {
 	uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
