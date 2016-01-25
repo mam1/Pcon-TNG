@@ -72,6 +72,12 @@ clean:
 	@- $(RM) -v $(program_OBJS)
 
 dump:
-	@echo $(LDFLAGS)
+	@echo program_NAME $(program_NAME)
+	@echo program_OBJS $((program_OBJS)
+	@echo LDFLAGS $(LDFLAGS)
+	@echo CPPFLAGS $(CPPFLAGS)
+	@echo CFLAGS $(CFLAGS)
+	@echo LINK.cc $(LINK.cc)
+
 
 distclean: clean
