@@ -12,13 +12,13 @@ UNAME_P := $(shell uname -p)
 
 # set directories
 ifeq ($(UNAME_S),Darwin)
-	program_INCLUDE_DIRS := ../Pcon-share/
-	program_LIBRARY_DIRS := 
-	program_LIBRARIES := 
+	program_INCLUDE_DIRS := ../include
+	program_LIBRARY_DIRS := ../lib
+	program_LIBRARIES := libPcon
 else
-	program_INCLUDE_DIRS := 
-	program_LIBRARY_DIRS := 
-	program_LIBRARIES := 
+	program_INCLUDE_DIRS := ../include
+	program_LIBRARY_DIRS := ../lib
+	program_LIBRARIES := libPcon
 endif
 
 # set parameters
@@ -53,7 +53,8 @@ endif
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
+
+	$(LINK.cc) $(program_OBJS)-o $(program_NAME) 
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
@@ -69,5 +70,8 @@ endif
 clean:
 	@- $(RM) -v $(program_NAME)
 	@- $(RM) -v $(program_OBJS)
+
+dump:
+	@echo $(LDFLAGS)
 
 distclean: clean
