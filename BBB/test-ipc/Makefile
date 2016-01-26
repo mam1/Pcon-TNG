@@ -1,5 +1,5 @@
 # scan directory 
-program_NAME := listen
+program_NAME := test-ipc
 program_C_SRCS := $(wildcard *.c)
 program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
@@ -14,11 +14,11 @@ UNAME_P := $(shell uname -p)
 ifeq ($(UNAME_S),Darwin)
 	program_INCLUDE_DIRS := ../include
 	program_LIBRARY_DIRS := ../lib
-	program_LIBRARIES := libPcon
+	program_LIBRARIES := Pcon
 else
 	program_INCLUDE_DIRS := ../include
 	program_LIBRARY_DIRS := ../lib
-	program_LIBRARIES := libPcon
+	program_LIBRARIES := Pcon
 endif
 
 # set parameters
@@ -57,9 +57,9 @@ $(program_NAME): $(program_OBJS)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/Pcon-BBB/listener/ root@192.168.254.34:/home/rsync-OSX
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/test-ipc/ root@192.168.254.34:/home/rsync-OSX
 else
-	rsync -avz  /home/mam1/Git/Pcon-TNG/Pcon-BBB/listener/ root@192.168.254.34:/home/rsync-Mint	
+	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/test-ipc/ root@192.168.254.34:/home/rsync-Mint	
 endif
 
 # clean up
@@ -69,5 +69,14 @@ endif
 clean:
 	@- $(RM) -v $(program_NAME)
 	@- $(RM) -v $(program_OBJS)
+
+dump:
+	@echo program_NAME $(program_NAME)
+	@echo program_OBJS $((program_OBJS)
+	@echo LDFLAGS $(LDFLAGS)
+	@echo CPPFLAGS $(CPPFLAGS)
+	@echo CFLAGS $(CFLAGS)
+	@echo LINK.cc $(LINK.cc)
+
 
 distclean: clean

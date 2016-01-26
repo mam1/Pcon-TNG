@@ -16,11 +16,11 @@ UNAME_P := $(shell uname -p)
 ifeq ($(UNAME_S),Darwin)
 	program_INCLUDE_DIRS := include
 	program_LIBRARY_DIRS := lib
-	program_LIBRARIES := libPcon.a
+	program_LIBRARIES := Pcon.a
 else
 	program_INCLUDE_DIRS := include
 	program_LIBRARY_DIRS := lib
-	program_LIBRARIES := libPcon.a
+	program_LIBRARIES := Pcon.a
 endif
 
 # set parameters
@@ -51,12 +51,13 @@ else
 endif
 
 # set libarary
-LIB=libPcon.a
+LIB=libPcon
 LIBDEST= lib
 LIBSRC := $(wildcard lib-sources/*.c)
 LIBOBJ=$(LIBSRC:.c=.o)
 
 install: $(LIB)
+	@echo lib Makefile - LIBOBJ $(LIBOBJ)
 	@echo lib Makefile - libsrc $(LIBSRC)
 	@echo lib Makefile - installing  $(LIB)
 	@echo lib Makefile - into $(LIBDEST)
@@ -69,5 +70,9 @@ $(LIB): $(LIBOBJ)
 .c.o:
 	@echo lib Makefile - compiling $<
 	@$(CC) $(CFLAGS) -Iinclude -c $< -o $@
+
+clean:
+	@echo lib Makefile - cleaning up
+	@- $(RM) -v $(LIBOBJ)
 
 
