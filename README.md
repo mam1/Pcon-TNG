@@ -1,35 +1,66 @@
-Pcon-TNG
+HVAC-TNG
 ========
 - - - - - - - - - 
-#####Random thoughts - under construction and not stable.
-- - - - - - - - -
-###Pcon - multi channel programmable controller
-The state of up to 8 channels can be controlled by:
+###*** under construction and not stable ***
+
+These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a Beagle Bone Black (BBB), A BBB Cape from Waveshare with a real time clock, a BBB custom Control Cape built for this project and a Digital IO Board from Parallax. The hardware supports 16 channels; 8 low voltge/current channels (e.g. controlling zone valves) and 8 high voltage/current channels (e.g. controling 120 volt AC motors).
+
+Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modules read HDT22 sensors and use a wireless connection to post the data to the cloud (ThingSpeak) and to an Apache sever running on the BBB. The BBB logs the data from the ESP8266 modules. A process running on the BBB decides if a channel should be on or off.  A channel can be controlled by:
 
 * time of day
 * time of day and a sensor value
 * cycle (seconds on, seconds off)
 * manually
 
-####Hardware:
-* C3 micro controller, Parallax  
-* Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax 
-* ChronoDot real time clock module, based on a DS3231, adafruit
-* BeagleBone Black rev C, adafruit 
-* AQY212GH PhotoMOS relays, Newark
-* MID400 AC Line Monitor, Newark
+The BBB Control Cape (part of this project) uses PhotoMOS relays for controlling 24 volt zone valves.  PhotoMOS are resistant to inrush current (due to phase shift) and eliminate the need for snubber circuits as long as they are operated within the ratings. Furthermore, use of PhotoMOS® decreases the mounting area requirements, resulting in more compact programmable controllers. LEDs are used to indicate the state of the 16 channels.  There is a 16 position header connected to the photoMOS relays for directly switching 8, 24 volt, zone valves. A second 20 position header provides TTL signals for controlling a Parallax Digital IO Board (DIOB). The DIOB can control 8, 120VAC 8A loads.
 
-######see the project wiki for more information on the hardware environment
+The BBB provides a user interface to configure channels, build and maintain schedules, query sensor and channel data, manually control channel states, etc.
+- - - - - - - - -
+####Hardware
+  * **BeagleBone Black Rev C - 4GB Flash, adafruit**
+  * **BBB Control Cape**
+    *  1 - Beaglebone Black expansion board, Waveshare
+    *  8 - AQY212GH PhotoMOS relays, Newark
+    * 16 - red LEDs
+    *  2 - 100 ohm, 8 resistor DIP
+    *  1 - 2 x 8 header, zone valve control
+    *  1 - 2 x 5 header, DIOB control
+            * Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax
+  * **BBB Misc Cape, Waveshare**
+    * PCF8563 RTC
+  * **Wireless Sensors**
+    * ESP8266 NodeMCU Dev Board, R2, Electro Dragon
+    * DHT22 temperature/humidity sensor, Electro Dragon
+    * 0.96” 128*64 OLED Display (i2c), Electro Dragon
+
+######I2c connection between the BBB and PCF8563 real time clock on the Misc Cape 
+A DS3231 real time clock module is connected to the BBB's i2c bus (pins 28,29) to provide a time reference. 
+
+#####Serial connection between BBB and DIOB
+
+     C3 ------------------ DIOB (serial)
+    -------------------------------------
+    pin 4 ..................... DATA_RLY
+    pin 5 ..................... SCLK_IN
+    pin 5 ..................... SCLK_RLY
+    pin 6 ..................... LOAD_IN
+    pin 7 ..................... LAT_RLY
+
+
+####Development Environment:
+
+All code is stored on github.  The repository is cloned on two development machines.  At one site I have a MacMini running Linux Mint 17.x and at the other I have have an iMac running OS X 10.10.x . The Bone is connected to my network. I can access it from either site using ssh. I use rsync to move the binaries from the development machines to the Bone. 
+
+When cross compiling for the Bone on OS X I am using a tool chain I got from http://will-tm.com/cross-compiling-mac-os-x-mavericks. The only thing I needed to do was to create a case sensitive partition before copying the files from the .dmg file.  On the Linux box I tried installing installing a cross compile tool chain using the Mint software manager and experienced a lot of problems. After spending a lot of time dealing with missing files I gave up and installed the xxxx tool chain and it worked on the first try.
 
 ####Language
-* C
+* C - BBB
+* Lua - ESP8266
 
 ####Envirnoment
-* Development machine - MacMini Linux Mint 17.0
+* Development machines - MacMini Linux Mint 17.x - OS X 10.11.x
 * BeagleBone Black (rev C)- Debian
-* C3 -  bare metal
-
-######see the project wiki for more information on the development environment
+* ESP8266 (nodeMCU dev board r2) - nodeMCU firmware 
 
 ####Channels
 Each channel can switch 120 volt 8 amp load.  The channel is controlled by a schedule for the current day of the week.  There can be a different schedule for each day of the week. Each channel has it own set of schedules, so for any one day of the week there are 8 (number of channels) schedules active. The schedule for a picticular day is created my selecting a schedule "template" from the schedule libaray.  A template can be assigned to; a specific day for a specific channel, all days for a specific channel, all channels for a specific day. 
@@ -68,7 +99,7 @@ will result in the channel being off between 1:00 - 13:00. It will be on at any 
 
 will result in the channel turning on at 1:00, off at 13:00 and on at 18:00.  If the current time is between 1:00 and 13:00 the channel will be on, between 13:00 and 18:00 it will be off, between 18:00 and 0:0 it will be on and between 0:0 and 13:00 it will also be on.  
 
-A schedule is implemented as a vector of 32 bit unsigned integers. The length is configured by the preprocessor variable *_MAX_SCHEDULE_RECS* .  These are fixed length vectors. I have an alternate implementation using linked lists but his approach is much simpler and has less chance of memory leaks. Since I am already using xmmc size is not a big deal.
+A schedule is implemented as a vector of 32 bit unsigned integers. The length is configured by the preprocessor variable *_MAX_SCHEDULE_RECS*.  These are fixed length vectors. 
 
 The first 32 bits of the vector contain the number of active records in the schedule. The following 32 bit "records" are interpreted as:
 
@@ -104,35 +135,7 @@ In the following format:
     channel information <SSS><NNN>.ch
     schedules           <SSS><NNN>.sch
 
-####Propeller Pins:
 
-    0 - serial port Rx
-    1 - serail port Tx
-    2 - 
-    3 - 
-    4 - dio, DIN
-    4 - dio, DATA_RLY
-    5 - dio, SCLK_IN
-    5 - dio, SCLK_RLY
-    6 - dio, LOAD_IN
-    7 - dio, LAT_RLY
-    8 - SPI
-    9 - SPI, SPI_MOSI
-    10 - SPI, SPI_MISO
-    11 - SPI, SPI_CLK
-    12 - composite video
-    13 - composite video
-    14 - composite video
-    15 - toggle Port B header
-    16-23 - VGA 
-    24 - audio PWM
-    25 - SPI
-    26 - PS/2_DATA
-    27 - PS/2_CLOCK. 
-    28 - i2c
-    29 - i2c
-    30 - USB
-    31 - USB
 
 ####BeagleBone Black Pins
 
