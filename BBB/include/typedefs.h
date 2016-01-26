@@ -2,6 +2,9 @@
 #define _TYPEDEFS_H_
 
 #include "Pcon.h"
+#include <stdint.h>		//uint_8, uint_16, uint_32, etc.
+
+
 // #include "cmd_fsm.h"
 
 /* channel data */
@@ -25,12 +28,13 @@ typedef	struct {
     int         major_version;
     int         minor_version;
     int         minor_revision;	
-    // int 		template_id[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];			// map each (day,channel) to a template id
-    int 		schlib_index;												// points to the next available record (maybe)
-    uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
+    int         templib_index;											// points to the next available template record 
+    int         schlib_index;											  // points to the next available system schedule record
+    uint32_t    sch[_DAYS_PER_WEEK * _NUMBER_OF_CHANNELS * _SCHEDULE_SIZE];	// system schedule
     uint32_t	*sch_ptr;   												// pointer to system schedule
-    CHN_DAT     c_data[_NUMBER_OF_CHANNELS];								// channel persistent data
-    TMPL_DAT	s_data[_MAX_SCHLIB_SCH];									// schedule template library
+    CHN_DAT     c_data[_NUMBER_OF_CHANNELS];		    // channel persistent data
+    TMPL_DAT    t_data[_MAX_TMPLLIB_SCH];               // schedule template library
+    SCH_DAT     s_data[_MAX_SCHLIB_SCH];					    // schedule library							
 } SYS_DAT;
 
 /* cmd_fsm control block */
@@ -41,7 +45,7 @@ typedef struct {
 	int				token_type;
 	int				token_value;
 	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
-	uint32_t        w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
+	uint32_t        w_sch[_DAYS_PER_WEEK * _NUMBER_OF_CHANNELS * _SCHEDULE_SIZE];
 	uint32_t		*w_sch_ptr;
 	int             w_channel;                      //working channel number
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
@@ -61,6 +65,41 @@ typedef struct {
 /* action routine definitions */
 typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
 typedef int (*CHAR_ACTION_PTR)(char *);
+
+typedef union { unsigned int MyLong; unsigned char MyByte[4]; } _packed;
+//typedef uint8_t sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE]; _SCHEDULE;
+
+
+typedef struct {
+    uint8_t length; // total packet length including length and checksum byte
+    uint8_t data[_MAX_PACKET]; // add 1 for checksum
+} _packet;
+
+
+typedef struct {
+  uint8_t         f_type;
+  uint8_t         ping;
+} _ping_frame;
+
+typedef struct {
+  uint8_t       f_type;
+  uint8_t       day;
+  uint8_t       channel;
+  uint8_t       rcnt;
+  uint32_t      rec[_MAX_SCHEDULE_RECS];
+} _schedule_frame;
+
+typedef struct {
+  uint8_t     f_type;
+  uint8_t     ack_byte;
+} _ack_frame;  
+
+typedef struct {
+  uint8_t     f_type;
+  uint8_t     ack_byte;
+} _nack_frame;  
+
+
 
 /************************************************************************************/
 /************************************************************************************/
