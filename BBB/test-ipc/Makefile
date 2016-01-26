@@ -12,13 +12,13 @@ UNAME_P := $(shell uname -p)
 
 # set directories
 ifeq ($(UNAME_S),Darwin)
-	program_INCLUDE_DIRS := ../
-	program_LIBRARY_DIRS := 
-	program_LIBRARIES := 
+	program_INCLUDE_DIRS := ../include
+	program_LIBRARY_DIRS := ../lib
+	program_LIBRARIES := libPcon
 else
-	program_INCLUDE_DIRS := ../
-	program_LIBRARY_DIRS := 
-	program_LIBRARIES := 
+	program_INCLUDE_DIRS := ../include
+	program_LIBRARY_DIRS := ../lib
+	program_LIBRARIES := libPcon
 endif
 
 # set parameters
