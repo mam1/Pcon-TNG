@@ -8,12 +8,14 @@
 #include "typedefs.h"
 #include "ipc.h"
 
-IPC_DAT 		ipc_dat; 							//ipc data
-void			*data;								//pointer to ipc data
-int 			fd;					//file descriptor for ipc data file
-// int 			build_flag;
+IPC_DAT 		   ipc_dat; 		  //ipc data
+void			     *data;				  //pointer to ipc data
+int 			     fd;					  //file descriptor for ipc data file
 
-int   ipc_open(char *);
+extern int  ipc_open(char *);
+extern void   *ipc_map(int, int);
+extern void   ipc_close(int, void *, int);
+extern int  ipc_size(void);
 
 int main (int argc, char **argv){
 
@@ -62,8 +64,8 @@ int main (int argc, char **argv){
 		printf("  **** this should never happen\n");
 		return 1;
 	} 
-
-	fd = ipc_open(_IPC_FILE);					// create/open ipc file
+  char *cptr = _IPC_FILE;
+	fd = ipc_open(cptr);					// create/open ipc file
     
  	printf("\nnormal termination\n\n");
    	return 0;
