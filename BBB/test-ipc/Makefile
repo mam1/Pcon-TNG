@@ -53,7 +53,10 @@ endif
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
+
+	/Volumes/cross-compile/bin/arm-linux-gnueabihf-g++ -Wall -fno-exceptions -fno-rtti -o test-ipc test-ipc.c -I../include -L../lib -lPcon
+	
+#	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
@@ -71,6 +74,10 @@ clean:
 	@- $(RM) -v $(program_OBJS)
 
 dump:
+	@echo CC $(CC)
+	@echo cc $(cc)
+	@echo LINK $(LINK)
+	@echo LINK.cc $(LINK.cc)
 	@echo program_NAME $(program_NAME)
 	@echo program_C_OBJS $(program_C_OBJS)
 	@echo program_OBJS $(program_OBJS)
