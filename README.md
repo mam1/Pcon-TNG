@@ -1,9 +1,7 @@
-<<<<<<< HEAD
-HVAC-TNG
-=======
-PCON-TNG
->>>>>>> mmap
-========
+
+##PCON-TNG
+>>>>>>> 
+
 - - - - - - - - - 
 ###*** under construction and not stable ***
 
@@ -72,11 +70,12 @@ Each channel can switch 120 volt 8 amp load.  The channel is controlled by a sch
 ####Application Architecture
 The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the application handle backspace/delete. The app maintains a buffer which matches the user's screen. When a CR is entered the screen buffer is passed to a state machine(char_fsm) which parses the screen buffer into a fifo stack of tokens. 
 
-![character parser state diagram](state_diagrams/char_fsm.jpg?raw=true)
+![character parser state diagram](/Users/mam1/Git/Pcon-TNG/support_docs/state_diagrams/char_fsm.jpg?raw=true "character parser FSM")
+
 
 When the main event loop detects a non-empty token stack it passes the stack to a second state machine (cmd_fsm) which processes the token stack. 
 
-![command parser state diagram](state_diagrams/cmd_fsm.jpg?raw=true)
+![command parser state diagram](/Users/mam1/Git/Pcon-TNG/support_docs/state_diagrams/cmd_fsm.jpg?raw=true "command parser FSM")
 
 A third state machine handles communication with the C3. 
 
