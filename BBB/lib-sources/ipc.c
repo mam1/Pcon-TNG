@@ -23,7 +23,7 @@ int ipc_open(char *fname, int size) {
     mode_t              mode = S_IRWXO | S_IRWXG | S_IRWXU;
     int                 result;
 
-    fd = open(fname, O_RDWR | O_CREAT, mode);
+    fd = open(fname, O_RDONLY | O_CREAT, mode);
     if (fd == -1)
         handle_error("open");
     if (fstat(fd, &sb) == -1)           
@@ -32,37 +32,40 @@ int ipc_open(char *fname, int size) {
         fprintf (stderr, "%s is not a file\n", fname);
         exit(1);
     }
-    printf("    file size from stat() = %i\n",(int)sb.st_size ); 
-    printf("    file block size from stat() = %i\n",(int)sb.st_blksize );
-    printf("    file blocks from stat() = %i\n",(int)sb.st_blocks );   
-    printf("  ipc_open: file descriptor %i returned from open\n", fd);
 
-    /* Stretch the file size to the size of the (mmapped) array of ints
-     */
-    result = lseek(fd, size-1, SEEK_SET);
-    if (result == -1) {
-    close(fd);
-    perror("Error calling lseek() to 'stretch' the file");
-    exit(EXIT_FAILURE);
+    if(sb.st_size < size){
+    /* Stretch the file size to the size of the (mmapped) buffer */
+        result = lseek(fd, size-1, SEEK_SET);
+        if (result == -1) {
+        close(fd);
+        perror("Error calling lseek() to 'stretch' the file");
+        exit(EXIT_FAILURE);
+        }
+
+        result = write(fd, "", 1);
+        if (result != 1) {
+            close(fd);
+            perror("Error writing last byte of the file");
+            exit(EXIT_FAILURE);
+        }
+        if (fstat(fd, &sb) == -1)           
+            handle_error("fstat");
+        if (!S_ISREG (sb.st_mode)) {
+            fprintf (stderr, "%s is not a file\n", fname);
+            exit(1);
+        }
+        close(fd);
     }
 
-    result = write(fd, "", 1);
-    if (result != 1) {
-    close(fd);
-    perror("Error writing last byte of the file");
-    exit(EXIT_FAILURE);
-    }
+    fd = open(fname, O_RDWR | O_CREAT, mode);
+    if (fd == -1)
+        handle_error("RDWR open");
     if (fstat(fd, &sb) == -1)           
-        handle_error("fstat");
+        handle_error("RDWR fstat");
     if (!S_ISREG (sb.st_mode)) {
         fprintf (stderr, "%s is not a file\n", fname);
         exit(1);
     }
-    printf("    file size from stat() = %i\n",(int)sb.st_size ); 
-    printf("    file block size from stat() = %i\n",(int)sb.st_blksize );
-    printf("    file blocks from stat() = %i\n",(int)sb.st_blocks );   
-    printf("  ipc_open: file descriptor %i returned from open\n", fd);
-    
 
     return fd;
 }
