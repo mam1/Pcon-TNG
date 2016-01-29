@@ -54,7 +54,9 @@ all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
 
-	/Volumes/cross-compile/bin/arm-linux-gnueabihf-g++ -Wall -fno-exceptions -fno-rtti -o test-ipc test-ipc.c -I../include -L../lib -lPcon
+	$(CXX) -Wall  -o test-ipc test-ipc.c -I../include ../lib/libPcon.a
+
+	#-fno-exceptions -fno-rtti
 	
 #	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
 
