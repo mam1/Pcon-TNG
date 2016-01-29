@@ -51,7 +51,7 @@ else
 endif
 
 # set libarary
-LIB=libPcon
+LIB=libPcon.a
 LIBDEST= lib
 LIBSRC := $(wildcard lib-sources/*.c)
 LIBOBJ=$(LIBSRC:.c=.o)

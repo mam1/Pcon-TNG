@@ -54,11 +54,11 @@ all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
 
-	$(CXX) -Wall  -o test-ipc test-ipc.c -I../include ../lib/libPcon.a
+#	$(CXX) -Wall -o test-ipc test-ipc.c -I../include ../lib/libPcon.a
 
 	#-fno-exceptions -fno-rtti
 	
-#	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
+	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
