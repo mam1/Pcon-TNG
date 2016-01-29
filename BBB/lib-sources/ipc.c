@@ -17,35 +17,90 @@
 #include <stdint.h>   //uint_8, uint_16, uint_32, etc.
 #include "ipc.h"
 
-int ipc_open(char *fname) {
-    int         fd;
-    struct stat sb;
-    // mode_t       mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+int ipc_open(char *fname, int size) {
+    int                 fd;
+    struct stat         sb;
+    mode_t              mode = S_IRWXO | S_IRWXG | S_IRWXU;
+    int                 result;
 
-    fd = open(fname, O_RDWR | O_CREAT);
+    fd = open(fname, O_RDWR | O_CREAT, mode);
     if (fd == -1)
         handle_error("open");
-
-    if (fstat(fd, &sb) == -1)           /* To obtain file size */
+    if (fstat(fd, &sb) == -1)           
         handle_error("fstat");
-
+    if (!S_ISREG (sb.st_mode)) {
+        fprintf (stderr, "%s is not a file\n", fname);
+        exit(1);
+    }
+    printf("    file size from stat() = %i\n",(int)sb.st_size ); 
+    printf("    file block size from stat() = %i\n",(int)sb.st_blksize );
+    printf("    file blocks from stat() = %i\n",(int)sb.st_blocks );   
     printf("  ipc_open: file descriptor %i returned from open\n", fd);
+
+    /* Stretch the file size to the size of the (mmapped) array of ints
+     */
+    result = lseek(fd, size-1, SEEK_SET);
+    if (result == -1) {
+    close(fd);
+    perror("Error calling lseek() to 'stretch' the file");
+    exit(EXIT_FAILURE);
+    }
+
+    result = write(fd, "", 1);
+    if (result != 1) {
+    close(fd);
+    perror("Error writing last byte of the file");
+    exit(EXIT_FAILURE);
+    }
+    if (fstat(fd, &sb) == -1)           
+        handle_error("fstat");
+    if (!S_ISREG (sb.st_mode)) {
+        fprintf (stderr, "%s is not a file\n", fname);
+        exit(1);
+    }
+    printf("    file size from stat() = %i\n",(int)sb.st_size ); 
+    printf("    file block size from stat() = %i\n",(int)sb.st_blksize );
+    printf("    file blocks from stat() = %i\n",(int)sb.st_blocks );   
+    printf("  ipc_open: file descriptor %i returned from open\n", fd);
+    
+
     return fd;
 }
 
 void *ipc_map(int fd, int size) {
     void        *data;
-    int         pa_offset;
+    struct stat         sb;
 
-    pa_offset = 0 & ~(sysconf(_SC_PAGE_SIZE) - 1);   // offset for mmap() must be page aligned
-    printf("page offset %i\n", pa_offset);
+    printf("    ipc_map: called with fd=%i, size=%i\n",fd,size);
 
-    data = mmap((caddr_t)0, size + pa_offset, PROT_READ | PROT_WRITE, MAP_SHARED, fd, pa_offset);
+    data = mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+
     if (data == MAP_FAILED)
-        // if((caddr_t)data == (caddr_t)(-1))
         handle_error("mmap");
 
-    printf("  ipc_map: file mapped to memory\n");
+    printf("    ipc_map: file mapped to memory\n");
+
+                        if (fstat(fd, &sb) == -1)           
+                            handle_error("fstat2");
+                        if (!S_ISREG (sb.st_mode)) {
+                            fprintf (stderr, "is not a file2\n");
+                            exit(1);
+                        }
+                        printf("    file size from stat() = %i\n",(int)sb.st_size ); 
+                        printf("    file block size from stat() = %i\n",(int)sb.st_blksize );
+                        printf("    file blocks from stat() = %i\n",(int)sb.st_blocks );   
+                        printf("  ipc_open: file descriptor %i returned from open\n", fd);
+
+    printf("    try and refference shared memory\n");
+
+    memset(data,0,size);
+
+    printf("     **********************\n");
+    printf("     **********************\n");
+    printf("     **********************\n");
+    printf("     **********************\n");
+    printf("     **********************\n");
+
     return data;
 }
 
