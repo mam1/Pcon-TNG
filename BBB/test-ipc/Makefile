@@ -57,8 +57,10 @@ $(program_NAME): $(program_OBJS)
 #	$(CXX) -Wall -o test-ipc test-ipc.c -I../include ../lib/libPcon.a
 
 	#-fno-exceptions -fno-rtti
+
+	/usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-g++ $(program_OBJS) -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti
 	
-	$(LINK.cc) $(program_OBJS) -o $(program_NAME)
+	# $(LINK.cc) $(program_OBJS) -o $(program_NAME)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)

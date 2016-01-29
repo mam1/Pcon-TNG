@@ -20,7 +20,7 @@ int main (int argc, char **argv) {
   int c;
   char  ipc_file[] = {_IPC_FILE};
 
-
+  printf("\n*** test-ipc ver 1.5\n\n");
 /* test arguments to see if this code should update or watch shared memory */
   opterr = 0;
   if (argc != 2) {
