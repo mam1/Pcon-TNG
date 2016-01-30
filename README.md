@@ -1,10 +1,8 @@
 
 ##PCON-TNG
->>>>>>> 
-
-- - - - - - - - - 
+------
 ###*** under construction and not stable ***
-
+------
 These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a Beagle Bone Black (BBB), A BBB Cape from Waveshare with a real time clock, a BBB custom Control Cape built for this project and a Digital IO Board from Parallax. The hardware supports 16 channels; 8 low voltge/current channels (e.g. controlling zone valves) and 8 high voltage/current channels (e.g. controling 120 volt AC motors).
 
 Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modules read HDT22 sensors and use a wireless connection to post the data to the cloud (ThingSpeak) and to an Apache sever running on the BBB. The BBB logs the data from the ESP8266 modules. A process running on the BBB decides if a channel should be on or off.  A channel can be controlled by:
