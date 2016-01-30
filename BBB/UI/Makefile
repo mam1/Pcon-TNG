@@ -55,7 +55,7 @@ all: $(program_NAME)
 $(program_NAME): $(program_OBJS)
 
 #	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
-	/usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-g++ $(program_OBJS) -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti 
+	$(CXX) $(program_OBJS) -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti 
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
