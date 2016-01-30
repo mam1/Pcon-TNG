@@ -19,6 +19,8 @@ int main (int argc, char **argv) {
   int wflag = 0;
   int index;
   int c, hold;
+  int loop = -1;
+  int value;
 
 
   printf("\n*** test-ipc ver 1.5\n\n");
@@ -50,12 +52,11 @@ int main (int argc, char **argv) {
     }
   for (index = optind; index < argc; index++)
     printf ("Non-option argument %s\n", argv[index]);
-}
 
 /* set up shared memory */
-fd = ipc_open(ipc_file, ipc_size());      // create/open ipc file
-data = ipc_map(fd, ipc_size());           // map file to memory
-memcpy(&ipc_dat, data, sizeof(ipc_dat));  // move shared memory data to local structure
+  fd = ipc_open(ipc_file, ipc_size());      // create/open ipc file
+  data = ipc_map(fd, ipc_size());           // map file to memory
+  memcpy(&ipc_dat, data, sizeof(ipc_dat));  // move shared memory data to local structure
 
   if (wflag == 1){
     printf("  program configured to watch shared memory\n");
@@ -64,21 +65,30 @@ memcpy(&ipc_dat, data, sizeof(ipc_dat));  // move shared memory data to local st
         hold = ipc_dat.force_update;
         printf("  shared data changed\n");
       }
+      memcpy(&ipc_dat, data, sizeof(ipc_dat));  // move shared memory data to local structure
     }
   }
   else if (tflag == 1){
     printf("  program configured to update shared memory\n");
-    while(1){
-      
+    printf("enter number (0 to quit)\n> ");
+    while(loop){
+      scanf("%i",&value);
+      if(value == 0) 
+        loop = 0;
+      else{
+        ipc_dat.force_update = value;
+        memcpy(data,&ipc_dat,sizeof(ipc_dat));  // move local data into shared memory
+        printf("> ");
+      }
     }
   }
   else {
     printf("  **** this should never happen\n");
     return 1;
   }
-ipc_close(fd, data, ipc_size());
-printf("\nnormal termination\n\n");
-return 0;
+  ipc_close(fd, data, ipc_size());
+  printf("\nnormal termination\n\n");
+  return 0;
 }
 
 
