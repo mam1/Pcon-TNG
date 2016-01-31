@@ -25,5 +25,12 @@
 
 /* general */
 #define _DAYS_PER_WEEK 				7
+#define _ON 						1
+#define _OFF 						0
+
+
+
+#define handle_error(msg) \
+   do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
 #endif

@@ -3,8 +3,8 @@
 
 #include "shared.h"
 
-#define handle_error(msg) \
-   do { perror(msg); exit(EXIT_FAILURE); } while (0)
+#define KEY (1492)				// semaphore key
+
 
 /* ipc data - memory mapped */
 typedef	struct {
@@ -31,5 +31,6 @@ typedef	struct {
  void 	*ipc_map(int, int);
  void 	ipc_close(int, void *, int);
  int 	ipc_size(void);
+ int 	ipc_init_sem();
 
 #endif
