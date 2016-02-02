@@ -1,5 +1,5 @@
-#ifndef IPC_H_
-#define IPC_H_
+#ifndef GPIO_H_
+#define GPIO_H_
 
 #define SYSFS_GPIO_DIR "/sys/class/gpio"
 
