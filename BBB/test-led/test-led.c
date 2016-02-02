@@ -24,21 +24,18 @@ int main (void) {
 
   printf("\n **** starting\n");
   iolib_init();
-  iolib_setdir(8, 7, BBBIO_DIR_IN);
   iolib_setdir(8, 8, BBBIO_DIR_OUT);
 
   int count = 0;
+  del = 100; 
   while (count < 50)
   {
-    count ++ ;
-    del = 500; // slow speed
-    pin_high(8, 7);
+    count++ ;
+    pin_high(8, 8);
     iolib_delay_ms(del);
-    pin_low(8, 7);
+    pin_low(8, 8);
     iolib_delay_ms(del);
-
   }
-
 
   iolib_free();
   printf("\n **** ending\n");

@@ -58,7 +58,7 @@ $(program_NAME): $(program_OBJS)
 
 	#-fno-exceptions -fno-rtti
 
-	$(CXX) $(program_OBJS) -o $(program_NAME) -Wall -I../include -L../lib -lPcon -L../../../BBBIOlib/BBBio_lib -lBBBio -Wall -fno-exceptions -fno-rtti
+	$(CXX) $(program_OBJS) -o $(program_NAME) -Wall -I../include -L../lib -lPcon  -Wall -fno-exceptions -fno-rtti
 	
 	# $(LINK.cc) $(program_OBJS) -o $(program_NAME)
 

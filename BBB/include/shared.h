@@ -23,6 +23,12 @@
 #define _BYTES_PER_SCHEDULE 	_SCHEDULE_SIZE * _BYTES_PER_INT
 #define _BYTES_PER_DAY 			_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE
 
+/* map leds to P8 header pins */
+#define _LED_1		7	
+#define _LED_2		9		
+#define _LED_3		8			
+#define _LED_4		10	
+
 /* general */
 #define _DAYS_PER_WEEK 				7
 #define _ON 						1

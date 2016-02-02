@@ -11,14 +11,15 @@
 #include <fcntl.h>
 #include <string.h>
 #include "shared.h"
-#include "ipc.h"
+ #include "ipc.h"
 #include "Pcon.h"
 #include "shared.h"
 #include "bitlit.h"
 #include "PCF8563.h"
-#include "gpio.h"
-#include "led.h"
+// #include "gpio.h"
+// #include "led.h"
 #include "schedule.h"
+#include "BBBiolib.h"
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -36,9 +37,8 @@ void           	*data;                      				// pointer to ipc data
 int            	fd;                        				 	// file descriptor for ipc data file
 int         	rtc;										// file descriptor for PCF8563 RTC
 _tm         	tm;											// time date structure
-int             led_fd[4];                               	// file descriptor array for leds
-int             led_state[4];				             	// led state
-unsigned int    gpio[4] = {_LED_0, _LED_1, _LED_2, _LED_3}; // map LEDs to gpio(s)
+// int             led_fd[4];                               	// file descriptor array for leds
+// int             led_state[4];				             	// led state
 
 /********** support functions *******************************************************************/
 void dispdat(void) {
@@ -75,11 +75,9 @@ void update_relays(_tm *tm, IPC_DAT *sm) {
 int main(void) {
 
 	int 	h_min;
-	int 	i;
+	int 	toggle;
 
-	printf("\n  **** daemon active 0.2 ****\n\n");
-	for (i = 0; i < 4; i++) 
-		printf("    <%i>\n", gpio[i]);
+	printf("\n  **** daemon active 0.3 ****\n\n");
 
 	/********** initializations *******************************************************************/
 
@@ -91,19 +89,17 @@ int main(void) {
 	memcpy(&ipc_dat, data, sizeof(ipc_dat));  	// move shared memory data to local structure
 	/* setup semaphores */
 	ipc_init_sem();
-	printf("setting up gpios\n");
-	/* setup gpio controlled leds */
-	// for (i = 0; i < 4; i++) {
-	// 	led_fd[i] = led_open(gpio[i]);
-	// 	printf("file descriptor %i for led %i\n",led_fd[i],i );
-	// 	led_set(led_fd[i], _OFF);
-	// 	led_state[i] = _OFF;
-	// }
 
-	led_write(66,_ON);
-	printf("got file descriptors\n");
-	led_state[0] = _ON;
-	led_set(led_fd[0], _ON);
+	/* setup gpio access */
+	iolib_init();
+  	iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
+  	iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);
+  	iolib_setdir(8, _LED_3, BBBIO_DIR_OUT);
+  	iolib_setdir(8, _LED_4, BBBIO_DIR_OUT);
+  	pin_low(8,  _LED_1);
+  	pin_low(8,  _LED_2);
+  	pin_low(8,  _LED_3);
+  	pin_low(8,  _LED_4);
 
 	/********** main loop *******************************************************************/
 	printf("starting main loop\n");
@@ -114,34 +110,32 @@ int main(void) {
 			// wait for a lock on shared memory
 			memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local structure to shared memory
 			// unlock shared memory
-			update_relays(&tm, &ipc_dat);
-			dispdat();
+			// update_relays(&tm, &ipc_dat);
+			// dispdat();
 		}
 		else {
 			get_tm(rtc, &tm);
 			if (h_min != tm.tm_min) {					// see if we are on a new minute
 				h_min = tm.tm_min;
-				update_relays(&tm, &ipc_dat);
-				dispdat();
+				// update_relays(&tm, &ipc_dat);
+				// dispdat();
 			}
 		}
 
 		/* cycle leds */
-		for (i = 0; i < 4; i++) {
-			if (led_state[i] == 1) {
-				led_state[i] = 0;
-				led_set(led_fd[i], _OFF);
-
-				if (i < 3) {
-					led_state[i + 1]  = 1;
-					led_set(led_fd[i + 1] , _ON);
-				}
-				else {
-					led_state[0] = 1;
-					led_set(led_fd[0], _ON);
-				}
-				break;
-			}
+		if(toggle){
+			toggle = 0;
+		  	pin_low(8,  _LED_1);
+		  	pin_high(8,  _LED_2);
+		  	pin_low(8,  _LED_3);
+		  	pin_high(8,  _LED_4);
+		}
+		else{
+			toggle = 1;
+		  	pin_high(8,  _LED_1);
+		  	pin_low(8,  _LED_2);
+		  	pin_high(8,  _LED_3);
+		  	pin_low(8,  _LED_4);
 		}
 		sleep(1);
 
