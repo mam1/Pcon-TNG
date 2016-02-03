@@ -4,6 +4,7 @@
 // #define _TRACE
 #define _SYSTEM_DATA_FILE		"/home/Pcon-data/Pcon.dat" 		// system data file
 #define _IPC_FILE				"/home/Pcon-data/ipc.dat"   	// memory mapped ipc file
+#define _TRACE_FILE_NAME		"/home/Pcon-data/trace.dat" 	// trace file
 
 #include "shared.h"
 

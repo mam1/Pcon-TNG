@@ -1,6 +1,8 @@
 #ifndef _SHARE_H_
 #define _SHARE_H_
 
+#define _TRACE on
+
 /* version info */
 #define _major_version 			6
 #define _minor_version 			0

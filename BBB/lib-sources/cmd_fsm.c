@@ -504,31 +504,34 @@ int c_1(CMD_FSM_CB *cb)
 
     // printf("sizeofkeyword %i\n\r",(sizeof(keyword)/4));
 
-    printf("\r\ncurrent state %i\r\n",cb->state);
 
-    printf("\r\nvalid commands any state\r\n  ESC .... reset command processor\r\n");
+
+    printf("\r\ncommands valid in any state\r\n  ESC .... reset command processor\r\n");
     printf("  ? ...... display current state and list all valid commands\r\n");
     printf("  q ...... terminate the application\r\n");
     printf("  system . display system data\r\n");
+    printf("\r\ncommands valid in any state other than state 0\r\n");
     printf("  done ... terminate active function\r\n");
     printf("  back ... return to previous state\r\n");
-
-    printf("       -------------------------------------\r\n");
+    printf("\r\ncurrent state %i, ",cb->state);
+    printf("commands valid in current state\r\n");
 
     for(i=0;i<_CMD_TOKENS;i++){
-        // printf("keyword = %s, length = %i\r\n",keyword[i],strlen(keyword[i]));
+        printf("keyword = %s, length = %i\r\n",keyword[i],strlen(keyword[i]));
         if((strlen(keyword[i]) > dots)){
             dots = strlen(keyword[i]);
-            // printf("dots %i\r\n",dots);            
+            printf("dots %i\r\n",dots);            
         }
     }
-    // printf("dots = %i\r\n",dots);
+    printf("dots = %i\r\n",dots);
     
-    // printf("valid commands in state %i\r\n",cb->state);
-    // for(i=0;i<_CMD_TOKENS - 7;i++){
+    printf("valid commands in state %i\r\n",cb->state);
+    for(i=0;i<_CMD_TOKENS - 7;i++){
     //     // if(cb->token_type != )
-    //     if((cmd_action[i][cb->state] != c_8) && (cmd_action[i][cb->state] != c_7) && (cmd_action[i][cb->state] != c_0)){
-    //         printf("  %s ",keyword[i]);
+		if(	(cmd_action[i][cb->state] != c_8) && 
+    		(cmd_action[i][cb->state] != c_7) && 
+    		(cmd_action[i][cb->state] != c_0)){
+			printf("  %s ",keyword[i]);
     //         for(ii=0;ii<((dots + 2)- strlen(keyword[i]));ii++){
     //             printf(".");
     //         }
@@ -536,9 +539,8 @@ int c_1(CMD_FSM_CB *cb)
     //         if(i==0)
     //             printf(" (%s)",INT_def[i]);
     //         printf("\r\n");
-
-    //     }
-    // }
+		}
+    }
     /* build prompt */
     c_34(cb);  // state 0 prompt
     return 0;    
