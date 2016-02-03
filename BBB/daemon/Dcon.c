@@ -16,8 +16,6 @@
 #include "shared.h"
 #include "bitlit.h"
 #include "PCF8563.h"
-// #include "gpio.h"
-// #include "led.h"
 #include "schedule.h"
 #include "BBBiolib.h"
 
@@ -37,8 +35,6 @@ void           	*data;                      				// pointer to ipc data
 int            	fd;                        				 	// file descriptor for ipc data file
 int         	rtc;										// file descriptor for PCF8563 RTC
 _tm         	tm;											// time date structure
-// int             led_fd[4];                               	// file descriptor array for leds
-// int             led_state[4];				             	// led state
 
 /********** support functions *******************************************************************/
 void dispdat(void) {
@@ -60,11 +56,17 @@ void update_relays(_tm *tm, IPC_DAT *sm) {
 	int 				state;
 	int 				channel;
 
-	key =  make_key(tm->tm_hour, tm->tm_min);									// generate key
+	key =  make_key(tm->tm_hour, tm->tm_min);						// generate key
+	printf("key = %i\n",key );
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
-		srec_ptr = find_schedule_record(sm->sch[tm->tm_wday][channel], key);	// get a pointer to record matching key
-		state =  get_s(*srec_ptr);												// extract state from schedule record
-		sm->c_dat[channel].c_state = state;
+		srec_ptr = get_schedule(sm->sch,tm->tm_wday,channel);		// get a pointer to record matching key
+		state =  get_s(*srec_ptr);									// extract state from schedule record
+		printf("chanel = %i, state = %i\n", channel, state);
+		// get a memory lock
+	 	sm->c_dat[channel].c_state = state;
+		memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local structure to shared memory
+
+
 	}
 	printf("  %02i:%02i:%02i  %02i/%02i/%02i  dow %i\n",
 	       tm->tm_hour, tm->tm_min, tm->tm_sec, tm->tm_mon, tm->tm_mday, tm->tm_year, tm->tm_wday);
@@ -77,7 +79,7 @@ int main(void) {
 	int 	h_min;
 	int 	toggle;
 
-	printf("\n  **** daemon active 0.3 ****\n\n");
+	printf("\n  **** daemon active 0.4 ****\n\n");
 
 	/********** initializations *******************************************************************/
 
@@ -107,18 +109,19 @@ int main(void) {
 		memcpy(&ipc_dat, data, sizeof(ipc_dat));  		// move shared memory data to local structure
 		if (ipc_dat.force_update) {
 			ipc_dat.force_update = 0;
+			printf("  update forced\n");
 			// wait for a lock on shared memory
 			memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local structure to shared memory
 			// unlock shared memory
-			// update_relays(&tm, &ipc_dat);
-			// dispdat();
+			update_relays(&tm, &ipc_dat);
+			dispdat();
 		}
 		else {
 			get_tm(rtc, &tm);
 			if (h_min != tm.tm_min) {					// see if we are on a new minute
 				h_min = tm.tm_min;
-				// update_relays(&tm, &ipc_dat);
-				// dispdat();
+				update_relays(&tm, &ipc_dat);
+				dispdat();
 			}
 		}
 

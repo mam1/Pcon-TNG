@@ -119,7 +119,17 @@ int ipc_size(void) {
     return (pages * (int)page_size);
 }
 
-int ipc_init_sem() {
+int ipc_save(void){
+
+    return 0;
+}
+
+int ipc_load(void){
+
+    return 0;
+}
+
+int ipc_init_sem(void) {
     
     int id; /* Number by which the semaphore is known within a program */
 

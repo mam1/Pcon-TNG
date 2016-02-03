@@ -524,21 +524,21 @@ int c_1(CMD_FSM_CB *cb)
     }
     // printf("dots = %i\r\n",dots);
     
-    printf("valid commands in state %i\r\n",cb->state);
-    for(i=0;i<_CMD_TOKENS - 7;i++){
-        // if(cb->token_type != )
-        if((cmd_action[i][cb->state] != c_8) && (cmd_action[i][cb->state] != c_7) && (cmd_action[i][cb->state] != c_0)){
-            printf("  %s ",keyword[i]);
-            for(ii=0;ii<((dots + 2)- strlen(keyword[i]));ii++){
-                printf(".");
-            }
-            printf(" %s",keyword_defs[i]);
-            if(i==0)
-                printf(" (%s)",INT_def[i]);
-            printf("\r\n");
+    // printf("valid commands in state %i\r\n",cb->state);
+    // for(i=0;i<_CMD_TOKENS - 7;i++){
+    //     // if(cb->token_type != )
+    //     if((cmd_action[i][cb->state] != c_8) && (cmd_action[i][cb->state] != c_7) && (cmd_action[i][cb->state] != c_0)){
+    //         printf("  %s ",keyword[i]);
+    //         for(ii=0;ii<((dots + 2)- strlen(keyword[i]));ii++){
+    //             printf(".");
+    //         }
+    //         printf(" %s",keyword_defs[i]);
+    //         if(i==0)
+    //             printf(" (%s)",INT_def[i]);
+    //         printf("\r\n");
 
-        }
-    }
+    //     }
+    // }
     /* build prompt */
     c_34(cb);  // state 0 prompt
     return 0;    
