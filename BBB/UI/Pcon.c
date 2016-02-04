@@ -88,7 +88,12 @@ int main(void) {
 
 /************************ initializations ****************************/
 	printf("ipc data allocated at <%x>\n",(uint32_t)&ipc_dat);
-	// fflush(stdout);
+	
+
+    /* set up file mapped shared memory for inter process communication */ 
+   	fd = ipc_open(ipc_file, ipc_size());      // create/open ipc file
+  	data = ipc_map(fd, ipc_size());           // map file to memory
+ // 	memcpy(&ipc_dat, data, sizeof(ipc_dat));  // move shared memory data to local structure
 
 	/* load data from file on sd card */
 	load_system_data(_SYSTEM_DATA_FILE,&sdat);
@@ -108,6 +113,18 @@ int main(void) {
 		c = fgetc(stdin);	// get rid of trailing CR
 	}
 
+	/* copy system data to shared memory */
+	memcpy(ipc_dat.sch, sdat.sch, sizeof(sdat.sch));
+	for(i=0;i<_NUMBER_OF_CHANNELS;i++){
+		ipc_dat.c_dat[i].c_state = sdat.c_data[i].c_state;
+		ipc_dat.c_dat[i].c_mode = sdat.c_data[i].c_mode;
+		ipc_dat.c_dat[i].on_sec = sdat.c_data[i].on_sec;
+		ipc_dat.c_dat[i].off_sec = sdat.c_data[i].off_sec;
+	}
+	ipc_dat.force_update = 1;			// force daemon to update relays
+	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local structure to shared memory
+	printf("  Pcon: system data copied to shared memory\r\n");
+
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm control block to allow acces to system data
 	cmd_fsm_cb.w_sch_ptr = (uint32_t *)cmd_fsm_cb.w_sch;
@@ -117,12 +134,6 @@ int main(void) {
     printf("  Pcon: size of schedule buffer = %i\r\n",sizeof(cmd_fsm_cb.w_sch));
     memcpy(cmd_fsm_cb.w_sch_ptr,cmd_fsm_cb.sdat_ptr->sch_ptr,sizeof(cmd_fsm_cb.w_sch));
     printf("  Pcon: system schedule copied to buffer\r\n");
-
-    /* set up file mapped shared memory for inter process communication */ 
-
-   	fd = ipc_open(ipc_file, ipc_size());      // create/open ipc file
-  	data = ipc_map(fd, ipc_size());           // map file to memory
-  	memcpy(&ipc_dat, data, sizeof(ipc_dat));  // move shared memory data to local structure
 
 	/* initialize state machines */
 	work_buffer_ptr = (char *)work_buffer;  //initialize work buffer pointer

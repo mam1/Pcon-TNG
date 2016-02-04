@@ -89,6 +89,8 @@ int main(void) {
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	memcpy(&ipc_dat, data, sizeof(ipc_dat));  	// move shared memory data to local structure
+	printf("\n  force_update <%i>\n\n", ipc_dat.force_update);
+	
 	/* setup semaphores */
 	ipc_init_sem();
 

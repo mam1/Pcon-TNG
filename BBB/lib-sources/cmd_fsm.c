@@ -609,9 +609,11 @@ int c_5(CMD_FSM_CB *cb)
 int c_6(CMD_FSM_CB *cb)
 {
 	int         i;
+	printf("  channel  state   mode     name\n\r");
+	printf("  ---------------------------------\n\r");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
-		printf("state <%i>\r\n", sdat.c_data[i].c_state);
-		printf("  %s - %i %s - %s", onoff[sdat.c_data[i].c_state], i, c_mode[sdat.c_data[i].c_mode], sdat.c_data[i].name);
+		printf("   <%2i> - ", i);
+		printf(" %s    %s   %s", onoff[sdat.c_data[i].c_state], c_mode[sdat.c_data[i].c_mode], sdat.c_data[i].name);
 		if ((sdat.c_data[i].c_mode) == 3)
 			printf(" (%i:%i)", sdat.c_data[i].on_sec, sdat.c_data[i].off_sec);
 		printf("\r\n");
