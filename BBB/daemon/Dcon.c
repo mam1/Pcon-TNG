@@ -38,13 +38,15 @@ _tm         	tm;											// time date structure
 
 /********** support functions *******************************************************************/
 void dispdat(void) {
-	int 		channel;
-
-	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
-		if (channel < 10)
-			printf("  %i  - %i\n", channel, ipc_ptr->c_dat[channel].c_state );
-		else
-			printf("  %i - %i\n", channel, ipc_ptr->c_dat[channel].c_state );
+	int         i;
+	printf("  channel  state   mode   \n\r");
+	printf("  ---------------------------------\n\r");
+	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
+		printf("   <%2i> - ", i);
+		printf(" %s     %s", onoff[ipc_ptr->c_dat[i].c_state], c_mode[ipc_ptr->c_dat[i].c_mode]);
+		if ((ipc_ptr->c_dat[i].c_mode) == 3)
+			printf(" (%i:%i)", ipc_ptr->c_dat[i].on_sec, ipc_ptr->c_dat[i].off_sec);
+		printf("\r\n");
 	}
 	return;
 }
@@ -110,10 +112,9 @@ int main(void) {
 	printf("starting main loop\n");
 	while (1) {
 //		memcpy(ipc_ptr, data, sizeof(ipc_dat));  		// move shared memory data to local structure
-		if (ipc_ptr->force_update) {
-			dispdat();
+		if (ipc_ptr->force_update == 1) {
 			ipc_ptr->force_update = 0;
-			printf("  update forced\n");
+			printf("  *** update forced\n");
 			// wait for a lock on shared memory
 //			memcpy(data, ipc_ptr, sizeof(ipc_dat));  	// move local structure to shared memory
 			// unlock shared memory
@@ -124,6 +125,7 @@ int main(void) {
 			get_tm(rtc, &tm);
 			if (h_min != tm.tm_min) {					// see if we are on a new minute
 				h_min = tm.tm_min;
+				printf("  *** update triggered by time\n");
 				// update_relays(&tm, ipc_ptr);
 				dispdat();
 			}

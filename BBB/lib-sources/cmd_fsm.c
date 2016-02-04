@@ -653,10 +653,11 @@ int c_8(CMD_FSM_CB *cb)
 int c_9(CMD_FSM_CB *cb)
 {
 	char        numstr[2];
-	ipc_dat.force_update = 1;					// update ipc data
-	ipc_dat.c_dat[cb->w_channel].c_mode = 0;	// update ipc data
-	ipc_dat.c_dat[cb->w_channel].c_state = 1;	// update ipc data
-	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local data into shared memory
+	ipc_ptr->force_update = 1;					// update ipc data
+	ipc_ptr->c_dat[cb->w_channel].c_mode = 0;	// update ipc data
+	ipc_ptr->c_dat[cb->w_channel].c_state = 1;	// update ipc data
+	ipc_ptr->force_update = 1;					// force relays to be updated
+//	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local data into shared memory
 
 	sdat.c_data[cb->w_channel].c_mode = 0;
 	sdat.c_data[cb->w_channel].c_state = 1;
@@ -674,10 +675,11 @@ int c_9(CMD_FSM_CB *cb)
 int c_10(CMD_FSM_CB *cb)
 {
 	char        numstr[2];
-	ipc_dat.force_update = 1;					// update ipc data
-	ipc_dat.c_dat[cb->w_channel].c_mode = 0;	// update ipc data
-	ipc_dat.c_dat[cb->w_channel].c_state = 0;	// update ipc data
-	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local data into shared memory
+	ipc_ptr->force_update = 1;					// update ipc data
+	ipc_ptr->c_dat[cb->w_channel].c_mode = 0;	// update ipc data
+	ipc_ptr->c_dat[cb->w_channel].c_state = 0;	// update ipc data
+	ipc_ptr->force_update = 1;					// force relays to be updated
+//	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local data into shared memory
 
 	sdat.c_data[cb->w_channel].c_mode = 0;
 	sdat.c_data[cb->w_channel].c_state = 0;
@@ -697,6 +699,8 @@ int c_11(CMD_FSM_CB *cb)
 	char        numstr[2];
 
 	printf("cb->w_channel <%i>\n\r", cb->w_channel);
+	ipc_ptr->c_dat[cb->w_channel].c_mode = 1;
+	ipc_ptr->force_update = 1;					// force relays to be updated
 	sdat.c_data[cb->w_channel].c_mode = 1;
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);
 	strcpy(cb->prompt_buffer, "channel ");
@@ -711,6 +715,8 @@ int c_11(CMD_FSM_CB *cb)
 int c_12(CMD_FSM_CB *cb)
 {
 	char        numstr[2];
+	ipc_ptr->c_dat[cb->w_channel].c_mode = 2;
+	ipc_ptr->force_update = 1;					// force relays to be updated
 	sdat.c_data[cb->w_channel].c_mode = 2;
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);
 	strcpy(cb->prompt_buffer, "channel ");
@@ -725,6 +731,8 @@ int c_13(CMD_FSM_CB *cb)
 {
 	char        sbuf[20];
 
+	ipc_ptr->c_dat[cb->w_channel].c_mode = 3;
+	ipc_ptr->force_update = 1;					// force relays to be updated
 	sdat.c_data[cb->w_channel].c_mode = 3;
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);
 
