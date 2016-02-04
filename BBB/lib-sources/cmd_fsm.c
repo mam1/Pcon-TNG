@@ -24,16 +24,17 @@
 
 
 /*********************** externals **************************/
-extern int             cmd_state, char_state;
-extern char            input_buffer[_INPUT_BUFFER_SIZE], *input_buffer_ptr;
-extern char            c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
-extern int 		    exit_flag;		              	//exit man loop if TRUE
-extern int             trace_flag;                   	//trace file is active
-extern int             bbb;				          	//UART1 file descriptor
-extern CMD_FSM_CB      cmd_fsm_cb, *cmd_fsm_cb_ptr;  	//cmd_fsm control block
-extern SYS_DAT         sdat;                         	//system data structure
+extern int             	cmd_state, char_state;
+extern char            	input_buffer[_INPUT_BUFFER_SIZE], *input_buffer_ptr;
+extern char            	c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
+extern int 		    	exit_flag;		              	//exit man loop if TRUE
+extern int             	trace_flag;                   	//trace file is active
+extern int             	bbb;				          	//UART1 file descriptor
+extern CMD_FSM_CB      	cmd_fsm_cb, *cmd_fsm_cb_ptr;  	//cmd_fsm control block
+extern SYS_DAT         	sdat;                         	//system data structure
 extern IPC_DAT			ipc_dat;					  	//ipc data
-extern void			*data; 							//pointer for shared memory
+extern void				*data; 							//pointer for shared memory
+extern IPC_DAT 			*ipc_ptr;
 
 
 /* code to text conversion */
@@ -613,7 +614,9 @@ int c_6(CMD_FSM_CB *cb)
 	printf("  ---------------------------------\n\r");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("   <%2i> - ", i);
-		printf(" %s    %s   %s", onoff[sdat.c_data[i].c_state], c_mode[sdat.c_data[i].c_mode], sdat.c_data[i].name);
+		printf(" %s    %s   %s", onoff[ipc_ptr->c_dat[i].c_state], c_mode[ipc_ptr->c_dat[i].c_mode], sdat.c_data[i].name);
+		// printf(" %s    %s   %s", onoff[sdat.c_data[i].c_state], c_mode[sdat.c_data[i].c_mode], sdat.c_data[i].name);
+
 		if ((sdat.c_data[i].c_mode) == 3)
 			printf(" (%i:%i)", sdat.c_data[i].on_sec, sdat.c_data[i].off_sec);
 		printf("\r\n");

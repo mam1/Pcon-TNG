@@ -22,7 +22,7 @@ int				trace_flag;							//control program trace
 int 			bbb;								//UART1 file descriptor
 SYS_DAT 		sdat;								//system data structure
 CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
-IPC_DAT 		ipc_dat; 							//ipc data
+IPC_DAT 		ipc_dat,*ipc_ptr; 							//ipc data
 void			*data = NULL;						//pointer to ipc data
 char           	ipc_file[] = {_IPC_FILE};  			//name of ipc file
 uint8_t 		cmd_state,char_state;				//fsm current state
@@ -93,6 +93,7 @@ int main(void) {
     /* set up file mapped shared memory for inter process communication */ 
    	fd = ipc_open(ipc_file, ipc_size());      // create/open ipc file
   	data = ipc_map(fd, ipc_size());           // map file to memory
+  	ipc_ptr = data;
  // 	memcpy(&ipc_dat, data, sizeof(ipc_dat));  // move shared memory data to local structure
 
 	/* load data from file on sd card */
@@ -116,13 +117,13 @@ int main(void) {
 	/* copy system data to shared memory */
 	memcpy(ipc_dat.sch, sdat.sch, sizeof(sdat.sch));
 	for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-		ipc_dat.c_dat[i].c_state = sdat.c_data[i].c_state;
-		ipc_dat.c_dat[i].c_mode = sdat.c_data[i].c_mode;
-		ipc_dat.c_dat[i].on_sec = sdat.c_data[i].on_sec;
-		ipc_dat.c_dat[i].off_sec = sdat.c_data[i].off_sec;
+		ipc_ptr->c_dat[i].c_state = sdat.c_data[i].c_state;
+		ipc_ptr->c_dat[i].c_mode = sdat.c_data[i].c_mode;
+		ipc_ptr->c_dat[i].on_sec = sdat.c_data[i].on_sec;
+		ipc_ptr->c_dat[i].off_sec = sdat.c_data[i].off_sec;
 	}
-	ipc_dat.force_update = 1;			// force daemon to update relays
-	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local structure to shared memory
+	ipc_ptr->force_update = 1;			// force daemon to update relays
+//	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local structure to shared memory
 	printf("  Pcon: system data copied to shared memory\r\n");
 
 	/* setup control block pointers */

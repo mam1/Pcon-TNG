@@ -29,7 +29,7 @@ char *c_mode[4] = {"manual","  time","   t&s"," cycle"};
 
 /********** globals *******************************************************************/
 
-IPC_DAT        	ipc_dat;                    				// ipc data
+IPC_DAT        	ipc_dat, *ipc_ptr;                    		// ipc data
 char           	ipc_file[] = {_IPC_FILE};   				// name of ipc file
 void           	*data;                      				// pointer to ipc data
 int            	fd;                        				 	// file descriptor for ipc data file
@@ -42,9 +42,9 @@ void dispdat(void) {
 
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 		if (channel < 10)
-			printf("  %i  - %i\n", channel, ipc_dat.c_dat[channel].c_state );
+			printf("  %i  - %i\n", channel, ipc_ptr->c_dat[channel].c_state );
 		else
-			printf("  %i - %i\n", channel, ipc_dat.c_dat[channel].c_state );
+			printf("  %i - %i\n", channel, ipc_ptr->c_dat[channel].c_state );
 	}
 	return;
 }
@@ -64,7 +64,7 @@ void update_relays(_tm *tm, IPC_DAT *sm) {
 		printf("chanel = %i, state = %i\n", channel, state);
 		// get a memory lock
 	 	sm->c_dat[channel].c_state = state;
-		memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local structure to shared memory
+//		memcpy(data, ipc_ptr, sizeof(ipc_dat));  	// move local structure to shared memory
 
 
 	}
@@ -88,8 +88,9 @@ int main(void) {
 	/* setup shared memory */
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
-	memcpy(&ipc_dat, data, sizeof(ipc_dat));  	// move shared memory data to local structure
-	printf("\n  force_update <%i>\n\n", ipc_dat.force_update);
+	ipc_ptr = data;
+	// memcpy(ipc_ptr, data, sizeof(ipc_dat));  	// move shared memory data to local structure
+	printf("\n  force_update <%i>\n\n", ipc_ptr->force_update);
 	
 	/* setup semaphores */
 	ipc_init_sem();
@@ -108,21 +109,22 @@ int main(void) {
 	/********** main loop *******************************************************************/
 	printf("starting main loop\n");
 	while (1) {
-		memcpy(&ipc_dat, data, sizeof(ipc_dat));  		// move shared memory data to local structure
-		if (ipc_dat.force_update) {
-			ipc_dat.force_update = 0;
+//		memcpy(ipc_ptr, data, sizeof(ipc_dat));  		// move shared memory data to local structure
+		if (ipc_ptr->force_update) {
+			dispdat();
+			ipc_ptr->force_update = 0;
 			printf("  update forced\n");
 			// wait for a lock on shared memory
-			memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local structure to shared memory
+//			memcpy(data, ipc_ptr, sizeof(ipc_dat));  	// move local structure to shared memory
 			// unlock shared memory
-			update_relays(&tm, &ipc_dat);
+//			update_relays(&tm, ipc_ptr);
 			dispdat();
 		}
 		else {
 			get_tm(rtc, &tm);
 			if (h_min != tm.tm_min) {					// see if we are on a new minute
 				h_min = tm.tm_min;
-				update_relays(&tm, &ipc_dat);
+				// update_relays(&tm, ipc_ptr);
 				dispdat();
 			}
 		}

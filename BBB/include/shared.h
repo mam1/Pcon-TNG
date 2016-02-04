@@ -6,7 +6,7 @@
 /* version info */
 #define _major_version 			6
 #define _minor_version 			0
-#define _minor_revision 		2
+#define _minor_revision 		3
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		10
