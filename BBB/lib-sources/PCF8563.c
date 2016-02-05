@@ -18,52 +18,16 @@
 
 #include "PCF8563.h"
 
-//---------------------------------------------- 
 // Convert an 8 bit binary value to an 8 bit BCD value
-static uint8_t  bin2bcd(uint8_t  value) 
-{ 
-char retval; 
-
-retval = 0; 
-while(1) 
-  { 
-   // Get the tens digit by doing multiple subtraction 
-   // of 10 from the binary value. 
-   if(value >= 10) 
-     { 
-      value -= 10; 
-      retval += 0x10; 
-     } 
-   else // Get the ones digit by adding the remainder. 
-     { 
-      retval += value; 
-      break; 
-     } 
-   } 
-
-return(retval); 
-} 
-
-//---------------------------------------------- 
+static uint8_t  BCDToDecimal(uint8_t  bcdByte){ 
+  return (((bcdByte & 0xF0) >> 4) * 10) + (bcdByte & 0x0F);
+}
+ 
 // Convert an 8 bit BCD value to an 8 bit binary value
-static uint8_t bcd2bin(uint8_t bcd_value) 
-{ 
-uint8_t temp; 
-
-temp = bcd_value; 
-
-// Shifting the upper digit right by 1 is 
-// the same as multiplying it by 8. 
-temp >>= 1; 
-
-// Isolate the bits for the upper digit. 
-temp &= 0x78; 
-
-// Now return: (Tens * 8) + (Tens * 2) + Ones 
-return(temp + (temp >> 2) + (bcd_value & 0x0f)); 
+static uint8_t DecimalToBCD(uint8_t decimalByte) { 
+  return (((decimalByte / 10) << 4) | (decimalByte % 10));
 }
 
-//----------------------------------------------
 // open the i2c buss connected to the PCF8563
 int open_tm(char *filename, uint8_t addr){
   int     fn;
@@ -82,7 +46,6 @@ int open_tm(char *filename, uint8_t addr){
   return fn;
 }
 
-//---------------------------------------------- 
 // This function loads the time date structure
 // from the PCF8563 register buffer
 int get_tm(int rtc, _tm *tm){
@@ -102,36 +65,44 @@ int get_tm(int rtc, _tm *tm){
     printf("\n\n");
     } 
   else {
-    tm->tm_sec = bcd2bin(reg_buf[0] & 0x7f);
-    tm->tm_min = bcd2bin(reg_buf[1] & 0x7f);
-    tm->tm_hour = bcd2bin(reg_buf[2] & 0x3f);
-    tm->tm_mday = bcd2bin(reg_buf[3] & 0x3f);
+    tm->tm_sec = BCDToDecimal(reg_buf[0] & 0x7f);
+    tm->tm_min = BCDToDecimal(reg_buf[1] & 0x7f);
+    tm->tm_hour = BCDToDecimal(reg_buf[2] & 0x3f);
+    tm->tm_mday = BCDToDecimal(reg_buf[3] & 0x3f);
     tm->tm_wday = reg_buf[4] & 0x7;
-    tm->tm_mon = bcd2bin(reg_buf[5] & 0x0f) - 1; /* rtc mn 1-12 */
-    tm->tm_year = bcd2bin(reg_buf[6]) + 2000;
+    tm->tm_mon = BCDToDecimal(reg_buf[5] & 0x1f) + 1;    /* rtc mn 1-12 */
+    tm->tm_year = BCDToDecimal(reg_buf[6]) + 2000;
   }
   return 0;
 
   return 0;
 }
 
-//---------------------------------------------- 
 // This function loads the values in the date structure
 // into the PCF8563.  
 
 int set_tm(int rtc,_tm *tm){
   uint8_t   reg_buf[PCF8563_REGS];
 
+  printf("  set_time: tm->tm_mday = %i\n\r",tm->tm_mday);
+
   /* start register */
   reg_buf[0] = SEC_REG;               
   /* time date registers */
-  reg_buf[1] = bin2bcd(tm->tm_sec);
-  reg_buf[2] = bin2bcd(tm->tm_min);
-  reg_buf[3] = bin2bcd(tm->tm_hour);
-  reg_buf[4] = bin2bcd(tm->tm_mday);
-  reg_buf[5] = tm->tm_wday & 0x07;
-  reg_buf[6] = bin2bcd(tm->tm_mon + 1);
-  reg_buf[7] = bin2bcd(tm->tm_year - 2000);
+  reg_buf[1] = DecimalToBCD((uint8_t)tm->tm_sec);
+  reg_buf[2] = DecimalToBCD((uint8_t)tm->tm_min);
+  reg_buf[3] = DecimalToBCD((uint8_t)tm->tm_hour);
+
+  reg_buf[4] = DecimalToBCD((uint8_t)tm->tm_mday);
+ 
+  reg_buf[5] = tm->tm_wday;
+  reg_buf[6] = DecimalToBCD((uint8_t)tm->tm_mon - 1);
+  reg_buf[7] = DecimalToBCD((uint8_t)tm->tm_year - 2000);
+
+  printf("  set_time: reg_buf[4] = %i\n\r",reg_buf[4]);
+  printf("  set_time: BCDToDecimal(reg_buf[4] & 0x1f = %i\n\r",BCDToDecimal(reg_buf[4] & 0x1f));
+
+
   /* the buffer to the PCF8563 */
   if(write(rtc,reg_buf,8) != 8){
       printf("Failed to write to the i2c bus.\n");

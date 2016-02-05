@@ -94,6 +94,7 @@ int main(void) {
    	fd = ipc_open(ipc_file, ipc_size());      // create/open ipc file
   	data = ipc_map(fd, ipc_size());           // map file to memory
   	ipc_ptr = data;
+  	// int sem_init(sem_t *sem,int pshared, unsigned int value)
  // 	memcpy(&ipc_dat, data, sizeof(ipc_dat));  // move shared memory data to local structure
 
 	/* load data from file on sd card */

@@ -18,6 +18,16 @@
 #include "PCF8563.h"
 #include "schedule.h"
 #include "BBBiolib.h"
+#include "trace.h"
+
+
+
+/*********************** globals **************************/
+
+#ifdef _TRACE
+char			trace_buf[128];
+#endif
+int             	trace_flag;                   	//trace file is active
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -54,27 +64,47 @@ void dispdat(void) {
 void update_relays(_tm *tm, IPC_DAT *sm) {
 
 	int 				key;
-	uint32_t			*srec_ptr;
+	uint32_t			*s_ptr, *r_ptr;
 	int 				state;
 	int 				channel;
 
-	key =  make_key(tm->tm_hour, tm->tm_min);						// generate key
-	printf("key = %i\n",key );
-	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
-		srec_ptr = get_schedule(sm->sch,tm->tm_wday,channel);		// get a pointer to record matching key
-		state =  get_s(*srec_ptr);									// extract state from schedule record
-		printf("chanel = %i, state = %i\n", channel, state);
-		// get a memory lock
-	 	sm->c_dat[channel].c_state = state;
-//		memcpy(data, ipc_ptr, sizeof(ipc_dat));  	// move local structure to shared memory
-
-
+	
+	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++){
+		
+		switch(sm->c_dat[channel].c_mode){
+			case 0:	// manual
+				state = sm->c_dat[channel].c_state;
+				break;
+			case 1:	// time
+				key =  make_key(tm->tm_hour, tm->tm_min);							// generate key
+				s_ptr = get_schedule(((uint32_t *)sm->sch),tm->tm_wday,channel); 	// get a pointer to schedule for (day,channel)
+				printf("got s_ptr\n"); 
+				r_ptr = find_schedule_record(s_ptr,key);  							// search schedule for record with key match, return pointer to record or NULL	
+				printf("got r_ptr\n");
+				state =  get_s(*r_ptr);												// extract state from schedule record
+			 	printf("got state\n");
+			 	sm->c_dat[channel].c_state = state;
+				break;
+			case 2:	// time & sensor
+				printf("*** error mode set to <2>\n");
+				break;		
+			case 3:	// cycle
+				printf("*** error mode set to <3>\n");
+				break;
+			default: // error
+				printf("*** error mode set to <%i>\n",sm->c_dat[channel].c_mode);
+		}
+#ifdef _TRACE
+			sprintf(trace_buf, "    Dcon:update_relays:  relay %i set to %i\n", channel, state);
+			strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+#endif
+		printf("    relay %i set to %i\n", channel, state);
 	}
-	printf("  %02i:%02i:%02i  %02i/%02i/%02i  dow %i\n",
-	       tm->tm_hour, tm->tm_min, tm->tm_sec, tm->tm_mon, tm->tm_mday, tm->tm_year, tm->tm_wday);
+
+	// printf("  %02i:%02i:%02i  %02i/%02i/%02i  dow %i\n",
+	//        tm->tm_hour, tm->tm_min, tm->tm_sec, tm->tm_mon, tm->tm_mday, tm->tm_year, tm->tm_wday);
 	return;
 }
-
 
 int main(void) {
 
@@ -85,17 +115,33 @@ int main(void) {
 
 	/********** initializations *******************************************************************/
 
+		/************************* setup trace *******************************/
+#ifdef _TRACE
+	trace_flag = true;
+#else
+	trace_flag = false;
+#endif
+	if (trace_flag == true) {
+		printf(" program trace active,");
+		if(trace_on(_TRACE_FILE_NAME,&trace_flag)){
+			printf("trace_on returned error\n");
+			trace_flag = false;
+		}
+	}
+	if (trace_flag == false)
+		printf(" program trace disabled\n");
+
 	/* setup PCF8563 RTC */
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 	/* setup shared memory */
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
-	ipc_ptr = data;
+	ipc_ptr = data;								// overlay ipc data structure on shared memory
 	// memcpy(ipc_ptr, data, sizeof(ipc_dat));  	// move shared memory data to local structure
 	printf("\n  force_update <%i>\n\n", ipc_ptr->force_update);
 	
 	/* setup semaphores */
-	ipc_init_sem();
+	// ipc_init_sem();
 
 	/* setup gpio access */
 	iolib_init();
@@ -118,7 +164,7 @@ int main(void) {
 			// wait for a lock on shared memory
 //			memcpy(data, ipc_ptr, sizeof(ipc_dat));  	// move local structure to shared memory
 			// unlock shared memory
-//			update_relays(&tm, ipc_ptr);
+			update_relays(&tm, ipc_ptr);
 			dispdat();
 		}
 		else {
@@ -126,7 +172,7 @@ int main(void) {
 			if (h_min != tm.tm_min) {					// see if we are on a new minute
 				h_min = tm.tm_min;
 				printf("  *** update triggered by time\n");
-				// update_relays(&tm, ipc_ptr);
+				update_relays(&tm, ipc_ptr);
 				dispdat();
 			}
 		}
