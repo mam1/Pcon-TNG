@@ -80,7 +80,7 @@ void update_relays(_tm *tm, IPC_DAT *sm) {
 				s_ptr = get_schedule(((uint32_t *)sm->sch),tm->tm_wday,channel); 	// get a pointer to schedule for (day,channel)
 				printf("got s_ptr\n"); 
 				r_ptr = find_schedule_record(s_ptr,key);  							// search schedule for record with key match, return pointer to record or NULL	
-				printf("got r_ptr\n");
+				printf("got r_ptr <%x>\n",(uint32_t)r_ptr);
 				state =  get_s(*r_ptr);												// extract state from schedule record
 			 	printf("got state\n");
 			 	sm->c_dat[channel].c_state = state;
