@@ -391,13 +391,41 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     return;
  }
 
+ // uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a schedule
+ // {
+ //    SCH             *sch_ptr;
+ //    DAY             *day_ptr;
+
+ //    day_ptr = (DAY *)sbuf;      //set day pointer to the start of the schedule buffer
+ //    day_ptr += d-1;             //move day pointer to the start of the requested day
+ //    sch_ptr = (SCH *)day_ptr;   //set channel pointer to the start of the requested day
+ //    sch_ptr += c;               //move channel pointer to the requested channel
+
+ //    return (uint32_t *)sch_ptr;
+ // }
+
+int test_sch(uint32_t *r, int k) //return state for key
+ {
+    uint32_t              *last_record;
+
+    if(*r == 0) return 0;     //test for no schedule records    
+    last_record =  r + *r++;  //add number of records to first record pointer to set pointer to last record
+    while(r <= last_record)   // search schedule for corresponding to key 
+    {
+        if(get_key(*r)==k)
+            return get_s(*r);
+        if((get_key(*r) > k))     
+            return get_s(*(--r));
+        r++;
+    }
+
+    return get_s(*last_record);
+ }
+
 uint32_t *get_schedule(uint32_t *sch,int day,int channel) // return pointer to a schedule for a (day,channel)
  {
     // int         i;
     uint32_t    *start_schedule;
-
-    // day = day + 1;
-    // printf("day = %i channel = %i\r\n",day,channel);
 
     start_schedule = sch;
     while(day > 0){         //move day pointer to the requested day

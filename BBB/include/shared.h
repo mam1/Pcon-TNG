@@ -6,7 +6,10 @@
 /* version info */
 #define _major_version 			6
 #define _minor_version 			0
-#define _minor_revision 		3
+#define _minor_revision 		4
+
+/* semaphore key */
+#define _SEM_KEY 				1234
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		10
@@ -21,7 +24,7 @@
 #define _SCHEDULE_SIZE			_MAX_SCHEDULE_RECS + 1
 // #define _SCHEDULE_BUFFER		128
 
-#define	_BYTES_PER_INT 				4
+#define	_BYTES_PER_INT 			4
 #define _BYTES_PER_SCHEDULE 	_SCHEDULE_SIZE * _BYTES_PER_INT
 #define _BYTES_PER_DAY 			_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE
 

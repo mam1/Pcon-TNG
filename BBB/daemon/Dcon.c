@@ -3,6 +3,11 @@
 /*	the user requests an immediate update							*/
 /********************************************************************/
 
+#include <sys/sem.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+#include <errno.h>
+
 #include <stdio.h>
 #include <unistd.h>		//sleep
 #include <stdint.h>		//uint_8, uint_16, uint_32, etc.
@@ -22,6 +27,7 @@
 
 
 
+
 /*********************** globals **************************/
 
 #ifdef _TRACE
@@ -30,12 +36,12 @@ char			trace_buf[128];
 int             	trace_flag;                   	//trace file is active
 
 /***************** global code to text conversion ********************/
-char *day_names_long[7] = {"Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
-char *onoff[2] = {"off"," on"};
-char *con_mode[3] = {"manual","  time","time & sensor"};
-char *sch_mode[2] = {"day","week"};
-char *c_mode[4] = {"manual","  time","   t&s"," cycle"};	
+char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+char *onoff[2] = {"off", " on"};
+char *con_mode[3] = {"manual", "  time", "time & sensor"};
+char *sch_mode[2] = {"day", "week"};
+char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
 
@@ -45,6 +51,10 @@ void           	*data;                      				// pointer to ipc data
 int            	fd;                        				 	// file descriptor for ipc data file
 int         	rtc;										// file descriptor for PCF8563 RTC
 _tm         	tm;											// time date structure
+key_t 			skey = _SEM_KEY;
+int 			semid;
+unsigned short 	semval;
+struct sembuf 	wait, signal;
 
 /********** support functions *******************************************************************/
 void dispdat(void) {
@@ -67,36 +77,36 @@ void update_relays(_tm *tm, IPC_DAT *sm) {
 	uint32_t			*s_ptr, *r_ptr;
 	int 				state;
 	int 				channel;
+	int 				i, rcnt;
 
-	
-	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++){
-		
-		switch(sm->c_dat[channel].c_mode){
-			case 0:	// manual
-				state = sm->c_dat[channel].c_state;
-				break;
-			case 1:	// time
-				key =  make_key(tm->tm_hour, tm->tm_min);							// generate key
-				s_ptr = get_schedule(((uint32_t *)sm->sch),tm->tm_wday,channel); 	// get a pointer to schedule for (day,channel)
-				printf("got s_ptr\n"); 
-				r_ptr = find_schedule_record(s_ptr,key);  							// search schedule for record with key match, return pointer to record or NULL	
-				printf("got r_ptr <%x>\n",(uint32_t)r_ptr);
-				state =  get_s(*r_ptr);												// extract state from schedule record
-			 	printf("got state\n");
-			 	sm->c_dat[channel].c_state = state;
-				break;
-			case 2:	// time & sensor
-				printf("*** error mode set to <2>\n");
-				break;		
-			case 3:	// cycle
-				printf("*** error mode set to <3>\n");
-				break;
-			default: // error
-				printf("*** error mode set to <%i>\n",sm->c_dat[channel].c_mode);
+	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
+
+		switch (sm->c_dat[channel].c_mode) {
+		case 0:	// manual
+			state = sm->c_dat[channel].c_state;
+			break;
+		case 1:	// time
+			key =  make_key(tm->tm_hour, tm->tm_min);							// generate key
+			s_ptr = get_schedule(((uint32_t *)sm->sch), tm->tm_wday, channel); 	// get a pointer to schedule for (day,channel)
+			printf("got s_ptr\n");
+			// r_ptr = find_schedule_record(s_ptr,key);  							// search schedule for record with key match, return pointer to record or NULL
+			// printf("got r_ptr <%x>\n",(uint32_t)r_ptr);
+			state =  test_sch(s_ptr, key);
+			printf("got state <%i>\n", state);
+			sm->c_dat[channel].c_state = state;
+			break;
+		case 2:	// time & sensor
+			printf("*** error mode set to <2>\n");
+			break;
+		case 3:	// cycle
+			printf("*** error mode set to <3>\n");
+			break;
+		default: // error
+			printf("*** error mode set to <%i>\n", sm->c_dat[channel].c_mode);
 		}
 #ifdef _TRACE
-			sprintf(trace_buf, "    Dcon:update_relays:  relay %i set to %i\n", channel, state);
-			strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+		sprintf(trace_buf, "    Dcon:update_relays:  relay %i set to %i\n", channel, state);
+		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
 		printf("    relay %i set to %i\n", channel, state);
 	}
@@ -115,7 +125,7 @@ int main(void) {
 
 	/********** initializations *******************************************************************/
 
-		/************************* setup trace *******************************/
+	/* setup trace */
 #ifdef _TRACE
 	trace_flag = true;
 #else
@@ -123,7 +133,7 @@ int main(void) {
 #endif
 	if (trace_flag == true) {
 		printf(" program trace active,");
-		if(trace_on(_TRACE_FILE_NAME,&trace_flag)){
+		if (trace_on(_TRACE_FILE_NAME, &trace_flag)) {
 			printf("trace_on returned error\n");
 			trace_flag = false;
 		}
@@ -139,31 +149,57 @@ int main(void) {
 	ipc_ptr = data;								// overlay ipc data structure on shared memory
 	// memcpy(ipc_ptr, data, sizeof(ipc_dat));  	// move shared memory data to local structure
 	printf("\n  force_update <%i>\n\n", ipc_ptr->force_update);
-	
+
 	/* setup semaphores */
-	// ipc_init_sem();
+	wait.sem_num = 0;
+	wait.sem_op = -1;
+	wait.sem_flg = SEM_UNDO;
+	signal.sem_num = 0;
+	signal.sem_op = 1;
+	signal.sem_flg = SEM_UNDO;
+	semid = semget(skey, 1, 0666 | IPC_CREAT);
+	printf("  *** semid = %i\n",semid );
+	printf("  Allocating the semaphore: %s\n", strerror(errno));
 
 	/* setup gpio access */
 	iolib_init();
-  	iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
-  	iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);
-  	iolib_setdir(8, _LED_3, BBBIO_DIR_OUT);
-  	iolib_setdir(8, _LED_4, BBBIO_DIR_OUT);
-  	pin_low(8,  _LED_1);
-  	pin_low(8,  _LED_2);
-  	pin_low(8,  _LED_3);
-  	pin_low(8,  _LED_4);
+	iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
+	iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);
+	iolib_setdir(8, _LED_3, BBBIO_DIR_OUT);
+	iolib_setdir(8, _LED_4, BBBIO_DIR_OUT);
+	pin_low(8,  _LED_1);
+	pin_low(8,  _LED_2);
+	pin_low(8,  _LED_3);
+	pin_low(8,  _LED_4);
 
 	/********** main loop *******************************************************************/
-	printf("starting main loop\n");
+
+	printf("  *** start memory lock test ***\n");
+	semctl(semid, 0, GETVAL, &semval);
+	printf(" initial semaphore value: %d\n", semval);
+	semop(semid, &wait, 1);
+	sleep(2);
+	printf("Process1 using the terminal now\n");
+	printf("I am Dcon 1\n");
+	semctl(semid, 0, GETVAL, &semval);
+	printf("I decreased the semaphore value to : %d\n", semval);
+	printf("locking memory for 30 seconds\n");
+	sleep(30);
+	semop(semid,&signal,1);
+	semctl(semid,0,GETVAL,&semval);
+	printf("Dcon: Semaphore value after calling signal : %d\n",semval);
+	printf("unlocking memory\n");
+	printf("moving on\n");
+	printf("  *** end memory lock test ***\n");
+
+
+
+	printf("starting main loop\n\n");
 	while (1) {
-//		memcpy(ipc_ptr, data, sizeof(ipc_dat));  		// move shared memory data to local structure
+		// get a lock on shared memory
 		if (ipc_ptr->force_update == 1) {
 			ipc_ptr->force_update = 0;
 			printf("  *** update forced\n");
-			// wait for a lock on shared memory
-//			memcpy(data, ipc_ptr, sizeof(ipc_dat));  	// move local structure to shared memory
-			// unlock shared memory
 			update_relays(&tm, ipc_ptr);
 			dispdat();
 		}
@@ -171,26 +207,29 @@ int main(void) {
 			get_tm(rtc, &tm);
 			if (h_min != tm.tm_min) {					// see if we are on a new minute
 				h_min = tm.tm_min;
-				printf("  *** update triggered by time\n");
+				printf("  *** update triggered by time:");
+				printf("  %02i:%02i:%02i  %02i/%02i/%02i  dow %i\n",
+				       tm.tm_hour, tm.tm_min, tm.tm_sec, tm.tm_mon, tm.tm_mday, tm.tm_year, tm.tm_wday);
 				update_relays(&tm, ipc_ptr);
 				dispdat();
 			}
 		}
+		// clear lock on shared memory
 
 		/* cycle leds */
-		if(toggle){
+		if (toggle) {
 			toggle = 0;
-		  	pin_low(8,  _LED_1);
-		  	pin_high(8,  _LED_2);
-		  	pin_low(8,  _LED_3);
-		  	pin_high(8,  _LED_4);
+			pin_low(8,  _LED_1);
+			pin_high(8,  _LED_2);
+			pin_low(8,  _LED_3);
+			pin_high(8,  _LED_4);
 		}
-		else{
+		else {
 			toggle = 1;
-		  	pin_high(8,  _LED_1);
-		  	pin_low(8,  _LED_2);
-		  	pin_high(8,  _LED_3);
-		  	pin_low(8,  _LED_4);
+			pin_high(8,  _LED_1);
+			pin_low(8,  _LED_2);
+			pin_high(8,  _LED_3);
+			pin_low(8,  _LED_4);
 		}
 		sleep(1);
 

@@ -1251,6 +1251,7 @@ int c_39(CMD_FSM_CB *cb)
 {
 	// char            temp_buf[128];
 
+	memcpy(ipc_dat.sch, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));
 	memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);
 	printf("\r\n*** system schedule replaced ***\r\n");

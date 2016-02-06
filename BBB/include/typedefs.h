@@ -20,6 +20,18 @@ typedef struct {
 	uint32_t		schedule[_SCHEDULE_SIZE];
 } TMPL_DAT;
 
+/*  data structures for indexing the schedule array */
+typedef struct
+ {
+    uint32_t            rec[_MAX_SCHEDULE_RECS+1];
+ } SCH;
+
+typedef struct
+ {
+    SCH                 sch[_NUMBER_OF_CHANNELS];
+ } DAY;
+
+
 /* system data - saved and restored at restart */
 typedef	struct {
     int         major_version;
