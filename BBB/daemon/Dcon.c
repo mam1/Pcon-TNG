@@ -7,7 +7,6 @@
 #include <sys/ipc.h>
 #include <sys/types.h>
 #include <errno.h>
-
 #include <stdio.h>
 #include <unistd.h>		//sleep
 #include <stdint.h>		//uint_8, uint_16, uint_32, etc.
@@ -25,11 +24,7 @@
 #include "BBBiolib.h"
 #include "trace.h"
 
-
-
-
 /*********************** globals **************************/
-
 #ifdef _TRACE
 char			trace_buf[128];
 #endif
@@ -44,7 +39,6 @@ char *sch_mode[2] = {"day", "week"};
 char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
-
 IPC_DAT        	ipc_dat, *ipc_ptr;                    		// ipc data
 char           	ipc_file[] = {_IPC_FILE};   				// name of ipc file
 void           	*data;                      				// pointer to ipc data
@@ -128,7 +122,7 @@ int main(void) {
 	int 	h_min;
 	int 	toggle;
 
-	printf("\n  **** daemon active 0.4 ****\n\n");
+	printf("\n  **** daemon active 0.5 ****\n\n");
 
 	/********** initializations *******************************************************************/
 
@@ -158,19 +152,19 @@ int main(void) {
 	printf("\n  force_update <%i>\n\n", ipc_ptr->force_update);
 
 	/* setup semaphores */
-	wait.sem_num = 0;
-	wait.sem_op = -1;
-	wait.sem_flg = SEM_UNDO;
-	signal.sem_num = 0;
-	signal.sem_op = 1;
-	signal.sem_flg = SEM_UNDO;
+	// wait.sem_num = 0;
+	// wait.sem_op = -1;
+	// wait.sem_flg = SEM_UNDO;
+	// signal.sem_num = 0;
+	// signal.sem_op = 1;
+	// signal.sem_flg = SEM_UNDO;
 	if ((semid = semget(skey, 1, 0)) == -1) { //	grab the semaphore set
 		perror("semget");
 		exit(1);
 	}
 
-
 	/* setup gpio access */
+
 	iolib_init();
 	iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
 	iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);

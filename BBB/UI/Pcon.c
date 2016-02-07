@@ -323,7 +323,7 @@ void term1(void) {
 	system("/bin/stty cooked");			//switch to buffered iput
 	system("/bin/stty echo");			//turn on terminal echo
 	semctl(semid, 0, IPC_RMID, dummy);
-	printf("  semaphore set removed\n\r");
+	printf("    semaphore set removed\n\r");
 	printf("\n*** program terminated\n\n");
 	exit(-1);
 	return;

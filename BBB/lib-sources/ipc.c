@@ -129,7 +129,7 @@ int ipc_size(void) {
     if (pages < 1) pages = 1;
     else if (sizeof(IPC_DAT) % page_size != 0) pages += 1;
     // printf("    2 -pages = %i\n",pages);
-    printf("  ipc_size: system page size %i, ipc data %i, ipc data requires %i pages, %i bytes\n", (int)page_size, sizeof(IPC_DAT), pages, pages * (int)page_size);
+ //   printf("  ipc_size: system page size %i, ipc data %i, ipc data requires %i pages, %i bytes\n", (int)page_size, sizeof(IPC_DAT), pages, pages * (int)page_size);
     return (pages * (int)page_size);
 }
 
