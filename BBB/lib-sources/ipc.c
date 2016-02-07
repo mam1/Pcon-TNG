@@ -4,6 +4,13 @@
 /*                                                                      */
 /************************************************************************/
 
+// #include <stdio.h>
+// #include <stdlib.h>
+#include <errno.h>
+// #include <sys/types.h>
+// #include <sys/ipc.h>
+#include <sys/sem.h>
+
 #include <sys/types.h>
 #include <sys/mman.h>
 #include <errno.h>
@@ -16,9 +23,15 @@
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
 #include <sys/ipc.h>
 // #include <sys/sem.h>
-#include <semaphore.h>
+// #include <semaphore.h>
 
 #include "ipc.h"
+
+union semun {
+    int val;              /* used for SETVAL only */
+    struct semid_ds *buf; /* for IPC_STAT and IPC_SET */
+    ushort *array;        /* used for GETALL and SETALL */
+};
 
 int ipc_open(char *fname, int size) {
     int                 fd;
@@ -120,62 +133,34 @@ int ipc_size(void) {
     return (pages * (int)page_size);
 }
 
-int ipc_save(void){
+int ipc_save(void) {
 
     return 0;
 }
 
-int ipc_load(void){
+int ipc_load(void) {
 
     return 0;
 }
 
-// int ipc_init_sem(void) {
-    
-//     int id; /* Number by which the semaphore is known within a program */
-
-//     /* The next thing is an argument to the semctl() function. Semctl()
-//        does various things to the semaphore depending on which arguments
-//        are passed. We will use it to make sure that the value of the
-//        semaphore is initially 0. */
-
-//     union semun {
-//         int val;
-//         struct semid_ds *buf;
-//         ushort * array;
-//     } argument;
-
-//     argument.val = 0;
-
-//     /* Create the semaphore with external key KEY if it doesn't already
-//        exists. Give permissions to the world. */
-
-//     id = semget(KEY, 1, 0666 | IPC_CREAT);
-
-//     /* Always check system returns. */
-
-//     if (id < 0)
-//     {
-//         fprintf(stderr, "Unable to obtain semaphore.\n");
-//         exit(0);
-//     }
-
-//     /* What we actually get is an array of semaphores. The second
-//        argument to semget() was the array dimension - in our case
-//        1. */
-
-//     /* Set the value of the number 0 semaphore in semaphore array
-//        # id to the value 0. */
-
-//     if ( semctl(id, 0, SETVAL, argument) < 0)
-//     {
-//         fprintf( stderr, "Cannot set semaphore value.\n");
-//     }
-//     else
-//     {
-//         fprintf(stderr, "Semaphore %d initialized.\n", KEY);
-//     }
 
 
-//     return 0;
-// }
+int ipc_init_sem(void)
+{
+    key_t key = _SEM_KEY;
+    int semid;
+    union semun     arg;
+ 
+    /* create a semaphore set with 1 semaphore: */
+    if ((semid = semget(key, 1, 0666 | IPC_CREAT)) == -1) {
+        perror("semget");
+        exit(1);
+    }
+    /* initialize semaphore #0 to 1: */
+    arg.val = 1;
+    if (semctl(semid, 0, SETVAL, arg) == -1) {
+        perror("semctl");
+        exit(1);
+    }
+    return 0;
+}

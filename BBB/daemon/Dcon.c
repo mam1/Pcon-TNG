@@ -55,6 +55,13 @@ key_t 			skey = _SEM_KEY;
 int 			semid;
 unsigned short 	semval;
 struct sembuf 	wait, signal;
+union semun {
+	int val;              /* used for SETVAL only */
+	struct semid_ds *buf; /* for IPC_STAT and IPC_SET */
+	ushort *array;        /* used for GETALL and SETALL */
+};
+union 			semun dummy;
+struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
 
 /********** support functions *******************************************************************/
 void dispdat(void) {
@@ -157,9 +164,11 @@ int main(void) {
 	signal.sem_num = 0;
 	signal.sem_op = 1;
 	signal.sem_flg = SEM_UNDO;
-	semid = semget(skey, 1, 0666 | IPC_CREAT);
-	printf("  *** semid = %i\n",semid );
-	printf("  Allocating the semaphore: %s\n", strerror(errno));
+	if ((semid = semget(skey, 1, 0)) == -1) { //	grab the semaphore set
+		perror("semget");
+		exit(1);
+	}
+
 
 	/* setup gpio access */
 	iolib_init();
@@ -174,23 +183,22 @@ int main(void) {
 
 	/********** main loop *******************************************************************/
 
-	printf("  *** start memory lock test ***\n");
-	semctl(semid, 0, GETVAL, &semval);
-	printf(" initial semaphore value: %d\n", semval);
-	semop(semid, &wait, 1);
-	sleep(2);
-	printf("Process1 using the terminal now\n");
-	printf("I am Dcon 1\n");
-	semctl(semid, 0, GETVAL, &semval);
-	printf("I decreased the semaphore value to : %d\n", semval);
-	printf("locking memory for 30 seconds\n");
+	printf("\n  *** start memory lock test ***\n\n");
+	printf("Trying to lock...\n");
+	if (semop(semid, &sb, 1) == -1) {
+		perror("semop");
+		exit(1);
+	}
+	printf("  *** %i Locked\n",semid);
 	sleep(30);
-	semop(semid,&signal,1);
-	semctl(semid,0,GETVAL,&semval);
-	printf("Dcon: Semaphore value after calling signal : %d\n",semval);
-	printf("unlocking memory\n");
-	printf("moving on\n");
-	printf("  *** end memory lock test ***\n");
+	sb.sem_op = 1; /* free resource */
+	if (semop(semid, &sb, 1) == -1) {
+		perror("semop");
+		exit(1);
+	}
+	printf("  *** Unlocked\n");
+
+	printf("\n  *** end memory lock test ***\n");
 
 
 

@@ -37,6 +37,14 @@ key_t 			skey = _SEM_KEY;
 int 			semid;
 unsigned short 	semval;
 struct sembuf 	wait, signal;
+union semun {
+	int val;              /* used for SETVAL only */
+	struct semid_ds *buf; /* for IPC_STAT and IPC_SET */
+	ushort *array;        /* used for GETALL and SETALL */
+};
+union 			semun dummy;
+struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
+
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -73,6 +81,7 @@ int main(void) {
 	int 			fd;					//file descriptor for ipc data file
 
 
+
 	/*********************** setup console *******************************/
 	printf("\033\143"); 				//clear the terminal screen, preserve the scroll back
 	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version, _minor_revision);
@@ -103,23 +112,25 @@ int main(void) {
 	ipc_ptr = data;
 
 	/* setup semaphores */
-	int semget(key_t skey, int nsems, int semflg);
-	wait.sem_num = 0;
-	wait.sem_op = -1;
-	wait.sem_flg = SEM_UNDO;
-	signal.sem_num = 0;
-	signal.sem_op = 1;
-	signal.sem_flg = SEM_UNDO;
-	semid = semget(skey, 1, 0666 | IPC_CREAT);
-	printf("  *** semid = %i\n",semid );
-	printf("  Allocating the semaphore: %s\n", strerror(errno));
-	semval = 1;
-	semctl(semid, 0, SETVAL, semval);
-	printf("  Setting semaphore value to %d: %s\n", semval, strerror(errno));
+	// int semget(key_t skey, int nsems, int semflg);
+	// wait.sem_num = 0;
+	// wait.sem_op = -1;
+	// wait.sem_flg = SEM_UNDO;
+	// signal.sem_num = 0;
+	// signal.sem_op = 1;
+	// signal.sem_flg = SEM_UNDO;
+	// semid = semget(skey, 1, 0666 | IPC_CREAT);
+	// printf("  *** semid = %i\n",semid );
+	// printf("  Allocating the semaphore: %s\n", strerror(errno));
+	// semval = 1;
+	// semctl(semid, 0, SETVAL, semval);
+	// printf("  Setting semaphore value to %d: %s\n", semval, strerror(errno));
 
-	semval = semctl(semid, 0, GETVAL);
-	printf("  Initialized Semaphore value to %d: %s\n", semval, strerror(errno));
-	
+	// semval = semctl(semid, 0, GETVAL);
+	// printf("  Initialized Semaphore value to %d: %s\n", semval, strerror(errno));
+
+	ipc_init_sem();			// setup semaphores
+
 	/* load data from file on sd card */
 	load_system_data(_SYSTEM_DATA_FILE, &sdat);
 	printf("  Pcon: system data loaded from %s\r\n", _SYSTEM_DATA_FILE);
@@ -139,14 +150,21 @@ int main(void) {
 	}
 
 	/* copy system data to shared memory */
-	semop(semid,&wait,1);
-	sleep(2);							// wait 
-	printf("\n **** shared memory available\n");
-	semctl(semid,0,GETVAL,&semval);
-	printf("I decreased the semaphore value to : %d\n",semval);
-	semop(semid,&signal,1);
-	semctl(semid,0,GETVAL,&semval);
-	printf("Pcon: Semaphore value after calling signal : %d\n",semval);
+
+
+	/* grab the semaphore set created by seminit.c: */
+	if ((semid = semget(skey, 1, 0)) == -1){ //	grab the semaphore set
+		perror("semget");
+		exit(1);
+	}
+
+	printf("Trying to lock...\n");
+	if (semop(semid, &sb, 1) == -1) {
+		perror("semop");
+		exit(1);
+	}
+	printf("  *** Locked\n");
+	printf("\n  *** shared memory available\n");
 
 	memcpy(ipc_dat.sch, sdat.sch, sizeof(sdat.sch));
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
@@ -157,6 +175,13 @@ int main(void) {
 	}
 	ipc_ptr->force_update = 1;			// force daemon to update relays
 	printf("  Pcon: system data copied to shared memory\r\n");
+	sb.sem_op = 1; /* free resource */
+	if (semop(semid, &sb, 1) == -1) {
+		perror("semop");
+		exit(1);
+	}
+	printf("  *** Unlocked\n");
+
 
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm control block to allow acces to system data
@@ -268,7 +293,8 @@ int main(void) {
 	return 0;
 }
 int term(int t) {
-	// s_close(bbb);
+	semctl(semid, 0, IPC_RMID, dummy);
+	printf("  semaphore set removed\n\r");
 	switch (t) {
 	case 1:
 		system("/bin/stty cooked");			//switch to buffered iput
@@ -296,7 +322,9 @@ int term(int t) {
 void term1(void) {
 	system("/bin/stty cooked");			//switch to buffered iput
 	system("/bin/stty echo");			//turn on terminal echo
-	printf("\r\n*** program terminated\n\n");
+	semctl(semid, 0, IPC_RMID, dummy);
+	printf("  semaphore set removed\n\r");
+	printf("\n*** program terminated\n\n");
 	exit(-1);
 	return;
 }

@@ -13,6 +13,10 @@
 #include <stdint.h>		//uint_8, uint_16, uint_32, etc.
 #include <ctype.h>		//isdigit, isalnum, tolower
 #include <stdbool.h>
+#include <sys/sem.h>
+#include <sys/ipc.h>
+#include <errno.h>
+
 #include "Pcon.h"
 #include "typedefs.h"
 #include "char_fsm.h"
@@ -35,6 +39,17 @@ extern SYS_DAT         	sdat;                         	//system data structure
 extern IPC_DAT			ipc_dat;					  	//ipc data
 extern void				*data; 							//pointer for shared memory
 extern IPC_DAT 			*ipc_ptr;
+extern key_t 			skey;
+extern int 			semid;
+extern unsigned short 	semval;
+extern struct sembuf 	wait, signal;
+extern union semun {
+	int val;              /* used for SETVAL only */
+	struct semid_ds *buf; /* for IPC_STAT and IPC_SET */
+	ushort *array;        /* used for GETALL and SETALL */
+};
+extern union 			semun dummy;
+extern struct sembuf sb;
 
 
 /* code to text conversion */
@@ -653,12 +668,23 @@ int c_8(CMD_FSM_CB *cb)
 int c_9(CMD_FSM_CB *cb)
 {
 	char        numstr[2];
+	printf(" ** Trying to lock...\r\n");
+	if (semop(semid, &sb, 1) == -1) {
+		perror("semop");
+		exit(1);
+	}
+	printf(" ** %i Locked\r\n",semid);	
 	ipc_ptr->force_update = 1;					// update ipc data
 	ipc_ptr->c_dat[cb->w_channel].c_mode = 0;	// update ipc data
 	ipc_ptr->c_dat[cb->w_channel].c_state = 1;	// update ipc data
 	ipc_ptr->force_update = 1;					// force relays to be updated
 //	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local data into shared memory
-
+	sb.sem_op = 1; /* free resource */
+	if (semop(semid, &sb, 1) == -1) {
+		perror("semop");
+		exit(1);
+	}
+	printf("  *** Unlocked\r\n");
 	sdat.c_data[cb->w_channel].c_mode = 0;
 	sdat.c_data[cb->w_channel].c_state = 1;
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);	// write data to disk

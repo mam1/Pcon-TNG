@@ -31,6 +31,6 @@ typedef	struct {
  void 	*ipc_map(int, int);
  void 	ipc_close(int, void *, int);
  int 	ipc_size(void);
- int 	ipc_init_sem();
+ int 	ipc_init_sem(void);
 
 #endif
