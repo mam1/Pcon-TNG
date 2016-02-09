@@ -38,13 +38,12 @@ int 			semid;
 unsigned short 	semval;
 struct sembuf 	wait, signal;
 union semun {
-	int val;              /* used for SETVAL only */
-	struct semid_ds *buf; /* for IPC_STAT and IPC_SET */
-	ushort *array;        /* used for GETALL and SETALL */
+	int 				val;        //used for SETVAL only 
+	struct semid_ds 	*buf; 		//for IPC_STAT and IPC_SET 
+	uint8_t 			*array;     //used for GETALL and SETALL 
 };
 union 			semun dummy;
 struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
-
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -157,13 +156,15 @@ int main(void) {
 		perror("semget");
 		exit(1);
 	}
-
+	sb.sem_num = 0;        	// semaphore number 
+    sb.sem_op = -1;         	// semaphore operation 
+    sb.sem_flg = 0;        	// operation flags 
 	printf("Trying to lock...\n");
 	if (semop(semid, &sb, 1) == -1) {
 		perror("semop");
 		exit(1);
 	}
-	printf("  *** Locked\n");
+	printf("  *** Locked - %i\n",semid);
 	printf("\n  *** shared memory available\n");
 
 	memcpy(ipc_dat.sch, sdat.sch, sizeof(sdat.sch));
@@ -176,11 +177,12 @@ int main(void) {
 	ipc_ptr->force_update = 1;			// force daemon to update relays
 	printf("  Pcon: system data copied to shared memory\r\n");
 	sb.sem_op = 1; /* free resource */
+	
 	if (semop(semid, &sb, 1) == -1) {
 		perror("semop");
 		exit(1);
 	}
-	printf("  *** Unlocked\n");
+	printf("  *** Unlocked - %i\n",semid);
 
 
 	/* setup control block pointers */

@@ -44,12 +44,12 @@ extern int 			semid;
 extern unsigned short 	semval;
 extern struct sembuf 	wait, signal;
 extern union semun {
-	int val;              /* used for SETVAL only */
-	struct semid_ds *buf; /* for IPC_STAT and IPC_SET */
-	ushort *array;        /* used for GETALL and SETALL */
+	int 				val;  	/* used for SETVAL only */
+	struct semid_ds 	*buf; 	/* for IPC_STAT and IPC_SET */
+	uint8_t 			*array; /* used for GETALL and SETALL */
 };
 extern union 			semun dummy;
-extern struct sembuf sb;
+extern struct 			sembuf sb;
 
 
 /* code to text conversion */
@@ -668,7 +668,13 @@ int c_8(CMD_FSM_CB *cb)
 int c_9(CMD_FSM_CB *cb)
 {
 	char        numstr[2];
-	printf(" ** Trying to lock...\r\n");
+
+	printf("  *** Locked - %i\n",semid);
+
+	printf(" ** Trying to lock %i...\r\n",semid);
+	sb.sem_num = 0;        	// semaphore number 
+    sb.sem_op = -1;         	// semaphore operation 
+    sb.sem_flg = 0;        	// operation flags 
 	if (semop(semid, &sb, 1) == -1) {
 		perror("semop");
 		exit(1);
@@ -678,7 +684,7 @@ int c_9(CMD_FSM_CB *cb)
 	ipc_ptr->c_dat[cb->w_channel].c_mode = 0;	// update ipc data
 	ipc_ptr->c_dat[cb->w_channel].c_state = 1;	// update ipc data
 	ipc_ptr->force_update = 1;					// force relays to be updated
-//	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local data into shared memory
+
 	sb.sem_op = 1; /* free resource */
 	if (semop(semid, &sb, 1) == -1) {
 		perror("semop");

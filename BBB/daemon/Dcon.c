@@ -75,10 +75,10 @@ void dispdat(void) {
 void update_relays(_tm *tm, IPC_DAT *sm) {
 
 	int 				key;
-	uint32_t			*s_ptr, *r_ptr;
+	uint32_t			*s_ptr;		// *r_ptr;
 	int 				state;
 	int 				channel;
-	int 				i, rcnt;
+	// int 				i, rcnt;
 
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 
@@ -179,6 +179,9 @@ int main(void) {
 
 	printf("\n  *** start memory lock test ***\n\n");
 	printf("Trying to lock...\n");
+	sb.sem_num = 0;        	// semaphore number 
+    sb.sem_op = -1;         	// semaphore operation 
+    sb.sem_flg = 0;        	// operation flags 
 	if (semop(semid, &sb, 1) == -1) {
 		perror("semop");
 		exit(1);

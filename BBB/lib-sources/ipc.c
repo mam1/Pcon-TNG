@@ -28,9 +28,9 @@
 #include "ipc.h"
 
 union semun {
-    int val;              /* used for SETVAL only */
-    struct semid_ds *buf; /* for IPC_STAT and IPC_SET */
-    ushort *array;        /* used for GETALL and SETALL */
+    int 				val;      	// used for SETVAL only 
+    struct semid_ds 	*buf; 		// for IPC_STAT and IPC_SET
+    uint8_t 			*array;  	// used for GETALL and SETALL
 };
 
 int ipc_open(char *fname, int size) {
@@ -143,13 +143,11 @@ int ipc_load(void) {
     return 0;
 }
 
-
-
 int ipc_init_sem(void)
 {
-    key_t key = _SEM_KEY;
-    int semid;
-    union semun     arg;
+    key_t 			key = _SEM_KEY;
+    int 			semid;
+    union semun 	arg;
  
     /* create a semaphore set with 1 semaphore: */
     if ((semid = semget(key, 1, 0666 | IPC_CREAT)) == -1) {
