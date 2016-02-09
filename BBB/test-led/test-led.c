@@ -17,15 +17,13 @@
 #include "schedule.h"
 #include "BBBiolib.h"
 
-unsigned int    gpio[4] = {_LED_1, _LED_2, _LED_3, _LED_4}; // map LEDs to gpio(s)
-
 int main (void) {
   int del;
 
   printf("\n **** starting\n");
 
   printf("  iolib_init returned %i\n",iolib_init());
-  printf("  iolib_setdirn returned", iolib_setdir(8, 8, BBBIO_DIR_OUT));
+  printf("  iolib_setdirn returned = %i", iolib_setdir(8, 8, BBBIO_DIR_OUT));
 
   int count = 0;
   del = 100; 

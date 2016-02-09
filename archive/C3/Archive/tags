@@ -1,0 +1,243 @@
+!_TAG_FILE_FORMAT	1	/original ctags format/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+B16	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/bitlit.h	17
+B32	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/bitlit.h	18
+B8	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/bitlit.h	16
+B8__	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/bitlit.h	6
+BITLIT_H_	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/bitlit.h	2
+CHAR_ACTION_PTR	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^typedef int (*CHAR_ACTION_PTR)(char *);$/
+CHN_DAT	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^} CHN_DAT;$/
+CMD_ACTION_PTR	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);$/
+CMD_FSM_CB	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^} CMD_FSM_CB;$/
+CONS_BAUD	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	29
+CONS_MODE	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	28
+CONS_RX	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	26
+CONS_TX	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	27
+HEX__	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/bitlit.h	5
+MyByte	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^typedef union {uint32_t MyLong; uint8_t MyByte[4]; } _packed;$/
+MyLong	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^typedef union {uint32_t MyLong; uint8_t MyByte[4]; } _packed;$/
+PACKET_DLEN	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	36
+PACKET_QLEN	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	37
+PACKET_QMASK	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	38
+PCON_H_	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	2
+PCON_H_	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.h	9
+PROD_BAUD	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	34
+PROD_MODE	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	33
+PROD_RX	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	31
+PROD_TX	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	32
+PackLong	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^void PackLong(uint8_t *p, _packed N) { \/\/ N - 4 byte long,   p - insertion point$/
+SCHEDULE_H_	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/xschedule.h	2
+SCHEDULE_H_	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.h	2
+SCH_DAT	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^} SCH_DAT;$/
+SYS_DAT	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^} SYS_DAT;$/
+TMPL_DAT	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^} TMPL_DAT;$/
+UnPackLong	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^uint32_t UnPackLong(uint8_t *p) {   \/\/ p pointer to start of 4 byte long$/
+_ACK	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	11
+_ACK_F	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	23
+_BLOCK	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	17
+_BLOCKING	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	53
+_BS	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	36
+_BS	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	64
+_BYTES_PER_DAY	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	33
+_BYTES_PER_INT	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	31
+_BYTES_PER_SCHEDULE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	32
+_CHANNEL_F	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	20
+_CHANNEL_NAME_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	23
+_CHAR_STATES	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	12
+_CHAR_STATES	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	37
+_CHAR_TOKENS	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	11
+_CHAR_TOKENS	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	36
+_CMD_STATES	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	17
+_CMD_STATES	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	42
+_CMD_TOKENS	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	16
+_CMD_TOKENS	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	41
+_COLON	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	33
+_COLON	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	61
+_COMMA	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	35
+_COMMA	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	63
+_CR	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	39
+_CR	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	67
+_DAYS_PER_WEEK	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	75
+_DEL	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	37
+_DEL	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	65
+_DELIMITER	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	44
+_DELIMITER	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	72
+_EOF	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	42
+_EOF	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	70
+_ESC	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	31
+_ESC	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	59
+_FF	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	41
+_FF	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	69
+_INPUT_BUFFER_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	23
+_INPUT_BUFFER_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	48
+_INT	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	18
+_MAX_SCHEDULE_RECS	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	27
+_MAX_SCHLIB_SCH	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	19
+_MAX_SCHLIB_SCH	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	44
+_MAX_TMPLLIB_SCH	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	20
+_MAX_TMPLLIB_SCH	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	45
+_MAX_TOKEN_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	13
+_MAX_TOKEN_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	38
+_NL	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	40
+_NL	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	68
+_NO_CHAR	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	43
+_NO_CHAR	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	71
+_NUMBER_OF_CHANNELS	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	22
+_PING	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	10
+_PING_F	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	22
+_PROMPT_BUFFER_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	25
+_PROMPT_BUFFER_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	50
+_PUSH_STATS	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	15
+_QUOTE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	38
+_QUOTE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	66
+_READ_CMD	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	13
+_REBOOT_F	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	24
+_RECEIVE_SYS_DAT	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	16
+_SCHEDULE_F	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	19
+_SCHEDULE_NAME_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	26
+_SCHEDULE_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	28
+_SHARE_H_	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	2
+_SLASH	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	34
+_SLASH	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	62
+_SOH	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	10
+_SPACE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	32
+_SPACE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	60
+_STX	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	11
+_SYSTEM	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	19
+_SYSTEM_DATA_FILE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	5
+_TIME_F	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	21
+_TOKEN_BUFFER_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	24
+_TOKEN_BUFFER_SIZE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	49
+_TRACE	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/Pcon.h	4
+_TYPEDEFS_H_	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	2
+_WRITE_CMD	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	12
+_WRITE_SCH	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	14
+__PACKET_H__	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	6
+_ack_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^} _ack_frame;  $/
+_channel_data	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^} _channel_data;  $/
+_channel_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^} _channel_frame;$/
+_major_version	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	5
+_minor_revision	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	7
+_minor_version	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/shared.h	6
+_packed	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^typedef union {uint32_t MyLong; uint8_t MyByte[4]; } _packed;$/
+_packet	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^} _packet;$/
+_packetruct	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^typedef struct _packetruct {$/
+_schedule_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^} _schedule_frame;$/
+ack	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	14
+ack_byte	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^  uint8_t     ack_byte;$/
+ack_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^_ack_frame        ack_frame ={.f_type=_ACK_F, .ack_byte=_ACK};$/
+add_sch_rec	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^int add_sch_rec(uint32_t *sch, int k, int s)    \/\/ add or change a schedule record *\/$/
+c_data	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    CHN_DAT     c_data[_NUMBER_OF_CHANNELS];		    \/\/ channel persistent data$/
+c_mode	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int 		c_mode; 	\/\/Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle$/
+c_mode	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^const char *c_mode[4] = {"manual","  time","   t&s"," cycle"};$/
+c_state	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int 		c_state;	\/\/0 = off, 1 = on$/
+channel	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^  uint8_t       channel;$/
+channel_buffer	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^_channel_data     channel_buffer;$/
+chn_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^_channel_frame    chn_frame ={.f_type=_CHANNEL_F};$/
+con_mode	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^const char *con_mode[3] = {"manual","  time","time & sensor"};$/
+data	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^    uint8_t data[PACKET_DLEN+1]; \/\/ add 1 for checksum$/
+day	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^  uint8_t       day;$/
+day_names_long	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^const char *day_names_long[7] = {$/
+day_names_short	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^const char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};$/
+del_sch_rec	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^int del_sch_rec(uint32_t *sch, int k)           \/\/ delete a schedule record with matching key $/
+disp_all_schedules	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^ void disp_all_schedules(uint32_t *sch)$/
+eot	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	13
+etx	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	12
+f_type	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^	uint8_t		f_type;$/
+f_type	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^  uint8_t       f_type;$/
+f_type	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^  uint8_t     f_type;$/
+find_schedule_record	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^uint32_t *find_schedule_record(uint32_t *sch,int k)  \/\/ search schedule for record with key match, return pointer to record or NULL $/
+g_packet	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^_packet           g_packet,r_packet;$/
+gcog	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^static int gcog;$/
+get_key	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^int get_key(uint32_t b)                         \/\/ extract key from a schedule record $/
+get_s	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^int get_s(uint32_t b)                           \/\/ extract state from a schedule record $/
+get_schedule	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^uint32_t *get_schedule(uint32_t *sch,int day,int channel) \/\/ return pointer to a schedule for a (day,channel)$/
+grec	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^static volatile fdserial *grec;$/
+key_mask	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^ uint32_t       key_mask   = B32(01111111,11111111,11111111,11111111);$/
+length	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^    uint8_t length; \/\/ total packet length including length and checksum byte$/
+load_schedule	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^ void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   \/\/ load schedule buffer w$/
+main	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^int main(int argc, char *argv[])$/
+major_version	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    int         major_version;$/
+make_key	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^int make_key(int hour, int minute){$/
+make_schedule_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int make_schedule_frame(_packet *pkt,uint8_t *data,int len,int day,int channel,uint32_t *sch){$/
+minor_revision	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    int         minor_revision;	$/
+minor_version	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    int         minor_version;$/
+mode	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^	uint8_t		mode;$/
+nak	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	15
+name	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	char 			name[_SCHEDULE_NAME_SIZE];$/
+name	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	char 		name[_CHANNEL_NAME_SIZE];$/
+off_sec	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int 		off_sec;	\/\/off cycle in seconds$/
+off_time	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^	int 		off_time;		$/
+off_time	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^	int 		off_time;$/
+on_sec	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int			on_sec;		\/\/on cycle in seconds$/
+on_time	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^	int			on_time;$/
+onoff	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^const char *onoff[2] = {"off"," on"};$/
+p_state	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int 			p_state;$/
+pack_schedule_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int pack_schedule_frame(_schedule_frame *sf_ptr){$/
+packet_cog	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^void packet_cog(void *parm)$/
+packet_make	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int packet_make(_packet *pkt, uint8_t *data, int len)$/
+packet_print	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int packet_print(_packet *pkt)$/
+packet_read	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int packet_read(_packet *rxpkt)$/
+packet_ready	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int packet_ready(void)$/
+packet_send	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int packet_send(fdserial *port, _packet *pkt)$/
+packet_stack	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^static char packet_stack[sizeof(_thread_state_t)+20*sizeof(int)];$/
+packet_start	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^void packet_start(fdserial *rec)$/
+packet_stop	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^void packet_stop(void)$/
+pkt	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^_packet           pkt;$/
+pktport	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^fdserial          *pktport;$/
+prompt_buffer	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];$/
+put_key	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^void put_key(volatile uint32_t *value,int key)  \/\/ load key into a schedule record $/
+put_state	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^void put_state(volatile uint32_t *b,int s)      \/\/ load state into a schedule record$/
+qcount	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^static volatile int         qcount = 0;$/
+qhead	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^static volatile int         qhead = 0;$/
+qtail	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^static volatile int         qtail = 0;$/
+queue	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^static volatile _packet     queue[PACKET_QLEN];$/
+r_packet	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^_packet           g_packet,r_packet;$/
+rcnt	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^  uint8_t       rcnt;$/
+reboot	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.h	13
+rec	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^  uint32_t      rec[_MAX_SCHEDULE_RECS];$/
+s_data	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    SCH_DAT     s_data[_MAX_SCHLIB_SCH];					    \/\/ schedule library							$/
+s_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^_schedule_frame   s_frame, s_frame_read; $/
+s_frame_read	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^_schedule_frame   s_frame, s_frame_read; $/
+sch	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	\/\/ system schedule$/
+sch	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^uint32_t          sch[_SCHEDULE_SIZE];$/
+sch_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^_schedule_frame   sch_frame ={.f_type=_SCHEDULE_F};$/
+sch_mode	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^const char *sch_mode[2] = {"day","week"};$/
+sch_ptr	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    uint32_t	   *sch_ptr;   												\/\/ pointer to system schedule$/
+schedule	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	uint32_t		schedule[_SCHEDULE_SIZE];$/
+schedule_buffer	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^uint8_t           schedule_buffer[];$/
+schedule_frame_print	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int schedule_frame_print(_schedule_frame *f){$/
+schlib_index	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    int         schlib_index;											  \/\/ points to the next available system schedule record$/
+sdat_ptr	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	SYS_DAT			*sdat_ptr;$/
+send_PING	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int send_PING(_packet *pkt,fdserial *pktport,uint8_t *ping_data){$/
+send_ack	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int send_ack(_packet *pkt, fdserial *pktport, _ack_frame *ack_ptr){$/
+state	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int				state;$/
+state	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	/^	uint8_t		state;$/
+state_mask	/home/mam1/Git/Pcon-TNG/Pcon-C3/schedule.c	/^ uint32_t       state_mask = B32(10000000,00000000,00000000,00000000);$/
+syn	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.h	16
+t_data	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    TMPL_DAT    t_data[_MAX_TMPLLIB_SCH];               \/\/ schedule template library$/
+templib_index	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^    int         templib_index;											\/\/ points to the next available template record $/
+time_on	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int 		time_on; 	\/\/ accumulated minutes of on time for channel$/
+token	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	char 			token[_MAX_TOKEN_SIZE];$/
+token_type	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int				token_type;$/
+token_value	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int				token_value;$/
+unpack_schedule_frame	/home/mam1/Git/Pcon-TNG/Pcon-C3/packet.c	/^int unpack_schedule_frame(uint8_t *byte_ptr, _schedule_frame *sf_ptr){$/
+w_channel	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int             w_channel;                      \/\/working channel number$/
+w_day	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int 			w_day;$/
+w_hours	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int             w_hours;$/
+w_hours_str	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	char            w_hours_str[4];$/
+w_minutes	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int             w_minutes;$/
+w_minutes_str	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	char            w_minutes_str[4];$/
+w_sch	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	uint32_t        w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];$/
+w_sch	/home/mam1/Git/Pcon-TNG/Pcon-C3/Pcon.c	/^uint32_t          w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];$/
+w_sch_ptr	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	uint32_t		*w_sch_ptr;$/
+w_schedule	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	uint32_t        w_schedule[_SCHEDULE_SIZE];$/
+w_schedule_name	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int             w_schedule_name[_SCHEDULE_NAME_SIZE];$/
+w_schedule_number	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int             w_schedule_number;$/
+w_srec_state	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int				w_srec_state;$/
+w_template_index	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int				w_template_index;$/
+w_template_num	/home/mam1/Git/Pcon-TNG/Pcon-C3/../Pcon-share/typedefs.h	/^	int				w_template_num;$/
