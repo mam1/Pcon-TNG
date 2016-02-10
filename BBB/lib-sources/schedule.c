@@ -266,11 +266,12 @@ int test_sch(uint32_t *r, int k) //return state for key
 	{
 		if (get_key(*r) == k)
 			return get_s(*r);
-		if ((get_key(*r) > k))
+		if ((get_key(*r) > k)){
 			if(r == first_record)
 				return get_s(*last_record);
 			else
 				return get_s(*(--r));
+		}
 		r++;
 	}
 	return get_s(*last_record);

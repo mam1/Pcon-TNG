@@ -134,7 +134,7 @@ int main(void) {
 
 	ipc_sem_lock(semid, &sb);			// wait for a lock on shared memory
 	memcpy(ipc_ptr->sch, sdat.sch, sizeof(sdat.sch));
-	disp_sch(ipc_ptr->sch);
+	// disp_sch(ipc_ptr->sch);
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		ipc_ptr->c_dat[i].c_state = sdat.c_data[i].c_state;
 		ipc_ptr->c_dat[i].c_mode = sdat.c_data[i].c_mode;
