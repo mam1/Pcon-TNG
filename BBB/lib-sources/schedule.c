@@ -227,7 +227,7 @@ void disp_all_schedules(CMD_FSM_CB *cb, uint32_t *sch)
 	return;
 }
 
-/*  */
+
 void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   // load schedule buffer w
 {
 	int         i;
@@ -245,7 +245,7 @@ uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a sche
    DAY             *day_ptr;
 
    day_ptr = (DAY *)sbuf;      //set day pointer to the start of the schedule buffer
-   day_ptr += d-1;             //move day pointer to the start of the requested day
+   day_ptr += d;             //move day pointer to the start of the requested day
    sch_ptr = (SCH *)day_ptr;   //set channel pointer to the start of the requested day
    sch_ptr += c;               //move channel pointer to the requested channel
 
@@ -275,6 +275,59 @@ int test_sch(uint32_t *r, int k) //return state for key
 	}
 	return get_s(*last_record);
 }
+
+void disp_sch(uint32_t *sch)
+{
+	uint32_t        *rec_ptr;
+	int             i;
+	int             day, channel;
+	char            time_state[9];
+	int             rcnt[_DAYS_PER_WEEK], mrcnt;
+
+
+	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++)
+	{
+
+
+		/* print day header */
+		printf("   ");
+		for (day = 0; day < _DAYS_PER_WEEK; day++)
+			printf("%s         ", day_names_short[day]);
+		printf("\n\r");
+
+		/* figure the maximum number of transitions per day */
+		mrcnt = 0;
+		for (day = 0; day < _DAYS_PER_WEEK; day++)
+		{
+			rcnt[day] = *(get_schedule(sch, day, channel));
+			if (rcnt[day] > mrcnt)
+				mrcnt = rcnt[day];        //max number of records for the week
+		}
+
+		/* Print the daily schedules */
+		for (i = 0; i < mrcnt; i++)
+		{
+			// printf("         ");
+			for (day = 0; day < _DAYS_PER_WEEK; day++)
+			{
+				rec_ptr = get_schedule(sch, day, channel);
+				rec_ptr += (i + 1);
+				if (*get_schedule(sch, day, channel) <= i)
+					strcpy(time_state, "         ");
+				else
+					sprintf(time_state, "%02i:%02i %s", get_key((uint32_t)*rec_ptr) / 60, get_key((uint32_t)*rec_ptr) % 60, onoff[get_s((uint32_t)*rec_ptr)]);
+
+				printf("%s   ", time_state);
+
+			}
+			printf("\n\r");
+		}
+		printf("\n\r");
+	}
+
+	return;
+}
+
 
 // uint32_t *get_schedule(uint32_t *sch, int day, int channel) { // return pointer to a schedule for a (day,channel)
 

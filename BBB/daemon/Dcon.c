@@ -80,6 +80,7 @@ void update_relays(_tm *tm, IPC_DAT *sm) {
 	int 				channel;
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	disp_sch((uint32_t *)sm->sch);
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 		switch (sm->c_dat[channel].c_mode) {
 		case 0:	// manual
@@ -88,6 +89,7 @@ void update_relays(_tm *tm, IPC_DAT *sm) {
 		case 1:	// time
 			key =  make_key(tm->tm_hour, tm->tm_min);							// generate key
 			s_ptr = get_schedule(((uint32_t *)sm->sch), tm->tm_wday, channel); 	// get a pointer to schedule for (day,channel)
+			s_ptr++;
 			// printf("got s_ptr\n");
 			// r_ptr = find_schedule_record(s_ptr,key);  							// search schedule for record with key match, return pointer to record or NULL
 			// printf("got r_ptr <%x>\n",(uint32_t)r_ptr);
@@ -146,8 +148,9 @@ int main(void) {
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
-	ipc_ptr = data;								// overlay ipc data structure on shared memory
+	ipc_ptr = (IPC_DAT *)data;								// overlay ipc data structure on shared memory
 	ipc_ptr->force_update = 1;
+	disp_sch(ipc_ptr->sch);
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	/* setup gpio access */
