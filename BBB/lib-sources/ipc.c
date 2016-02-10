@@ -143,7 +143,7 @@ int ipc_load(void) {
     return 0;
 }
 
-int ipc_init_sem(void)
+int ipc_sem_init(void)
 {
     key_t 			key = _SEM_KEY;
     int 			semid;
@@ -161,4 +161,41 @@ int ipc_init_sem(void)
         exit(1);
     }
     return 0;
+}
+
+int ipc_sem_lock(int semid, struct sembuf *sb){
+
+	// printf(" ** %i locked\r\n",semid);
+	sb->sem_num = 0;        	// semaphore number 
+    sb->sem_op = -1;         	// semaphore operation 
+    sb->sem_flg = 0;        	// operation flags 
+	if (semop(semid, sb, 1) == -1) {
+		perror("semop");
+		exit(1);
+	}
+	printf(" ** %i locked\r\n",semid);	
+
+	return 0;
+}
+
+int ipc_sem_free(int semid, struct sembuf *sb){
+
+	sb->sem_op = 1; /* free resource */
+	
+	if (semop(semid, sb, 1) == -1) {
+		perror("semop");
+		exit(1);
+	}
+	printf(" ** %i unlocked\r\n",semid);	
+
+	return 0;
+}
+
+int ipc_sem_id(key_t skey){
+	int    			semid;
+	if ((semid = semget(skey, 1, 0)) == -1){ 	//	grab the semaphore set
+		perror("semget");
+		exit(1);
+	}
+	return semid;
 }

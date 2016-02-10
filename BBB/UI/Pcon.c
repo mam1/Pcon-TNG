@@ -106,30 +106,12 @@ int main(void) {
 
 
 	/* set up file mapped shared memory for inter process communication */
-	fd = ipc_open(ipc_file, ipc_size());      // create/open ipc file
-	data = ipc_map(fd, ipc_size());           // map file to memory
+	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
+	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = data;
-
-	/* setup semaphores */
-	// int semget(key_t skey, int nsems, int semflg);
-	// wait.sem_num = 0;
-	// wait.sem_op = -1;
-	// wait.sem_flg = SEM_UNDO;
-	// signal.sem_num = 0;
-	// signal.sem_op = 1;
-	// signal.sem_flg = SEM_UNDO;
-	// semid = semget(skey, 1, 0666 | IPC_CREAT);
-	// printf("  *** semid = %i\n",semid );
-	// printf("  Allocating the semaphore: %s\n", strerror(errno));
-	// semval = 1;
-	// semctl(semid, 0, SETVAL, semval);
-	// printf("  Setting semaphore value to %d: %s\n", semval, strerror(errno));
-
-	// semval = semctl(semid, 0, GETVAL);
-	// printf("  Initialized Semaphore value to %d: %s\n", semval, strerror(errno));
-
-	ipc_init_sem();			// setup semaphores
-
+	ipc_sem_init();								// setup semaphores
+	semid = ipc_sem_id(skey);						// set semaphor id		
+	
 	/* load data from file on sd card */
 	load_system_data(_SYSTEM_DATA_FILE, &sdat);
 	printf("  Pcon: system data loaded from %s\r\n", _SYSTEM_DATA_FILE);
@@ -150,23 +132,7 @@ int main(void) {
 
 	/* copy system data to shared memory */
 
-
-	/* grab the semaphore set created by seminit.c: */
-	if ((semid = semget(skey, 1, 0)) == -1){ //	grab the semaphore set
-		perror("semget");
-		exit(1);
-	}
-	sb.sem_num = 0;        	// semaphore number 
-    sb.sem_op = -1;         	// semaphore operation 
-    sb.sem_flg = 0;        	// operation flags 
-	printf("Trying to lock...\n");
-	if (semop(semid, &sb, 1) == -1) {
-		perror("semop");
-		exit(1);
-	}
-	printf("  *** Locked - %i\n",semid);
-	printf("\n  *** shared memory available\n");
-
+	ipc_sem_lock(semid, &sb);			// wait for a lock on shared memory
 	memcpy(ipc_dat.sch, sdat.sch, sizeof(sdat.sch));
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		ipc_ptr->c_dat[i].c_state = sdat.c_data[i].c_state;
@@ -175,15 +141,9 @@ int main(void) {
 		ipc_ptr->c_dat[i].off_sec = sdat.c_data[i].off_sec;
 	}
 	ipc_ptr->force_update = 1;			// force daemon to update relays
-	printf("  Pcon: system data copied to shared memory\r\n");
-	sb.sem_op = 1; /* free resource */
-	
-	if (semop(semid, &sb, 1) == -1) {
-		perror("semop");
-		exit(1);
-	}
-	printf("  *** Unlocked - %i\n",semid);
+	ipc_sem_free(semid, &sb);			// free lock on shared memory
 
+	printf("  Pcon: system data copied to shared memory\r\n");
 
 	/* setup control block pointers */
 	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm control block to allow acces to system data
@@ -197,9 +157,9 @@ int main(void) {
 
 	/* initialize state machines */
 	work_buffer_ptr = (char *)work_buffer;  //initialize work buffer pointer
-	cmd_fsm_reset(&cmd_fsm_cb); 	//initialize the command processor fsm
+	cmd_fsm_reset(&cmd_fsm_cb); 			//initialize the command processor fsm
 	char_fsm_reset();
-	char_state = 0;					//initialize the character fsm
+	char_state = 0;							//initialize the character fsm
 
 	/* set up unbuffered io */
 	fflush(stdout);
@@ -296,7 +256,7 @@ int main(void) {
 }
 int term(int t) {
 	semctl(semid, 0, IPC_RMID, dummy);
-	printf("  semaphore set removed\n\r");
+	printf("    semaphore set removed\n\r");
 	switch (t) {
 	case 1:
 		system("/bin/stty cooked");			//switch to buffered iput
@@ -325,7 +285,7 @@ void term1(void) {
 	system("/bin/stty cooked");			//switch to buffered iput
 	system("/bin/stty echo");			//turn on terminal echo
 	semctl(semid, 0, IPC_RMID, dummy);
-	printf("    semaphore set removed\n\r");
+	printf("	  semaphore set removed\n\r");
 	printf("\n*** program terminated\n\n");
 	exit(-1);
 	return;

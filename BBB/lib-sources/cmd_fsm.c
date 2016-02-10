@@ -7,7 +7,6 @@
 
 #include <unistd.h>		//sleep
 #include <stdlib.h>
-
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>		//uint_8, uint_16, uint_32, etc.
@@ -26,7 +25,6 @@
 #include "schedule.h"
 #include "ipc.h"
 
-
 /*********************** externals **************************/
 extern int             	cmd_state, char_state;
 extern char            	input_buffer[_INPUT_BUFFER_SIZE], *input_buffer_ptr;
@@ -40,17 +38,16 @@ extern IPC_DAT			ipc_dat;					  	//ipc data
 extern void				*data; 							//pointer for shared memory
 extern IPC_DAT 			*ipc_ptr;
 extern key_t 			skey;
-extern int 			semid;
+extern int 				semid;
 extern unsigned short 	semval;
-extern struct sembuf 	wait, signal;
-extern union semun {
-	int 				val;  	/* used for SETVAL only */
-	struct semid_ds 	*buf; 	/* for IPC_STAT and IPC_SET */
-	uint8_t 			*array; /* used for GETALL and SETALL */
-};
-extern union 			semun dummy;
-extern struct 			sembuf sb;
-
+// extern struct sembuf 	wait, signal;
+// extern union semun {
+// 	int 				val;  	/* used for SETVAL only */
+// 	struct semid_ds 	*buf; 	/* for IPC_STAT and IPC_SET */
+// 	uint8_t 			*array; /* used for GETALL and SETALL */
+// };
+// extern union 			semun dummy;
+extern struct sembuf	sb;
 
 /* code to text conversion */
 extern char *day_names_long[7];
@@ -630,8 +627,6 @@ int c_6(CMD_FSM_CB *cb)
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("   <%2i> - ", i);
 		printf(" %s    %s   %s", onoff[ipc_ptr->c_dat[i].c_state], c_mode[ipc_ptr->c_dat[i].c_mode], sdat.c_data[i].name);
-		// printf(" %s    %s   %s", onoff[sdat.c_data[i].c_state], c_mode[sdat.c_data[i].c_mode], sdat.c_data[i].name);
-
 		if ((sdat.c_data[i].c_mode) == 3)
 			printf(" (%i:%i)", sdat.c_data[i].on_sec, sdat.c_data[i].off_sec);
 		printf("\r\n");
@@ -669,28 +664,15 @@ int c_9(CMD_FSM_CB *cb)
 {
 	char        numstr[2];
 
-	printf("  *** Locked - %i\n",semid);
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-	printf(" ** Trying to lock %i...\r\n",semid);
-	sb.sem_num = 0;        	// semaphore number 
-    sb.sem_op = -1;         	// semaphore operation 
-    sb.sem_flg = 0;        	// operation flags 
-	if (semop(semid, &sb, 1) == -1) {
-		perror("semop");
-		exit(1);
-	}
-	printf(" ** %i Locked\r\n",semid);	
 	ipc_ptr->force_update = 1;					// update ipc data
 	ipc_ptr->c_dat[cb->w_channel].c_mode = 0;	// update ipc data
 	ipc_ptr->c_dat[cb->w_channel].c_state = 1;	// update ipc data
 	ipc_ptr->force_update = 1;					// force relays to be updated
 
-	sb.sem_op = 1; /* free resource */
-	if (semop(semid, &sb, 1) == -1) {
-		perror("semop");
-		exit(1);
-	}
-	printf("  *** Unlocked\r\n");
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
+
 	sdat.c_data[cb->w_channel].c_mode = 0;
 	sdat.c_data[cb->w_channel].c_state = 1;
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);	// write data to disk
@@ -707,11 +689,15 @@ int c_9(CMD_FSM_CB *cb)
 int c_10(CMD_FSM_CB *cb)
 {
 	char        numstr[2];
+
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+
 	ipc_ptr->force_update = 1;					// update ipc data
 	ipc_ptr->c_dat[cb->w_channel].c_mode = 0;	// update ipc data
 	ipc_ptr->c_dat[cb->w_channel].c_state = 0;	// update ipc data
 	ipc_ptr->force_update = 1;					// force relays to be updated
-//	memcpy(data, &ipc_dat, sizeof(ipc_dat));  	// move local data into shared memory
+
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	sdat.c_data[cb->w_channel].c_mode = 0;
 	sdat.c_data[cb->w_channel].c_state = 0;
@@ -731,8 +717,14 @@ int c_11(CMD_FSM_CB *cb)
 	char        numstr[2];
 
 	printf("cb->w_channel <%i>\n\r", cb->w_channel);
+
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+
 	ipc_ptr->c_dat[cb->w_channel].c_mode = 1;
 	ipc_ptr->force_update = 1;					// force relays to be updated
+
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
+					
 	sdat.c_data[cb->w_channel].c_mode = 1;
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);
 	strcpy(cb->prompt_buffer, "channel ");
@@ -747,8 +739,14 @@ int c_11(CMD_FSM_CB *cb)
 int c_12(CMD_FSM_CB *cb)
 {
 	char        numstr[2];
+
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+
 	ipc_ptr->c_dat[cb->w_channel].c_mode = 2;
 	ipc_ptr->force_update = 1;					// force relays to be updated
+
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
+
 	sdat.c_data[cb->w_channel].c_mode = 2;
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);
 	strcpy(cb->prompt_buffer, "channel ");
@@ -763,8 +761,13 @@ int c_13(CMD_FSM_CB *cb)
 {
 	char        sbuf[20];
 
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+
 	ipc_ptr->c_dat[cb->w_channel].c_mode = 3;
 	ipc_ptr->force_update = 1;					// force relays to be updated
+
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
+
 	sdat.c_data[cb->w_channel].c_mode = 3;
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);
 
