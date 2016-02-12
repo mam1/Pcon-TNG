@@ -120,7 +120,7 @@ int main(void) {
 	int 	h_min;
 	int 	toggle;
 
-	printf("\n  **** daemon active 0.5 ****\n\n");
+	printf("\n  **** daemon active 0.8 ****\n\n");
 
 	/********** initializations *******************************************************************/
 

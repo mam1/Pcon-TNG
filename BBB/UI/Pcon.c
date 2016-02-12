@@ -57,6 +57,8 @@ char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 /* write system info to stdout */
 void disp_sys(void) {
 	printf(" Pcon  %d.%d.%d \n\r", _major_version, _minor_version, _minor_revision);
+	printf(" configured for controlling %i channels\n\r",_NUMBER_OF_CHANNELS);
+	printf(" configured for reading %i sensors\n\r",_NUMBER_OF_SENSORS);
 	printf(" input buffer size: %d characters\n\r", _INPUT_BUFFER_SIZE);
 	printf(" system schedule size: %d bytes\r\n", sizeof(cmd_fsm_cb.sdat_ptr->sch));
 	printf(" stored schedule templates: %i\r\n", sdat.schlib_index);

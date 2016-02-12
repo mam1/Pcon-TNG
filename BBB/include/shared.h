@@ -6,16 +6,16 @@
 /* version info */
 #define _major_version 			6
 #define _minor_version 			0
-#define _minor_revision 		5
+#define _minor_revision 		7
 
 /* semaphore key */
-#define _SEM_KEY 				1234
+#define _SEM_KEY 				1234321
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		10
 
 /* channel parameters */
-#define _NUMBER_OF_CHANNELS 	4
+#define _NUMBER_OF_CHANNELS 	6
 #define _CHANNEL_NAME_SIZE		20
 
 /* schedule parameters */

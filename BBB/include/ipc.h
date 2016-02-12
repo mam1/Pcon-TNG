@@ -4,7 +4,7 @@
 #include "shared.h"
 #include "typedefs.h"
 
-#define KEY (1492)				// semaphore key
+// #define KEY (1492)				// semaphore key
 
 
 /* ipc data - memory mapped */
