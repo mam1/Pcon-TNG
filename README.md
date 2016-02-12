@@ -33,19 +33,37 @@ The BBB provides a user interface to configure channels, build and maintain sche
     * DHT22 temperature/humidity sensor, Electro Dragon
     * 0.96” 128*64 OLED Display (i2c), Electro Dragon
 
+#####BeagleBone GPIO assignments
+      header  pin #   gpio    use
+    -------------------------------------------------------------------
+        P8      7      66     Led 1 on WaveShare Misc Cape
+        P8      8      67     Led 2 on WaveShare Misc Cape
+        P8      9      69     Led 3 on WaveShare Misc Cape
+        P8     10      68     Led 4 on WaveShare Misc Cape
+        P8     11      45     Relay 1 on DIOB
+        P8     12      44     Relay 2 on DIOB
+        P8     14      26     Relay 3 on DIOB
+        P8     15      47     Relay 4 on DIOB
+        P8     16      46     Relay 5 on DIOB
+        P8     17      27     Relay 6 on DIOB
+        P8     18      65     Relay 7 on DIOB
+
+        P9     11      30     Relay 8 on DIOB
+        P9     12      60     Relay 1 on proto Cape
+        P9     13      31     Relay 2 on proto Cape
+        P9     15      48     Relay 3 on proto Cape
+        P9     23      49     Relay 4 on proto Cape
+        P9     25     117     Relay 5 on proto Cape
+        P9     27     115     Relay 6 on proto Cape
+        P9     30     112     Relay 7 on proto Cape
+        P9     41      20     Relay 8 on proto Cape
+
+
+
 ######I2c connection between the BBB and PCF8563 real time clock on the Misc Cape 
 A DS3231 real time clock module is connected to the BBB's i2c bus (pins 28,29) to provide a time reference. 
 
 #####Serial connection between BBB and DIOB
-
-     C3 ------------------ DIOB (serial)
-    -------------------------------------
-    pin 4 ..................... DATA_RLY
-    pin 5 ..................... SCLK_IN
-    pin 5 ..................... SCLK_RLY
-    pin 6 ..................... LOAD_IN
-    pin 7 ..................... LAT_RLY
-
 
 ####Development Environment:
 
