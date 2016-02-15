@@ -40,15 +40,16 @@ The BBB provides a user interface to configure channels, build and maintain sche
         P8      8      67     Led 2 on WaveShare Misc Cape
         P8      9      69     Led 3 on WaveShare Misc Cape
         P8     10      68     Led 4 on WaveShare Misc Cape
-        P8     11      45     Relay 1 on DIOB
-        P8     12      44     Relay 2 on DIOB
-        P8     14      26     Relay 3 on DIOB
-        P8     15      47     Relay 4 on DIOB
-        P8     16      46     Relay 5 on DIOB
-        P8     17      27     Relay 6 on DIOB
-        P8     18      65     Relay 7 on DIOB
+        P8     11      45     DIN on DIOB serial header
+        P8     12      44     DATA_RLY on DIOB serial header
+        P8     14      26     SCLK_IN on DIOB serial header
+        P8     15      47     SCLK_RLY on DIOB serial header
+        P8     16      46     LOAD_IN on DIOB serial header
+        P8     17      27     LAT_RLY on DIOB serial header
 
-        P9     11      30     Relay 8 on DIOB
+        P8     18      65     Relay 7 on DIOB serial header
+        P9     11      30     Relay 8 on DIOB serial header
+        
         P9     12      60     Relay 1 on proto Cape
         P9     13      31     Relay 2 on proto Cape
         P9     15      48     Relay 3 on proto Cape

@@ -15,6 +15,7 @@
 #include "Pcon.h"
 #include "sd_card.h"
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
+#include "trace.h"
 
 
 FILE *sd_open(char *fname,SYS_DAT *cdat){
@@ -71,11 +72,16 @@ void load_system_data(char *fname,SYS_DAT *cdat){
     FILE *sd;
     int     rtn;
     sd = sd_open(fname,cdat);
-    // printf("  file handle %i\n",sd);
-    // printf("  size of sys_dat %i\r\n",(int)sizeof(*cdat));
-    // printf("  read system data\r\n");
+#ifdef _TRACE
+    trace(_TRACE_FILE_NAME, "sd_card", 0, NULL, "\nloading system data", 1);
+    printf("  file handle %i\n",sd);
+    printf("  size of sys_dat %i\r\n",(int)sizeof(*cdat));
+    printf("  read system data\r\n");
+#endif 
     rtn = fread(cdat, sizeof(*cdat), 1, sd);
-    // printf("  fread returns %i\r\n",rtn);
+#ifdef _TRACE
+    printf("  fread returns %i\r\n",rtn);
+#endif 
     if(rtn != 1){
         printf("\n*** error reading system data\n  fread returned %i\r\n",rtn);
         perror(fname);

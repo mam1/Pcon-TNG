@@ -104,16 +104,21 @@ int main(void) {
 		printf(" program trace disabled\n");
 
 	/************************ initializations ****************************/
-	printf("ipc data allocated at <%x>\n", (uint32_t)&ipc_dat);
-
-
+#ifdef _TRACE
+	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "starting initializations", trace_flag);
+#endif
 	/* set up file mapped shared memory for inter process communication */
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = data;
 	ipc_sem_init();								// setup semaphores
+#ifdef _TRACE
+	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores initialized", trace_flag);
+#endif	
 	semid = ipc_sem_id(skey);						// set semaphor id		
-	
+#ifdef _TRACE
+	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores id set", trace_flag);
+#endif	
 	/* load data from file on sd card */
 	load_system_data(_SYSTEM_DATA_FILE, &sdat);
 	printf("  Pcon: system data loaded from %s\r\n", _SYSTEM_DATA_FILE);
@@ -172,7 +177,7 @@ int main(void) {
 	fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
 
 #ifdef _TRACE
-	trace(_TRACE_FILE_NAME, "Pcon", char_state, NULL, "starting main event loop\n", trace_flag);
+	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "starting main event loop\n", trace_flag);
 #endif
 	printf("\r\ninitialization complete\r\n\n");
 	disp_sys();	        //display system info on serial terminal
@@ -201,7 +206,7 @@ int main(void) {
 			break;
 	/* ESC */  case _ESC:
 #ifdef _TRACE
-			trace(_TRACE_FILE_NAME, "Pcon", char_state, work_buffer, "escape entered", trace_flag);
+			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "escape entered", trace_flag);
 #endif
 			while (pop_cmd_q(cmd_fsm_cb.token)); 	//empty command queue
 			cmd_fsm_reset(&cmd_fsm_cb);				//reset command fsm
@@ -214,7 +219,7 @@ int main(void) {
 
 	/* CR */	case _CR:
 #ifdef _TRACE
-			trace(_TRACE_FILE_NAME, "Pcon", char_state, work_buffer, "character entered is a _CR", trace_flag);
+			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _CR", trace_flag);
 #endif
 			fputc(_CR, stdout);						//make the scree look right
 			fputc(_NL, stdout);
@@ -229,7 +234,7 @@ int main(void) {
 			break;
 	/* DEL */   case _DEL:
 #ifdef _TRACE
-			trace(_TRACE_FILE_NAME, "Pcon", char_state, work_buffer, "character entered is a _BS", trace_flag);
+			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _BS", trace_flag);
 #endif
 			fputc(_BS, stdout);
 			fputc(' ', stdout);
@@ -237,7 +242,7 @@ int main(void) {
 			*work_buffer_ptr-- = '\0';
 			*work_buffer_ptr = '\0';
 #ifdef _TRACE
-			trace(_TRACE_FILE_NAME, "Pcon", char_state, work_buffer, "remove character from input buffer", trace_flag);
+			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "remove character from input buffer", trace_flag);
 #endif
 			break;
 
@@ -245,7 +250,7 @@ int main(void) {
 			fputc(c, stdout);       				// echo char
 			*work_buffer_ptr++ = c;
 #ifdef _TRACE
-			trace(_TRACE_FILE_NAME, "Pcon", char_state, work_buffer, "add character to work buffer", trace_flag);
+			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "add character to work buffer", trace_flag);
 #endif
 		}
 		/* do suff while waiting or the keyboard */

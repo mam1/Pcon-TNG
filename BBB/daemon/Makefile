@@ -68,6 +68,15 @@ endif
 	@- $(RM) -v $(program_NAME)
 	@- $(RM) -v $(program_OBJS)
 
+movesh:
+ifeq ($(UNAME_S),Darwin)
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/daemon/mystart.sh root@192.168.254.34:/etc/init.d
+else
+	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/daemon/mystart.sh root@192.168.254.34:/etc/init.d
+endif
+
+	@echo mystart.sh moved to /ect/init.d on the BBB
+
 clean:
 	@- $(RM) -v $(program_NAME)
 	@- $(RM) -v $(program_OBJS)

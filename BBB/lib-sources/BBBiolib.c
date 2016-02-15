@@ -192,12 +192,12 @@ int iolib_setdir(char port, char pin, char dir)
 	if (param_error)
 	{
 #ifdef BBBIO_LIB_DBG
-		printf("iolib_setdir: parameter error!\n");
+		printf("*** iolib_setdir: parameter error!\n");
 #endif
 		return(-1);
 	}
 #ifdef BBBIO_LIB_DBG
-	printf("iolib_setdir: PortSet_ptr P%d.%d , %X\n",port ,pin , PortSet_ptr[port-8][pin-1]);
+	printf("    iolib_setdir: PortSet_ptr P%d.%d, %X\n",port ,pin , PortSet_ptr[port-8][pin-1]);
 #endif
 	reg=(void*)gpio_addr[PortSet_ptr[port-8][pin-1]] +BBBIO_GPIO_OE;
 

@@ -1,5 +1,6 @@
 #!/bin/sh
 # this file must be copied to /etc/init.d on the BBB
+# use movesh target in makefile to move
 # set up GPIOs
 echo  66 > /sys/class/gpio/export
 echo  67 > /sys/class/gpio/export

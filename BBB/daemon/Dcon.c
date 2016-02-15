@@ -153,16 +153,42 @@ int main(void) {
 	disp_sch((uint32_t *)ipc_ptr->sch);
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	/* setup gpio access */
-	iolib_init();
+	/* setup gpio access to LEDs on the WaveShare Cape*/
+	iolib_init();							// only needed once
+	printf(" iolib initialized\n");
+	printf("\n mapping WaveShare Misc Cape leds to gpio pins\n");
 	iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
 	iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);
 	iolib_setdir(8, _LED_3, BBBIO_DIR_OUT);
 	iolib_setdir(8, _LED_4, BBBIO_DIR_OUT);
-	pin_low(8,  _LED_1);
-	pin_low(8,  _LED_2);
-	pin_low(8,  _LED_3);
-	pin_low(8,  _LED_4);
+
+
+	/* turn off the LEDs */
+	pin_low(8, _LED_1);
+	pin_low(8, _LED_2);
+	pin_low(8, _LED_3);
+	pin_low(8, _LED_4);
+
+	/* setup gpio access to PhotoMos relays */
+	printf("\n mapping PhotoMos relays to gpio pins\n");
+	iolib_setdir(9, _R1_CAPE, BBBIO_DIR_OUT);
+	iolib_setdir(9, _R2_CAPE, BBBIO_DIR_OUT);
+	iolib_setdir(9, _R3_CAPE, BBBIO_DIR_OUT);
+	iolib_setdir(9, _R4_CAPE, BBBIO_DIR_OUT);
+	// iolib_setdir(9, _R5_CAPE, BBBIO_DIR_OUT);
+	// iolib_setdir(9, _R6_CAPE, BBBIO_DIR_OUT);
+	iolib_setdir(9, _R7_CAPE, BBBIO_DIR_OUT);
+	iolib_setdir(9, _R8_CAPE, BBBIO_DIR_OUT);
+
+
+	/* setup gpio access to serial header on the DIOB */
+	printf("\n mapping DIOB serial header to gpio pins\n");
+	iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);
+	iolib_setdir(8, _DIOB_DATA_RLY, BBBIO_DIR_OUT);
+	iolib_setdir(8, _DIOB_SCLK_IN, BBBIO_DIR_OUT);
+	iolib_setdir(8, _DIOB_SCLK_RLY, BBBIO_DIR_OUT);
+	iolib_setdir(8, _DIOB_LOAD_IN, BBBIO_DIR_OUT);
+
 
 	/********** main loop *******************************************************************/
 
