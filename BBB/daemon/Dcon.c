@@ -115,6 +115,73 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	return;
 }
 
+/* initialise gpio pins for iolib */
+int init_gpio(void){
+	char 				command[60];
+
+	strcpy( command, "echo  66 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	strcpy( command, "echo  67 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  69 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  68 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  45 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  44 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  26 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  47 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  46 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  27 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  65 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  30 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  60 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  31 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  48 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  49 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo 117 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo 115 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo 112 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+	strcpy( command, "echo  20 > /sys/class/gpio/export");
+	printf("system command %s returned %i\n", command,system(command));
+	system(command);
+
+	return 0;
+}
+
 int main(void) {
 
 	int 	h_min;
@@ -153,15 +220,17 @@ int main(void) {
 	disp_sch((uint32_t *)ipc_ptr->sch);
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	/* setup gpio access to LEDs on the WaveShare Cape*/
-	iolib_init();							// only needed once
+	/* initialise gpio access */
+	init_gpio();
+	iolib_init();
+
+	/* setup gpio access to LEDs on the WaveShare Cape*/						
 	printf(" iolib initialized\n");
 	printf("\n mapping WaveShare Misc Cape leds to gpio pins\n");
 	iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
 	iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);
 	iolib_setdir(8, _LED_3, BBBIO_DIR_OUT);
 	iolib_setdir(8, _LED_4, BBBIO_DIR_OUT);
-
 
 	/* turn off the LEDs */
 	pin_low(8, _LED_1);
