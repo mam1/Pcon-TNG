@@ -156,38 +156,46 @@ int main(void) {
 	/* setup gpio access to LEDs on the WaveShare Cape*/
 	iolib_init();							// only needed once
 	printf(" iolib initialized\n");
+	printf("out = %i\n", BBBIO_DIR_OUT);
+	int 	temp[4] = {_LED_1,_LED_2,_LED_3,_LED_4};
+	int 	i;
+	for(i=0;i<4;i++){
+		printf("led %i pin %i\n", i+1, temp[i]);
+	}
+
 	printf("\n mapping WaveShare Misc Cape leds to gpio pins\n");
 	iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
-	iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);
-	iolib_setdir(8, _LED_3, BBBIO_DIR_OUT);
-	iolib_setdir(8, _LED_4, BBBIO_DIR_OUT);
+	printf("done set\n");
+	// iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);
+	// iolib_setdir(8, _LED_3, BBBIO_DIR_OUT);
+	// iolib_setdir(8, _LED_4, BBBIO_DIR_OUT);
 
 
-	/* turn off the LEDs */
-	pin_low(8, _LED_1);
-	pin_low(8, _LED_2);
-	pin_low(8, _LED_3);
-	pin_low(8, _LED_4);
+	// /* turn off the LEDs */
+	// pin_low(8, _LED_1);
+	// pin_low(8, _LED_2);
+	// pin_low(8, _LED_3);
+	// pin_low(8, _LED_4);
 
-	/* setup gpio access to PhotoMos relays */
-	printf("\n mapping PhotoMos relays to gpio pins\n");
-	iolib_setdir(9, _R1_CAPE, BBBIO_DIR_OUT);
-	iolib_setdir(9, _R2_CAPE, BBBIO_DIR_OUT);
-	iolib_setdir(9, _R3_CAPE, BBBIO_DIR_OUT);
-	iolib_setdir(9, _R4_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(9, _R5_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(9, _R6_CAPE, BBBIO_DIR_OUT);
-	iolib_setdir(9, _R7_CAPE, BBBIO_DIR_OUT);
-	iolib_setdir(9, _R8_CAPE, BBBIO_DIR_OUT);
+	// /* setup gpio access to PhotoMos relays */
+	// printf("\n mapping PhotoMos relays to gpio pins\n");
+	// iolib_setdir(9, _R1_CAPE, BBBIO_DIR_OUT);
+	// iolib_setdir(9, _R2_CAPE, BBBIO_DIR_OUT);
+	// iolib_setdir(9, _R3_CAPE, BBBIO_DIR_OUT);
+	// iolib_setdir(9, _R4_CAPE, BBBIO_DIR_OUT);
+	// // iolib_setdir(9, _R5_CAPE, BBBIO_DIR_OUT);
+	// // iolib_setdir(9, _R6_CAPE, BBBIO_DIR_OUT);
+	// iolib_setdir(9, _R7_CAPE, BBBIO_DIR_OUT);
+	// iolib_setdir(9, _R8_CAPE, BBBIO_DIR_OUT);
 
 
-	/* setup gpio access to serial header on the DIOB */
-	printf("\n mapping DIOB serial header to gpio pins\n");
-	iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);
-	iolib_setdir(8, _DIOB_DATA_RLY, BBBIO_DIR_OUT);
-	iolib_setdir(8, _DIOB_SCLK_IN, BBBIO_DIR_OUT);
-	iolib_setdir(8, _DIOB_SCLK_RLY, BBBIO_DIR_OUT);
-	iolib_setdir(8, _DIOB_LOAD_IN, BBBIO_DIR_OUT);
+	// /* setup gpio access to serial header on the DIOB */
+	// printf("\n mapping DIOB serial header to gpio pins\n");
+	// iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);
+	// iolib_setdir(8, _DIOB_DATA_RLY, BBBIO_DIR_OUT);
+	// iolib_setdir(8, _DIOB_SCLK_IN, BBBIO_DIR_OUT);
+	// iolib_setdir(8, _DIOB_SCLK_RLY, BBBIO_DIR_OUT);
+	// iolib_setdir(8, _DIOB_LOAD_IN, BBBIO_DIR_OUT);
 
 
 	/********** main loop *******************************************************************/
@@ -214,20 +222,20 @@ int main(void) {
 		}
 
 		/* cycle leds */
-		if (toggle) {
-			toggle = 0;
-			pin_low(8,  _LED_1);
-			pin_high(8,  _LED_2);
-			pin_low(8,  _LED_3);
-			pin_high(8,  _LED_4);
-		}
-		else {
-			toggle = 1;
-			pin_high(8,  _LED_1);
-			pin_low(8,  _LED_2);
-			pin_high(8,  _LED_3);
-			pin_low(8,  _LED_4);
-		}
+		// if (toggle) {
+		// 	toggle = 0;
+		// 	pin_low(8,  _LED_1);
+		// 	pin_high(8,  _LED_2);
+		// 	pin_low(8,  _LED_3);
+		// 	pin_high(8,  _LED_4);
+		// }
+		// else {
+		// 	toggle = 1;
+		// 	pin_high(8,  _LED_1);
+		// 	pin_low(8,  _LED_2);
+		// 	pin_high(8,  _LED_3);
+		// 	pin_low(8,  _LED_4);
+		// }
 		sleep(1);
 
 	}
