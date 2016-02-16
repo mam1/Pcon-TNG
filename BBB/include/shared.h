@@ -43,7 +43,7 @@
 #define _R2_CAPE	13
 #define _R3_CAPE	15
 #define _R4_CAPE	23
-#define _R5_CAPE	25
+#define _R5_CAPE	2
 #define _R6_CAPE	27
 #define _R7_CAPE	30
 #define _R8_CAPE	41

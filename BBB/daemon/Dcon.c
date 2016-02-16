@@ -244,10 +244,39 @@ int main(void) {
 	iolib_setdir(9, _R2_CAPE, BBBIO_DIR_OUT);
 	iolib_setdir(9, _R3_CAPE, BBBIO_DIR_OUT);
 	iolib_setdir(9, _R4_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(9, _R5_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(9, _R6_CAPE, BBBIO_DIR_OUT);
+	iolib_setdir(9, _R5_CAPE, BBBIO_DIR_OUT);
+	iolib_setdir(9, _R6_CAPE, BBBIO_DIR_OUT);
 	iolib_setdir(9, _R7_CAPE, BBBIO_DIR_OUT);
 	iolib_setdir(9, _R8_CAPE, BBBIO_DIR_OUT);
+
+	/* turn all relays off */
+	pin_low(9, _R1_CAPE);
+	pin_low(9, _R2_CAPE);
+	pin_low(9, _R3_CAPE);
+	pin_low(9, _R4_CAPE);
+	pin_low(9, _R5_CAPE);
+	pin_low(9, _R6_CAPE);
+	pin_low(9, _R7_CAPE);
+	pin_low(9, _R8_CAPE);
+
+	sleep(1);
+	pin_high(9, _R1_CAPE);
+	sleep(1);
+	pin_high(9, _R2_CAPE);
+	sleep(1);
+	pin_high(9, _R3_CAPE);
+	sleep(1);
+	pin_high(9, _R4_CAPE);
+	sleep(1);
+	pin_high(9, _R5_CAPE);
+	sleep(1);
+	pin_high(9, _R6_CAPE);
+	sleep(1);
+	pin_high(9, _R7_CAPE);
+	sleep(1);
+	pin_high(9, _R8_CAPE);
+	sleep(1);
+
 
 
 	/* setup gpio access to serial header on the DIOB */
@@ -257,6 +286,8 @@ int main(void) {
 	iolib_setdir(8, _DIOB_SCLK_IN, BBBIO_DIR_OUT);
 	iolib_setdir(8, _DIOB_SCLK_RLY, BBBIO_DIR_OUT);
 	iolib_setdir(8, _DIOB_LOAD_IN, BBBIO_DIR_OUT);
+
+
 
 
 	/********** main loop *******************************************************************/
