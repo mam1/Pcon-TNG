@@ -26,34 +26,36 @@
 #define _BYTES_PER_SCHEDULE 	_SCHEDULE_SIZE * _BYTES_PER_INT
 #define _BYTES_PER_DAY 			_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE
 
+/* gpio enable list */
+#define _NUMBER_OF_GPIOS	16
+#define _GPIOS              66,67,69,68,45,44,26,47,46,27,65,61,60,48,49,20		 		
+
 /* map P8 header pins */
 #define _LED_1			7	
 #define _LED_2			9		
 #define _LED_3			8			
 #define _LED_4			10
 #define _DIOB_DIN 		11
-#define _DIOB_DATA_RLY	12
-#define _DIOB_SCLK_IN	14
-#define	_DIOB_SCLK_RLY	15
-#define	_DIOB_LOAD_IN	16
-#define	_DIOB_LAT_RLY	17
+#define _DIOB_DATA_RLY	11
+#define _DIOB_SCLK_IN	12
+#define	_DIOB_SCLK_RLY	12
+#define	_DIOB_LOAD_IN	14
+#define	_DIOB_LAT_RLY	15
+#define _R1_CAPE		16
+#define _R2_CAPE		17
+#define _R3_CAPE		18
+#define _R4_CAPE		26
  
-/* map P9 header pins to PhotoMOS relays */
-#define _R1_CAPE	12
-#define _R2_CAPE	13
-#define _R3_CAPE	15
-#define _R4_CAPE	23
-#define _R5_CAPE	2
-#define _R6_CAPE	27
-#define _R7_CAPE	30
-#define _R8_CAPE	41
+/* map P9 header pins  */
+#define _R5_CAPE		12
+#define _R6_CAPE		15
+#define _R7_CAPE		23
+#define _R8_CAPE		41
 
 /* general */
-#define _DAYS_PER_WEEK 				7
-#define _ON 						1
-#define _OFF 						0
-
-
+#define _DAYS_PER_WEEK 	7
+#define _ON 			1
+#define _OFF 			0
 
 #define handle_error(msg) \
    do { perror(msg); exit(EXIT_FAILURE); } while (0)
