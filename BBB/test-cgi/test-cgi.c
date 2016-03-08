@@ -1,26 +1,21 @@
-#include <sys/sem.h>
-#include <sys/ipc.h>
-#include <sys/types.h>
-#include <errno.h>
 #include <stdio.h>
-#include <unistd.h>		//sleep
-#include <stdint.h>		//uint_8, uint_16, uint_32, etc.
-#include <ctype.h> 		//isalnum, tolower
-#include <stdlib.h>
-#include <fcntl.h>
-#include <string.h>
-#include "shared.h"
-#include "ipc.h"
-#include "Pcon.h"
-#include "shared.h"
-#include "bitlit.h"
-#include "PCF8563.h"
-#include "schedule.h"
-#include "BBBiolib.h"
-#include "trace.h"
+
+char evars[20][80]={"SERVER_SOFTWARE", "SERVER_NAME", "SERVER_PROTOCOL", 
+                    "SERVER_PORT",
+                    "GATEWAY_INTERFACE", "REQUEST_METHOD", 
+                    "PATH_INFO", "PATH_TRANSLATED", "SCRIPT_NAME", 
+                    "QUERY_STRING", 
+                    "REMOTE_HOST", "REMOTE_ADDR", "REMOTE_USER", 
+                    "REMOTE_IDENT",
+                    "AUTH_TYPE", "CONTENT_TYPE", "CONTENT_LENGTH", 
+                    "HTTP_ACCEPT", "HTTP_USER_AGENT", "HTTP_REFERER"};
+
 
 int main(void) {
-    printf("Content-type: text/html\n\n");
-    printf("Hi from the CGI!\n");
+    const numvars=20;
+    int i;
+  
+    printf("Content-type: text/plain\n\n");
+    for (i=0;i<numvars;i++) printf("%s = %s\n", evars[i], getenv(evars[i]));
     return 0;
 }
