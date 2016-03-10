@@ -80,7 +80,7 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	int 				channel;
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	// disp_sch((uint32_t *)ipc_ptr->sch);
+	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 		switch (ipc_ptr->c_dat[channel].c_mode) {
 		case 0:	// manual
@@ -111,8 +111,19 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 	#endif	
 	}
+	/* update relays */
+	for(i=0:i<8;i++){
+	
+	}
+
+
+	for(i=8;i<15;i++){
+
+	}
+
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 	return;
+
 }
 
 /* initialise gpio pins for iolib */
@@ -135,7 +146,7 @@ int main(void) {
 	int 	h_min;
 	int 	toggle;
 
-	printf("\n  **** daemon active 0.8 ****\n\n");
+	printf("\n  **** daemon active 0.9 ****\n\n");
 
 	/********** initializations *******************************************************************/
 
