@@ -79,6 +79,11 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	int 				state;
 	int 				channel;
 
+	struct{
+		static int 			pin = {_PINS};
+		static header 		header = {_HEADERS};
+	}gpio_map[_NUMBER_OF_CHANNELS];
+
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
@@ -109,7 +114,26 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	#ifdef _TRACE
 		sprintf(trace_buf, "    Dcon:update_relays:  relay %i set to %i\n", channel, state);
 		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-	#endif	
+	#endif
+
+	pin_high(8, _R1_CAPE);
+	pin_high(8, _R2_CAPE);
+	pin_high(8, _R3_CAPE);
+	pin_high(8, _R4_CAPE);
+	pin_high(9, _R5_CAPE);
+	pin_high(9, _R6_CAPE);
+	pin_high(9, _R7_CAPE);
+	pin_high(9, _R8_CAPE);
+
+	int 
+
+	if(state){
+
+	}
+	else{
+
+	}
+
 	}
 	/* update relays */
 	for(i=0:i<8;i++){
@@ -218,23 +242,23 @@ int main(void) {
 	pin_low(9, _R7_CAPE);
 	pin_low(9, _R8_CAPE);
 
-	sleep(1);
-	pin_high(8, _R1_CAPE);
-	sleep(1);
-	pin_high(8, _R2_CAPE);
-	sleep(1);
-	pin_high(8, _R3_CAPE);
-	sleep(1);
-	pin_high(8, _R4_CAPE);
-	sleep(1);
-	pin_high(9, _R5_CAPE);
-	sleep(1);
-	pin_high(9, _R6_CAPE);
-	sleep(1);
-	pin_high(9, _R7_CAPE);
-	sleep(1);
-	pin_high(9, _R8_CAPE);
-	sleep(1);
+	// sleep(1);
+	// pin_high(8, _R1_CAPE);
+	// sleep(1);
+	// pin_high(8, _R2_CAPE);
+	// sleep(1);
+	// pin_high(8, _R3_CAPE);
+	// sleep(1);
+	// pin_high(8, _R4_CAPE);
+	// sleep(1);
+	// pin_high(9, _R5_CAPE);
+	// sleep(1);
+	// pin_high(9, _R6_CAPE);
+	// sleep(1);
+	// pin_high(9, _R7_CAPE);
+	// sleep(1);
+	// pin_high(9, _R8_CAPE);
+	// sleep(1);
 
 
 
