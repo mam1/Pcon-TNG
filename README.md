@@ -3,7 +3,11 @@
 ------
 ###*** under construction and not stable ***
 ------
-These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a Beagle Bone Black (BBB), A BBB Cape from Waveshare with a real time clock, a BBB custom Control Cape built for this project and a Digital IO Board from Parallax. The hardware supports 16 channels; 8 low voltge/current channels (e.g. controlling zone valves) and 8 high voltage/current channels (e.g. controling 120 volt AC motors).
+These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a Beagle Bone Black (BBB), A BBB Cape from Waveshare with a real time clock, a BBB custom Control Cape built for this project and a Digital IO Board from Parallax. The hardware supports 16 channels:
+
+	channel number
+    	0-7 ............ low voltge/current channels (e.g. controlling zone valves) 
+    	8-15 ........... high voltage/current channels (e.g. controling 120 volt AC motors)
 
 Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modules read HDT22 sensors and use a wireless connection to post the data to the cloud (ThingSpeak) and to an Apache sever running on the BBB. The BBB logs the data from the ESP8266 modules. A process running on the BBB decides if a channel should be on or off.  A channel can be controlled by:
 
@@ -14,7 +18,7 @@ Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modul
 
 The BBB Control Cape (part of this project) uses PhotoMOS relays for controlling 24 volt zone valves.  PhotoMOS are resistant to inrush current (due to phase shift) and eliminate the need for snubber circuits as long as they are operated within the ratings. Furthermore, use of PhotoMOS® decreases the mounting area requirements, resulting in more compact programmable controllers. LEDs are used to indicate the state of the 16 channels.  There is a 16 position header connected to the photoMOS relays for directly switching 8, 24 volt, zone valves. A second 20 position header provides TTL signals for controlling a Parallax Digital IO Board (DIOB). The DIOB can control 8, 120VAC 8A loads.
 
-The BBB provides a user interface to configure channels, build and maintain schedules, query sensor and channel data, manually control channel states, etc.
+The BBB provides a state machine driven user interface to configure channels, build and maintain schedules, query sensor and channel data, manually control channel states, etc.
 - - - - - - - - -
 ####Hardware
   * **BeagleBone Black Rev C - 4GB Flash, adafruit**
