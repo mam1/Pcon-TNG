@@ -13,7 +13,7 @@
 #define _NUMBER_OF_SENSORS		8
 
 /* channel parameters */
-#define _NUMBER_OF_CHANNELS 	6
+#define _NUMBER_OF_CHANNELS 	16
 #define _CHANNEL_NAME_SIZE		20
 
 /* schedule parameters */

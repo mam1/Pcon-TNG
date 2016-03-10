@@ -72,17 +72,36 @@ void dispdat(void) {
 	return;
 }
 
+void send_ccb(byte)         //send control byte to dio board
+ {
+    int         i;
+    iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);   //setup to write 
+    pin_low(8,_DIOB_DIN);  
+    for(i=7;i>=0;i--)   //serialize and reverse bits 
+    {
+        if((1 << i) & byte)
+            pin_high(8,_DIOB_DIN);  //send bit high
+        else
+            pin_low(8,_DIOB_DIN);   //send bit low
+        /* send clock pluse */                 
+        pin_high(8,_DIOB_SCLK_IN);   
+        pin_low(8,_DIOB_SCLK_IN);
+    }   
+    pin_high(8,_DIOB_LAT_RLY);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
+    pin_low(8,_DIOB_LAT_RLY);        //done - ready for next write */ 
+    return;
+ }
+
 void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 
 	int 				key;
 	uint32_t			*s_ptr;		// *r_ptr;
 	int 				state;
 	int 				channel;
+	uint8_t 			ccb;
 
-	struct{
-		static int 			pin = {_PINS};
-		static header 		header = {_HEADERS};
-	}gpio_map[_NUMBER_OF_CHANNELS];
+	static int 			pin[_NUMBER_OF_CHANNELS] = {_PINS};
+	static int 			header[_NUMBER_OF_CHANNELS] = {_HEADERS};
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	/* set channel state based on channel mode */
@@ -111,55 +130,42 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 		default: // error
 			printf("*** error mode set to <%i>\n", ipc_ptr->c_dat[channel].c_mode);
 		}
-	#ifdef _TRACE
+#ifdef _TRACE
 		sprintf(trace_buf, "    Dcon:update_relays:  relay %i set to %i\n", channel, state);
 		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-	#endif
-
-	pin_high(8, _R1_CAPE);
-	pin_high(8, _R2_CAPE);
-	pin_high(8, _R3_CAPE);
-	pin_high(8, _R4_CAPE);
-	pin_high(9, _R5_CAPE);
-	pin_high(9, _R6_CAPE);
-	pin_high(9, _R7_CAPE);
-	pin_high(9, _R8_CAPE);
-
-	int 
-
-	if(state){
+#endif
 
 	}
-	else{
-
+	/* update on board relays channels 0-7 */    	
+	for (channel = 0;channel < 8; channel++) {
+		if (ipc_ptr->c_dat[channel].c_state)
+			pin_high(header[channel], pin[channel]);
+		else 
+			pin_low(header[channel], pin[channel]);
 	}
-
+	/* update DBIO relays channels 8-15 */
+	for (channel = 8; channel < 15; channel++) {
+	    if(ipc_ptr->c_dat[channel].c_state)
+	        ccb |= (1<<((channel - 8)));
+	    else
+	        ccb &= ~(1<<((channel - 8)));
 	}
-	/* update relays */
-	for(i=0:i<8;i++){
-	
-	}
-
-
-	for(i=8;i<15;i++){
-
-	}
-
-	ipc_sem_free(semid, &sb);					// free lock on shared memory
+	send_ccb(ccb);         		// send a control byte to the DIOB 
+	ipc_sem_free(semid, &sb);	// free lock on shared memory
 	return;
 
 }
 
 /* initialise gpio pins for iolib */
-int init_gpio(void){
+int init_gpio(void) {
 	char 				command[100];
 	int 				i;
 	int 				gpios[_NUMBER_OF_GPIOS] = {_GPIOS};
 
-	for(i=0;i<_NUMBER_OF_GPIOS;i++){
-		sprintf(command, "if [ ! -d /sys/class/gpio/gpio%i ]; then echo %i > /sys/class/gpio/export; fi", gpios[i],gpios[i] );
+	for (i = 0; i < _NUMBER_OF_GPIOS; i++) {
+		sprintf(command, "if [ ! -d /sys/class/gpio/gpio%i ]; then echo %i > /sys/class/gpio/export; fi", gpios[i], gpios[i] );
 		printf("command <%s>\n", command);
-		printf("system command %s returned %i\n", command,system(command));
+		printf("system command %s returned %i\n", command, system(command));
 	}
 
 	return 0;
@@ -207,7 +213,7 @@ int main(void) {
 	init_gpio();
 	iolib_init();
 
-	/* setup gpio access to LEDs on the WaveShare Cape*/						
+	/* setup gpio access to LEDs on the WaveShare Cape*/
 	printf(" iolib initialized\n");
 	printf("\n mapping WaveShare Misc Cape leds to gpio pins\n");
 	iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
