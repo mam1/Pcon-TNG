@@ -127,66 +127,6 @@ int init_gpio(void){
 		printf("system command %s returned %i\n", command,system(command));
 	}
 
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  66 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  67 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  69 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  68 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  45 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  44 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  26 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  47 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  46 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  27 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  65 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  30 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  60 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  31 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  48 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  49 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo 117 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo 115 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo 112 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-	// strcpy( command, "if [ ! -d /sys/class/gpio/gpio48 ]; then echo  20 > /sys/class/gpio/export; fi");
-	// printf("system command %s returned %i\n", command,system(command));
-	// system(command);
-
 	return 0;
 }
 
