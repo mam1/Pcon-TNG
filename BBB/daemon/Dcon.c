@@ -99,10 +99,14 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	int 				state;
 	int 				channel;
 	uint8_t 			ccb;
+	int 				gpio_index;
 
-	static char 			pin[_NUMBER_OF_CHANNELS] = {_PINS};
-	static char 			header[_NUMBER_OF_CHANNELS] = {_HEADERS};
+	static int 			pin[_NUMBER_OF_CHANNELS] = {_PINS};
+	static int 			header[_NUMBER_OF_CHANNELS] = {_HEADERS};
 
+	for(channel = 0;channel <16;channel++){
+		printf("channel %i - header %i, pin %i\n",channel, header[channel], pin[channel] );
+	}
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
@@ -136,17 +140,39 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 #endif
 
 	}
+
+
+	// pin_high(8, _R1_CAPE);
+	// pin_high(8, _R2_CAPE);
+	// pin_high(8, _R3_CAPE);
+	// pin_high(8, _R4_CAPE);
+	// pin_high(9, _R5_CAPE);
+	// pin_high(9, _R6_CAPE);
+	// pin_high(9, _R7_CAPE);
+	// pin_high(9, _R8_CAPE);
+
+	// return;
+
+#ifdef _TRACE 
+	printf("moving on\n"); 
+#endif
+
 	/* update on board relays channels 0-7 */    	
 	for (channel = 0;channel < 8; channel++) {
+		gpio_index = channel + 4;
 		if (ipc_ptr->c_dat[channel].c_state){
-			pin_high(header[channel], pin[channel]);
-			printf("setting high, header %x, pin %x\n",header[channel],pin[channel]);
+			pin_low(header[gpio_index], pin[gpio_index]);
+			printf("setting high, header %x, pin %x\n",header[gpio_index],pin[gpio_index]);
 		}
 		else{ 
-			pin_low(header[channel], pin[channel]);
-			printf("setting low, header %x, pin %x\n",header[channel],pin[channel]);
+			// pin_high(8, 16);
+			pin_low(header[gpio_index], pin[gpio_index]);
+			printf("setting low, header %x, pin %x\n",header[gpio_index],pin[gpio_index]);
 		}
 	}
+#ifdef _TRACE
+	printf("channels 0-7 set\n");
+#endif
 	/* update DBIO relays channels 8-15 */
 	for (channel = 8; channel < 15; channel++) {
 	    if(ipc_ptr->c_dat[channel].c_state)
@@ -155,6 +181,9 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	        ccb &= ~(1<<((channel - 8)));
 	}
 	send_ccb(ccb);         		// send a control byte to the DIOB 
+#ifdef _TRACE
+	printf("channels 8-15 set\n");
+#endif
 	ipc_sem_free(semid, &sb);	// free lock on shared memory
 	return;
 
@@ -180,7 +209,7 @@ int main(void) {
 	int 	h_min;
 	int 	toggle;
 
-	printf("\n  **** daemon active 0.9 ****\n\n");
+	printf("\n  **** daemon active 0.10 ****\n\n");
 
 /********** initializations *******************************************************************/
 
@@ -202,7 +231,9 @@ int main(void) {
 
 	/* setup PCF8563 RTC */
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
-
+#ifdef _TRACE
+	printf("PCF8563 opened\n");
+#endif
 	/* setup shared memory */
 	semid = ipc_sem_id(skey);					// get semaphore id
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
@@ -212,7 +243,9 @@ int main(void) {
 	ipc_ptr->force_update = 1;
 	disp_sch((uint32_t *)ipc_ptr->sch);
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
-
+#ifdef _TRACE
+	printf("shared memory setup completed\n");
+#endif
 	/* initialise gpio access */
 	init_gpio();
 	iolib_init();
@@ -244,14 +277,13 @@ int main(void) {
 
 	/* turn all relays off */
 	pin_low(8, _R1_CAPE);
-	pin_high(8, _R2_CAPE);
-	pin_high(8, _R3_CAPE);
+	pin_low(8, _R2_CAPE);
+	pin_low(8, _R3_CAPE);
 	pin_low(8, _R4_CAPE);
-	pin_high(9, _R5_CAPE);
+	pin_low(9, _R5_CAPE);
 	pin_low(9, _R6_CAPE);
-	pin_high(9, _R7_CAPE);
+	pin_low(9, _R7_CAPE);
 	pin_low(9, _R8_CAPE);
-
 
 	/* setup gpio access to serial header on the DIOB */
 	printf("\n mapping DIOB serial header to gpio pins\n");
