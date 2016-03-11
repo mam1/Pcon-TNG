@@ -159,7 +159,7 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 
 	/* update on board relays channels 0-7 */    	
 	for (channel = 0;channel < 8; channel++) {
-		gpio_index = channel + 4;
+		gpio_index = channel + 5;
 		if (ipc_ptr->c_dat[channel].c_state){
 			pin_low(header[gpio_index], pin[gpio_index]);
 			printf("setting high, header %x, pin %x\n",header[gpio_index],pin[gpio_index]);
