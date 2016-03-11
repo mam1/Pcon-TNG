@@ -4,7 +4,7 @@
 /* version info */
 #define _major_version 			6
 #define _minor_version 			0
-#define _minor_revision 		8
+#define _minor_revision 		9
 
 /* semaphore key */
 #define _SEM_KEY 				1234321

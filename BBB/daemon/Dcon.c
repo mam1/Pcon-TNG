@@ -100,8 +100,8 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	int 				channel;
 	uint8_t 			ccb;
 
-	static int 			pin[_NUMBER_OF_CHANNELS] = {_PINS};
-	static int 			header[_NUMBER_OF_CHANNELS] = {_HEADERS};
+	static char 			pin[_NUMBER_OF_CHANNELS] = {_PINS};
+	static char 			header[_NUMBER_OF_CHANNELS] = {_HEADERS};
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	/* set channel state based on channel mode */
@@ -138,10 +138,14 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	}
 	/* update on board relays channels 0-7 */    	
 	for (channel = 0;channel < 8; channel++) {
-		if (ipc_ptr->c_dat[channel].c_state)
+		if (ipc_ptr->c_dat[channel].c_state){
 			pin_high(header[channel], pin[channel]);
-		else 
+			printf("setting high, header %x, pin %x\n",header[channel],pin[channel]);
+		}
+		else{ 
 			pin_low(header[channel], pin[channel]);
+			printf("setting low, header %x, pin %x\n",header[channel],pin[channel]);
+		}
 	}
 	/* update DBIO relays channels 8-15 */
 	for (channel = 8; channel < 15; channel++) {
@@ -178,7 +182,7 @@ int main(void) {
 
 	printf("\n  **** daemon active 0.9 ****\n\n");
 
-	/********** initializations *******************************************************************/
+/********** initializations *******************************************************************/
 
 	/* setup trace */
 #ifdef _TRACE
@@ -240,32 +244,13 @@ int main(void) {
 
 	/* turn all relays off */
 	pin_low(8, _R1_CAPE);
-	pin_low(8, _R2_CAPE);
-	pin_low(8, _R3_CAPE);
+	pin_high(8, _R2_CAPE);
+	pin_high(8, _R3_CAPE);
 	pin_low(8, _R4_CAPE);
-	pin_low(9, _R5_CAPE);
+	pin_high(9, _R5_CAPE);
 	pin_low(9, _R6_CAPE);
-	pin_low(9, _R7_CAPE);
+	pin_high(9, _R7_CAPE);
 	pin_low(9, _R8_CAPE);
-
-	// sleep(1);
-	// pin_high(8, _R1_CAPE);
-	// sleep(1);
-	// pin_high(8, _R2_CAPE);
-	// sleep(1);
-	// pin_high(8, _R3_CAPE);
-	// sleep(1);
-	// pin_high(8, _R4_CAPE);
-	// sleep(1);
-	// pin_high(9, _R5_CAPE);
-	// sleep(1);
-	// pin_high(9, _R6_CAPE);
-	// sleep(1);
-	// pin_high(9, _R7_CAPE);
-	// sleep(1);
-	// pin_high(9, _R8_CAPE);
-	// sleep(1);
-
 
 
 	/* setup gpio access to serial header on the DIOB */
@@ -276,10 +261,7 @@ int main(void) {
 	iolib_setdir(8, _DIOB_SCLK_RLY, BBBIO_DIR_OUT);
 	iolib_setdir(8, _DIOB_LOAD_IN, BBBIO_DIR_OUT);
 
-
-
-
-	/********** main loop *******************************************************************/
+/********** main loop *******************************************************************/
 
 	printf("starting main loop\n");
 	while (1) {
