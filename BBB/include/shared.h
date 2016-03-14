@@ -6,6 +6,8 @@
 #define _minor_version 			0
 #define _minor_revision 		9
 
+#define TRACE on
+
 /* semaphore key */
 #define _SEM_KEY 				1234321
 
