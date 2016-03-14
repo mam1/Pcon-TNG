@@ -99,26 +99,26 @@ void dispdat(void) {
 void send_ccb(uint8_t byte)         //send control byte to dio board
  {
     int         i;
-    iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);   //setup to write 
+    // iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);   //setup to write 
     // pin_high(8, _DIOB_LAT_RLY);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
     // pin_low(8,_DIOB_LAT_RLY);        //done - ready for next write */ 
     pin_low(8,_DIOB_DIN);  
     for(i=7;i>=0;i--)   //serialize and reverse bits 
     {
-    	iolib_delay_ms(500);
+    	// iolib_delay_ms(500);
         if((1 << i) & byte)
             pin_high(8,_DIOB_DIN);  //send bit high
         else
             pin_low(8,_DIOB_DIN);   //send bit low
         /* send clock pluse */ 
-        iolib_delay_ms(500);                
+        // iolib_delay_ms(500);                
         pin_high(8,_DIOB_SCLK_IN);
-        iolib_delay_ms(500);   
+        // iolib_delay_ms(500);   
         pin_low(8,_DIOB_SCLK_IN);
     }
-    iolib_delay_ms(500);   
+    // iolib_delay_ms(500);   
     pin_high(8,_DIOB_LAT_RLY);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
-    iolib_delay_ms(500);
+    // iolib_delay_ms(500);
     pin_low(8,_DIOB_LAT_RLY);        //done - ready for next write */ 
     return;
  }
