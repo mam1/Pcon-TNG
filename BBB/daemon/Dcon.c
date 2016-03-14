@@ -58,6 +58,30 @@ union 			semun dummy;
 SEMBUF sb = {0, -1, 0};  /* set to allocate resource */
 
 /********** support functions *******************************************************************/
+void bin_prnt_byte(uint8_t x)
+{
+   int n;
+
+   for(n=0; n<8; n++)
+   {
+      if((x & 0x80) !=0)
+      {
+         printf("1");
+      }
+      else
+      {
+         printf("0");
+      }
+      if (n==3)
+      {
+         printf(" "); /* insert a space between nybbles */
+      }
+      x = x<<1;
+   }
+   printf("\n");
+   return;
+}
+
 void dispdat(void) {
 	int         i;
 	printf("  channel  state   mode   \n\r");
@@ -104,9 +128,9 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	static int 			pin[_NUMBER_OF_CHANNELS] = {_PINS};
 	static int 			header[_NUMBER_OF_CHANNELS] = {_HEADERS};
 
-	for(channel = 0;channel <16;channel++){
-		printf("channel %i - header %i, pin %i\n",channel, header[channel], pin[channel] );
-	}
+	// for(channel = 0;channel <16;channel++){
+	// 	printf("channel %i - header %i, pin %i\n",channel, header[channel], pin[channel] );
+	// }
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
@@ -155,26 +179,29 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 
 #ifdef _TRACE 
 	printf("moving on\n"); 
+	dispdat();
+	printf("\nupdating relays\n");
 #endif
 
 	/* update on board relays channels 0-7 */    	
 	for (channel = 0;channel < 8; channel++) {
 		gpio_index = channel + 4;
 		if (ipc_ptr->c_dat[channel].c_state){
-			pin_low(header[gpio_index], pin[gpio_index]);
-			printf("setting high, header %x, pin %x\n",header[gpio_index],pin[gpio_index]);
+			// pin_high(8, 16);
+			pin_high(header[gpio_index], pin[gpio_index]);
+			printf("setting high, header %i, pin %i\n",header[gpio_index],pin[gpio_index]);
 		}
 		else{ 
 			// pin_high(8, 16);
 			pin_low(header[gpio_index], pin[gpio_index]);
-			printf("setting low, header %x, pin %x\n",header[gpio_index],pin[gpio_index]);
+			printf("setting low, header %i, pin %i\n",header[gpio_index],pin[gpio_index]);
 		}
 	}
 #ifdef _TRACE
-	printf("channels 0-7 set\n");
+	printf("\nchannels 0-7 set\n");
 #endif
 	/* update DBIO relays channels 8-15 */
-	for (channel = 8; channel < 15; channel++) {
+	for (channel = 8; channel < 16; channel++) {
 	    if(ipc_ptr->c_dat[channel].c_state)
 	        ccb |= (1<<((channel - 8)));
 	    else
@@ -182,7 +209,9 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	}
 	send_ccb(ccb);         		// send a control byte to the DIOB 
 #ifdef _TRACE
-	printf("channels 8-15 set\n");
+	printf("\nchannels 8-15 set\n");
+	printf("control byte: ");
+	bin_prnt_byte(ccb);
 #endif
 	ipc_sem_free(semid, &sb);	// free lock on shared memory
 	return;
@@ -209,7 +238,7 @@ int main(void) {
 	int 	h_min;
 	int 	toggle;
 
-	printf("\n  **** daemon active 0.10 ****\n\n");
+	printf("\n  **** daemon active 0.11 ****\n\n");
 
 /********** initializations *******************************************************************/
 
