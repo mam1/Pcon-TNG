@@ -185,7 +185,7 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 
 	/* update on board relays channels 0-7 */    	
 	for (channel = 0;channel < 8; channel++) {
-		gpio_index = channel + 5;
+		gpio_index = channel + 8;
 		if (ipc_ptr->c_dat[channel].c_state){
 			// pin_high(8, 16);
 			pin_high(header[gpio_index], pin[gpio_index]);
