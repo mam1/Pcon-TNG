@@ -28,9 +28,9 @@
 
 /* gpio enable list */
 #define _NUMBER_OF_GPIOS	16
-#define _GPIOS              66,67,69,68,45,44,26,47,46,27,65,61,60,48,49,20	
-#define _HEADERS			 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9
-#define _PINS  				 7, 9, 8,10,11,12,14,15,16,17,18,26,12,15,23,41	 		
+#define _GPIOS              66,67,69,68,45,44,26,115,46,27,65,61,60,48,49,20	
+#define _HEADERS			 8, 8, 8, 8, 8, 8, 8, 9, 8, 8, 8, 8, 9, 9, 9, 9
+#define _PINS  				 7, 9, 8,10,11,12,14,27,16,17,18,26,12,15,23,41	 		
 
 /* map P8 header pins */
 #define _LED_1			7	
@@ -41,8 +41,8 @@
 #define _DIOB_DATA_RLY	11
 #define _DIOB_SCLK_IN	12
 #define	_DIOB_SCLK_RLY	12
-#define	_DIOB_LOAD_IN	14
-#define	_DIOB_LAT_RLY	15
+#define	_DIOB_LAT_RLY	14
+#define	_DIOB_LOAD_IN	27
 #define _R1_CAPE		16
 #define _R2_CAPE		17
 #define _R3_CAPE		18

@@ -100,6 +100,8 @@ void send_ccb(byte)         //send control byte to dio board
  {
     int         i;
     iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);   //setup to write 
+    // pin_high(8, _DIOB_LAT_RLY);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
+    // pin_low(8,_DIOB_LAT_RLY);        //done - ready for next write */ 
     pin_low(8,_DIOB_DIN);  
     for(i=7;i>=0;i--)   //serialize and reverse bits 
     {
@@ -112,6 +114,7 @@ void send_ccb(byte)         //send control byte to dio board
         pin_low(8,_DIOB_SCLK_IN);
     }   
     pin_high(8,_DIOB_LAT_RLY);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
+ //   iolib_delay_ms(1);
     pin_low(8,_DIOB_LAT_RLY);        //done - ready for next write */ 
     return;
  }
@@ -125,8 +128,8 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	uint8_t 			ccb;
 	int 				gpio_index;
 
-	static int 			pin[_NUMBER_OF_CHANNELS] = {_PINS};
-	static int 			header[_NUMBER_OF_CHANNELS] = {_HEADERS};
+	static int 			pin[_NUMBER_OF_GPIOS] = {_PINS};
+	static int 			header[_NUMBER_OF_GPIOS] = {_HEADERS};
 
 	// for(channel = 0;channel <16;channel++){
 	// 	printf("channel %i - header %i, pin %i\n",channel, header[channel], pin[channel] );
@@ -220,7 +223,7 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 
 /* initialise gpio pins for iolib */
 int init_gpio(void) {
-	char 				command[100];
+	char 				command[120];
 	int 				i;
 	int 				gpios[_NUMBER_OF_GPIOS] = {_GPIOS};
 
@@ -317,10 +320,11 @@ int main(void) {
 	/* setup gpio access to serial header on the DIOB */
 	printf("\n mapping DIOB serial header to gpio pins\n");
 	iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);
-	iolib_setdir(8, _DIOB_DATA_RLY, BBBIO_DIR_OUT);
+	// iolib_setdir(8, _DIOB_DATA_RLY, BBBIO_DIR_OUT);
 	iolib_setdir(8, _DIOB_SCLK_IN, BBBIO_DIR_OUT);
-	iolib_setdir(8, _DIOB_SCLK_RLY, BBBIO_DIR_OUT);
-	iolib_setdir(8, _DIOB_LOAD_IN, BBBIO_DIR_OUT);
+	// iolib_setdir(8, _DIOB_SCLK_RLY, BBBIO_DIR_OUT);
+	iolib_setdir(8, _DIOB_LAT_RLY, BBBIO_DIR_OUT);
+	// iolib_setdir(9, _DIOB_LOAD_IN, BBBIO_DIR_OUT);
 
 /********** main loop *******************************************************************/
 
