@@ -1,11 +1,11 @@
 --startup.lua
 
-function runthermo()
-    print("\n*** running thermo.lua")
-    dofile("thermo.lua")
+function runsensor_post()
+    print("\n*** running sensor_post.lua")
+    dofile("sensor_post.lua")
 end
 
-print('\n*** startup.lua ver 1.4')
+print('\n*** startup.lua ver 1.6')
 print('  set mode=STATION (mode='..wifi.getmode()..')')
 print('  MAC: ',wifi.sta.getmac())
 print('  chip: ',node.chipid())
@@ -26,4 +26,4 @@ tmr.alarm(1, 1000, 1, function()
     end
 end)
 
-tmr.alarm(2,8000,0,runthermo)
+-- tmr.alarm(2,8000,0,runsensor_post)
