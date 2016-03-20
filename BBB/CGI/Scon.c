@@ -22,13 +22,14 @@
 #include "schedule.h"
 #include "BBBiolib.h"
 #include "trace.h"
+#include "typedefs.h"
 
-#define _TRACE
+// #define _TRACE
 
-/*********************** globals **************************/
-#ifdef _TRACE
-char			trace_buf[128];
-#endif
+// /*********************** globals **************************/
+// #ifdef _TRACE
+// char			trace_buf[128];
+// #endif
 int             	trace_flag;                   	//trace file is active
 
 /***************** global code to text conversion ********************/
@@ -62,42 +63,63 @@ SEMBUF sb = {0, -1, 0};  /* set to allocate resource */
 
 /********** main routine ************************************************************************/
 int main(void) {
+	FILE 			*cgi_data;
+//	CGI_DAT 		write_buffer;
+	// int 			ret;
+//	_tm 			tm;
+	int         	rtc;		// file name for real time clock
+	int 			sensor_number;
+	int 			sensor_value;
+
 
 	printf("\n  **** cgi active 0.0 ****\n\n");
 
 	/********** initializations *******************************************************************/
+	printf("  starting initializations\n");
 
-	/* setup trace */
-#ifdef _TRACE
-	trace_flag = true;
-#else
-	trace_flag = false;
-#endif
-	if (trace_flag == true) {
-		printf(" program trace active in Scon,");
-		if (trace_on(_TRACE_FILE_NAME, &trace_flag)) {
-			printf("trace_on returned error\n");
-			trace_flag = false;
-		}
-	}
-	if (trace_flag == false)
-		printf(" program trace disabled\n");
-
-	// /* setup PCF8563 RTC */
-	// rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
+	/* setup PCF8563 RTC */
+	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 
 	/* setup shared memory */
+	ipc_sem_init();
 	semid = ipc_sem_id(skey);					// get semaphore id
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (IPC_DAT *)data;					// overlay ipc data structure on shared memory
-	ipc_ptr->force_update = 1;
-	disp_sch((uint32_t *)ipc_ptr->sch);
-	ipc_sem_free(semid, &sb);					// free lock on shared memory
-
-	printf("starting main loop\n");
+	printf("  %s copied to shared memory\n",ipc_file);
 	
+	/* move sensor data to shared memory */
+	get_tm(rtc, &(ipc_ptr->s_dat[sensor_number].ts));				// read the clock
+	ipc_ptr->s_dat[sensor_number].temp = 66 * 10;
+	ipc_ptr->s_dat[sensor_number].humidity = 45 * 10;
+	printf("  sensor data copied to shared memory\n");
+	ipc_ptr->force_update = 1;
+	ipc_sem_free(semid, &sb);		// free lock on shared memory
 
+	/* log sensor data */
+	cgi_data = fopen(_CGI_DATA_FILE,"a");
+	if(cgi_data == NULL){
+		printf("  Error: %d (%s)\n", errno, strerror(errno));
+		printf("    attempting to open %s\n\n application terminated\n\n", _CGI_DATA_FILE);
+		return 1;
+	}
+	printf("  %s opened\n",_CGI_DATA_FILE);
+	printf("  write buffer size %i\n", sizeof(ipc_ptr->s_dat[sensor_number]));
+	printf("%s\n",&ipc_ptr->s_dat[sensor_number]);
+
+	if(fwrite(&ipc_ptr->s_dat[sensor_number], sizeof(ipc_ptr->s_dat[sensor_number]), 1, cgi_data) != 1){
+		printf("  Error: %d (%s)\n", errno, strerror(errno));
+		printf("    attempting to append data to %s\n\n application terminated\n\n", _CGI_DATA_FILE);
+		return 1;
+	}
+	printf("  data appended to %s\n",_CGI_DATA_FILE);
+
+
+	// #ifdef _TRACE
+	// 	strace(_TRACE_FILE_NAME, "Scon: starting main loop", trace_flag);
+	// #endif
+	fclose(cgi_data);
+	printf("\nnormal termination\n\n");
 	return 0;
 }

@@ -6,6 +6,9 @@
 #define _minor_version 			0
 #define _minor_revision 		9
 
+/* file names */
+#define _CGI_DATA_FILE			"/home/Pcon-data/cgi.dat"
+
 #define TRACE on
 
 /* semaphore key */

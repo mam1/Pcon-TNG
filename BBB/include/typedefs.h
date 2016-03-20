@@ -8,6 +8,7 @@
 #include "Pcon.h"
 
 
+
 /* channel data */
 typedef struct {
 	int 		time_on; 	// accumulated minutes of on time for channel
@@ -76,6 +77,36 @@ typedef struct {
 } CMD_FSM_CB;
 
 typedef struct sembuf SEMBUF;  
+
+
+typedef struct {
+    int tm_sec;         // seconds
+    int tm_min;         // minutes
+    int tm_hour;        // hours
+    int tm_mday;        // day of the month
+    int tm_mon;         // month
+    int tm_year;        // year
+    int tm_wday;        // day of the week
+    int tm_yday;        // day in the year
+    int tm_isdst;       // daylight saving time
+} _tm;
+
+/* ipc data - memory mapped */
+typedef	struct {
+	uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
+	int			force_update;		// force daemon to update channel
+    struct {
+    	int 		c_state;		// 0 = off, 1 = on	
+		int 		c_mode; 		// Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
+		int			on_sec ;		// on cycle in seconds
+		int 		off_sec;		// off cycle in seconds    
+	} c_dat[_NUMBER_OF_CHANNELS];
+	struct{
+		int			temp;
+		int			humidity;
+		_tm 		ts;
+	} s_dat[_NUMBER_OF_SENSORS];
+} IPC_DAT;
 
 /* action routine definitions */
 typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);

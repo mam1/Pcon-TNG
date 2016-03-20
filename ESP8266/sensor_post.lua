@@ -125,6 +125,7 @@ function posta(key,field,value)
     connout:connect(80,'api.thingspeak.com')
 end
 
+
 -- update temperature and humidity
 function update()
 	local t, h,send
@@ -141,6 +142,7 @@ function update()
     end	
     dispPage(10,"Office Sensor",tempStr,hmdyStr)
     post(CHANNEL_API_KEY,FIELDS[pinptr],tostring(send/10).."."..tostring(send % 10))
+    posta(CHANNEL_API_KEY,FIELDS[pinptr],tostring(send/10).."."..tostring(send % 10))
 	pinptr = pinptr + 1
 	if pinptr > #PINS then pinptr = 1 end
 end

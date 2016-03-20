@@ -1,6 +1,8 @@
 
 // #include "i2c.h"
 #include "bitlit.h"
+#include "typedefs.h"
+
 
 #define PCF8583_ADDRESS     0x51			// PCF8563 device address (8 bit)
 #define I2C_BUSS            "/dev/i2c-1"	// i2c buss that the WaveShare Cape uses for the PCF8563
@@ -43,17 +45,7 @@
 #define YEAR_MASK           B8(11111111)
 #define CENTRY_MASK			B8(10000000)
 
-typedef struct {
-    int tm_sec;         /* seconds */
-    int tm_min;         /* minutes */
-    int tm_hour;        /* hours */
-    int tm_mday;        /* day of the month */
-    int tm_mon;         /* month */
-    int tm_year;        /* year */
-    int tm_wday;        /* day of the week */
-    int tm_yday;        /* day in the year */
-    int tm_isdst;       /* daylight saving time */
-} _tm;
+
 
 
 int open_tm(char *filename, uint8_t addr);

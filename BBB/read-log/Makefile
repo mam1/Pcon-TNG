@@ -1,5 +1,5 @@
 # scan directory 
-program_NAME := test-led
+program_NAME := read-log
 program_C_SRCS := $(wildcard *.c)
 program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
@@ -64,9 +64,9 @@ $(program_NAME): $(program_OBJS)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/test-led/ root@192.168.254.34:/home/rsync-OSX
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/read-log/ root@192.168.254.34:/home/rsync-OSX
 else
-	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/test-led/ root@192.168.254.34:/home/rsync-Mint	
+	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/read-log/ root@192.168.254.34:/home/rsync-Mint	
 endif
 
 # clean up
