@@ -239,18 +239,18 @@ void load_schedule(uint32_t *sch, uint32_t *template, int day, int channel)   //
 	return;
 }
 
-uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a schedule
-{
-   SCH             *sch_ptr;
-   DAY             *day_ptr;
+// uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a schedule
+// {
+//    SCH             *sch_ptr;
+//    DAY             *day_ptr;
 
-   day_ptr = (DAY *)sbuf;      //set day pointer to the start of the schedule buffer
-   day_ptr += d;             //move day pointer to the start of the requested day
-   sch_ptr = (SCH *)day_ptr;   //set channel pointer to the start of the requested day
-   sch_ptr += c;               //move channel pointer to the requested channel
+//    day_ptr = (DAY *)sbuf;      //set day pointer to the start of the schedule buffer
+//    day_ptr += d;             //move day pointer to the start of the requested day
+//    sch_ptr = (SCH *)day_ptr;   //set channel pointer to the start of the requested day
+//    sch_ptr += c;               //move channel pointer to the requested channel
 
-   return (uint32_t *)sch_ptr;
-}
+//    return (uint32_t *)sch_ptr;
+// }
 
 int test_sch(uint32_t *r, int k) //return state for key
 {
@@ -330,21 +330,34 @@ void disp_sch(uint32_t *sch)
 }
 
 
-// uint32_t *get_schedule(uint32_t *sch, int day, int channel) { // return pointer to a schedule for a (day,channel)
+uint32_t *get_schedule(uint32_t *sch, int day, int channel) { // return pointer to a schedule for a (day,channel)
 
-// 	uint32_t    *start_schedule;
+	uint32_t    *start_schedule;
 
-// 	start_schedule = sch;
-// 	while (day > 0) {       //move day pointer to the requested day
-// 		start_schedule += _BYTES_PER_DAY;
-// 		day--;
-// 	}
-// 	while (channel > 0) {   //move channel pointer to the requested channel
-// 		start_schedule += _SCHEDULE_SIZE;
-// 		channel--;
-// 	}
+	start_schedule = sch;
+	while (day > 0) {       //move day pointer to the requested day
+		start_schedule += _BYTES_PER_DAY;
+		day--;
+	}
+	while (channel > 0) {   //move channel pointer to the requested channel
+		start_schedule += _SCHEDULE_SIZE;
+		channel--;
+	}
 
-// 	return (uint32_t *)start_schedule;
-// 	// return sch;
-// }
+	return (uint32_t *)start_schedule;
+	// return sch;
+}
 
+void dump_sch(uint32_t *sch){
+
+	int 			rcnt,i;
+
+	rcnt = (int)*sch;
+
+	printf("\n--------------------------------------------------\n%i schedule records\n",rcnt );
+
+	for(i=0;i<rcnt;i++){
+		printf("  record number %i  key <>  state <>\n",i, get_key(*(sch+i)), get_s(*(sch+i)));
+	}
+	return;
+}

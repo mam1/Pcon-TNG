@@ -73,10 +73,10 @@ int get_tm(int rtc, _tm *tm){
     tm->tm_wday = reg_buf[4] & 0x7;
     tm->tm_mon = BCDToDecimal(reg_buf[5] & 0x1f) + 1;    /* rtc mn 1-12 */
     tm->tm_year = BCDToDecimal(reg_buf[6]) + 2000;
-    snprintf(&tm->tm_stamp[0], sizeof(tm->tm_stamp), "%4d%2d%2d%2d%2d",tm->tm_year,tm->tm_mon,tm->tm_mday,tm->tm_hour,tm->tm_min);
-    for(i=0;i<15;i++)
-    	if(tm->tm_stamp[i] ==' ')
-    		tm->tm_stamp[i] = '0';
+    // snprintf(&tm->tm_stamp[0], sizeof(tm->tm_stamp), "%4d%2d%2d%2d%2d",tm->tm_year,tm->tm_mon,tm->tm_mday,tm->tm_hour,tm->tm_min);
+    // for(i=0;i<15;i++)
+    // 	if(tm->tm_stamp[i] ==' ')
+    // 		tm->tm_stamp[i] = '0';
   }
   return 0;
 
