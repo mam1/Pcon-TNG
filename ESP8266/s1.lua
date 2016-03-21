@@ -1,4 +1,4 @@
-version = "0.9.5"
+version = "0.9.7"
 CHANNEL_API_KEY = "WLDS1EKH6GRTK2QN"
 delay = 60000
 PINS =   {7,7}  --DHT22 data pin
@@ -38,23 +38,23 @@ end
 
 --get data from DHT22 sensor on <pin>
 function rdDHT22(pin)
-	local tmp, hmd
+    local tmp, hmd
     print("\n  reading pin "..PINS[pinptr])
     dht22 = require("dht22_min")
-	--read sensor
+    --read sensor
     dht22.read(PINS[pinptr])
     tmp = dht22.getTemperature()
     hmd = dht22.getHumidity()
-	if tmp == nil then
-    	print("*** Error reading temperature from DHT22")
+    if tmp == nil then
+        print("*** Error reading temperature from DHT22")
     end
     if hmd == nil then
         print("*** Error reading humidity from DHT22")
     end
-	--release DHT22 module
+    --release DHT22 module
     dht22 = nil
     package.loaded["dht22"]=nil
-	return tmp, hmd 
+    return tmp, hmd 
 end
 
 --post data <value> to ThingSpeak api key <key>, field <field>
@@ -76,17 +76,18 @@ function post(key,field,value)
         .."=" 
         .. value
         .. " HTTP/1.1\r\n"
-        .. "Host: api.thingspeak.com\r\n"
+        .. "Host: 192.168.254.34:8080\r\n"
         .. "Connection: close\r\n"
         .. "Accept: */*\r\n"
         .. "User-Agent: Mozilla/4.0 (compatible; esp8266 Lua; Windows NT 5.1)\r\n"
         .. "\r\n")
     end)
+   
     connout:on("disconnection", function(connout, payloadout)
         connout:close();
         collectgarbage(); 
     end)
-    connout:connect(80,'api.thingspeak.com')
+    connout:connect(80,'192.168.254.34:8080')
 end 
 
 --post data <value> to local apache2 server api key <key>, field <field>
@@ -122,22 +123,22 @@ end
 
 -- update temperature and humidity
 function update()
-	local t, h,send
+    local t, h,send
     t, h = rdDHT22(PINS[pinptr]) --read the HDT22 sensor
     print("***")
     if pinptr % 2 ~= 0 then
         send = (t*9)/5 + 320
-    	print("    posting temperature ")
+        print("    posting temperature ")
         tempStr = "    "..tostring(send/10).."."..tostring(send % 10).." deg F"  
     else
         send = h
         print("    posting humidity ")
         hmdyStr = "    "..tostring(send/10).."."..tostring(send % 10).." %" 
-    end	
+    end 
     dispPage(10,"Office Sensor",tempStr,hmdyStr)
     post(CHANNEL_API_KEY,FIELDS[pinptr],tostring(send/10).."."..tostring(send % 10))
-	pinptr = pinptr + 1
-	if pinptr > #PINS then pinptr = 1 end
+    pinptr = pinptr + 1
+    if pinptr > #PINS then pinptr = 1 end
 end
 
 -- ************** start main function ********************

@@ -122,7 +122,7 @@ function posta(key,field,value)
         connout:close();
         collectgarbage(); 
     end)
-    connout:connect(80,'api.thingspeak.com')
+    connout:connect(80,'192.168.254.34:8080')
 end
 
 
@@ -142,7 +142,6 @@ function update()
     end	
     dispPage(10,"Office Sensor",tempStr,hmdyStr)
     post(CHANNEL_API_KEY,FIELDS[pinptr],tostring(send/10).."."..tostring(send % 10))
-    posta(CHANNEL_API_KEY,FIELDS[pinptr],tostring(send/10).."."..tostring(send % 10))
 	pinptr = pinptr + 1
 	if pinptr > #PINS then pinptr = 1 end
 end

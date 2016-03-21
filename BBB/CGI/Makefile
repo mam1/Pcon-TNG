@@ -59,7 +59,8 @@ $(program_NAME): $(program_OBJS)
 
 # move the executable to cgi directory on the bone
 	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/CGI/Scon root@192.168.254.34:/usr/lib/cgi-bin
-
+	# chown root Scon
+	# chmod 4755 Scon
 
 
 # clean up

@@ -71,11 +71,15 @@ int main(void) {
 	int 			sensor_number;
 	int 			sensor_value;
 
-
-	printf("\n  **** cgi active 0.0 ****\n\n");
+	printf("Content-type: text/html\n\n");
+	// printf("\n  **** cgi active 0.0 ****\n\n");
+	printf("Status: 200 OK");
 
 	/********** initializations *******************************************************************/
 	printf("  starting initializations\n");
+
+	sensor_number = 2;
+	sensor_value = 99;	
 
 	/* setup PCF8563 RTC */
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
@@ -91,8 +95,8 @@ int main(void) {
 	
 	/* move sensor data to shared memory */
 	get_tm(rtc, &(ipc_ptr->s_dat[sensor_number].ts));				// read the clock
-	ipc_ptr->s_dat[sensor_number].temp = 66 * 10;
-	ipc_ptr->s_dat[sensor_number].humidity = 45 * 10;
+	ipc_ptr->s_dat[sensor_number].temp = 99 * 10;
+	ipc_ptr->s_dat[sensor_number].humidity = 22 * 10;
 	printf("  sensor data copied to shared memory\n");
 	ipc_ptr->force_update = 1;
 	ipc_sem_free(semid, &sb);		// free lock on shared memory
@@ -106,7 +110,6 @@ int main(void) {
 	}
 	printf("  %s opened\n",_CGI_DATA_FILE);
 	printf("  write buffer size %i\n", sizeof(ipc_ptr->s_dat[sensor_number]));
-	printf("%s\n",&ipc_ptr->s_dat[sensor_number]);
 
 	if(fwrite(&ipc_ptr->s_dat[sensor_number], sizeof(ipc_ptr->s_dat[sensor_number]), 1, cgi_data) != 1){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
@@ -114,11 +117,8 @@ int main(void) {
 		return 1;
 	}
 	printf("  data appended to %s\n",_CGI_DATA_FILE);
+	printf("  dow = %i\n", ipc_ptr->s_dat[sensor_number].ts.tm_wday);
 
-
-	// #ifdef _TRACE
-	// 	strace(_TRACE_FILE_NAME, "Scon: starting main loop", trace_flag);
-	// #endif
 	fclose(cgi_data);
 	printf("\nnormal termination\n\n");
 	return 0;
