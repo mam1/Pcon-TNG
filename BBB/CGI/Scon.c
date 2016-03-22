@@ -174,7 +174,7 @@ int main(void) {
     char *eptr;
 
 	printf("Content-type: text/html\n\n");
-	printf("\n  **** cgi active 0.0 ****\n\r");
+	printf("\n  **** cgi active 0.10 ****\n\r");
 	// printf("Status: 200 OK\n");
 	// printf("%s = <%s>\n\r", "QUERY_STRING", getenv("QUERY_STRING"));
 
