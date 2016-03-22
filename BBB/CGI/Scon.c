@@ -175,12 +175,31 @@ int main(void) {
 
 	printf("Content-type: text/html\n\n");
 	printf("\n  **** cgi active 0.0 ****\n\r");
-	printf("Status: 200 OK\n");
-	printf("%s = <%s>\n\r", "QUERY_STRING", getenv("QUERY_STRING"));
+	// printf("Status: 200 OK\n");
+	// printf("%s = <%s>\n\r", "QUERY_STRING", getenv("QUERY_STRING"));
+
+	/********** initializations *******************************************************************/
+	// printf("  starting initializations\n");
+
+	/* setup PCF8563 RTC */
+	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
+
+	/* setup shared memory */
+	ipc_sem_init();
+	semid = ipc_sem_id(skey);					// get semaphore id
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
+	data = ipc_map(fd, ipc_size());           	// map file to memory
+	ipc_ptr = (IPC_DAT *)data;					// overlay ipc data structure on shared memory
+	printf("  %s copied to shared memory\n",ipc_file);
+
+	/*********** start main process *******************************************************************/
+
+	/* parce the query string for values sent by a ESP8266 */
 	s_num = cgigetval("snesor");
 	s_temp = cgigetval("temp");
 	s_humid = cgigetval("humid");
-	printf("values %s, %s, %s\n",s_num,s_temp,s_humid);
+	// printf("values %s, %s, %s\n",s_num,s_temp,s_humid);
     l_num = strtol(s_num, &eptr, 10);
     if (l_num == 0)
     {
@@ -199,21 +218,7 @@ int main(void) {
         printf("Conversion error occurred: %d", errno);
         exit(0);
     }
-    printf("semsor %i, temp %i, humidity %i\n", (int)l_num, (int)l_temp, (int)l_humid);
-	/********** initializations *******************************************************************/
-	printf("  starting initializations\n");
-
-	/* setup PCF8563 RTC */
-	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
-
-	/* setup shared memory */
-	ipc_sem_init();
-	semid = ipc_sem_id(skey);					// get semaphore id
-	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
-	data = ipc_map(fd, ipc_size());           	// map file to memory
-	ipc_ptr = (IPC_DAT *)data;					// overlay ipc data structure on shared memory
-	printf("  %s copied to shared memory\n",ipc_file);
+    printf("  semsor %i, temp %i, humidity %i\n", (int)l_num, (int)l_temp, (int)l_humid);
 	
 	/* move sensor data to shared memory */
 	get_tm(rtc, &(ipc_ptr->s_dat[l_num].ts));				// read the clock
