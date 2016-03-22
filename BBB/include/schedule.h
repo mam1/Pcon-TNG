@@ -23,6 +23,7 @@
  int make_key(int hour, int minute);
  int test_sch(uint32_t *r, int k); 				//return state for key
  void disp_sch(uint32_t *sch);
+ void dump_sch(uint32_t *sch);
 
 
 #endif
