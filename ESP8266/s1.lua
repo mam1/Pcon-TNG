@@ -87,7 +87,7 @@ function post(key,field,value)
         connout:close();
         collectgarbage(); 
     end)
-    connout:connect(80,'192.168.254.34:8080')
+    connout:connect(8080,'192.168.254.34')
 end 
 
 --post data <value> to local apache2 server api key <key>, field <field>
@@ -118,7 +118,7 @@ function posta(key,field,value)
         connout:close();
         collectgarbage(); 
     end)
-    connout:connect(80,'192.168.254.34:8080')
+    connout:connect(80,"192.168.254.34")
 end
 
 -- update temperature and humidity
