@@ -66,112 +66,107 @@ char *unescstring(char *, int, char *, int);
 
 char *cgigetval(char *fieldname)
 {
-int fnamelen;
-char *p, *p2, *p3;
-int len1, len2;
-static char *querystring = NULL;
-if(querystring == NULL)
+	int fnamelen;
+	char *p, *p2, *p3;
+	int len1, len2;
+	static char *querystring = NULL;
+	if (querystring == NULL)
 	{
-	querystring = getenv("QUERY_STRING");
-	if(querystring == NULL)
-		return NULL;
-	}
-
-if(fieldname == NULL)
-	return NULL;
-
-fnamelen = strlen(fieldname);
-
-for(p = querystring; *p != '\0';)
-	{
-	p2 = strchr(p, '=');
-	p3 = strchr(p, '&');
-	if(p3 != NULL)
-		len2 = p3 - p;
-	else	len2 = strlen(p);
-
-	if(p2 == NULL || p3 != NULL && p2 > p3)
-		{
-		/* no = present in this field */
-		p3 += len2;
-		continue;
-		}
-	len1 = p2 - p;
-
-	if(len1 == fnamelen && strncmp(fieldname, p, len1) == 0)
-		{
-		/* found it */
-		int retlen = len2 - len1 - 1;
-		char *retbuf = malloc(retlen + 1);
-		if(retbuf == NULL)
+		querystring = getenv("QUERY_STRING");
+		if (querystring == NULL)
 			return NULL;
-		unescstring(p2 + 1, retlen, retbuf, retlen+1);
-		return retbuf;
-		}
-
-	p += len2;
-	if(*p == '&')
-		p++;
 	}
 
-/* never found it */
+	if (fieldname == NULL)
+		return NULL;
 
-return NULL;
+	fnamelen = strlen(fieldname);
+
+	for (p = querystring; *p != '\0';)
+	{
+		p2 = strchr(p, '=');
+		p3 = strchr(p, '&');
+		if (p3 != NULL)
+			len2 = p3 - p;
+		else	len2 = strlen(p);
+
+		if (p2 == NULL || p3 != NULL && p2 > p3)
+		{
+			/* no = present in this field */
+			p3 += len2;
+			continue;
+		}
+		len1 = p2 - p;
+
+		if (len1 == fnamelen && strncmp(fieldname, p, len1) == 0)
+		{
+			/* found it */
+			int retlen = len2 - len1 - 1;
+			char *retbuf = malloc(retlen + 1);
+			if (retbuf == NULL)
+				return NULL;
+			unescstring(p2 + 1, retlen, retbuf, retlen + 1);
+			return retbuf;
+		}
+
+		p += len2;
+		if (*p == '&')
+			p++;
+	}
+
+	/* never found it */
+
+	return NULL;
 }
 
 static int xctod(int);
 
 char *unescstring(char *src, int srclen, char *dest, int destsize)
 {
-char *endp = src + srclen;
-char *srcp;
-char *destp = dest;
-int nwrote = 0;
+	char *endp = src + srclen;
+	char *srcp;
+	char *destp = dest;
+	int nwrote = 0;
 
-for(srcp = src; srcp < endp; srcp++)
+	for (srcp = src; srcp < endp; srcp++)
 	{
-	if(nwrote > destsize)
-		return NULL;
-	if(*srcp == '+')
-		*destp++ = ' ';
-	else if(*srcp == '%')
+		if (nwrote > destsize)
+			return NULL;
+		if (*srcp == '+')
+			*destp++ = ' ';
+		else if (*srcp == '%')
 		{
-		*destp++ = 16 * xctod(*(srcp+1)) + xctod(*(srcp+2));
-		srcp += 2;
+			*destp++ = 16 * xctod(*(srcp + 1)) + xctod(*(srcp + 2));
+			srcp += 2;
 		}
-	else	*destp++ = *srcp;
-	nwrote++;
+		else	*destp++ = *srcp;
+		nwrote++;
 	}
 
-*destp = '\0';
+	*destp = '\0';
 
-return dest;
+	return dest;
 }
 
 static int xctod(int c)
 {
-if(isdigit(c))
-	return c - '0';
-else if(isupper(c))
-	return c - 'A' + 10;
-else if(islower(c))
-	return c - 'a' + 10;
-else	return 0;
+	if (isdigit(c))
+		return c - '0';
+	else if (isupper(c))
+		return c - 'A' + 10;
+	else if (islower(c))
+		return c - 'a' + 10;
+	else	return 0;
 }
 
 
 /********** main routine ************************************************************************/
 int main(void) {
-	FILE 			*cgi_data;
-//	CGI_DAT 		write_buffer;
-	// int 			ret;
-//	_tm 			tm;
-	int         	rtc;		// file name for real time clock
-	// int 			sensor_number, sensor_value;
+	FILE 			*cgi_data;					// cgi log file handle
 	char 			*s_num, *s_temp, *s_humid;
 	long 			l_num, l_temp, l_humid;
-	// char value[10];
-    char *eptr;
+	char 			cgi_file_name[_FILE_NAME_SIZE];
+	char 			*eptr;
 
 	printf("Content-type: text/html\n\n");
 	printf("\n  **** cgi active 0.10 ****\n\r");
@@ -184,6 +179,8 @@ int main(void) {
 	/* setup PCF8563 RTC */
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 
+	/* build cgi file name */
+
 	/* setup shared memory */
 	ipc_sem_init();
 	semid = ipc_sem_id(skey);					// get semaphore id
@@ -191,7 +188,7 @@ int main(void) {
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (IPC_DAT *)data;					// overlay ipc data structure on shared memory
-	printf("  %s copied to shared memory\n",ipc_file);
+	printf("  %s copied to shared memory\n", ipc_file);
 
 	/*********** start main process *******************************************************************/
 
@@ -199,27 +196,28 @@ int main(void) {
 	s_num = cgigetval("snesor");
 	s_temp = cgigetval("temp");
 	s_humid = cgigetval("humid");
-	// printf("values %s, %s, %s\n",s_num,s_temp,s_humid);
-    l_num = strtol(s_num, &eptr, 10);
-    if (l_num == 0)
-    {
-        printf("Conversion error occurred: %d", errno);
-        exit(0);
-    }
-    l_temp = strtol(s_temp, &eptr, 10);
-    if (l_temp == 0)
-    {
-        printf("Conversion error occurred: %d", errno);
-        exit(0);
-    }
-    l_humid = strtol(s_humid, &eptr, 10);
-    if (l_humid == 0)
-    {
-        printf("Conversion error occurred: %d", errno);
-        exit(0);
-    }
-    printf("  semsor %i, temp %i, humidity %i\n", (int)l_num, (int)l_temp, (int)l_humid);
-	
+	l_num = strtol(s_num, &eptr, 10);
+	if (l_num == 0)
+	{
+		printf("Conversion error occurred: %d", errno);
+		exit(0);
+	}
+	l_temp = strtol(s_temp, &eptr, 10);
+	if (l_temp == 0)
+	{
+		printf("Conversion error occurred: %d", errno);
+		exit(0);
+	}
+	l_humid = strtol(s_humid, &eptr, 10);
+	if (l_humid == 0)
+	{
+		printf("Conversion error occurred: %d", errno);
+		exit(0);
+	}
+	printf("  sensor %i, temp %i, humidity %i\n", (int)l_num, (int)l_temp, (int)l_humid);
+	snprintf(cgi_file_name, _FILE_NAME_SIZE, "%s%i%s", _CGI_DATA_FILE_PREFIX, (int)l_num, _CGI_DATA_FILE_SUFIX);
+	printf("\n******* file name <%s>\n",cgi_file_name);
+
 	/* move sensor data to shared memory */
 	get_tm(rtc, &(ipc_ptr->s_dat[l_num].ts));				// read the clock
 	ipc_ptr->s_dat[l_num].temp = (int)l_temp;
@@ -229,21 +227,21 @@ int main(void) {
 	ipc_sem_free(semid, &sb);		// free lock on shared memory
 
 	/* log sensor data */
-	cgi_data = fopen(_CGI_DATA_FILE,"a");
-	if(cgi_data == NULL){
+	cgi_data = fopen(_CGI_DATA_FILE, "a");
+	if (cgi_data == NULL) {
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
 		printf("    attempting to open %s\n\n application terminated\n\n", _CGI_DATA_FILE);
 		return 1;
 	}
-	printf("  %s opened\n",_CGI_DATA_FILE);
+	printf("  %s opened\n", _CGI_DATA_FILE);
 	printf("  write buffer size %i\n", sizeof(ipc_ptr->s_dat[l_num]));
 
-	if(fwrite(&ipc_ptr->s_dat[l_num], sizeof(ipc_ptr->s_dat[l_num]), 1, cgi_data) != 1){
+	if (fwrite(&ipc_ptr->s_dat[l_num], sizeof(ipc_ptr->s_dat[l_num]), 1, cgi_data) != 1) {
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
 		printf("    attempting to append data to %s\n\n application terminated\n\n", _CGI_DATA_FILE);
 		return 1;
 	}
-	printf("  data appended to %s\n",_CGI_DATA_FILE);
+	printf("  data for sensor %i appended to %s\n", l_num, _CGI_DATA_FILE);
 	printf("  dow = %i\n", ipc_ptr->s_dat[l_num].ts.tm_wday);
 
 	fclose(cgi_data);
