@@ -43,7 +43,7 @@ int main (void) {
 	}
 	printf("  %s opened\n",_CGI_DATA_FILE);
 	while(fread(&buffer, sizeof(buffer), 1, cgi_data) == 1){
-		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i temp %i humidity %i\n",
+		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %i humidity %i\n",
 	       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
 	       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year,buffer.temp,buffer.humidity);
 	}

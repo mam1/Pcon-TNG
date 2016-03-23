@@ -7,7 +7,10 @@
 #define _minor_revision 		9
 
 /* file names */
+#define _FILE_NAME_SIZE 		50
 #define _CGI_DATA_FILE			"/home/Pcon-data/cgi.dat"
+#define _CGI_DATA_FILE_PREFIX	"/home/Pcon-data/sensor"
+#define _CGI_DATA_FILE_SUFIX	".dat"
 
 #define TRACE on
 
