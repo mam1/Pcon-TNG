@@ -57,29 +57,19 @@ $(program_NAME): $(program_OBJS)
 #	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
 	$(CXX) $(program_OBJS) -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti 
 
-# move the directory to the bone
-# ifeq ($(UNAME_S),Darwin)
-# 	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/daemon/ root@192.168.254.34:/home/rsync-OSX
-# else
-# 	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/daemon/ root@192.168.254.34:/home/rsync-Mint	
-# endif
-# move the executable to /usr/local/sbin directory on the bone
-	rsync -avz /Users/mam1/Git/Pcon-TNG/BBB/daemon/$(program_NAME) root@192.168.254.34:/usr/local/sbin
-	ssh root@192.168.254.34 'chown root /usr/local/sbin/$(program_NAME)'		# change owner
-	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(program_NAME)'		# open access
+# move the executable to the bone
+ifeq ($(UNAME_S),Darwin)
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/daemon/$(program_NAME) root@192.168.254.34:/usr/local/sbin 	# copy file
+else
+	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/daemon/$(program_NAME) root@192.168.254.34:/usr/local/sbin		# copy file
+endif
+# fix permissions
+	ssh root@192.168.254.34 'chown root:root /usr/local/sbin/$(program_NAME)'								# change owner
+	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(program_NAME)'									# open access
 
 # clean up
 	@- $(RM) -v $(program_NAME)
 	@- $(RM) -v $(program_OBJS)
-
-# movesh:
-# ifeq ($(UNAME_S),Darwin)
-# 	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/daemon/mystart.sh root@192.168.254.34:/etc/init.d
-# else
-# 	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/daemon/mystart.sh root@192.168.254.34:/etc/init.d
-# endif
-
-# 	@echo mystart.sh moved to /ect/init.d on the BBB
 
 clean:
 	@- $(RM) -v $(program_NAME)
