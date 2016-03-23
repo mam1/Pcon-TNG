@@ -37,6 +37,7 @@ extern int     edit_channel, edit_day, edit_hour, edit_minute, edit_key;
 /***************************** globals **********************************/
 uint32_t       state_mask = B32(10000000, 00000000, 00000000, 00000000);
 uint32_t       key_mask   = B32(01111111, 11111111, 11111111, 11111111);
+uint32_t       state_mask = B32(00000000, 00000000, 11111111, 11111111);
 
 /*******************************  functions ******************************/
 
@@ -55,11 +56,31 @@ int get_key(uint32_t b)                         // extract key from a schedule r
 	return (int)k;
 }
 
-int get_s(uint32_t b)                           // extract state from a schedule record
+int get_state(uint32_t b)                           // extract state from a schedule record
 {
 	if (b & state_mask)
 		return 1;
 	return 0;
+}
+
+int get_sensor(uint32_t b)                         // extract key from a schedule record
+{
+	uint32_t     k;
+	k = (int)(b & key_mask);
+	return (int)k;
+}
+
+void put_sensor(volatile uint32_t *value, int key) // load key into a schedule record
+{
+	int         hold_state;
+	uint32_t    t;
+
+	hold_state = get_state(*value);
+	t = (uint32_t)key;
+	if (*value & state_mask) t |= state_mask;
+	*value = key;
+	put_state(value, hold_state);
+	return;
 }
 
 void put_key(volatile uint32_t *value, int key) // load key into a schedule record
@@ -67,7 +88,7 @@ void put_key(volatile uint32_t *value, int key) // load key into a schedule reco
 	int         hold_state;
 	uint32_t    t;
 
-	hold_state = get_s(*value);
+	hold_state = get_state(*value);
 	t = (uint32_t)key;
 	if (*value & state_mask) t |= state_mask;
 	*value = key;
@@ -83,6 +104,7 @@ void put_state(volatile uint32_t *b, int s)     // load state into a schedule re
 	return;
 }
 
+int 
 int add_sch_rec(uint32_t *sch, int k, int s)    // add or change a schedule record */
 {
 	uint32_t       *end, *r;
@@ -214,7 +236,7 @@ void disp_all_schedules(CMD_FSM_CB *cb, uint32_t *sch)
 				if (*get_schedule(sch, day, channel) <= i)
 					strcpy(time_state, "         ");
 				else
-					sprintf(time_state, "%02i:%02i %s", get_key((uint32_t)*rec_ptr) / 60, get_key((uint32_t)*rec_ptr) % 60, onoff[get_s((uint32_t)*rec_ptr)]);
+					sprintf(time_state, "%02i:%02i %s", get_key((uint32_t)*rec_ptr) / 60, get_key((uint32_t)*rec_ptr) % 60, onoff[get_state((uint32_t)*rec_ptr)]);
 
 				printf("%s   ", time_state);
 
@@ -265,16 +287,16 @@ int test_sch(uint32_t *r, int k) //return state for key
 	while (r <= last_record)   	// search schedule for corresponding to key
 	{
 		if (get_key(*r) == k)
-			return get_s(*r);
+			return get_state(*r);
 		if ((get_key(*r) > k)){
 			if(r == first_record)
-				return get_s(*last_record);
+				return get_state(*last_record);
 			else
-				return get_s(*(--r));
+				return get_state(*(--r));
 		}
 		r++;
 	}
-	return get_s(*last_record);
+	return get_state(*last_record);
 }
 
 void disp_sch(uint32_t *sch)
@@ -316,7 +338,7 @@ void disp_sch(uint32_t *sch)
 				if (*get_schedule(sch, day, channel) <= i)
 					strcpy(time_state, "         ");
 				else
-					sprintf(time_state, "%02i:%02i %s", get_key((uint32_t)*rec_ptr) / 60, get_key((uint32_t)*rec_ptr) % 60, onoff[get_s((uint32_t)*rec_ptr)]);
+					sprintf(time_state, "%02i:%02i %s", get_key((uint32_t)*rec_ptr) / 60, get_key((uint32_t)*rec_ptr) % 60, onoff[get_state((uint32_t)*rec_ptr)]);
 
 				printf("%s   ", time_state);
 
@@ -357,7 +379,7 @@ void dump_sch(uint32_t *sch){
 	printf("\n--------------------------------------------------\n%i schedule records\n",rcnt );
 
 	for(i=0;i<rcnt;i++){
-		printf("  record number %i  key <>  state <>\n",i, get_key(*(sch+i)), get_s(*(sch+i)));
+		printf("  record number %i  key <>  state <>\n",i, get_key(*(sch+i)), get_state(*(sch+i)));
 	}
 	return;
 }

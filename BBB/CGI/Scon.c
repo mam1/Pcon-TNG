@@ -227,21 +227,21 @@ int main(void) {
 	ipc_sem_free(semid, &sb);		// free lock on shared memory
 
 	/* log sensor data */
-	cgi_data = fopen(_CGI_DATA_FILE, "a");
+	cgi_data = fopen(cgi_file_name, "a");
 	if (cgi_data == NULL) {
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to open %s\n\n application terminated\n\n", _CGI_DATA_FILE);
+		printf("    attempting to open %s\n\n application terminated\n\n", cgi_file_name);
 		return 1;
 	}
-	printf("  %s opened\n", _CGI_DATA_FILE);
+	printf("  %s opened\n", cgi_file_name);
 	printf("  write buffer size %i\n", sizeof(ipc_ptr->s_dat[l_num]));
 
 	if (fwrite(&ipc_ptr->s_dat[l_num], sizeof(ipc_ptr->s_dat[l_num]), 1, cgi_data) != 1) {
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to append data to %s\n\n application terminated\n\n", _CGI_DATA_FILE);
+		printf("    attempting to append data to %s\n\n application terminated\n\n", cgi_file_name);
 		return 1;
 	}
-	printf("  data for sensor %i appended to %s\n", l_num, _CGI_DATA_FILE);
+	printf("  data for sensor %i appended to %s\n", l_num, cgi_file_name);
 	printf("  dow = %i\n", ipc_ptr->s_dat[l_num].ts.tm_wday);
 
 	fclose(cgi_data);

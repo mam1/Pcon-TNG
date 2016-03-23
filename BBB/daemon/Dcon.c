@@ -65,17 +65,11 @@ void bin_prnt_byte(uint8_t x)
    for(n=0; n<8; n++)
    {
       if((x & 0x80) !=0)
-      {
          printf("1");
-      }
       else
-      {
          printf("0");
-      }
       if (n==3)
-      {
          printf(" "); /* insert a space between nybbles */
-      }
       x = x<<1;
    }
    printf("\n");
@@ -99,26 +93,19 @@ void dispdat(void) {
 void send_ccb(uint8_t byte)         //send control byte to dio board
  {
     int         i;
-    // iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);   //setup to write 
-    // pin_high(8, _DIOB_LAT_RLY);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
-    // pin_low(8,_DIOB_LAT_RLY);        //done - ready for next write */ 
+ 
     pin_low(8,_DIOB_DIN);  
     for(i=7;i>=0;i--)   //serialize and reverse bits 
     {
-    	// iolib_delay_ms(500);
         if((1 << i) & byte)
             pin_high(8,_DIOB_DIN);  //send bit high
         else
             pin_low(8,_DIOB_DIN);   //send bit low
-        /* send clock pluse */ 
-        // iolib_delay_ms(500);                
-        pin_high(8,_DIOB_SCLK_IN);
-        // iolib_delay_ms(500);   
+        /* send clock pluse */                
+        pin_high(8,_DIOB_SCLK_IN);  
         pin_low(8,_DIOB_SCLK_IN);
-    }
-    // iolib_delay_ms(500);   
+    }   
     pin_high(8,_DIOB_LAT_RLY);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
-    // iolib_delay_ms(500);
     pin_low(8,_DIOB_LAT_RLY);        //done - ready for next write */ 
     return;
  }
@@ -137,9 +124,7 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	printf("got the lock\n\n");
-
-	// dump_sch(ipc_ptr->sch);
+	// printf("got the lock\n\n");
 	
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
@@ -182,14 +167,10 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	for (channel = 0;channel < 8; channel++) {
 		gpio_index = channel + 8;
 		if (ipc_ptr->c_dat[channel].c_state){
-			// pin_high(8, 16);
 			pin_high(header[gpio_index], pin[gpio_index]);
-			// printf("setting high, header %i, pin %i\n",header[gpio_index],pin[gpio_index]);
 		}
 		else{ 
-			// pin_high(8, 16);
 			pin_low(header[gpio_index], pin[gpio_index]);
-			// printf("setting low, header %i, pin %i\n",header[gpio_index],pin[gpio_index]);
 		}
 	}
 #ifdef _TRACE
@@ -266,8 +247,6 @@ int main(void) {
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (IPC_DAT *)data;					// overlay ipc data structure on shared memory
 	ipc_ptr->force_update = 1;
-	// update_relays(&tm, ipc_ptr);
-	// disp_sch((uint32_t *)ipc_ptr->sch);
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 #ifdef _TRACE
 	printf("shared memory setup completed\n");
@@ -329,7 +308,7 @@ int main(void) {
 			ipc_ptr->force_update = 0;
 			printf("\n*** update forced\n");
 			update_relays(&tm, ipc_ptr);
-			dispdat();
+			// dispdat();
 		}
 		else {
 			get_tm(rtc, &tm);
@@ -339,7 +318,7 @@ int main(void) {
 				printf("  %02i:%02i:%02i  %02i/%02i/%02i  dow %i\n",
 				       tm.tm_hour, tm.tm_min, tm.tm_sec, tm.tm_mon, tm.tm_mday, tm.tm_year, tm.tm_wday);
 				update_relays(&tm, ipc_ptr);
-				dispdat();
+				// dispdat();
 			}
 		}
 

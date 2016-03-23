@@ -1,7 +1,7 @@
 #ifndef PCON_H_
 #define PCON_H_
 
-#define _TRACE 				// turn on trace
+// #define _TRACE 				// turn on trace
 
 #include "shared.h"
 
@@ -12,7 +12,7 @@
 
 /* command parser fsm */
 #define _CMD_TOKENS     		34
-#define _CMD_STATES     		22 
+#define _CMD_STATES     		24 
 
 #define _MAX_SCHLIB_SCH			20
 
