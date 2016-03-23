@@ -135,10 +135,6 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	static int 			pin[_NUMBER_OF_GPIOS] = {_PINS};
 	static int 			header[_NUMBER_OF_GPIOS] = {_HEADERS};
 
-	// for(channel = 0;channel <16;channel++){
-	// 	printf("channel %i - header %i, pin %i\n",channel, header[channel], pin[channel] );
-	// }
-
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
@@ -174,18 +170,6 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 #endif
 
 	}
-
-
-	// pin_high(8, _R1_CAPE);
-	// pin_high(8, _R2_CAPE);
-	// pin_high(8, _R3_CAPE);
-	// pin_high(8, _R4_CAPE);
-	// pin_high(9, _R5_CAPE);
-	// pin_high(9, _R6_CAPE);
-	// pin_high(9, _R7_CAPE);
-	// pin_high(9, _R8_CAPE);
-
-	// return;
 
 #ifdef _TRACE 
 	printf("moving on\n"); 
@@ -327,12 +311,8 @@ int main(void) {
 	/* setup gpio access to serial header on the DIOB */
 	printf("\n mapping DIOB serial header to gpio pins\n");
 	iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _DIOB_DATA_RLY, BBBIO_DIR_OUT);
 	iolib_setdir(8, _DIOB_SCLK_IN, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _DIOB_SCLK_RLY, BBBIO_DIR_OUT);
 	iolib_setdir(8, _DIOB_LAT_RLY, BBBIO_DIR_OUT);
-	// iolib_setdir(9, _DIOB_LOAD_IN, BBBIO_DIR_OUT);
-
 	pin_low(8, _DIOB_SCLK_IN);
     pin_low(8, _DIOB_DIN);
 

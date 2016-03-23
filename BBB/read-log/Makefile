@@ -68,10 +68,10 @@ $(program_NAME): $(program_OBJS)
 # else
 # 	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/read-log/ root@192.168.254.34:/home/rsync-Mint	
 # endif
-# move the executable to /usr/local/bin/Pcon directory on the bone
-	rsync -avz /Users/mam1/Git/Pcon-TNG/BBB/read-log/$(program_NAME) root@192.168.254.34:/usr/local/bin/Pcon
-	ssh root@192.168.254.34 'chown root /usr/local/bin/Pcon/$(program_NAME)'		# change owner
-	ssh root@192.168.254.34 'chmod 4755 /usr/local/bin/Pcon/$(program_NAME)'		# open access
+# move the executable to /usr/local/sbin directory on the bone
+	rsync -avz /Users/mam1/Git/Pcon-TNG/BBB/read-log/$(program_NAME) root@192.168.254.34:/usr/local/sbin
+	ssh root@192.168.254.34 'chown root /usr/local/sbin/$(program_NAME)'		# change owner
+	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(program_NAME)'		# open access
 
 # clean up
 	@- $(RM) -v $(program_NAME)

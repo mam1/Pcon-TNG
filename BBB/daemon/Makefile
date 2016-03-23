@@ -11,15 +11,15 @@ UNAME_S := $(shell uname -s)
 UNAME_P := $(shell uname -p)
 
 # set directories
-ifeq ($(UNAME_S),Darwin)
+# ifeq ($(UNAME_S),Darwin)
 	program_INCLUDE_DIRS := ../include
 	program_LIBRARY_DIRS := ../lib
 	program_LIBRARIES := libPcon
-else
-	program_INCLUDE_DIRS := ../include
-	program_LIBRARY_DIRS := ../lib
-	program_LIBRARIES := libPcon
-endif
+# else
+# 	program_INCLUDE_DIRS := ../include
+# 	program_LIBRARY_DIRS := ../lib
+# 	program_LIBRARIES := libPcon
+# endif
 
 # set parameters
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
@@ -63,23 +63,23 @@ $(program_NAME): $(program_OBJS)
 # else
 # 	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/daemon/ root@192.168.254.34:/home/rsync-Mint	
 # endif
-# move the executable to /usr/local/bin/Pcon directory on the bone
-	rsync -avz /Users/mam1/Git/Pcon-TNG/BBB/daemon/$(program_NAME) root@192.168.254.34:/usr/local/bin/Pcon
-	ssh root@192.168.254.34 'chown root /usr/local/bin/Pcon/$(program_NAME)'		# change owner
-	ssh root@192.168.254.34 'chmod 4755 /usr/local/bin/Pcon/$(program_NAME)'		# open access
+# move the executable to /usr/local/sbin directory on the bone
+	rsync -avz /Users/mam1/Git/Pcon-TNG/BBB/daemon/$(program_NAME) root@192.168.254.34:/usr/local/sbin
+	ssh root@192.168.254.34 'chown root /usr/local/sbin/$(program_NAME)'		# change owner
+	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(program_NAME)'		# open access
 
 # clean up
 	@- $(RM) -v $(program_NAME)
 	@- $(RM) -v $(program_OBJS)
 
-movesh:
-ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/daemon/mystart.sh root@192.168.254.34:/etc/init.d
-else
-	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/daemon/mystart.sh root@192.168.254.34:/etc/init.d
-endif
+# movesh:
+# ifeq ($(UNAME_S),Darwin)
+# 	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/daemon/mystart.sh root@192.168.254.34:/etc/init.d
+# else
+# 	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/daemon/mystart.sh root@192.168.254.34:/etc/init.d
+# endif
 
-	@echo mystart.sh moved to /ect/init.d on the BBB
+# 	@echo mystart.sh moved to /ect/init.d on the BBB
 
 clean:
 	@- $(RM) -v $(program_NAME)
