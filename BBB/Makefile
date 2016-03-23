@@ -13,15 +13,15 @@ UNAME_S := $(shell uname -s)
 UNAME_P := $(shell uname -p)
 
 # set directories
-ifeq ($(UNAME_S),Darwin)
-	program_INCLUDE_DIRS := include
-	program_LIBRARY_DIRS := lib
-	program_LIBRARIES := Pcon.a
-else
-	program_INCLUDE_DIRS := include
-	program_LIBRARY_DIRS := lib
-	program_LIBRARIES := Pcon.a
-endif
+# ifeq ($(UNAME_S),Darwin)
+program_INCLUDE_DIRS := include
+program_LIBRARY_DIRS := lib
+program_LIBRARIES := Pcon.a
+# else
+# 	program_INCLUDE_DIRS := include
+# 	program_LIBRARY_DIRS := lib
+# 	program_LIBRARIES := Pcon.a
+# endif
 
 # set parameters
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
