@@ -65,9 +65,9 @@ $(program_NAME): $(program_OBJS)
 # endif
 
 # move the executable to cgi directory on the bone
-	rsync -avz /Users/mam1/Git/Pcon-TNG/BBB/UI/$(program_NAME) root@192.168.254.34:/usr/local/bin/Pcon
-	ssh root@192.168.254.34 'chown root /usr/local/bin/Pcon/$(program_NAME)'		# change owner
-	ssh root@192.168.254.34 'chmod 4755 /usr/local/bin/Pcon/$(program_NAME)'		# open access
+	rsync -avz /Users/mam1/Git/Pcon-TNG/BBB/UI/$(program_NAME) root@192.168.254.34:/usr/local/sbin
+	ssh root@192.168.254.34 'chown root /usr/local/sbin/$(program_NAME)'		# change owner
+	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(program_NAME)'		# open access
 
 # clean up
 	@- $(RM) -v $(program_NAME)
