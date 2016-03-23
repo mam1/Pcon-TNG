@@ -27,7 +27,7 @@ int				trace_flag;							//control program trace
 int 			bbb;								//UART1 file descriptor
 SYS_DAT 		sdat;								//system data structure
 CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
-IPC_DAT 		ipc_dat, *ipc_ptr; 							//ipc data
+IPC_DAT 		ipc_dat, *ipc_ptr; 					//ipc data
 void			*data = NULL;						//pointer to ipc data
 char           	ipc_file[] = {_IPC_FILE};  			//name of ipc file
 uint8_t 		cmd_state, char_state;				//fsm current state
@@ -138,7 +138,6 @@ int main(void) {
 	}
 
 	/* copy system data to shared memory */
-
 	ipc_sem_lock(semid, &sb);			// wait for a lock on shared memory
 	memcpy(ipc_ptr->sch, sdat.sch, sizeof(sdat.sch));
 	// disp_sch(ipc_ptr->sch);
@@ -148,6 +147,7 @@ int main(void) {
 		ipc_ptr->c_dat[i].on_sec = sdat.c_data[i].on_sec;
 		ipc_ptr->c_dat[i].off_sec = sdat.c_data[i].off_sec;
 	}
+	// memcpy(ipc_ptr->sch, cmd_fsm_cb.sdat_ptr->sch_ptr, sizeof(ipc_ptr->sch));
 	ipc_ptr->force_update = 1;			// force daemon to update relays
 	ipc_sem_free(semid, &sb);			// free lock on shared memory
 
@@ -263,8 +263,8 @@ int main(void) {
 	return 0;
 }
 int term(int t) {
-	semctl(semid, 0, IPC_RMID, dummy);
-	printf("    semaphore set removed\n\r");
+	// semctl(semid, 0, IPC_RMID, dummy);
+	// printf("    semaphore set removed\n\r");
 	switch (t) {
 	case 1:
 		system("/bin/stty cooked");			//switch to buffered iput

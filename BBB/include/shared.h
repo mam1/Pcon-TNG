@@ -8,11 +8,11 @@
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
-#define _CGI_DATA_FILE			"/home/Pcon-data/cgi.dat"
-#define _CGI_DATA_FILE_PREFIX	"/home/Pcon-data/sensor"
-#define _CGI_DATA_FILE_SUFIX	".dat"
-
-#define TRACE on
+#define _CGI_DATA_FILE_PREFIX	"/home/Pcon-data/sensor"		// cgi generated log of sensor data
+#define _CGI_DATA_FILE_SUFIX	".dat"							// cgi generated log of sensor data
+#define _SYSTEM_DATA_FILE		"/home/Pcon-data/sys.dat"		// system data file
+#define _IPC_FILE				"/home/Pcon-data/ipc.dat"   	// memory mapped ipc file
+#define _TRACE_FILE_NAME		"/home/Pcon-data/trace.dat" 	// trace file
 
 /* semaphore key */
 #define _SEM_KEY 				1234321
@@ -26,7 +26,7 @@
 
 /* schedule parameters */
 #define _SCHEDULE_NAME_SIZE		40
-#define _MAX_SCHEDULE_RECS		10
+#define _MAX_SCHEDULE_RECS		20
 #define _SCHEDULE_SIZE			_MAX_SCHEDULE_RECS + 1
 // #define _SCHEDULE_BUFFER		128
 

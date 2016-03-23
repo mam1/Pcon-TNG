@@ -137,8 +137,9 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	printf("got the lock\n\n");
 
-	dump_sch(ipc_ptr->sch);
+	// dump_sch(ipc_ptr->sch);
 	
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
@@ -150,9 +151,9 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 			key =  make_key(tm->tm_hour, tm->tm_min);								// generate key
 			s_ptr = get_schedule(((uint32_t *)ipc_ptr->sch), tm->tm_wday, channel); // get a pointer to the schedule for (day,channel)
 			printf("  cmd:fsm testing schedule for day %i channel %i\n", tm->tm_wday, channel);
-			dump_sch(s_ptr);
+			// dump_sch(s_ptr);
 			state =  test_sch(s_ptr, key);
-			printf("  cmd_fsm:  <%i> returned from test_sch\n", state);
+			// printf("  cmd_fsm:  <%i> returned from test_sch\n", state);
 			ipc_ptr->c_dat[channel].c_state = state;
 			break;
 		case 2:	// time & sensor
@@ -172,9 +173,9 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	}
 
 #ifdef _TRACE 
-	printf("moving on\n"); 
-	dispdat();
-	printf("\nupdating relays\n");
+	// printf("moving on\n"); 
+	// dispdat();
+	// printf("\nupdating relays\n");
 #endif
 
 	/* update on board relays channels 0-7 */    	
@@ -183,12 +184,12 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 		if (ipc_ptr->c_dat[channel].c_state){
 			// pin_high(8, 16);
 			pin_high(header[gpio_index], pin[gpio_index]);
-			printf("setting high, header %i, pin %i\n",header[gpio_index],pin[gpio_index]);
+			// printf("setting high, header %i, pin %i\n",header[gpio_index],pin[gpio_index]);
 		}
 		else{ 
 			// pin_high(8, 16);
 			pin_low(header[gpio_index], pin[gpio_index]);
-			printf("setting low, header %i, pin %i\n",header[gpio_index],pin[gpio_index]);
+			// printf("setting low, header %i, pin %i\n",header[gpio_index],pin[gpio_index]);
 		}
 	}
 #ifdef _TRACE
@@ -232,7 +233,7 @@ int main(void) {
 	int 	h_min;
 	int 	toggle;
 
-	printf("\n  **** daemon active 0.11 ****\n\n");
+	printf("\n  **** daemon active 0.12 ****\n\n");
 
 /********** initializations *******************************************************************/
 
@@ -258,13 +259,15 @@ int main(void) {
 	printf("PCF8563 opened\n");
 #endif
 	/* setup shared memory */
+	ipc_sem_init();								// setup semaphores
 	semid = ipc_sem_id(skey);					// get semaphore id
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (IPC_DAT *)data;					// overlay ipc data structure on shared memory
 	ipc_ptr->force_update = 1;
-	disp_sch((uint32_t *)ipc_ptr->sch);
+	// update_relays(&tm, ipc_ptr);
+	// disp_sch((uint32_t *)ipc_ptr->sch);
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 #ifdef _TRACE
 	printf("shared memory setup completed\n");

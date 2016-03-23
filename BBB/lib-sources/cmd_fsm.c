@@ -1160,7 +1160,7 @@ int c_31(CMD_FSM_CB *cb)
 int c_32(CMD_FSM_CB *cb)
 {
 	// printf("editing system schedule\r\n");
-	cb->w_day = _ALL_CHANNELS;
+	cb->w_day = _ALL_DAYS;
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "\r\n  enter template number  > ");
@@ -1286,8 +1286,11 @@ int c_39(CMD_FSM_CB *cb)
 {
 	// char            temp_buf[128];
 
-	memcpy(ipc_dat.sch, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));
-	memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));
+	ipc_sem_lock(semid, &sb);																// wait for a lock on shared memory
+	memcpy(ipc_ptr->sch, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));					// move working schedule from fsm controol block to shared memory
+	ipc_ptr->force_update = 1;																// force relays to be updated
+	ipc_sem_free(semid, &sb);																// free lock on shared memory
+	memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));	// move working schedule to system schedule in fsm control block
 	save_system_data(_SYSTEM_DATA_FILE, &sdat);
 	printf("\r\n*** system schedule replaced ***\r\n");
 
