@@ -58,11 +58,15 @@ $(program_NAME): $(program_OBJS)
 	$(CXX) $(program_OBJS) -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti 
 
 # move the directory to the bone
-ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/daemon/ root@192.168.254.34:/home/rsync-OSX
-else
-	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/daemon/ root@192.168.254.34:/home/rsync-Mint	
-endif
+# ifeq ($(UNAME_S),Darwin)
+# 	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/daemon/ root@192.168.254.34:/home/rsync-OSX
+# else
+# 	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/daemon/ root@192.168.254.34:/home/rsync-Mint	
+# endif
+# move the executable to /usr/local/bin/Pcon directory on the bone
+	rsync -avz /Users/mam1/Git/Pcon-TNG/BBB/daemon/$(program_NAME) root@192.168.254.34:/usr/local/bin/Pcon
+	ssh root@192.168.254.34 'chown root /usr/local/bin/Pcon/$(program_NAME)'		# change owner
+	ssh root@192.168.254.34 'chmod 4755 /usr/local/bin/Pcon/$(program_NAME)'		# open access
 
 # clean up
 	@- $(RM) -v $(program_NAME)
