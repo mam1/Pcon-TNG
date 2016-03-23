@@ -44,7 +44,7 @@ typedef	struct {
 
     // int 		template_id[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];			// map each (day,channel) to a template id
     int 		schlib_index;												// points to the next available record (maybe)
-    uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
+    uint64_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
     uint32_t	*sch_ptr;   												// pointer to system schedule
     CHN_DAT     c_data[_NUMBER_OF_CHANNELS];								// channel persistent data
     TMPL_DAT	s_data[_MAX_SCHLIB_SCH];									// schedule template library
@@ -59,12 +59,12 @@ typedef struct {
 	int				token_type;
 	int				token_value;
 	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
-	uint32_t        w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
-	uint32_t		*w_sch_ptr;
+	uint64_t        w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
+	uint64_t		*w_sch_ptr;
 	int             w_channel;                      //working channel number
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
 	int             w_schedule_number;
-	uint32_t        w_schedule[_SCHEDULE_SIZE];
+	uint64_t        w_schedule[_SCHEDULE_SIZE];
 	int             w_minutes;
 	char            w_minutes_str[4];
 	int             w_hours;
@@ -93,7 +93,8 @@ typedef struct {
 
 /* ipc data - memory mapped */
 typedef	struct {
-	uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
+	// uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
+	uint64_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
 	int			force_update;		// force daemon to update channel
     struct {
     	int 		c_state;		// 0 = off, 1 = on	
