@@ -109,6 +109,24 @@ typedef	struct {
 	} s_dat[_NUMBER_OF_SENSORS];
 } IPC_DAT;
 
+
+typedef struct {
+	int		key;
+	int 	state;
+	int 	temp;
+	int 	humid;
+} _S_REC;
+
+typedef struct {
+	_S_REC 	rec[_MAX_SCHEDULE_RECS];
+	int 	rcnt;
+	int 	sensor_id;
+} _S_DAY;
+
+typedef struct {	
+	_S_DAY 	schedule[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];	
+} _SCH;
+
 /* action routine definitions */
 typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
 typedef int (*CHAR_ACTION_PTR)(char *);

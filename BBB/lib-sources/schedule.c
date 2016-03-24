@@ -104,7 +104,7 @@ void put_state(volatile uint32_t *b, int s)     // load state into a schedule re
 	return;
 }
 
-int 
+
 int add_sch_rec(uint32_t *sch, int k, int s)    // add or change a schedule record */
 {
 	uint32_t       *end, *r;
