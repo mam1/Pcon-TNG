@@ -200,7 +200,7 @@ char    *STR_def[_CMD_STATES] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*                    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23*/
-	/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0},
+	/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0, 49,  0,  0},
 	/*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 	/*  2  $        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 	/*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
@@ -413,7 +413,7 @@ char *sch2text(uint32_t *sch, char *buf) {
 			h = key / 60;
 			m = key % 60;
 			sprintf(&buf[strlen(buf)], "  %2i:%02i ", h, m);
-			strcat(buf, onoff[get_s(sch[i])]);
+			// strcat(buf, onoff[get_s(sch[i])]);
 			strcat(buf, "\n\r");
 		}
 	return buf;
@@ -436,7 +436,7 @@ char *sch2text2(uint32_t *sch, char *buf) {
 			h = key / 60;
 			m = key % 60;
 			sprintf(&buf[strlen(buf)], "  %2i:%02i ", h, m);
-			strcat(buf, onoff[get_s(sch[i])]);
+			// strcat(buf, onoff[get_s(sch[i])]);
 		}
 	return buf;
 }
@@ -623,14 +623,18 @@ int c_5(CMD_FSM_CB *cb)
 int c_6(CMD_FSM_CB *cb)
 {
 	int         i;
-	printf("  channel  state   mode     name\n\r");
-	printf("  ---------------------------------\n\r");
+	printf("  channel  state   mode  sensor id     name\n\r");
+	printf("  ----------------------------------------------------------\n\r");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("   <%2i> - ", i);
-		printf(" %s    %s   %s", onoff[ipc_ptr->c_dat[i].c_state], c_mode[ipc_ptr->c_dat[i].c_mode], sdat.c_data[i].name);
-		if ((sdat.c_data[i].c_mode) == 3)
+		printf(" %s    %s   ", onoff[ipc_ptr->c_dat[i].c_state], c_mode[ipc_ptr->c_dat[i].c_mode]);
+
+		if (sdat.c_data[i].c_mode == 2)
+			printf("  %i     ", ipc_ptr->c_dat[i].sensor_id);
+		else if (sdat.c_data[i].c_mode == 3)
 			printf(" (%i:%i)", sdat.c_data[i].on_sec, sdat.c_data[i].off_sec);
-		printf("\r\n");
+		printf("%s\r\n",sdat.c_data[i].name);
+
 	}
 	c_34(cb);  // state 0 prompt
 	return 0;
@@ -1392,10 +1396,18 @@ int c_48(CMD_FSM_CB *cb)
 /* set sensor id  */
 int c_49(CMD_FSM_CB *cb)
 {
+	char        numstr[2];
 	
-	ipc_ptr->c_dat[cb->w_channel].sensor_id = cb->token_value;
+	ipc_ptr->c_dat[cb->w_channel].sensor_id = 11; //cb->token_value;
+
 
 	/* build prompt */
+	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nsensor id for channel \r\n> ");
+	sprintf(numstr, "%d set to ", cb->w_channel);
+	strcat(cb->prompt_buffer, numstr);
+	sprintf(numstr, "%d", ipc_ptr->c_dat[cb->w_channel].sensor_id);
+	strcat(cb->prompt_buffer, numstr);
+
 	c_34(cb);
 	return 0;
 }

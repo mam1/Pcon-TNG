@@ -16,10 +16,6 @@
 
 #define _MAX_SCHLIB_SCH			20
 
-/* buffers */
-#define _INPUT_BUFFER_SIZE		128
-#define _TOKEN_BUFFER_SIZE		60
-#define _PROMPT_BUFFER_SIZE		200
 
 // #define _TIME_STRING_BUFFER     40
 // #define _VCMD_BUFFER            128

@@ -2,9 +2,9 @@
 #define _SHARE_H_
 
 /* version info */
-#define _major_version 			6
+#define _major_version 			7
 #define _minor_version 			0
-#define _minor_revision 		9
+#define _minor_revision 		0
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
@@ -16,6 +16,11 @@
 
 /* semaphore key */
 #define _SEM_KEY 				1234321
+
+/* buffers */
+#define _INPUT_BUFFER_SIZE		128
+#define _TOKEN_BUFFER_SIZE		60
+#define _PROMPT_BUFFER_SIZE		200
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		8
