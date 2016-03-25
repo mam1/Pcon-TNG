@@ -1404,13 +1404,13 @@ int c_49(CMD_FSM_CB *cb)
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
 	
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nsensor id for channel > ");
+	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nsensor id for channel ");
 	sprintf(numstr, "%d set to ", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	sprintf(numstr, "%d", ipc_ptr->c_dat[cb->w_channel].sensor_id);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, "\r\n");
-	c_34(cb);		//append state 0 prompt to prompt buffer
+	c_36(cb);		
 	return 0;
 }
 
