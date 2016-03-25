@@ -37,7 +37,7 @@ extern int     edit_channel, edit_day, edit_hour, edit_minute, edit_key;
 /***************************** globals **********************************/
 uint32_t       state_mask = B32(10000000, 00000000, 00000000, 00000000);
 uint32_t       key_mask   = B32(01111111, 11111111, 11111111, 11111111);
-uint32_t       state_mask = B32(00000000, 00000000, 11111111, 11111111);
+uint32_t       temp_mask = B32(00000000, 00000000, 11111111, 11111111);
 
 /*******************************  functions ******************************/
 
@@ -379,7 +379,7 @@ void dump_sch(uint32_t *sch){
 	printf("\n--------------------------------------------------\n%i schedule records\n",rcnt );
 
 	for(i=0;i<rcnt;i++){
-		printf("  record number %i  key <>  state <>\n",i, get_key(*(sch+i)), get_state(*(sch+i)));
+		printf("  record number %i  key <%i>  state <>\n",i, get_key(*(sch+i)), get_state(*(sch+i)));
 	}
 	return;
 }

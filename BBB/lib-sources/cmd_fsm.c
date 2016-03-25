@@ -286,12 +286,13 @@ int c_45(CMD_FSM_CB *); /* set real time clock day */
 int c_46(CMD_FSM_CB *); /* set real time clock year */
 int c_47(CMD_FSM_CB *); /* set real time clock day of the week */
 int c_48(CMD_FSM_CB *); /* set PCF8563 */
+int c_49(CMD_FSM_CB *); /* set channel sensor_id */
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21    22    23  */
-	/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30, c_35, c_33, c_21,  c_0, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_0,  c_0,  c_0,  c_0},
+	/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30, c_35, c_33, c_21,  c_0, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_0,  c_0,  c_0, c_49},
 	/*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 	/*  2  $        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 	/*  3  *        */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0, c_31, c_32,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -752,8 +753,7 @@ int c_12(CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "channel ");
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, " mode set to time & sensor\r\n");
-	c_36(cb);   //append state 0 prompt to prompt buffer
+	strcat(cb->prompt_buffer, " mode set to time & sensor\r\n enter sensor id number > ");
 	return 0;
 }
 /* set channel control mode to cycle */
@@ -928,10 +928,6 @@ int c_22(CMD_FSM_CB *cb)
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
 	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
-	// strcat(cb->prompt_buffer,"\r\n  enter action for ");
-	// strcat(cb->prompt_buffer,cb->w_hours_str);
-	// strcat(cb->prompt_buffer,":");
-	// strcat(cb->prompt_buffer,cb->w_minutes_str);
 	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
 	return 0;
 }
@@ -1393,7 +1389,16 @@ int c_48(CMD_FSM_CB *cb)
 	return 0;
 }
 
+/* set sensor id  */
+int c_49(CMD_FSM_CB *cb)
+{
+	
+	ipc_ptr->c_dat[cb->w_channel].sensor_id = cb->token_value;
 
+	/* build prompt */
+	c_34(cb);
+	return 0;
+}
 
 /**************** end command fsm action routines ******************/
 

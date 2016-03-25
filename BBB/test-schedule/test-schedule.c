@@ -57,7 +57,7 @@ int add_sch_rec(_SCH *sch, int day, int channel, int s_id, int hour, int minute,
 		printf("  rcnt=%i\n", sch->schedule[day][channel].rcnt);
 		return 0;
 	}
-	/* search shedule */
+	/* search schedule */
 
 	for (i = 0; i < sch->schedule[day][channel].rcnt - 1; i++) {
 		trec = i;
