@@ -17,6 +17,7 @@ typedef struct {
 	char 		name[_CHANNEL_NAME_SIZE];
 	int 		c_mode; 	//Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
 	int 		c_state;	//0 = off, 1 = on
+	int 		sensor_id;
 } CHN_DAT;
 
 /* schedule templates */
