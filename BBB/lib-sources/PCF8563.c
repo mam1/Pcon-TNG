@@ -50,7 +50,7 @@ int open_tm(char *filename, uint8_t addr){
 // from the PCF8563 register buffer
 int get_tm(int rtc, _tm *tm){
   uint8_t   reg_buf[PCF8563_REGS];
-  int 		i;
+  // int 		i;
 
   // select register to start read
   reg_buf[0] = SEC_REG;

@@ -73,9 +73,9 @@ _tm 			tm;
 char    *keyword[_CMD_TOKENS] = {
 	/*  0 */    "INT",
 	/*  1 */    "STR",
-	/*  2 */    "",    //
+	/*  2 */    "humidity",    
 	/*  3 */    "*",
-	/*  4 */    "",        //
+	/*  4 */    "temp",        //
 	/*  5 */    "schedule",
 	/*  6 */    "ping",
 	/*  7 */    "clock",
@@ -200,38 +200,38 @@ char    *STR_def[_CMD_STATES] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*                    0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23*/
-	/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0},
-	/*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/*  2  $        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/*  4  $        */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/*  5  schedule */  { 7,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/*  6  ping     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/*  0  INT      */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12, 12, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0},
+	/*  1  STR      */  { 0,  0,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/*  2  humidity */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/*  4  tmep     */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/*  5  schedule */  { 7,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/*  6  ping     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/*  7  clock    */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0},
-	/*  8  yes      */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/*  9  cancel   */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 10  replace  */  { 0,  1,  2,  3,  5,  5,  6,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 11  edit     */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/*  8  yes      */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/*  9  cancel   */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 10  replace  */  { 0,  1,  2,  3,  5,  5,  6,  0,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 11  edit     */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/* 12  delete   */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 13  zero     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 13  zero     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/* 14  on       */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/* 15  off      */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 16  clear    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 17  status   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 16  clear    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 17  status   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/* 18  time     */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0},
-	/* 19  t&s      */  { 0, 21,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 20  cycle    */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 21  startup  */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 22  reboot   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 23  save     */  { 0,  1,  2,  3,  4,  5,  4,  5,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 24  template */  { 4,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 25  channel  */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/* 26  load     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 19  t&s      */  { 0, 21,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 20  cycle    */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 21  startup  */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 22  reboot   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 23  save     */  { 0,  1,  2,  3,  4,  5,  4,  5,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 24  template */  { 4,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 25  channel  */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/* 26  load     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/* 27  OTHER    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0, 21,  0,  0},
 	/* 28  ?        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0},
-	/* 29  q        */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+	/* 29  q        */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 	/* 30  done     */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 31  back     */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0},
+	/* 31  back     */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0},
 	/* 32  system   */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0},
 	/* 33  debug    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0}
 };
@@ -287,16 +287,18 @@ int c_46(CMD_FSM_CB *); /* set real time clock year */
 int c_47(CMD_FSM_CB *); /* set real time clock day of the week */
 int c_48(CMD_FSM_CB *); /* set PCF8563 */
 int c_49(CMD_FSM_CB *); /* set channel sensor_id */
+int c_50(CMD_FSM_CB *); /* set channel temperature trigger */
+int c_51(CMD_FSM_CB *); /* set channel humidity trigger */
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21    22    23  */
-	/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30, c_35, c_33, c_21,  c_0, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_0, c_49,  c_0,  c_0},
-	/*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-	/*  2  $        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-	/*  3  *        */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0, c_31, c_32,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-	/*  4  $        */  { c_0,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+	/*  0  INT      */  { c_4,  c_7, c_16, c_17, c_27,  c_0, c_20, c_29, c_30, c_35, c_33, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_0, c_49,  c_0,  c_0},
+	/*  1  STR      */  { c_7,  c_5,  c_0,  c_0, c_19,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+	/*  2  humidity */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0, c_51,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+	/*  3  *        */  { c_8,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0, c_31, c_32,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+	/*  4  temp     */  { c_0,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  5  schedule */  {c_28,  c_8,  c_8,  c_0,  c_0,  c_0,  c_0,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 	/*  6  ping     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_0},
 	/*  7  clock    */  {c_40,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_0},
@@ -671,7 +673,6 @@ int c_9(CMD_FSM_CB *cb)
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-	ipc_ptr->force_update = 1;					// update ipc data
 	ipc_ptr->c_dat[cb->w_channel].c_mode = 0;	// update ipc data
 	ipc_ptr->c_dat[cb->w_channel].c_state = 1;	// update ipc data
 	ipc_ptr->force_update = 1;					// force relays to be updated
@@ -924,6 +925,7 @@ int c_22(CMD_FSM_CB *cb)
 	char            temp[200];
 	/*set the state of the schedule record to on */
 	cb->w_srec_state = 1;       //set working state to on
+	
 	if (add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours, cb->w_minutes), 1)) // add/change record
 		return -1;
 
@@ -1014,11 +1016,7 @@ int c_25(CMD_FSM_CB *cb)
 int c_26(CMD_FSM_CB *cb)
 {
 
-	// char            temp[200];
 	int                i, ii;
-
-	// printf("wipe out w index %i\r\n",cb->w_template_index);
-	// printf("wipe out d index %i\r\n",cb->sdat_ptr->schlib_index);
 
 	if (cb->w_template_index == (cb->sdat_ptr->schlib_index - 1)) {                                  //delete high entry
 		cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index - 1;                                //back down index
@@ -1026,8 +1024,6 @@ int c_26(CMD_FSM_CB *cb)
 		       sizeof(cb->sdat_ptr->s_data[cb->w_template_index].name));                               //wipe name
 		memset(cb->sdat_ptr->s_data[cb->w_template_index].schedule, '\0',
 		       sizeof(cb->sdat_ptr->s_data[cb->w_template_index].schedule));                           //wipe schedule
-		// cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index -1;                                 //back down index
-
 	}
 	else {
 		for (i = cb->w_template_index; i < (cb->sdat_ptr->schlib_index); i++) {
@@ -1063,21 +1059,15 @@ int c_27(CMD_FSM_CB *cb)
 	strcpy((char *)cb->w_schedule_name, cb->sdat_ptr->s_data[cb->w_template_index].name);
 
 	for (i = 0; i < _SCHEDULE_SIZE; i++) {
-		cb->w_schedule[i]  = cb->sdat_ptr->s_data[cb->w_template_index].schedule[i];   //load schedule
+		cb->w_schedule[i]  = cb->sdat_ptr->s_data[cb->w_template_index].schedule[i];   			//load schedule
 	}
 	strcpy((char *)cb->w_schedule_name, cb->sdat_ptr->s_data[cb->w_template_index].name);      //load name
-
-
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
 	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
-	// strcat(cb->prompt_buffer,"\r\n  enter action for ");
-	// strcat(cb->prompt_buffer,cb->w_hours_str);
-	// strcat(cb->prompt_buffer,":");
-	// strcat(cb->prompt_buffer,cb->w_minutes_str);
 	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
 	return 0;
 }
@@ -1414,6 +1404,46 @@ int c_49(CMD_FSM_CB *cb)
 	return 0;
 }
 
+/* set channel humidity trigger  */
+int c_50(CMD_FSM_CB *cb)
+{
+	char        numstr[2];
+
+	ipc_sem_lock(semid, &sb);								// wait for a lock on shared memory
+	// ipc_ptr->c_dat[cb->w_channel].humid = cb->token_value; 	// update ipc data
+	ipc_ptr->force_update = 1;									// force relays to be updated
+	ipc_sem_free(semid, &sb);									// free lock on shared memory
+	
+	/* build prompt */
+	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nhumidity trigger for channel ");
+	sprintf(numstr, "%d set to ", cb->w_channel);
+	strcat(cb->prompt_buffer, numstr);
+	// sprintf(numstr, "%d", ipc_ptr->c_dat[cb->w_channel].humid);
+	strcat(cb->prompt_buffer, numstr);
+	strcat(cb->prompt_buffer, "\r\n");
+	c_36(cb);		
+	return 0;
+}
+/* set channel tmeperature trigger  */
+int c_51(CMD_FSM_CB *cb)
+{
+	char        numstr[2];
+
+	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
+	// ipc_ptr->c_dat[cb->w_channel].temp = cb->token_value; 	// update ipc data
+	ipc_ptr->force_update = 1;									// force relays to be updated
+	ipc_sem_free(semid, &sb);									// free lock on shared memory
+	
+	/* build prompt */
+	strcpy(cmd_fsm_cb.prompt_buffer, "\r\ntemperature trigger for channel ");
+	sprintf(numstr, "%d set to ", cb->w_channel);
+	strcat(cb->prompt_buffer, numstr);
+	// sprintf(numstr, "%d", ipc_ptr->c_dat[cb->w_channel].temp);
+	strcat(cb->prompt_buffer, numstr);
+	strcat(cb->prompt_buffer, "\r\n");
+	c_36(cb);		
+	return 0;
+}
 /**************** end command fsm action routines ******************/
 
 /* cycle state machine */

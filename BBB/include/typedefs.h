@@ -7,23 +7,53 @@
 #include <sys/types.h>
 #include "Pcon.h"
 
-
+/* time date structure */
+typedef struct {
+    int tm_sec;         // seconds
+    int tm_min;         // minutes
+    int tm_hour;        // hours
+    int tm_mday;        // day of the month
+    int tm_mon;         // month
+    int tm_year;        // year
+    int tm_wday;        // day of the week
+    int tm_yday;        // day in the year
+    int tm_isdst;       // daylight saving time
+} _tm;
 
 /* channel data */
 typedef struct {
 	int 		time_on; 	// accumulated minutes of on time for channel
-	int			on_sec;		//on cycle in seconds
-	int 		off_sec;	//off cycle in seconds
+	int			on_sec;		// on cycle in seconds
+	int 		off_sec;	// off cycle in seconds
+	int 		c_mode; 	// Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
+	int 		c_state;	// 0 = off, 1 = on
+	int 		sensor_id;	// sensor id of sensor associated with the channel
 	char 		name[_CHANNEL_NAME_SIZE];
-	int 		c_mode; 	//Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
-	int 		c_state;	//0 = off, 1 = on
-	int 		sensor_id;
 } CHN_DAT;
+
+/* schedule table data structures */
+typedef struct {
+	int		key;
+	int 	state;
+	int 	temp;
+	int 	humid;
+} _S_REC;			// format of schedule record
+
+typedef struct {
+	_S_REC 	rec[_MAX_SCHEDULE_RECS];
+	int 	rcnt;
+	// int 	sensor_id;
+} _S_CHAN;				// combine schedule records into a schedule for a channel
+
+typedef struct {	
+	_S_CHAN 	schedule[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];	
+} _S_TAB; 				// combine channel schedules into a table
 
 /* schedule templates */
 typedef struct {
 	char 			name[_SCHEDULE_NAME_SIZE];
 	uint32_t		schedule[_SCHEDULE_SIZE];
+	_S_CHAN 		chan_sch;
 } TMPL_DAT;
 
 /*  data structures for indexing the schedule array */
@@ -42,10 +72,9 @@ typedef	struct {
     int         major_version;
     int         minor_version;
     int         minor_revision;	
-
-    // int 		template_id[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];			// map each (day,channel) to a template id
     int 		schlib_index;												// points to the next available record (maybe)
     uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
+  _S_TAB  		sch2;  
     uint32_t	*sch_ptr;   												// pointer to system schedule
     CHN_DAT     c_data[_NUMBER_OF_CHANNELS];								// channel persistent data
     TMPL_DAT	s_data[_MAX_SCHLIB_SCH];									// schedule template library
@@ -61,6 +90,8 @@ typedef struct {
 	int				token_value;
 	char 			prompt_buffer[_PROMPT_BUFFER_SIZE];
 	uint32_t        w_sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];
+  _S_TAB  			w_sch2;
+  _S_CHAN			w_schedule2[_MAX_SCHEDULE_RECS];
 	uint32_t		*w_sch_ptr;
 	int             w_channel;                      //working channel number
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
@@ -82,31 +113,12 @@ typedef struct {
 
 typedef struct sembuf SEMBUF;  
 
-
-typedef struct {
-    int tm_sec;         // seconds
-    int tm_min;         // minutes
-    int tm_hour;        // hours
-    int tm_mday;        // day of the month
-    int tm_mon;         // month
-    int tm_year;        // year
-    int tm_wday;        // day of the week
-    int tm_yday;        // day in the year
-    int tm_isdst;       // daylight saving time
-} _tm;
-
 /* ipc data - memory mapped */
 typedef	struct {
-	// uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
 	uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
+  _S_TAB 			sch2;
 	int			force_update;		// force daemon to update channel
-    struct {
-    	int 		sensor_id;		// sensor used for controling chanel
-    	int 		c_state;		// 0 = off, 1 = on	
-		int 		c_mode; 		// Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
-		int			on_sec ;		// on cycle in seconds
-		int 		off_sec;		// off cycle in seconds    
-	} c_dat[_NUMBER_OF_CHANNELS];
+	CHN_DAT 		c_dat[_NUMBER_OF_CHANNELS];
 	struct{
 		int			temp;
 		int			humidity;
@@ -114,23 +126,7 @@ typedef	struct {
 	} s_dat[_NUMBER_OF_SENSORS];
 } IPC_DAT;
 
-
-typedef struct {
-	int		key;
-	int 	state;
-	int 	temp;
-	int 	humid;
-} _S_REC;
-
-typedef struct {
-	_S_REC 	rec[_MAX_SCHEDULE_RECS];
-	int 	rcnt;
-	int 	sensor_id;
-} _S_DAY;
-
-typedef struct {	
-	_S_DAY 	schedule[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];	
-} _SCH;
+/************************************************************************/
 
 /* action routine definitions */
 typedef int (*CMD_ACTION_PTR)(CMD_FSM_CB *);
