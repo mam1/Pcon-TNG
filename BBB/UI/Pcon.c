@@ -21,11 +21,15 @@
 #include "trace.h"
 #include "ipc.h"
 
+#define _TRACE
+
 /******************************** globals **************************************/
 int				trace_flag;							//control program trace
 // int 			exit_flag = false;					//exit man loop if TRUE
 int 			bbb;								//UART1 file descriptor
 SYS_DAT 		sdat;								//system data structure
+SYS_DAT 		sdat2;								//system data structure
+
 CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 IPC_DAT 		ipc_dat, *ipc_ptr; 					//ipc data
 void			*data = NULL;						//pointer to ipc data
@@ -119,7 +123,7 @@ int main(void) {
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores id set", trace_flag);
 #endif	
-	/* load data from file on sd card */
+	/* load system data from file  */
 	load_system_data(_SYSTEM_DATA_FILE, &sdat);
 	printf("  Pcon: system data loaded from %s\r\n", _SYSTEM_DATA_FILE);
 	if ((sdat.major_version != _major_version ) | (sdat.minor_version != _minor_version) | (sdat.minor_revision != _minor_revision)) {
@@ -136,6 +140,12 @@ int main(void) {
 		}
 		c = fgetc(stdin);	// get rid of trailing CR
 	}
+	load_system_data2(_SYSTEM_DATA_FILE2, &sdat2);
+	if(comp_conf(&sdat2.config)){
+		printf(" *** current configuration does not match configuation stored in system file\n");
+		term1();
+	}
+
 
 	/* copy system data to shared memory */
 	ipc_sem_lock(semid, &sb);			// wait for a lock on shared memory

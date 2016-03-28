@@ -81,6 +81,23 @@ typedef	struct {
 
 } SYS_DAT;
 
+typedef struct {
+    int         major_version;
+    int         minor_version;
+    int         minor_revision;
+    int 		channels;
+    int 		sensors;
+    int 		commands;
+    int 		states;
+} _CONFIG_DAT;
+
+typedef struct {
+	_CONFIG_DAT 	config;							// system configuration	
+  	_S_TAB  		sch2;							// system schedule
+  	CHN_DAT     	c_data[_NUMBER_OF_CHANNELS];	// channel persistent data
+    TMPL_DAT		s_data[_MAX_SCHLIB_SCH];		// schedule template library
+} _SYS_DAT2;
+
 /* cmd_fsm control block */
 typedef struct {
 	int				state;
@@ -116,9 +133,10 @@ typedef struct sembuf SEMBUF;
 /* ipc data - memory mapped */
 typedef	struct {
 	uint32_t    sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS][_SCHEDULE_SIZE];	// system schedule
-  _S_TAB 			sch2;
+  	_S_TAB 			sch2;
 	int			force_update;		// force daemon to update channel
 	CHN_DAT 		c_dat[_NUMBER_OF_CHANNELS];
+
 	struct{
 		int			temp;
 		int			humidity;

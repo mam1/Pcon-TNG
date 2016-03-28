@@ -5,12 +5,15 @@
 #define _major_version 			7
 #define _minor_version 			0
 #define _minor_revision 		1
+#define _TRACE 					_ON
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
 #define _CGI_DATA_FILE_PREFIX	"/media/TOSHIBA/sensor"			// cgi generated log of sensor data
 #define _CGI_DATA_FILE_SUFIX	".dat"							// cgi generated log of sensor data
 #define _SYSTEM_DATA_FILE		"/home/Pcon-data/sys2.dat"		// system data file
+#define _SYSTEM_DATA_FILE2		"/home/Pcon-data/sys2.dat"		// system data file
+
 #define _IPC_FILE				"/home/Pcon-data/ipc.dat"   	// memory mapped ipc file
 #define _TRACE_FILE_NAME		"/home/Pcon-data/trace.dat" 	// trace file
 

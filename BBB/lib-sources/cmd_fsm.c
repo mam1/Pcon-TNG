@@ -179,7 +179,7 @@ char    *STR_def[_CMD_STATES] = {
 	/*  3 */    "",
 	/*  4 */    "template name",
 	/*  5 */    "",
-	/*  6 */    "",
+	/*  6 */    "hour",
 	/*  7 */    "",
 	/*  8 */    "",
 	/*  9 */    "",
@@ -205,7 +205,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*  2  humidity */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/*  3  *        */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/*  4  tmep     */  { 0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
-	/*  5  schedule */  { 7,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
+	/*  5  schedule */  { 7,  0,  0,  0,  0,  0,  7,  0,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/*  6  ping     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
 	/*  7  clock    */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0},
 	/*  8  yes      */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6, 12,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0},
@@ -867,7 +867,7 @@ int c_19(CMD_FSM_CB *cb)
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
+	strcat(cb->prompt_buffer, "\r\n  enter command or time (HH,MM) > ");
 	return 0;
 }
 
@@ -925,7 +925,7 @@ int c_22(CMD_FSM_CB *cb)
 	char            temp[200];
 	/*set the state of the schedule record to on */
 	cb->w_srec_state = 1;       //set working state to on
-	
+
 	if (add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours, cb->w_minutes), 1)) // add/change record
 		return -1;
 
@@ -934,7 +934,7 @@ int c_22(CMD_FSM_CB *cb)
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
 	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
-	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
+	strcat(cb->prompt_buffer, "\r\n  enter command or time (HH,MM) > ");
 	return 0;
 }
 
@@ -952,7 +952,7 @@ int c_23(CMD_FSM_CB *cb)
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
 	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
-	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
+	strcat(cb->prompt_buffer, "\r\n  enter command or time (HH,MM) > ");
 	return 0;
 }
 
@@ -969,7 +969,7 @@ int c_24(CMD_FSM_CB *cb)
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
 	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
-	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
+	strcat(cb->prompt_buffer, "\r\n  enter command or time (HH,MM) > ");
 	return 0;
 }
 
@@ -1068,7 +1068,7 @@ int c_27(CMD_FSM_CB *cb)
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
 	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
-	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
+	strcat(cb->prompt_buffer, "\r\n  enter command or time (HH,MM) > ");
 	return 0;
 }
 
