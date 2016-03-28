@@ -24,7 +24,7 @@ FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
     sys_file = fopen(fname,"w");
     if(sys_file == NULL){
         perror(fname);
-        term1();
+        exit(1);
     }
 
     /* initialize config data */
@@ -39,7 +39,7 @@ FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
     if(fwrite(sdat, 1, sizeof(*sdat), sys_file) != sizeof(*sdat)){
         printf("\n*** error initializing system data file\r\n");
         perror(fname);
-        term1();
+        exit(1);
     }
 
     /* set file pointer to start of file */
@@ -48,7 +48,7 @@ FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
     if(sys_file == NULL){
         printf("\n*** error reopening system data file\r\n");
         perror(fname);
-        term1();
+        exit(1);
     }
     printf(" system data file <%s> created and initialized\r\n",fname);
     return sys_file;
@@ -73,24 +73,53 @@ void sys_load(char *fname,_SYS_DAT2 *sdat){
     if(rtn != 1){
         printf("\n*** error reading system data\n  fread returned %i\r\n",rtn);
         perror(fname);
-        term1();
+        exit(1);
     }
     fclose(sd);    
     return;
 }
 
-void sys_save(char *fname,_SYS_DAT2 *sdat){
+int sys_save(char *fname,_SYS_DAT2 *sdat){
     FILE *sd;
     sd = sys_open(fname,sdat);
     if(fwrite(sdat, sizeof(*sdat), 1, sd) != 1){
         perror(fname);
-        term1();
+        return 1;
     }
     fclose(sd);
-    return;
+    return 0;
 }
 
-int sys_comp(
-	){
+int sys_comp(_SYS_DAT2 *sdat){
 
+    if(sdat->config.major_version != _major_version){
+        printf("major verions do not match\n");
+        return 1;
+    }
+    if(sdat->config.minor_version != _minor_version){
+        printf("minor versions do not match\n");
+        return 1;
+    }
+    if(sdat->config.minor_revision != _minor_revision){
+        printf("minor revisions do nto match\n");
+        return 1;
+    }
+    if(sdat->config.channels != _NUMBER_OF_CHANNELS){
+        printf("number of channels do not match\n");
+        return 1;
+    }
+    if(sdat->config.sensors != _NUMBER_OF_SENSORS){
+        printf("number of sensors do not match\n");
+        return 1;
+    }
+    if(sdat->config.commands != _CMD_TOKENS){
+        printf("number of commands do not match\n");
+        return 1;
+    }
+    if(sdat->config.states != _CMD_STATES){
+        printf("number of states do not match\n");
+        return 1;
+    }
+
+    return 0;
 }

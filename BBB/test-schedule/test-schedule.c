@@ -41,7 +41,7 @@ int main (void) {
     int         state;
     int         temp;
     int         humid;
-    int         sensor_id;
+    // int         sensor_id;
     char 		*fname = "test_sys.dat";
 
 
@@ -49,7 +49,7 @@ int main (void) {
     printf("  size of schedule %i bytes\n", sizeof(sch));
 
     sys_file = sys_open(fname,&sys_data);
-    sys_load(fname,&sys_dat);
+    sys_load(fname,&sys_data);
 
 
 	
