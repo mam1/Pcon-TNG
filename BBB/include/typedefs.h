@@ -7,24 +7,78 @@
 #include <sys/types.h>
 #include "Pcon.h"
 
-
+/* application configuration data */
+typedef struct {
+    int         major_version;
+    int         minor_version;
+    int         minor_revision;
+    int 		channels;
+    int 		sensors;
+    int 		commands;
+    int 		states;
+} _CONFIG_DAT;
 
 /* channel data */
 typedef struct {
 	int 		time_on; 	// accumulated minutes of on time for channel
 	int			on_sec;		//on cycle in seconds
 	int 		off_sec;	//off cycle in seconds
-	char 		name[_CHANNEL_NAME_SIZE];
 	int 		c_mode; 	//Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
 	int 		c_state;	//0 = off, 1 = on
-	int 		sensor_id;
-} CHN_DAT;
+	int 		sensor_id; // sensor id of sensor associated with the channel
+	char 		name[_CHANNEL_NAME_SIZE];
+} _CHN_DAT;
 
-/* schedule templates */
+/* schedule table data structures */
+typedef struct {
+	int			key;
+	int 		state;
+	int 		temp;
+	int 		humid;
+} _S_REC;				// format of schedule record
+
+typedef struct {
+	_S_REC 		rec[_MAX_SCHEDULE_RECS];
+	int 		rcnt;
+} _S_CHAN;				// combine schedule records into a schedule for a channel
+
+typedef struct {	
+	_S_CHAN 	schedule[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];	
+} _S_TAB; 
+
+/* schedule template */
 typedef struct {
 	char 			name[_SCHEDULE_NAME_SIZE];
-	uint32_t		schedule[_SCHEDULE_SIZE];
-} TMPL_DAT;
+	_S_CHAN			temp_chan_sch;
+} _TMPL_DAT;
+				// combine channel schedu
+
+/* structure of system file record */
+typedef struct {
+	_CONFIG_DAT 	config;							// system configuration	
+  	_S_TAB  		sys_sch;						// system schedule
+  	CHN_DAT     	c_data[_NUMBER_OF_CHANNELS];	// persistent channel data
+    TMPL_DAT		s_data[_MAX_TEMPLATES];			// schedule template library
+} _SYS_DAT2;
+
+
+
+
+
+/******************************************************************************************************?
+/******************************************************************************************************?
+/******************************************************************************************************?
+
+/* channel data */
+typedef struct {
+	int 		time_on; 	// accumulated minutes of on time for channel
+	int			on_sec;		//on cycle in seconds
+	int 		off_sec;	//off cycle in seconds
+	int 		c_mode; 	//Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
+	int 		c_state;	//0 = off, 1 = on
+	int 		sensor_id; // sensor id of sensor associated with the channel
+	char 		name[_CHANNEL_NAME_SIZE];
+} CHN_DAT;
 
 /*  data structures for indexing the schedule array */
 typedef struct

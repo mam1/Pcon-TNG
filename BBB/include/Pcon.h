@@ -14,7 +14,7 @@
 #define _CMD_TOKENS     		34
 #define _CMD_STATES     		24 
 
-#define _MAX_SCHLIB_SCH			20
+
 
 
 // #define _TIME_STRING_BUFFER     40
