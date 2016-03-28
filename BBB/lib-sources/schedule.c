@@ -379,7 +379,7 @@ void dump_sch(uint32_t *sch){
 	printf("\n--------------------------------------------------\n%i schedule records\n",rcnt );
 
 	for(i=0;i<rcnt;i++){
-		printf("  record number %i  key <%i>  state <>\n",i, get_key(*(sch+i)), get_state(*(sch+i)));
+		printf("  record number %i  key <%i>  state <%i>\n",i, get_key(*(sch+i)), get_state(*(sch+i)));
 	}
 	return;
 }
