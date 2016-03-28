@@ -89,3 +89,8 @@ void sys_save(char *fname,_SYS_DAT2 *sdat){
     fclose(sd);
     return;
 }
+
+int sys_comp(
+	){
+
+}

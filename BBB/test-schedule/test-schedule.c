@@ -33,6 +33,7 @@ int main (void) {
 
     _S_TAB      sch;
     _SYS_DAT2   sys_data;
+    FILE 		*sys_file;
     int         day;
     int         channel;
     int         hour;
@@ -41,11 +42,17 @@ int main (void) {
     int         temp;
     int         humid;
     int         sensor_id;
+    char 		*fname = "test_sys.dat";
 
 
     printf("\n **** starting\n");
     printf("  size of schedule %i bytes\n", sizeof(sch));
 
+    sys_file = sys_open(fname,&sys_data);
+    sys_load(fname,&sys_dat);
+
+
+	
     /* create schedule records */
     printf("  enter channel number > ");
     scanf("%i", &channel);
