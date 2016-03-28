@@ -48,11 +48,18 @@ int main (void) {
     printf("\n **** starting\n");
     printf("  size of schedule %i bytes\n", sizeof(sch));
 
-    sys_file = sys_open(fname,&sys_data);
+    /* load data from system data file and compare finfig data */
+    sys_file = sys_open(fname,&sys_data);  // handle missing file only need once
     sys_load(fname,&sys_data);
+    if(sys_comp(&sys_data)){
+    	printf("*** there are different configurations in the system file and in the application\n");
+    	printf("*** application terminated\n");
+    	exit(1);
+    }
 
+    if(sys_save(fname,&sys_data))
+    	printf("\n *\n*** unable to save system data to file\n");
 
-	
     /* create schedule records */
     printf("  enter channel number > ");
     scanf("%i", &channel);

@@ -93,31 +93,31 @@ int sys_save(char *fname,_SYS_DAT2 *sdat){
 int sys_comp(_SYS_DAT2 *sdat){
 
     if(sdat->config.major_version != _major_version){
-        printf("major verions do not match\n");
+        printf("\n*** major verions do not match\n");
         return 1;
     }
     if(sdat->config.minor_version != _minor_version){
-        printf("minor versions do not match\n");
+        printf("\n*** minor versions do not match\n");
         return 1;
     }
     if(sdat->config.minor_revision != _minor_revision){
-        printf("minor revisions do nto match\n");
+        printf("\n*** minor revisions do nto match\n");
         return 1;
     }
     if(sdat->config.channels != _NUMBER_OF_CHANNELS){
-        printf("number of channels do not match\n");
+        printf("\n*** number of channels do not match\n");
         return 1;
     }
     if(sdat->config.sensors != _NUMBER_OF_SENSORS){
-        printf("number of sensors do not match\n");
+        printf("\n*** number of sensors do not match\n");
         return 1;
     }
     if(sdat->config.commands != _CMD_TOKENS){
-        printf("number of commands do not match\n");
+        printf("\n*** number of commands do not match\n");
         return 1;
     }
     if(sdat->config.states != _CMD_STATES){
-        printf("number of states do not match\n");
+        printf("\n*** number of states do not match\n");
         return 1;
     }
 
