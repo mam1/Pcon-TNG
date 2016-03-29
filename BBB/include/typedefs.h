@@ -71,7 +71,7 @@ typedef struct {
 	_CONFIG_DAT 	config;							// system configuration	
   	_S_TAB  		sys_sch;						// system schedule
   	_CHN_DAT     	c_data[_NUMBER_OF_CHANNELS];	// persistent channel data
-    _TMPL_DAT		s_data[_MAX_TEMPLATES];			// schedule template library
+    _TMPL_DAT		t_data[_MAX_TEMPLATES];			// schedule template library
     int 			schlib_index;					// points to the next available record (maybe)
 
 } _SYS_DAT2;

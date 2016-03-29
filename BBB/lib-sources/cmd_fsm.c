@@ -439,7 +439,7 @@ char *sch2text2(_S_CHAN *sch, char *buf) {
 }
 
 /* append schedule template list to buffer  */
-char *make_lib_list(char *buf, CMD_FSM_CB *cb) {
+char *make_lib_list(char *buf, _CMD_FSM_CB *cb) {
 
 	int             i, ii;
 	int             max_name_size;
@@ -455,21 +455,22 @@ char *make_lib_list(char *buf, CMD_FSM_CB *cb) {
 
 	// hit = 0;
 	for (i = 0; i < cb->sdat_ptr->schlib_index + 1; i++) {
-		if (cb->sdat_ptr->s_data[i].name[0] != '\0') {
+		if (cb->sdat_ptr->t_data[i].name[0] != '\0') {
 			// hit = 1;
 
 			max_name_size = 0;
 			for (i = 0; i < cb->sdat_ptr->schlib_index; i++)
-				if (max_name_size < strlen(cb->sdat_ptr->s_data[i].name))
-					max_name_size = strlen(cb->sdat_ptr->s_data[i].name);
+				if(max_name_size < strlen(cb->sdat_ptr->t_data[i].name))
+					max_name_size = strlen(cb->sdat_ptr->t_data[i].name);
 
 			for (i = 0; i < cb->sdat_ptr->schlib_index; i++) {
-				pad_size = max_name_size - strlen(cb->sdat_ptr->s_data[i].name);
+				pad_size = max_name_size - strlen(cb->sdat_ptr->t_data[i].name);
 				pad[0] = '\0';
 				for (ii = 0; ii < pad_size; ii++)
 					strcat(pad, " ");
-				// printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->s_data[i].name,pad,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
-				sprintf(&cb->prompt_buffer[strlen(cb->prompt_buffer)], "    %i - %s%s  %s\r\n", i, cb->sdat_ptr->s_data[i].name, pad, sch2text2(cb->sdat_ptr->s_data[i].schedule, sbuf));
+				// printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->schlib_index,pad,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
+				sprintf(&cb->prompt_buffer[strlen(cb->prompt_buffer)], "    %i - %s%s  %s\r\n", 
+					i, cb->sdat_ptr->t_data[i].name, pad, sch2text2(&cb->sdat_ptr->t_data[i].temp_chan_sch, sbuf));
 			}
 		}
 	}
@@ -489,17 +490,19 @@ void print_tlist(_CMD_FSM_CB *cb) {
 	int             pad_size;
 	char            buf[128];
 
+
 	max_name_size = 0;
 	for (i = 0; i < cb->sdat_ptr->schlib_index; i++)
-		if (max_name_size < strlen(cb->sdat_ptr->s_data[i].name))
-			max_name_size = strlen(cb->sdat_ptr->s_data[i].name);
+		if (max_name_size < strlen(cb->sdat_ptr->t_data[i].name))
+			max_name_size = strlen(cb->sdat_ptr->t_data[i].name);
 
 	for (i = 0; i < cb->sdat_ptr->schlib_index; i++) {
-		pad_size = max_name_size - strlen(cb->sdat_ptr->s_data[i].name);
+		pad_size = max_name_size - strlen(cb->sdat_ptr->t_data[i].name);
 		pad[0] = '\0';
 		for (ii = 0; ii < pad_size; ii++)
 			strcat(pad, " ");
-		printf("    %i - %s%s  %s\r\n", i, cb->sdat_ptr->s_data[i].name, pad, sch2text2(cb->sdat_ptr->s_data[i].schedule, buf));
+		printf("    %i - %s%s  %s\r\n", 
+			i, cb->sdat_ptr->t_data[i].name, pad, sch2text2(&cb->sdat_ptr->t_data[i].temp_chan_sch, buf));
 	}
 
 	return;
@@ -607,7 +610,8 @@ int c_5(_CMD_FSM_CB *cb)
 	char        numstr[2];
 
 	strcpy(sdat.c_data[cb->w_channel].name, dequote(cb->token));
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
+	        sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "name set for channel ");
 	sprintf(numstr, "%d", cb->w_channel);
@@ -677,7 +681,7 @@ int c_9(_CMD_FSM_CB *cb)
 
 	sdat.c_data[cb->w_channel].c_mode = 0;
 	sdat.c_data[cb->w_channel].c_state = 1;
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);	// write data to disk
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);	// write data to disk
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "channel ");
 	sprintf(numstr, "%d", cb->w_channel);
@@ -703,7 +707,7 @@ int c_10(_CMD_FSM_CB *cb)
 
 	sdat.c_data[cb->w_channel].c_mode = 0;
 	sdat.c_data[cb->w_channel].c_state = 0;
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "channel ");
 	sprintf(numstr, "%d", cb->w_channel);
@@ -728,7 +732,7 @@ int c_11(_CMD_FSM_CB *cb)
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 					
 	sdat.c_data[cb->w_channel].c_mode = 1;
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 	strcpy(cb->prompt_buffer, "channel ");
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
@@ -750,7 +754,7 @@ int c_12(_CMD_FSM_CB *cb)
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	sdat.c_data[cb->w_channel].c_mode = 2;
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 	strcpy(cb->prompt_buffer, "channel ");
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
@@ -770,7 +774,7 @@ int c_13(_CMD_FSM_CB *cb)
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	sdat.c_data[cb->w_channel].c_mode = 3;
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 
 	strcpy(cb->prompt_buffer, "  setting cycle mode for channel ");
 	sprintf(sbuf, "%d", cb->w_channel);
@@ -789,7 +793,7 @@ int c_14(_CMD_FSM_CB *cb)
 	printf("\r\n******* schedule templates ********************************************************\r\n\n");
 	print_tlist(cb);
 	printf("\r\n******* system schedule ***********************************************************\r\n");
-	disp_all_schedules(cb, (uint32_t *)cb->sdat_ptr->sch_ptr);
+	disp_all_schedules(&cb->sdat_ptr->sys_sch);
 
 	c_34(cb);   // state 0 prompt
 	return 0;
@@ -809,7 +813,7 @@ int c_16(_CMD_FSM_CB *cb)
 	char            sbuf[20];  //max number of digits for a int
 
 	sdat.c_data[cb->w_channel].on_sec = cb->token_value;
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "  setting cycle mode for channel ");
@@ -828,8 +832,7 @@ int c_17(_CMD_FSM_CB *cb)
 	char            sbuf[20];  //max number of digits for a int
 
 	sdat.c_data[cb->w_channel].off_sec = cb->token_value;
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
-
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "  channel ");
 	sprintf(sbuf, "%d", cb->w_channel);
@@ -906,7 +909,7 @@ int c_21(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
-	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
+	strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
 	strcat(cb->prompt_buffer, "\r\n  enter action for ");
 	strcat(cb->prompt_buffer, cb->w_hours_str);
 	strcat(cb->prompt_buffer, ":");
@@ -928,7 +931,7 @@ int c_22(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
-	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
+	strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
 	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
 	return 0;
 }
@@ -946,7 +949,7 @@ int c_23(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
-	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
+	strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
 	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
 	return 0;
 }
@@ -963,7 +966,7 @@ int c_24(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
-	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
+	strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
 	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
 	return 0;
 }
@@ -980,7 +983,7 @@ int c_25(_CMD_FSM_CB *cb)
 	}
 	else
 		for (i = 0; i < cb->sdat_ptr->schlib_index + 1; i++) {
-			if (strcmp(cb->sdat_ptr->s_data[i].name, (char *)cb->w_schedule_name) == 0) {
+			if (strcmp(cb->sdat_ptr->schlib_index, (char *)cb->w_schedule_name) == 0) {
 				index = i;
 				break;
 			}
@@ -995,7 +998,7 @@ int c_25(_CMD_FSM_CB *cb)
 		cb->sdat_ptr->s_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
 		cb->w_schedule[i] = '\0';                                       //clear working shcedule
 	}
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "\r\nschedule template: ");
@@ -1028,7 +1031,7 @@ int c_26(_CMD_FSM_CB *cb)
 	}
 	else {
 		for (i = cb->w_template_index; i < (cb->sdat_ptr->schlib_index); i++) {
-			strcpy(cb->sdat_ptr->s_data[i].name, cb->sdat_ptr->s_data[i + 1].name);                 //copy name
+			strcpy(cb->sdat_ptr->schlib_index, cb->sdat_ptr->s_data[i + 1].name);                 //copy name
 			for (ii = 0; ii < _SCHEDULE_SIZE; ii++) {
 				cb->sdat_ptr->s_data[i].schedule[ii] = cb->sdat_ptr->s_data[ii + 1].schedule[ii];   //copy schedule
 			}
@@ -1037,7 +1040,7 @@ int c_26(_CMD_FSM_CB *cb)
 
 	}
 	cb->w_template_index = cb->w_template_index - 1;
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "\r\nschedule template: ");
@@ -1070,7 +1073,7 @@ int c_27(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
-	strcat(cb->prompt_buffer, sch2text(cb->w_schedule, temp));
+	strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
 	// strcat(cb->prompt_buffer,"\r\n  enter action for ");
 	// strcat(cb->prompt_buffer,cb->w_hours_str);
 	// strcat(cb->prompt_buffer,":");
@@ -1090,16 +1093,16 @@ int c_28(_CMD_FSM_CB *cb)
 
 	max_name_size = 0;
 	for (i = 0; i < cb->sdat_ptr->schlib_index; i++)
-		if (max_name_size < strlen(cb->sdat_ptr->s_data[i].name))
-			max_name_size = strlen(cb->sdat_ptr->s_data[i].name);
+		if (max_name_size < strlen(cb->sdat_ptr->schlib_index))
+			max_name_size = strlen(cb->sdat_ptr->schlib_index);
 
 	printf("\r\nediting system schedule\r\n\ntemplate library\r\n");
 	for (i = 0; i < cb->sdat_ptr->schlib_index; i++) {
-		pad_size = max_name_size - strlen(cb->sdat_ptr->s_data[i].name);
+		pad_size = max_name_size - strlen(cb->sdat_ptr->schlib_index);
 		pad[0] = '\0';
 		for (ii = 0; ii < pad_size; ii++)
 			strcat(pad, " ");
-		printf("    %i - %s%s  %s\r\n", i, cb->sdat_ptr->s_data[i].name, pad, sch2text2(cb->sdat_ptr->s_data[i].schedule, buf));
+		printf("    %i - %s%s  %s\r\n", i, cb->sdat_ptr->schlib_index, pad, sch2text2(&cb->sdat_ptr->s_data[i].schedule, buf));
 	}
 
 	/* load working schedule from system schedule */
@@ -1107,7 +1110,7 @@ int c_28(_CMD_FSM_CB *cb)
 	memcpy(cmd_fsm_cb.w_sch_ptr, cmd_fsm_cb.sdat_ptr->sch_ptr, sizeof(cmd_fsm_cb.w_sch));
 	printf("\r\nsystem schedule copied to edit buffer\r\n");
 	printf("copy of the system schedule\r\n");
-	disp_all_schedules(cb, (uint32_t *)cb->w_sch);
+	disp_all_schedules(&cb->sdat_ptr->sys_sch);
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "\r\n  enter channel{N(0...7)|*},day{N(1...7)|*},template{N}  > ");
@@ -1206,7 +1209,7 @@ int c_33(_CMD_FSM_CB *cb)
 	        else
 		        load_schedule(cb->w_sch_ptr, cb->sdat_ptr->s_data[template].schedule, day, channel);   // load schedule buffer
 
-	        disp_all_schedules(cb, (uint32_t *)cb->w_sch);
+	        disp_all_schedules(&cb->sdat_ptr->sys_sch);
 
 	        /* build prompt */
 	        strcpy(cb->prompt_buffer, "\r\n  enter channel{N(0...7)|*},day{N(1...7)|*},template{N}  > ");
@@ -1255,9 +1258,9 @@ int c_37(_CMD_FSM_CB *cb)
 	printf("\r\n******* schedule templates ********************************************************\r\n\n");
 	print_tlist(cb);
 	printf("\r\n******* system schedule ***********************************************************\r\n");
-	disp_all_schedules(cb, (uint32_t *)cb->sdat_ptr->sch_ptr);
+	disp_all_schedules(&cb->sdat_ptr->sys_sch);
 	printf("\r\n******* working schedule **********************************************************\r\n");
-	disp_all_schedules(cb, (uint32_t *)cb->w_sch);
+	disp_all_schedules(&cb->w_sch);
 
 	c_34(cb);   // state 0 prompt
 	return 0;
@@ -1288,7 +1291,7 @@ int c_39(_CMD_FSM_CB *cb)
 	ipc_ptr->force_update = 1;																// force relays to be updated
 	ipc_sem_free(semid, &sb);																// free lock on shared memory
 	memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));	// move working schedule to system schedule in fsm control block
-	save_system_data(_SYSTEM_DATA_FILE, &sdat);
+	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 	printf("\r\n*** system schedule replaced ***\r\n");
 
 	/* build prompt */

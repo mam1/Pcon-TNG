@@ -26,4 +26,7 @@ int con_key(int key,int *hour,int *minute);
 /* print the schedule for a (day,channel) */
 int dump_schedule(_S_TAB *sch, int day, int channel);
 
+/* print a formated dump of schedules for all channels */
+void disp_all_schedules(_S_TAB *sch);
+
 #endif /* _SCH_H_ */

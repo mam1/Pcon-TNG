@@ -155,3 +155,59 @@ int dump_schedule(_S_TAB *sch, int day, int channel){
     }
     return 0;
 }
+
+/* print a formated dump of schedules for all channels */
+void disp_all_schedules(_S_TAB *sysdat)
+{
+    uint32_t        *rec_ptr;
+    int             i;
+    int             day, channel;
+    char            time_state[9];
+    int             rcnt[_DAYS_PER_WEEK], mrcnt;
+
+    
+
+
+    for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++)
+    {
+        /* print channel header */
+        printf("\r\nchannel %i <%s>\r\n", channel, cb->sdat_ptr->c_data[channel].name);
+
+        /* print day header */
+        printf("   ");
+        for (day = 0; day < _DAYS_PER_WEEK; day++)
+            printf("%s         ", day_names_short[day]);
+        printf("\n\r");
+
+        /* figure the maximum number of transitions per day */
+        mrcnt = 0;
+        for (day = 0; day < _DAYS_PER_WEEK; day++)
+        {
+            rcnt[day] = *(get_schedule(sch, day, channel));
+            if (rcnt[day] > mrcnt)
+                mrcnt = rcnt[day];        //max number of records for the week
+        }
+
+        /* Print the daily schedules */
+        for (i = 0; i < mrcnt; i++)
+        {
+            // printf("         ");
+            for (day = 0; day < _DAYS_PER_WEEK; day++)
+            {
+                rec_ptr = get_schedule(sch, day, channel);
+                rec_ptr += (i + 1);
+                if (*get_schedule(sch, day, channel) <= i)
+                    strcpy(time_state, "         ");
+                else
+                    sprintf(time_state, "%02i:%02i %s", get_key((uint32_t)*rec_ptr) / 60, get_key((uint32_t)*rec_ptr) % 60, onoff[get_state((uint32_t)*rec_ptr)]);
+
+                printf("%s   ", time_state);
+
+            }
+            printf("\n\r");
+        }
+        printf("\n\r");
+    }
+
+    return;
+}
