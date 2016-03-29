@@ -22,8 +22,10 @@
 #include "cmd_fsm.h"
 #include "trace.h"
 #include "PCF8563.h"
-#include "schedule.h"
+// #include "schedule.h"
 #include "ipc.h"
+#include "sys_dat.h"
+#include "sch.h"
 
 /*********************** externals **************************/
 extern int             	cmd_state, char_state;
@@ -32,22 +34,17 @@ extern char            	c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
 extern int 		    	exit_flag;		              	//exit man loop if TRUE
 extern int             	trace_flag;                   	//trace file is active
 extern int             	bbb;				          	//UART1 file descriptor
-extern CMD_FSM_CB      	cmd_fsm_cb, *cmd_fsm_cb_ptr;  	//cmd_fsm control block
-extern SYS_DAT         	sdat;                         	//system data structure
-extern IPC_DAT			ipc_dat;					  	//ipc data
+extern _CMD_FSM_CB      	cmd_fsm_cb, *cmd_fsm_cb_ptr;  	//cmd_fsm control block
+extern _SYS_DAT2         	sdat;                         	//system data structure
+extern _IPC_DAT			ipc_dat;					  	//ipc data
 extern void				*data; 							//pointer for shared memory
-extern IPC_DAT 			*ipc_ptr;
+extern _IPC_DAT 			*ipc_ptr;
 extern key_t 			skey;
 extern int 				semid;
 extern unsigned short 	semval;
-// extern struct sembuf 	wait, signal;
-// extern union semun {
-// 	int 				val;  	/* used for SETVAL only */
-// 	struct semid_ds 	*buf; 	/* for IPC_STAT and IPC_SET */
-// 	uint8_t 			*array; /* used for GETALL and SETALL */
-// };
-// extern union 			semun dummy;
 extern struct sembuf	sb;
+
+
 
 /* code to text conversion */
 extern char *day_names_long[7];
@@ -237,56 +234,56 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 };
 
 /*cmd processor functions */
-int c_0(CMD_FSM_CB *); /* nop */
-int c_1(CMD_FSM_CB *); /* display all valid commands for the current state */
-int c_2(CMD_FSM_CB *); /* display time */
-int c_3(CMD_FSM_CB *); /* terminate program */
-int c_4(CMD_FSM_CB *); /* set working channel number*/
-int c_5(CMD_FSM_CB *); /* set channel name for working channel */
-int c_6(CMD_FSM_CB *); /* status - display channel data */
-int c_7(CMD_FSM_CB *); /* command not valid in current state */
-int c_8(CMD_FSM_CB *); /* command is not recognized */
-int c_9(CMD_FSM_CB *); /* set channel control mode to manual and turn channel on */
-int c_10(CMD_FSM_CB *); /* set channel control mode to manual and turn channel off */
-int c_11(CMD_FSM_CB *); /* set channel control mode to time */
-int c_12(CMD_FSM_CB *); /* set channel control mode to time & sensor */
-int c_13(CMD_FSM_CB *); /* set channel control mode to cycle */
-int c_14(CMD_FSM_CB *); /* display system data */
-int c_15(CMD_FSM_CB *); /* revert to previous state */
-int c_16(CMD_FSM_CB *); /* set on cycle time */
-int c_17(CMD_FSM_CB *); /* set off cycle time */
-int c_18(CMD_FSM_CB *); /* enter template maintenance mode */
-int c_19(CMD_FSM_CB *); /* set working schedule name */
-int c_20(CMD_FSM_CB *); /* set working schedule hour */
-int c_21(CMD_FSM_CB *); /* set working schedule minute */
-int c_22(CMD_FSM_CB *); /* set schedule record to on */
-int c_23(CMD_FSM_CB *); /* set set schedule record to off */
-int c_24(CMD_FSM_CB *); /* delete schedule record */
-int c_25(CMD_FSM_CB *); /* save schedule template */
-int c_26(CMD_FSM_CB *); /* delete schedule template */
-int c_27(CMD_FSM_CB *); /* edit template */
-int c_28(CMD_FSM_CB *); /* enter schedule maintenance mode */
-int c_29(CMD_FSM_CB *); /* set working channel */
-int c_30(CMD_FSM_CB *); /* set working day */
-int c_31(CMD_FSM_CB *); /* set working channel to all */
-int c_32(CMD_FSM_CB *); /* set working day to all */
-int c_33(CMD_FSM_CB *); /* build new schedule */
-int c_34(CMD_FSM_CB *); /* state 0 prompt */
-int c_35(CMD_FSM_CB *); /* set working template number */
-int c_36(CMD_FSM_CB *); /* append state 0 prompt to prompt buffer */
-int c_37(CMD_FSM_CB *); /* display debug data */
-int c_38(CMD_FSM_CB *); /* state 7 prompt */
-int c_39(CMD_FSM_CB *); /* replace system schedule */
-int c_40(CMD_FSM_CB *); /* set real time clock */
-int c_41(CMD_FSM_CB *); /* set real time clock hours */
-int c_42(CMD_FSM_CB *); /* set real time clock minutes */
-int c_43(CMD_FSM_CB *); /* set real time clock seconds */
-int c_44(CMD_FSM_CB *); /* set real time clock month */
-int c_45(CMD_FSM_CB *); /* set real time clock day */
-int c_46(CMD_FSM_CB *); /* set real time clock year */
-int c_47(CMD_FSM_CB *); /* set real time clock day of the week */
-int c_48(CMD_FSM_CB *); /* set PCF8563 */
-int c_49(CMD_FSM_CB *); /* set channel sensor_id */
+int c_0(_CMD_FSM_CB *); /* nop */
+int c_1(_CMD_FSM_CB *); /* display all valid commands for the current state */
+int c_2(_CMD_FSM_CB *); /* display time */
+int c_3(_CMD_FSM_CB *); /* terminate program */
+int c_4(_CMD_FSM_CB *); /* set working channel number*/
+int c_5(_CMD_FSM_CB *); /* set channel name for working channel */
+int c_6(_CMD_FSM_CB *); /* status - display channel data */
+int c_7(_CMD_FSM_CB *); /* command not valid in current state */
+int c_8(_CMD_FSM_CB *); /* command is not recognized */
+int c_9(_CMD_FSM_CB *); /* set channel control mode to manual and turn channel on */
+int c_10(_CMD_FSM_CB *); /* set channel control mode to manual and turn channel off */
+int c_11(_CMD_FSM_CB *); /* set channel control mode to time */
+int c_12(_CMD_FSM_CB *); /* set channel control mode to time & sensor */
+int c_13(_CMD_FSM_CB *); /* set channel control mode to cycle */
+int c_14(_CMD_FSM_CB *); /* display system data */
+int c_15(_CMD_FSM_CB *); /* revert to previous state */
+int c_16(_CMD_FSM_CB *); /* set on cycle time */
+int c_17(_CMD_FSM_CB *); /* set off cycle time */
+int c_18(_CMD_FSM_CB *); /* enter template maintenance mode */
+int c_19(_CMD_FSM_CB *); /* set working schedule name */
+int c_20(_CMD_FSM_CB *); /* set working schedule hour */
+int c_21(_CMD_FSM_CB *); /* set working schedule minute */
+int c_22(_CMD_FSM_CB *); /* set schedule record to on */
+int c_23(_CMD_FSM_CB *); /* set set schedule record to off */
+int c_24(_CMD_FSM_CB *); /* delete schedule record */
+int c_25(_CMD_FSM_CB *); /* save schedule template */
+int c_26(_CMD_FSM_CB *); /* delete schedule template */
+int c_27(_CMD_FSM_CB *); /* edit template */
+int c_28(_CMD_FSM_CB *); /* enter schedule maintenance mode */
+int c_29(_CMD_FSM_CB *); /* set working channel */
+int c_30(_CMD_FSM_CB *); /* set working day */
+int c_31(_CMD_FSM_CB *); /* set working channel to all */
+int c_32(_CMD_FSM_CB *); /* set working day to all */
+int c_33(_CMD_FSM_CB *); /* build new schedule */
+int c_34(_CMD_FSM_CB *); /* state 0 prompt */
+int c_35(_CMD_FSM_CB *); /* set working template number */
+int c_36(_CMD_FSM_CB *); /* append state 0 prompt to prompt buffer */
+int c_37(_CMD_FSM_CB *); /* display debug data */
+int c_38(_CMD_FSM_CB *); /* state 7 prompt */
+int c_39(_CMD_FSM_CB *); /* replace system schedule */
+int c_40(_CMD_FSM_CB *); /* set real time clock */
+int c_41(_CMD_FSM_CB *); /* set real time clock hours */
+int c_42(_CMD_FSM_CB *); /* set real time clock minutes */
+int c_43(_CMD_FSM_CB *); /* set real time clock seconds */
+int c_44(_CMD_FSM_CB *); /* set real time clock month */
+int c_45(_CMD_FSM_CB *); /* set real time clock day */
+int c_46(_CMD_FSM_CB *); /* set real time clock year */
+int c_47(_CMD_FSM_CB *); /* set real time clock day of the week */
+int c_48(_CMD_FSM_CB *); /* set PCF8563 */
+int c_49(_CMD_FSM_CB *); /* set channel sensor_id */
 
 /* cmd processor action table - initialized with fsm functions */
 
@@ -391,7 +388,7 @@ char *dequote(char *s) {
 }
 
 /* reset cmd_fsm to initial state */
-void cmd_fsm_reset(CMD_FSM_CB *cb) {
+void cmd_fsm_reset(_CMD_FSM_CB *cb) {
 	memset(&cb->prompt_buffer, '\0', sizeof(cb->prompt_buffer));
 	strcpy(cb->prompt_buffer, "\n\r> ");
 	cb->state = 0;
@@ -399,17 +396,17 @@ void cmd_fsm_reset(CMD_FSM_CB *cb) {
 }
 
 /* load buffer with a list of all records in a schedule */
-char *sch2text(uint32_t *sch, char *buf) {
+char *sch2text(_S_CHAN *sch, char *buf) {
 	int         sch_recs,  i, key, h, m;
 
 	/*build list of schedule records for prompt */
 	*buf = '\0';
-	sch_recs = *sch;
+	sch_recs = sch->rcnt;
 	if (sch_recs == 0)
 		strcat(buf, "  no schedule records");
 	else
 		for (i = 1; i < sch_recs + 1; i++) {
-			key = get_key(sch[i]);
+			key = sch->rec[i].key;
 			h = key / 60;
 			m = key % 60;
 			sprintf(&buf[strlen(buf)], "  %2i:%02i ", h, m);
@@ -420,19 +417,19 @@ char *sch2text(uint32_t *sch, char *buf) {
 }
 
 /* load schedule template list into buffer  */
-char *sch2text2(uint32_t *sch, char *buf) {
+char *sch2text2(_S_CHAN *sch, char *buf) {
 	int         sch_recs,  i, key, h, m;
 
 	/*build list of schedule */
 	*buf = '\0';
-	sch_recs = *sch;
+	sch_recs = sch->rcnt;
 
 	if (sch_recs == 0)
 		strcat(buf, "  no schedule records");
 	else
 		for (i = 1; i < sch_recs + 1; i++) {
 
-			key = get_key(sch[i]);
+			key = sch->rec[i].key;
 			h = key / 60;
 			m = key % 60;
 			sprintf(&buf[strlen(buf)], "  %2i:%02i ", h, m);
@@ -485,7 +482,7 @@ char *make_lib_list(char *buf, CMD_FSM_CB *cb) {
 	return buf;
 }
 /* print schedule template list */
-void print_tlist(CMD_FSM_CB *cb) {
+void print_tlist(_CMD_FSM_CB *cb) {
 	int             i, ii;
 	int             max_name_size;
 	char            pad[_SCHEDULE_NAME_SIZE];
@@ -510,7 +507,7 @@ void print_tlist(CMD_FSM_CB *cb) {
 
 /**************** start command fsm action routines ******************/
 /* do nothing */
-int c_0(CMD_FSM_CB *cb)
+int c_0(_CMD_FSM_CB *cb)
 {
 	cb->prompt_buffer[0] = '>';
 	cb->prompt_buffer[1] = ' ';
@@ -518,7 +515,7 @@ int c_0(CMD_FSM_CB *cb)
 	return 0;
 }
 /* display all valid commands for the current state */
-int c_1(CMD_FSM_CB *cb)
+int c_1(_CMD_FSM_CB *cb)
 {
 	int         i, ii;
 	int         dots;
@@ -567,7 +564,7 @@ int c_1(CMD_FSM_CB *cb)
 	return 0;
 }
 /* display time and date from PCF8563 */
-int c_2(CMD_FSM_CB *cb)
+int c_2(_CMD_FSM_CB *cb)
 {
 	_tm         tm;
 	int         rtc;
@@ -584,13 +581,13 @@ int c_2(CMD_FSM_CB *cb)
 	return 0;
 }
 /* terminate program */
-int c_3(CMD_FSM_CB *cb)
+int c_3(_CMD_FSM_CB *cb)
 {
 	term(1);
 	return 0;
 }
 /* set working channel number */
-int c_4(CMD_FSM_CB *cb)
+int c_4(_CMD_FSM_CB *cb)
 {
 	if (cb->token_value < _NUMBER_OF_CHANNELS) {
 		cb->w_channel = cb->token_value;
@@ -605,7 +602,7 @@ int c_4(CMD_FSM_CB *cb)
 	return 1;
 }
 /* set channel name for working channel */
-int c_5(CMD_FSM_CB *cb)
+int c_5(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
 
@@ -620,7 +617,7 @@ int c_5(CMD_FSM_CB *cb)
 	return 0;
 }
 /* status - display channel data */
-int c_6(CMD_FSM_CB *cb)
+int c_6(_CMD_FSM_CB *cb)
 {
 	int         i;
 	printf("  channel  state   mode  sensor id     name\n\r");
@@ -640,7 +637,7 @@ int c_6(CMD_FSM_CB *cb)
 	return 0;
 }
 /* command is not valid in current state */
-int c_7(CMD_FSM_CB *cb)
+int c_7(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
 	char        hold_prompt[_PROMPT_BUFFER_SIZE];
@@ -657,7 +654,7 @@ int c_7(CMD_FSM_CB *cb)
 	return 1;
 }
 /* command is not recognized */
-int c_8(CMD_FSM_CB *cb)
+int c_8(_CMD_FSM_CB *cb)
 {
 	strcpy(cb->prompt_buffer, "'");
 	strcat(cb->prompt_buffer, cb->token);
@@ -665,7 +662,7 @@ int c_8(CMD_FSM_CB *cb)
 	return 1;
 }
 /* set channel control mode to manual and turn channel on */
-int c_9(CMD_FSM_CB *cb)
+int c_9(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
 
@@ -691,7 +688,7 @@ int c_9(CMD_FSM_CB *cb)
 	return 0;
 }
 /* set channel control mode to manual and turn channel off */
-int c_10(CMD_FSM_CB *cb)
+int c_10(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
 
@@ -717,7 +714,7 @@ int c_10(CMD_FSM_CB *cb)
 	return 0;
 }
 /* set channel control mode to time */
-int c_11(CMD_FSM_CB *cb)
+int c_11(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
 
@@ -741,7 +738,7 @@ int c_11(CMD_FSM_CB *cb)
 	return 0;
 }
 /* set channel control mode to time and sensor */
-int c_12(CMD_FSM_CB *cb)
+int c_12(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
 
@@ -761,7 +758,7 @@ int c_12(CMD_FSM_CB *cb)
 	return 0;
 }
 /* set channel control mode to cycle */
-int c_13(CMD_FSM_CB *cb)
+int c_13(_CMD_FSM_CB *cb)
 {
 	char        sbuf[20];
 
@@ -782,13 +779,13 @@ int c_13(CMD_FSM_CB *cb)
 	return 0;
 }
 /* display system data */
-int c_14(CMD_FSM_CB *cb)
+int c_14(_CMD_FSM_CB *cb)
 {
 	// char            temp_buf[128];
 
 	printf("\r\ncurrent state %i\r\n\n", cb->state);
 	printf("\r\n******* system data ***************************************************************\r\n\n");
-	disp_sys();
+	sys_disp(cb->sdat_ptr);
 	printf("\r\n******* schedule templates ********************************************************\r\n\n");
 	print_tlist(cb);
 	printf("\r\n******* system schedule ***********************************************************\r\n");
@@ -798,7 +795,7 @@ int c_14(CMD_FSM_CB *cb)
 	return 0;
 }
 /* move back to previous state */
-int c_15(CMD_FSM_CB *cb)
+int c_15(_CMD_FSM_CB *cb)
 {
 
 	cb->state = cb->p_state;
@@ -807,7 +804,7 @@ int c_15(CMD_FSM_CB *cb)
 	return 0;
 }
 /* set on cycler time */
-int c_16(CMD_FSM_CB *cb)
+int c_16(_CMD_FSM_CB *cb)
 {
 	char            sbuf[20];  //max number of digits for a int
 
@@ -826,7 +823,7 @@ int c_16(CMD_FSM_CB *cb)
 	return 0;
 }
 /* set off cycle time */
-int c_17(CMD_FSM_CB *cb)
+int c_17(_CMD_FSM_CB *cb)
 {
 	char            sbuf[20];  //max number of digits for a int
 
@@ -848,7 +845,7 @@ int c_17(CMD_FSM_CB *cb)
 }
 
 /* enter template maintenance mode */
-int c_18(CMD_FSM_CB *cb)
+int c_18(_CMD_FSM_CB *cb)
 {
 
 	/* build prompt */
@@ -858,7 +855,7 @@ int c_18(CMD_FSM_CB *cb)
 }
 
 /* set working schedule name */
-int c_19(CMD_FSM_CB *cb)
+int c_19(_CMD_FSM_CB *cb)
 {
 	strcpy((char *)cb->w_schedule_name, cb->token);
 	dequote((char *)cb->w_schedule_name);
@@ -871,7 +868,7 @@ int c_19(CMD_FSM_CB *cb)
 }
 
 /* set working schedule hour */
-int c_20(CMD_FSM_CB *cb)
+int c_20(_CMD_FSM_CB *cb)
 {
 	if ((cb->token_value > 23) || (cb->token_value < 0)) {
 		strcpy(cb->prompt_buffer, "  hour must be 0 - 23\r\n  enter hour > ");
@@ -892,9 +889,9 @@ int c_20(CMD_FSM_CB *cb)
 }
 
 /* set working schedule minute */
-int c_21(CMD_FSM_CB *cb)
+int c_21(_CMD_FSM_CB *cb)
 {
-	char            temp[200];
+	char            temp[_PROMPT_BUFFER_SIZE];
 
 	/* check value */
 	if ((cb->token_value > 59) || (cb->token_value < 0)) {
@@ -919,9 +916,9 @@ int c_21(CMD_FSM_CB *cb)
 }
 
 /* set schedule record to on */
-int c_22(CMD_FSM_CB *cb)
+int c_22(_CMD_FSM_CB *cb)
 {
-	char            temp[200];
+	char            temp[_PROMPT_BUFFER_SIZE];
 	/*set the state of the schedule record to on */
 	cb->w_srec_state = 1;       //set working state to on
 	if (add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours, cb->w_minutes), 1)) // add/change record
@@ -937,10 +934,10 @@ int c_22(CMD_FSM_CB *cb)
 }
 
 /* set set schedule record to off */
-int c_23(CMD_FSM_CB *cb)
+int c_23(_CMD_FSM_CB *cb)
 {
 	// int                 sch_recs;
-	char            temp[200];
+	char            temp[_PROMPT_BUFFER_SIZE];
 
 	cb->w_srec_state = 0;       // set working state to off
 	add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours, cb->w_minutes), 0);
@@ -955,10 +952,10 @@ int c_23(CMD_FSM_CB *cb)
 }
 
 /* delete schedule record */
-int c_24(CMD_FSM_CB *cb)
+int c_24(_CMD_FSM_CB *cb)
 {
 
-	char            temp[200];
+	char            temp[_PROMPT_BUFFER_SIZE];
 
 	del_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours, cb->w_minutes));
 
@@ -972,7 +969,7 @@ int c_24(CMD_FSM_CB *cb)
 }
 
 /* save schedule template */
-int c_25(CMD_FSM_CB *cb)
+int c_25(_CMD_FSM_CB *cb)
 {
 	int             i, index;
 
@@ -1011,7 +1008,7 @@ int c_25(CMD_FSM_CB *cb)
 }
 
 /* delete schedule template */
-int c_26(CMD_FSM_CB *cb)
+int c_26(_CMD_FSM_CB *cb)
 {
 
 	// char            temp[200];
@@ -1053,10 +1050,10 @@ int c_26(CMD_FSM_CB *cb)
 }
 
 /* edit schedule template */
-int c_27(CMD_FSM_CB *cb)
+int c_27(_CMD_FSM_CB *cb)
 {
 
-	char            temp[200];
+	char            temp[_PROMPT_BUFFER_SIZE];
 	int             i;
 
 	cb->w_template_index = cb->token_value;
@@ -1083,7 +1080,7 @@ int c_27(CMD_FSM_CB *cb)
 }
 
 /* enter schedule build mode */
-int c_28(CMD_FSM_CB *cb)
+int c_28(_CMD_FSM_CB *cb)
 {
 	int             i, ii;
 	int             max_name_size;
@@ -1118,7 +1115,7 @@ int c_28(CMD_FSM_CB *cb)
 }
 
 /* set working channel */
-int c_29(CMD_FSM_CB *cb)
+int c_29(_CMD_FSM_CB *cb)
 {
 
 	// printf("editing system schedule\r\n");
@@ -1130,7 +1127,7 @@ int c_29(CMD_FSM_CB *cb)
 }
 
 /* set working day */
-int c_30(CMD_FSM_CB *cb)
+int c_30(_CMD_FSM_CB *cb)
 {
 	if ((cb->token_value > 0) && (cb->token_value < _DAYS_PER_WEEK + 1)) {
 		cb->w_day = cb->token_value - 1;
@@ -1147,7 +1144,7 @@ int c_30(CMD_FSM_CB *cb)
 }
 
 /* set working channel to all */
-int c_31(CMD_FSM_CB *cb)
+int c_31(_CMD_FSM_CB *cb)
 {
 	// printf("editing system schedule\r\n");
 	cb->w_channel = _ALL_CHANNELS;
@@ -1157,7 +1154,7 @@ int c_31(CMD_FSM_CB *cb)
 }
 
 /* set working day to all */
-int c_32(CMD_FSM_CB *cb)
+int c_32(_CMD_FSM_CB *cb)
 {
 	// printf("editing system schedule\r\n");
 	cb->w_day = _ALL_DAYS;
@@ -1168,7 +1165,7 @@ int c_32(CMD_FSM_CB *cb)
 }
 
 /* update schedule data*/
-int c_33(CMD_FSM_CB *cb)
+int c_33(_CMD_FSM_CB *cb)
 {
 	int             channel, template, day;
 	// int              i, ii, iii;
@@ -1217,7 +1214,7 @@ int c_33(CMD_FSM_CB *cb)
 }
 
         /* state 0 prompt */
-        int c_34(CMD_FSM_CB *cb)
+        int c_34(_CMD_FSM_CB *cb)
 {
 
 
@@ -1227,7 +1224,7 @@ int c_33(CMD_FSM_CB *cb)
 }
 
 /* set working template number */
-int c_35(CMD_FSM_CB *cb)
+int c_35(_CMD_FSM_CB *cb)
 {
 	cb->w_template_num = cb->token_value;
 	c_33(cb);
@@ -1238,7 +1235,7 @@ int c_35(CMD_FSM_CB *cb)
 }
 
 /* appenf state 0 prompt to prompt buffer */
-int c_36(CMD_FSM_CB *cb)
+int c_36(_CMD_FSM_CB *cb)
 {
 
 
@@ -1248,13 +1245,13 @@ int c_36(CMD_FSM_CB *cb)
 }
 
 /* display debug data */
-int c_37(CMD_FSM_CB *cb)
+int c_37(_CMD_FSM_CB *cb)
 {
 	// char            temp_buf[128];
 
 	printf("\r\ncurrent state %i\r\n", cb->state);
 	printf("\r\n******* system data ***************************************************************\r\n\n");
-	disp_sys();
+	sys_disp(cb->sdat_ptr);
 	printf("\r\n******* schedule templates ********************************************************\r\n\n");
 	print_tlist(cb);
 	printf("\r\n******* system schedule ***********************************************************\r\n");
@@ -1267,7 +1264,7 @@ int c_37(CMD_FSM_CB *cb)
 }
 
 /* reset work variables and display state 7 prompt */
-int c_38(CMD_FSM_CB *cb)
+int c_38(_CMD_FSM_CB *cb)
 {
 	// char            temp_buf[128];
 
@@ -1282,7 +1279,7 @@ int c_38(CMD_FSM_CB *cb)
 }
 
 /* replace system schedule */
-int c_39(CMD_FSM_CB *cb)
+int c_39(_CMD_FSM_CB *cb)
 {
 	// char            temp_buf[128];
 
@@ -1301,7 +1298,7 @@ int c_39(CMD_FSM_CB *cb)
 }
 
 /* set real time clock */
-int c_40(CMD_FSM_CB *cb)
+int c_40(_CMD_FSM_CB *cb)
 {
 
 	/* build prompt */
@@ -1310,7 +1307,7 @@ int c_40(CMD_FSM_CB *cb)
 }
 
 /* set real time clock hours */
-int c_41(CMD_FSM_CB *cb)
+int c_41(_CMD_FSM_CB *cb)
 {
 	tm.tm_hour = cb->token_value;
 
@@ -1320,7 +1317,7 @@ int c_41(CMD_FSM_CB *cb)
 }
 
 /* set real time clock minutes */
-int c_42(CMD_FSM_CB *cb)
+int c_42(_CMD_FSM_CB *cb)
 {
 	tm.tm_min = cb->token_value;
 	/* build prompt */
@@ -1329,7 +1326,7 @@ int c_42(CMD_FSM_CB *cb)
 }
 
 /* set real time clock seconds */
-int c_43(CMD_FSM_CB *cb)
+int c_43(_CMD_FSM_CB *cb)
 {
 	tm.tm_sec = cb->token_value;
 	/* build prompt */
@@ -1338,7 +1335,7 @@ int c_43(CMD_FSM_CB *cb)
 }
 
 /* set real time clock month */
-int c_44(CMD_FSM_CB *cb)
+int c_44(_CMD_FSM_CB *cb)
 {
 	tm.tm_mon = cb->token_value;
 	/* build prompt */
@@ -1347,7 +1344,7 @@ int c_44(CMD_FSM_CB *cb)
 }
 
 /* set real time clock day */
-int c_45(CMD_FSM_CB *cb)
+int c_45(_CMD_FSM_CB *cb)
 {
 	tm.tm_mday = cb->token_value;
 	/* build prompt */
@@ -1356,7 +1353,7 @@ int c_45(CMD_FSM_CB *cb)
 }
 
 /* set real time clock year */
-int c_46(CMD_FSM_CB *cb)
+int c_46(_CMD_FSM_CB *cb)
 {
 	tm.tm_year = cb->token_value;
 	/* build prompt */
@@ -1365,7 +1362,7 @@ int c_46(CMD_FSM_CB *cb)
 }
 
 /* set real time clock day of the week */
-int c_47(CMD_FSM_CB *cb)
+int c_47(_CMD_FSM_CB *cb)
 {
 	tm.tm_wday = cb->token_value;
 	printf("  set real time clock to:  %02i:%02i:%02i  %s %02i/%02i/%02i\n\n\r",
@@ -1376,7 +1373,7 @@ int c_47(CMD_FSM_CB *cb)
 }
 
 /* set PCF8563  */
-int c_48(CMD_FSM_CB *cb)
+int c_48(_CMD_FSM_CB *cb)
 {
 	int         rtc;
 
@@ -1394,7 +1391,7 @@ int c_48(CMD_FSM_CB *cb)
 }
 
 /* set sensor id  */
-int c_49(CMD_FSM_CB *cb)
+int c_49(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
 
@@ -1417,7 +1414,7 @@ int c_49(CMD_FSM_CB *cb)
 /**************** end command fsm action routines ******************/
 
 /* cycle state machine */
-void cmd_fsm(CMD_FSM_CB *cb)
+void cmd_fsm(_CMD_FSM_CB *cb)
 {
 	static int         num;
 	// static char        *s_ptr;

@@ -20,14 +20,17 @@
 #include "cmd_fsm.h"
 #include "trace.h"
 #include "ipc.h"
+#include "sys_dat.h"
+#include "sch.h"
 
 /******************************** globals **************************************/
 int				trace_flag;							//control program trace
 // int 			exit_flag = false;					//exit man loop if TRUE
 int 			bbb;								//UART1 file descriptor
-SYS_DAT 		sdat;								//system data structure
-CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
-IPC_DAT 		ipc_dat, *ipc_ptr; 					//ipc data
+// SYS_DAT 		sdat;								//system data structure
+_CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
+// IPC_DAT 		ipc_dat, *ipc_ptr; 					//ipc data
+_IPC_DAT 		ipc_dat, *ipc_ptr; 					//ipc data
 void			*data = NULL;						//pointer to ipc data
 char           	ipc_file[] = {_IPC_FILE};  			//name of ipc file
 uint8_t 		cmd_state, char_state;				//fsm current state
@@ -45,6 +48,9 @@ union semun {
 union 			semun dummy;
 struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
 
+// _SYS_DAT2 		sys_data;								//system data
+
+
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -54,17 +60,7 @@ char *sch_mode[2] = {"day", "week"};
 char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /***************************** support routines ********************************/
-/* write system info to stdout */
-void disp_sys(void) {
-	printf(" Pcon  %d.%d.%d \n\r", _major_version, _minor_version, _minor_revision);
-	printf(" configured for controlling %i channels\n\r",_NUMBER_OF_CHANNELS);
-	printf(" configured for reading %i sensors\n\r",_NUMBER_OF_SENSORS);
-	printf(" input buffer size: %d characters\n\r", _INPUT_BUFFER_SIZE);
-	printf(" system schedule size: %d bytes\r\n", sizeof(cmd_fsm_cb.sdat_ptr->sch));
-	printf(" stored schedule templates: %i\r\n", sdat.schlib_index);
 
-	return;
-}
 /* prompt for user input */
 void prompt(void) {
 	printf("%s", cmd_fsm_cb.prompt_buffer);
@@ -80,6 +76,7 @@ int main(void) {
 	int 			prompted = false;	//has a prompt been sent
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
+	FILE 			*sys_file;
 
 
 
@@ -108,60 +105,63 @@ int main(void) {
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "starting initializations", trace_flag);
 #endif
 	/* set up file mapped shared memory for inter process communication */
-	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
-	data = ipc_map(fd, ipc_size());           	// map file to memory
-	ipc_ptr = data;
 	ipc_sem_init();								// setup semaphores
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores initialized", trace_flag);
 #endif	
-	semid = ipc_sem_id(skey);						// set semaphor id		
+	semid = ipc_sem_id(skey);					// set semaphor id		
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores id set", trace_flag);
 #endif	
-	/* load data from file on sd card */
-	load_system_data(_SYSTEM_DATA_FILE, &sdat);
-	printf("  Pcon: system data loaded from %s\r\n", _SYSTEM_DATA_FILE);
-	if ((sdat.major_version != _major_version ) | (sdat.minor_version != _minor_version) | (sdat.minor_revision != _minor_revision)) {
-		printf("*** versions do not match\r\n");
-		printf("  version info from system data file - %d.%d.%d\r\n", sdat.major_version, sdat.minor_version, sdat.minor_revision);
-		printf("  version info from program          - %d.%d.%d\r\n", _major_version, _minor_version, _minor_revision);
-		printf("  update system data file? <y>|<n>: ");
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
+	data = ipc_map(fd, ipc_size());           	// map file to memory
+	ipc_ptr = data; 							// overlay data with _IPC_DAT data structure
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
+
+    /* load data from system data file and compare config data */
+    sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);  // handle missing file only need once
+    sys_load(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);
+    if(sys_comp(&ipc_ptr->sys_data)){
+    	printf("*** there are different configurations in the system file and in the application\n");
+    	printf("\n  ignor problem? <y>|<n>: ");
 		if (getchar() == 'y') {
-			sdat.major_version = _major_version;
-			sdat.minor_version = _minor_version;
-			sdat.minor_revision = _minor_revision;
-			save_system_data(_SYSTEM_DATA_FILE, &sdat);
-			printf("    Pcon: system data file updated\r\n");
+			ipc_ptr->sys_data.config.major_version = _major_version;
+			ipc_ptr->sys_data.config.minor_version = _minor_version;
+			ipc_ptr->sys_data.config.minor_revision = _minor_revision;
+			ipc_ptr->force_update = 1;			// force daemon to update relays
+
+
+			if(sys_save(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data)){
+    			printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
+			}
+			else
+				printf("    Pcon: system data file updated\r\n");
+
+			c = fgetc(stdin);			// get rid of trailing CR
 		}
-		c = fgetc(stdin);	// get rid of trailing CR
-	}
+		else {
+			c = fgetc(stdin);			// get rid of trailing CR
+	    	printf("*** application terminated\n");
+	    	exit(1);
+	    }
+    }
+    /* test to make sure save is working */
+    if(sys_save(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data))
+    	printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
 
-	/* copy system data to shared memory */
-	ipc_sem_lock(semid, &sb);			// wait for a lock on shared memory
-	memcpy(ipc_ptr->sch, sdat.sch, sizeof(sdat.sch));
-	// disp_sch(ipc_ptr->sch);
-	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
-		ipc_ptr->c_dat[i].c_state = sdat.c_data[i].c_state;
-		ipc_ptr->c_dat[i].c_mode = sdat.c_data[i].c_mode;
-		ipc_ptr->c_dat[i].on_sec = sdat.c_data[i].on_sec;
-		ipc_ptr->c_dat[i].off_sec = sdat.c_data[i].off_sec;
-	}
-	// memcpy(ipc_ptr->sch, cmd_fsm_cb.sdat_ptr->sch_ptr, sizeof(ipc_ptr->sch));
-	ipc_ptr->force_update = 1;			// force daemon to update relays
-	ipc_sem_free(semid, &sb);			// free lock on shared memory
-
-	printf("  Pcon: system data copied to shared memory\r\n");
+	printf("  Pcon: system data loaded into shared memory\r\n");
 
 	/* setup control block pointers */
-	cmd_fsm_cb.sdat_ptr = &sdat;	//set up pointer in cmd_fsm control block to allow acces to system data
-	cmd_fsm_cb.w_sch_ptr = (uint32_t *)cmd_fsm_cb.w_sch;
-	cmd_fsm_cb.sdat_ptr->sch_ptr = (uint32_t *)cmd_fsm_cb.sdat_ptr->sch;
+	cmd_fsm_cb.w_sch_ptr = &cmd_fsm_cb.w_sch;	//set pointer to working schedule
+	cmd_fsm_cb.sdat_ptr = &ipc_ptr->sys_data;	//set up pointer in cmd_fsm control block to allow acces to system data
+	// cmd_fsm_cb.sdat_ptr->sch_ptr = cmd_fsm_cb.sdat_ptr->sch;
 
 	/* load working schedule from system schedule */
-	printf("  Pcon: size of schedule buffer = %i\r\n", sizeof(cmd_fsm_cb.w_sch));
-	memcpy(cmd_fsm_cb.w_sch_ptr, cmd_fsm_cb.sdat_ptr->sch_ptr, sizeof(cmd_fsm_cb.w_sch));
-	printf("  Pcon: system schedule copied to buffer\r\n");
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	cmd_fsm_cb.w_sch = ipc_ptr->sys_data.sys_sch; 
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
+	printf("  Pcon: system schedule copied to working schedule\r\n");
 
 	/* initialize state machines */
 	work_buffer_ptr = (char *)work_buffer;  //initialize work buffer pointer
@@ -180,7 +180,7 @@ int main(void) {
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "starting main event loop\n", trace_flag);
 #endif
 	printf("\r\ninitialization complete\r\n\n");
-	disp_sys();	        //display system info on serial terminal
+	sys_disp(&ipc_ptr->sys_data);	        //display system info on serial terminal
 	printf("\r\n\n");
 	/* set initial prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "enter a command\r\n> ");

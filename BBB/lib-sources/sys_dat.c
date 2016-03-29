@@ -123,3 +123,16 @@ int sys_comp(_SYS_DAT2 *sdat){
 
     return 0;
 }
+
+/* write system info to stdout */
+void sys_disp(_SYS_DAT2 *s){
+	printf(" Pcon  %d.%d.%d \n\r", s->config.major_version, s->config.minor_version, s->config.minor_revision);
+	printf(" configured for controlling %i channels\n\r",s->config.channels);
+	printf(" configured for reading %i sensors\n\r",s->config.sensors);
+	printf(" input buffer size: %d characters\n\r", _INPUT_BUFFER_SIZE);
+	printf(" system data size: %d bytes\r\n", sizeof(*s));
+	printf(" system schedule size: %d bytes\r\n", sizeof(s->sys_sch));
+	printf(" stored schedule templates: %i\r\n", s->schlib_index);
+
+	return;
+}

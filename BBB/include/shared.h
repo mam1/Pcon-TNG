@@ -2,9 +2,9 @@
 #define _SHARE_H_
 
 /* version info */
-#define _major_version 			7
+#define _major_version 			8
 #define _minor_version 			0
-#define _minor_revision 		1
+#define _minor_revision 		0
 
 /* file names */
 #define _FILE_NAME_SIZE 		50

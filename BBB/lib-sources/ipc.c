@@ -124,10 +124,10 @@ int ipc_size(void) {
     long        page_size = sysconf (_SC_PAGESIZE);
     int         pages;
     // printf("    ipc data size %i\n",sizeof(IPC_DAT));
-    pages = sizeof(IPC_DAT) / page_size;
+    pages = sizeof(_IPC_DAT) / page_size;
     // printf("    1 -pages = %i\n",pages);
     if (pages < 1) pages = 1;
-    else if (sizeof(IPC_DAT) % page_size != 0) pages += 1;
+    else if (sizeof(_IPC_DAT) % page_size != 0) pages += 1;
     // printf("    2 -pages = %i\n",pages);
  //   printf("  ipc_size: system page size %i, ipc data %i, ipc data requires %i pages, %i bytes\n", (int)page_size, sizeof(IPC_DAT), pages, pages * (int)page_size);
     return (pages * (int)page_size);

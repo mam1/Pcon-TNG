@@ -41,14 +41,12 @@ int main (void) {
     int         state;
     int         temp;
     int         humid;
-    // int         sensor_id;
     char 		*fname = "test_sys.dat";
-
 
     printf("\n **** starting\n");
     printf("  size of schedule %i bytes\n", sizeof(sch));
 
-    /* load data from system data file and compare finfig data */
+    /* load data from system data file and compare config data */
     sys_file = sys_open(fname,&sys_data);  // handle missing file only need once
     sys_load(fname,&sys_data);
     if(sys_comp(&sys_data)){
@@ -56,9 +54,9 @@ int main (void) {
     	printf("*** application terminated\n");
     	exit(1);
     }
-
+    /* test to make sure save is working */
     if(sys_save(fname,&sys_data))
-    	printf("\n *\n*** unable to save system data to file\n");
+    	printf("\n *\n*** unable to save system data to file <%s>\n", fname);
 
     /* create schedule records */
     printf("  enter channel number > ");
