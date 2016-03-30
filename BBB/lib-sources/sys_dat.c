@@ -7,9 +7,11 @@
 #include <fcntl.h>
 #include <string.h>
 #include "Pcon.h"
-#include "sd_card.h"
+// #include "sd_card.h"
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
 #include "trace.h"
+#include "sys_dat.h"
+#include "sch.h"
 
 FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
     FILE            *sys_file;

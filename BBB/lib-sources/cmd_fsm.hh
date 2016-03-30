@@ -924,8 +924,10 @@ int c_22(_CMD_FSM_CB *cb)
 	char            temp[_PROMPT_BUFFER_SIZE];
 	/*set the state of the schedule record to on */
 	cb->w_srec_state = 1;       //set working state to on
-	if (add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours, cb->w_minutes), 1)) // add/change record
-		return -1;
+	if(up_sch_rec_state(&cb->w_sch, cb->w_day, cb->w_channel, cb->w_hours, cb->w_minutes, cb->w_srec_state)){
+		printf("problem schedule record\n");
+		return 1;
+	}
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
@@ -943,7 +945,10 @@ int c_23(_CMD_FSM_CB *cb)
 	char            temp[_PROMPT_BUFFER_SIZE];
 
 	cb->w_srec_state = 0;       // set working state to off
-	add_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours, cb->w_minutes), 0);
+	if(up_sch_rec_state(&cb->w_sch, cb->w_day, cb->w_channel, cb->w_hours, cb->w_minutes, cb->w_srec_state)){
+		printf("problem schedule record\n");
+		return 1;
+	}
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
@@ -960,7 +965,7 @@ int c_24(_CMD_FSM_CB *cb)
 
 	char            temp[_PROMPT_BUFFER_SIZE];
 
-	del_sch_rec(&cb->w_schedule[0], make_key(cb->w_hours, cb->w_minutes));
+	del_sch_rec2(&cb->w_sch, cb->w_day, cb->w_channel, cb->w_hours, cb->w_minutes);
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "editing schedule template: ");
@@ -983,7 +988,7 @@ int c_25(_CMD_FSM_CB *cb)
 	}
 	else
 		for (i = 0; i < cb->sdat_ptr->schlib_index + 1; i++) {
-			if (strcmp(cb->sdat_ptr->schlib_index, (char *)cb->w_schedule_name) == 0) {
+			if (strcmp(cb->sdat_ptr->t_data[i].name, (char *)cb->w_schedule_name) == 0) {
 				index = i;
 				break;
 			}
@@ -993,11 +998,16 @@ int c_25(_CMD_FSM_CB *cb)
 		cb->sdat_ptr->schlib_index += 1;
 	}
 
-	strcpy(cb->sdat_ptr->s_data[index].name, (char *)cb->w_schedule_name);      //copy name
+	strcpy(cb->sdat_ptr->t_data[index].name, (char *)cb->w_schedule_name);      //copy name
+	
+
 	for (i = 0; i < _SCHEDULE_SIZE; i++) {
 		cb->sdat_ptr->s_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
 		cb->w_schedule[i] = '\0';                                       //clear working shcedule
 	}
+
+
+
 	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 
 	/* build prompt */

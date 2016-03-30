@@ -29,4 +29,13 @@ int dump_schedule(_S_TAB *sch, int day, int channel);
 /* print a formated dump of schedules for all channels */
 void disp_all_schedules(_S_TAB *sch);
 
+/* add or change a schedule template record */
+int add_tem_rec2(_S_CHAN *c_sch, int hour, int minute, int state, int temp, int humid);
+
+/* print a template schedule */
+int dump_template(_TMPL_DAT *t_sch);
+
+/* print a formated dump of all days for a channel */
+// void disp_channel_sch(_S_CHAN *c_dat,int header);
+
 #endif /* _SCH_H_ */
