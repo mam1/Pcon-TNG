@@ -66,13 +66,19 @@ typedef struct {
 } _TMPL_DAT;
 				// combine channel schedu
 
+
+typedef struct {
+	__TMPL_DAT 		t_lib[_MAX_TEMPLATES];
+} _T_TAB
+
 /* structure of system file record */
 typedef struct {
 	_CONFIG_DAT 	config;							// system configuration	
   	_S_TAB  		sys_sch;						// system schedule
+  	_T_TAB 			sys_tem;						// schedule template library
   	_CHN_DAT     	c_data[_NUMBER_OF_CHANNELS];	// persistent channel data
     _TMPL_DAT		t_data[_MAX_TEMPLATES];			// schedule template library
-    int 			schlib_index;					// points to the next available record (maybe)
+    int 			schlib_index;					// points to the next available template record (maybe)
 
 } _SYS_DAT2;
 
@@ -110,18 +116,19 @@ typedef struct {
 	int             w_channel;                      //working channel number
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
 	int             w_schedule_number;
-
 	int             w_minutes;
 	char            w_minutes_str[4];
 	int             w_hours;
 	char            w_hours_str[4];
 	int				w_srec_state;
-	int				w_template_index;
+	int 			w_state;
 	int 			w_day;
 	int 			w_temp;
 	int 			w_humid;
+	int 			w_state;
 	int 			w_sensor_id;
 	int				w_template_num;
+	int				w_template_index;
 } _CMD_FSM_CB;
 
 /******************************************************************************************************/

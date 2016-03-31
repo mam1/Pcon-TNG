@@ -857,7 +857,7 @@ int c_18(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/* set working schedule name */
+/* set working template name */
 int c_19(_CMD_FSM_CB *cb)
 {
 	strcpy((char *)cb->w_schedule_name, cb->token);
@@ -1005,8 +1005,8 @@ int c_25(_CMD_FSM_CB *cb)
 		cb->sdat_ptr->t_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
 		cb->w_schedule[i] = '\0';                                       //clear working shcedule
 	}
-
-
+	cb->sdat_ptr->t_data
+	add_tem_rec2(cb->sdat_ptr->t_data, cb->w_hour, cb->w_minute, cb->w_state, cb->w_temp, cb->w_humid)
 
 	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 
@@ -1050,6 +1050,9 @@ int c_26(_CMD_FSM_CB *cb)
 
 	}
 	cb->w_template_index = cb->w_template_index - 1;
+
+
+	
 	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 
 	/* build prompt */
