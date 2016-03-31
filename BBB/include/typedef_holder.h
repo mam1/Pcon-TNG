@@ -52,9 +52,8 @@ typedef struct {
 /* schedule templates */
 typedef struct {
 	char 			name[_SCHEDULE_NAME_SIZE];
-	uint32_t		schedule[_SCHEDULE_SIZE];
 	_S_CHAN 		chan_sch;
-} TMPL_DAT;
+} _TMPL_DAT;
 
 /*  data structures for indexing the schedule array */
 typedef struct
@@ -77,7 +76,7 @@ typedef	struct {
   _S_TAB  		sch2;  
     uint32_t	*sch_ptr;   												// pointer to system schedule
     CHN_DAT     c_data[_NUMBER_OF_CHANNELS];								// channel persistent data
-    TMPL_DAT	s_data[_MAX_SCHLIB_SCH];									// schedule template library
+    _TMPL_DAT	s_data[_MAX_SCHLIB_SCH];									// schedule template library
 
 } SYS_DAT;
 
@@ -95,7 +94,7 @@ typedef struct {
 	_CONFIG_DAT 	config;							// system configuration	
   	_S_TAB  		sch2;							// system schedule
   	CHN_DAT     	c_data[_NUMBER_OF_CHANNELS];	// channel persistent data
-    TMPL_DAT		s_data[_MAX_SCHLIB_SCH];		// schedule template library
+    _TMPL_DAT		s_data[_MAX_SCHLIB_SCH];		// schedule template library
 } _SYS_DAT2;
 
 /* cmd_fsm control block */

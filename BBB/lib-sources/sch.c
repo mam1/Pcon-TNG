@@ -50,7 +50,7 @@ int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute){
 }
 
 /* add or change a schedule template record */
-int add_tem_rec2(_S_CHAN *c_sch, int hour, int minute, int state, int temp, int humid){
+int add_tem_rec2(_TMPL_DAT *t_sch, int hour, int minute, int state, int temp, int humid){
     int             key;
     // int          trec;
     _S_REC          hrec;
@@ -62,36 +62,36 @@ int add_tem_rec2(_S_CHAN *c_sch, int hour, int minute, int state, int temp, int 
     hrec.temp = temp;
     hrec.humid = humid;
 
-    for(i=0;i<c_sch->rcnt;i++){
-        if(c_sch->rec[i].key == key){      // record exists, change it
-            c_sch->rec[i] = hrec;
+    for(i=0;i<t_sch->temp_chan_sch.rcnt;i++){
+        if(t_sch->temp_chan_sch.rec[i].key == key){      // record exists, change it
+            t_sch->temp_chan_sch.rec[i] = hrec;
             return 0;
         }
     }
-    if((c_sch->rcnt + 1) > _MAX_SCHEDULE_RECS){    // see if there is room to add another record
+    if((t_sch->temp_chan_sch.rcnt + 1) > _MAX_SCHEDULE_RECS){    // see if there is room to add another record
         printf("  too many schedule records\n");
         return 1;
     }
-    c_sch->rcnt = c_sch->rcnt + 1;        //add a new record
-    if(c_sch->rcnt == 1){  //first record
-        c_sch->rec[0] = hrec;
-        printf("  first record created, key=%i\n", c_sch->rec[0].key);
-        printf("  rcnt=%i\n", c_sch->rcnt);
+    t_sch->temp_chan_sch.rcnt = t_sch->temp_chan_sch.rcnt + 1;        //add a new record
+    if(t_sch->temp_chan_sch.rcnt == 1){  //first record
+        t_sch->temp_chan_sch.rec[0] = hrec;
+        printf("  first record created, key=%i\n", t_sch->temp_chan_sch.rec[0].key);
+        printf("  rcnt=%i\n", t_sch->temp_chan_sch.rcnt);
         return 0;
     }
     /* search schedule */
-    for (i = 0; i < c_sch->rcnt - 1; i++) {
+    for (i = 0; i < t_sch->temp_chan_sch.rcnt - 1; i++) {
         // trec = i;
-        if ((c_sch->rec[i].key) > key) {
+        if ((t_sch->temp_chan_sch.rec[i].key) > key) {
             /* move records down */
-            for (ii = c_sch->rcnt; ii > i; ii--) {
-                c_sch->rec[ii] = c_sch->rec[ii - 1];
+            for (ii = t_sch->temp_chan_sch.rcnt; ii > i; ii--) {
+                t_sch->temp_chan_sch.rec[ii] = t_sch->temp_chan_sch.rec[ii - 1];
             }
             /* insert new record */
-            c_sch->rec[i] = hrec;
+            t_sch->temp_chan_sch.rec[i] = hrec;
             return 0;
         }
-        c_sch->rec[c_sch->rcnt - 1] = hrec;
+        t_sch->temp_chan_sch.rec[t_sch->temp_chan_sch.rcnt - 1] = hrec;
         return 0;
     }
     printf("**** this should not be happening\n\n");

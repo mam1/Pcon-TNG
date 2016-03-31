@@ -30,7 +30,7 @@ int dump_schedule(_S_TAB *sch, int day, int channel);
 void disp_all_schedules(_S_TAB *sch);
 
 /* add or change a schedule template record */
-int add_tem_rec2(_S_CHAN *c_sch, int hour, int minute, int state, int temp, int humid);
+int add_tem_rec2(_TMPL_DAT *c_sch, int hour, int minute, int state, int temp, int humid);
 
 /* print a template schedule */
 int dump_template(_TMPL_DAT *t_sch);

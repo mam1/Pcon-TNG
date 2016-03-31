@@ -31,16 +31,29 @@ char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 int main (void) {
 
-    _S_TAB       sch;
-    _TMPL_DAT    c_sch1, c_sch2;
+	_IPC_DAT 			ipc;
+	int 				i;
+
+    // _S_TAB       sch;
+    _TMPL_DAT    t_sch1[20]; // , c_sch2
 
 printf("\n *** testing ***\n\n  before load c_sch1\n");
-dump_template(&c_sch1);
+dump_template(&ipc.sys_data.t_data[0]);
 printf("adding a template record\n");
-add_tem_rec2(&c_sch1, 2, 4, 1, 99, 25);
+add_tem_rec2(&ipc.sys_data.t_data[0], 2, 4, 1, 99, 25);
+add_tem_rec2(&ipc.sys_data.t_data[0], 3, 4, 0, 89, 55);
+add_tem_rec2(&ipc.sys_data.t_data[0], 1, 4, 1, 65, 75);
 printf("\nafter load c_sch1\n");
-dump_template(&c_sch1);
+dump_template(&ipc.sys_data.t_data[0]);
 
+printf("**********************\n");
+
+dump_template(t_sch1);
+
+for(i=0;i<ipc.sys_data.schlib_index;i++)
+	t_sch1[i] = ipc.sys_data.t_data[i];
+
+dump_template(t_sch1);
 
 
     return 0;
