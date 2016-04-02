@@ -17,6 +17,31 @@
 /* semaphore key */
 #define _SEM_KEY 				1234321
 
+/* character parser fsm */
+#define _CHAR_TOKENS     		5
+#define _CHAR_STATES     		4
+#define _MAX_TOKEN_SIZE			128
+
+/* command parser fsm */
+#define _CMD_TOKENS     		38
+#define _CMD_STATES     		28 
+
+/* key codes */
+#define _ESC        27
+#define _SPACE      32
+#define _COLON      58
+#define _SLASH      47
+#define _COMMA      44
+#define _BS         8
+#define _DEL		127
+#define _QUOTE      34
+#define _CR         13
+#define _NL 		10
+#define _FF 		12
+#define _EOF		0
+#define _NO_CHAR    255
+#define _DELIMITER	28	
+
 /* buffers */
 #define _INPUT_BUFFER_SIZE		128
 #define _TOKEN_BUFFER_SIZE		60
@@ -33,7 +58,7 @@
 #define _SCHEDULE_NAME_SIZE		40
 #define _MAX_TEMPLATES			20
 #define _MAX_SCHEDULE_RECS		20
-#define _SCHEDULE_SIZE			_MAX_SCHEDULE_RECS + 1
+// #define _SCHEDULE_SIZE			_MAX_SCHEDULE_RECS + 1
 // #define _SCHEDULE_BUFFER		128
 
 #define	_BYTES_PER_INT 			4
