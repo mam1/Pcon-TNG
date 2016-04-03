@@ -208,21 +208,21 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*                       0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27*/
 	/*  0  temp        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/*  1  *           */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/*  2  humid       */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/*  3  schedule    */  { 4,  1,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/*  2  humid       */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/*  3  schedule    */  { 4,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/*  4  ?           */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/*  5  clock       */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
-	/*  6  yes         */  { 0,  1,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/*  7  cancel      */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/*  8  replace     */  { 0,  1,  2,  3,  5,  5,  6,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/*  9  edit        */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/*  6  yes         */  { 0,  1,  0,  3,  4,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+	/*  8  replace     */  { 0,  1,  2,  3,  4,  5,  6,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/*  9  edit        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 10  delete      */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 11  zero        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 15  status      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 16  time        */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
+	/* 16  time        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
 	/* 17  sensor      */  { 0, 21,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 18  cycle       */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 19  startup     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
@@ -233,16 +233,16 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 24  load        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 25  set         */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
 	/* 26  q           */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 27  done        */  { 0,  0,  0,  0,  0,  4,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+	/* 27  done        */  { 0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 	/* 28  back        */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0},
 	/* 29  system      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
 	/* 30  debug       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
-	/* 31 disp_sys_sch */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 32 disp_wrk_sch */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 33 disp_sch_lib */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 34 disp_tml_lib */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 35  INT         */  { 1,  1,  3,  0,  6,  6, 11,  8,  9,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 36  STR         */  { 0,  1,  2,  3,  6,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/* 31 disp_sys_sch */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/* 32 disp_wrk_sch */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/* 33 disp_sch_lib */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/* 34 disp_tml_lib */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/* 35  INT         */  { 1,  1,  3,  0,  8,  6, 11,  8,  9,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0,  0,  0,  0,  0},
+	/* 36  STR         */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 37  OTHER       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0}};
 
 /*cmd processor functions */
@@ -374,7 +374,7 @@ int cmd_type(char *c)
 	if (is_valid_int(c))
 		return 0;
 	/* test for a keyword */
-	for (i = 3; i < _CMD_TOKENS; i++)
+	for (i = 0; i < _CMD_TOKENS - 3; i++)
 	{
 		if (strlen(c) == strlen(keyword[i])) {
 			p = c;
@@ -545,7 +545,7 @@ int c_1(_CMD_FSM_CB *cb)
 	printf("\r\ncommands valid in any state\r\n  ESC .... reset command processor\r\n");
 	printf("  ? ...... display current state and list all valid commands\r\n");
 	printf("  q ...... terminate the application\r\n");
-	printf("  system . display system data\r\n");
+	// printf("  system . display system data\r\n");
 	printf("\r\ncommands valid in any state other than state 0\r\n");
 	printf("  done ... terminate active function\r\n");
 	printf("  back ... return to previous state\r\n");
@@ -661,14 +661,14 @@ int c_7(_CMD_FSM_CB *cb)
 	char        numstr[2];
 	char        hold_prompt[_PROMPT_BUFFER_SIZE];
 	/* build prompt */
-	strcpy(hold_prompt, cb->prompt_buffer);
-	strcpy(cb->prompt_buffer, "'");
-	strcat(cb->prompt_buffer, cb->token);
-	strcat(cb->prompt_buffer, "' is not a valid command in state ");
-	sprintf(numstr, "%d", cb->state);
-	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, "\n\r");
-	strcat(cb->prompt_buffer, hold_prompt);
+	// strcpy(hold_prompt, cb->prompt_buffer);
+	// strcpy(cb->prompt_buffer, "'");
+	// strcat(cb->prompt_buffer, cb->token);
+	// strcat(cb->prompt_buffer, "' is not a valid command in state ");
+	// sprintf(numstr, "%d", cb->state);
+	// strcat(cb->prompt_buffer, numstr);
+	// strcat(cb->prompt_buffer, "\n\r");
+	// strcat(cb->prompt_buffer, hold_prompt);
 
 	return 1;
 }
@@ -678,6 +678,8 @@ int c_8(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "'");
 	strcat(cb->prompt_buffer, cb->token);
 	strcat(cb->prompt_buffer, "' is not a valid command\n\r> ");
+	printf("%s",cb->prompt_buffer);
+	strcpy(cb->prompt_buffer, "\0");
 	return 1;
 }
 /* set channel control mode to manual and turn channel on */
@@ -1249,8 +1251,8 @@ int c_34(_CMD_FSM_CB *cb)
 {
 
 
-// 	/* build prompt */
-// 	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter a command\r\n> ");
+	/* build prompt */
+	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter a command\r\n> ");
 	return 0;
 }
 
@@ -1461,8 +1463,8 @@ void cmd_fsm(_CMD_FSM_CB *cb)
 		// s_ptr = cb->token;
 	}
 	else if (cb->token_type == 2){ // unrecognized
-		cb->token_value = 27;
-		cb->token_type = 27;
+		cb->token_value = 37;
+		cb->token_type = 37;
 	}
 	else if (cb->token_type == 0){		//integer
 		sscanf(cb->token, "%u", &num);
@@ -1477,7 +1479,7 @@ void cmd_fsm(_CMD_FSM_CB *cb)
 		// s_ptr = NULL;
 	}
 //    printf("call cmd_action[%i][%i](<%i>,<%i>,<%s>)\n",cb->token_type,*state,cb->token_type,*n_ptr,s_ptr);
-	if (cmd_action[cb->token_type][cb->state](cb) == 0) { //fire off an fsm action routine
+	if (cmd_action[cb->token_type][cb->state](cb) == 0) { //fire off a fsm action routine
 		cb->p_state = cb->state;
 		cb->state = cmd_new_state[cb->token_type][cb->state];
 	}         //transition to next state
