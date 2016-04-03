@@ -25,12 +25,9 @@
 
 /******************************** globals **************************************/
 int				trace_flag;							//control program trace
-// int 			exit_flag = false;					//exit man loop if TRUE
 int 			bbb;								//UART1 file descriptor
-// SYS_DAT 		sdat;								//system data structure
 _CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
-// IPC_DAT 		ipc_dat, *ipc_ptr; 					//ipc data
-_IPC_DAT 		ipc_dat, *ipc_ptr; 					//ipc data
+_IPC_DAT 		*ipc_ptr; 							//ipc data
 void			*data = NULL;						//pointer to ipc data
 char           	ipc_file[] = {_IPC_FILE};  			//name of ipc file
 uint8_t 		cmd_state, char_state;				//fsm current state
@@ -153,9 +150,11 @@ int main(void) {
 	printf("  Pcon: system data loaded into shared memory\r\n");
 
 	/* setup control block pointers */
-	cmd_fsm_cb.w_sch_ptr = &cmd_fsm_cb.w_sch;	//set pointer to working schedule
-	cmd_fsm_cb.sdat_ptr = &ipc_ptr->sys_data;	//set up pointer in cmd_fsm control block to allow acces to system data
-	// cmd_fsm_cb.sdat_ptr->sch_ptr = cmd_fsm_cb.sdat_ptr->sch;
+	cmd_fsm_cb.w_sch_ptr = &cmd_fsm_cb.w_sch;		//set pointer to working schedule
+	// cmd_fsm_cb.sdat_ptr = &ipc_ptr->sys_data;	//set up pointer in cmd_fsm control block to allow acces to system data
+	cmd_fsm_cb.ipc_ptr = ipc_ptr;					//set pointer to shared memory
+	cmd_fsm_cb.sys_ptr = &ipc_ptr->sys_data;		//set pointer to system data in shared memory
+	cmd_fsm_cb.sch_ptr = &ipc_ptr->sys_data.sys_sch;//set pointer to active shecule in shared memory
 
 	/* load working schedule from system schedule */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
