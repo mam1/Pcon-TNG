@@ -224,7 +224,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*  4  ?           */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/*  5  clock       */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
 	/*  6  yes         */  { 0,  1,  0,  3,  4,  4,  4,  0,  0,  0,  0,  6,  4, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  7,  0,  0,  0,  4, 13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
+	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 	/*  8  replace     */  { 0,  1,  2,  3,  4,  5,  6,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/*  9  edit        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 10  delete      */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
@@ -319,7 +319,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  4  ?           */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
 	/*  5  clock       */  {c_40,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  6  yes         */  { c_7, c_34,  c_7,  c_7, c_34,  c_7, c_18, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_48,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  7  cancel      */  { c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  7  cancel      */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/*  8  replace     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_39,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  9  edit        */  { c_7,  c_7,  c_7,  c_7, c_28,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 10  delete      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_26,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -339,8 +339,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 24  load        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 25  set         */  { c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 27  done        */  { c_7, c_34,  c_7,  c_7, c_34,  c_7, c_18, c_34, c_34, c_34, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 28  back        */  { c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_18, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
+	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 29  system      */  { c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 30  debug       */  { c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 31 disp_sys_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -567,7 +567,7 @@ int c_1(_CMD_FSM_CB *cb)
 	/* print list of valid commands */
 	for (i = 0; i < _CMD_TOKENS; i++) {
 		if((cmd_action[i][cb->state] == c_8) || (cmd_action[i][cb->state] == c_7) || (cmd_action[i][cb->state] == c_0) 
-			|| (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3))
+			|| (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3) || (cmd_action[i][cb->state] == c_34))
 			continue;
 		else {
 			printf("  %s ", keyword[i]);
@@ -1450,14 +1450,12 @@ int c_49(_CMD_FSM_CB *cb)
 void cmd_fsm(_CMD_FSM_CB *cb)
 {
 	static int         num;
-	// static char        *s_ptr;
 
 	cb->token_type = cmd_type(cb->token);
 #ifdef _TRACE
-	sprintf(trace_buf, "cmd_fsm called: token <%s>, token type <%i>, state <%i>\n", cb->token, cb->token_type, cb->state);
+	sprintf(trace_buf, "cmd_fsm called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
-//    printf("cmd_fsm called: token <%s>, token type <%i>, state <%i>\n",cb->token,cb->token_type, *state);
 	if (cb->token_type == 1){
 		// n_ptr = NULL;
 		// s_ptr = cb->token;
@@ -1469,6 +1467,7 @@ void cmd_fsm(_CMD_FSM_CB *cb)
 	else if (cb->token_type == 0){		//integer
 		sscanf(cb->token, "%u", &num);
 		cb->token_value = num;
+		printf("****hit interir\n\r");
 		// n_ptr = &num;
 		// s_ptr = NULL;
 	}
@@ -1478,13 +1477,21 @@ void cmd_fsm(_CMD_FSM_CB *cb)
 		// n_ptr = &num;
 		// s_ptr = NULL;
 	}
-//    printf("call cmd_action[%i][%i](<%i>,<%i>,<%s>)\n",cb->token_type,*state,cb->token_type,*n_ptr,s_ptr);
+#ifdef _TRACE	
+   printf("befor state[%i]\n\r",cb->state);
+#endif	
 	if (cmd_action[cb->token_type][cb->state](cb) == 0) { //fire off a fsm action routine
 		cb->p_state = cb->state;
 		cb->state = cmd_new_state[cb->token_type][cb->state];
+#ifdef _TRACE	
+   printf("after state state[%i]\r\n",cb->state);
+#endif	
 	}         //transition to next state
 	else
 	{
+#ifdef _TRACE	
+   printf("error returned from action routine\n\r");
+#endif	
 		while (pop_cmd_q(cmd_fsm_cb.token)); //empty command queue
 	}
 	return;
