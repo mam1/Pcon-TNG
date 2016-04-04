@@ -5,8 +5,8 @@
 
 
 FILE *sys_open(char *fname,_SYS_DAT2 *sdat);
-void sys_load(char *fname,_SYS_DAT2 *sdat);
-int sys_save(char *fname,_SYS_DAT2 *sdat);
+void sys_load(FILE *f,_SYS_DAT2 *sdat);
+int sys_save(FILE *f,_SYS_DAT2 *sdat);
 int sys_comp(_SYS_DAT2 *sdat);
 void sys_disp(_SYS_DAT2 *s);
 

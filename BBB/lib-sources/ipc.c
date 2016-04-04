@@ -22,10 +22,13 @@
 #include <unistd.h>     //sleep
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
 #include <sys/ipc.h>
+#include "trace.h"
 // #include <sys/sem.h>
 // #include <semaphore.h>
 
 #include "ipc.h"
+
+extern int              trace_flag;                     //trace file is active
 
 union semun {
     int 				val;      	// used for SETVAL only 
@@ -173,7 +176,11 @@ int ipc_sem_lock(int semid, struct sembuf *sb){
 		perror("semop");
 		exit(1);
 	}
-	printf(" ** %i locked\r\n",semid);	
+
+#ifdef _TRACE
+    trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory locked\n", trace_flag);
+    printf(" ** %i locked\r\n",semid);
+#endif	
 
 	return 0;
 }
@@ -186,7 +193,11 @@ int ipc_sem_free(int semid, struct sembuf *sb){
 		perror("semop");
 		exit(1);
 	}
-	printf(" ** %i unlocked\r\n",semid);	
+
+#ifdef _TRACE
+    trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory unlocked\n", trace_flag);
+    printf(" ** %i unlocked\r\n",semid);
+#endif  	
 
 	return 0;
 }

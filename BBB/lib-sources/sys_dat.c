@@ -13,6 +13,8 @@
 #include "sys_dat.h"
 #include "sch.h"
 
+extern int              trace_flag;                     //trace file is active
+
 FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
     FILE            *sys_file;
  
@@ -49,46 +51,40 @@ FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
     sys_file = fopen(fname,"r+");
     if(sys_file == NULL){
         printf("\n*** error reopening system data file\r\n");
-        perror(fname);
+        perror(_TRACE_FILE_NAME);
         exit(1);
     }
     printf(" system data file <%s> created and initialized\r\n",fname);
     return sys_file;
-
-
 }
 
-void sys_load(char *fname,_SYS_DAT2 *sdat){
-    FILE *sd;
+void sys_load(FILE *sd, _SYS_DAT2 *sdat){
     int     rtn;
-    sd = sys_open(fname,sdat);
+
 #ifdef _TRACE
-    trace(_TRACE_FILE_NAME, "sd_card", 0, NULL, "\nloading system data", 1);
+    trace(_TRACE_FILE_NAME, "sys_load", 0, NULL, "loading system data", 1);
     printf("  file handle %i\n",(int)sd);
     printf("  size of sys_dat %i\r\n",(int)sizeof(*sdat));
     printf("  read system data\r\n");
 #endif 
     rtn = fread(sdat, sizeof(*sdat), 1, sd);
 #ifdef _TRACE
-    printf("  fread returns %i\r\n",rtn);
+    // printf("  fread returns %i\r\n",rtn);
 #endif 
     if(rtn != 1){
         printf("\n*** error reading system data\n  fread returned %i\r\n",rtn);
-        perror(fname);
+        perror(_TRACE_FILE_NAME);
         exit(1);
-    }
-    fclose(sd);    
+    }   
     return;
 }
 
-int sys_save(char *fname,_SYS_DAT2 *sdat){
-    FILE *sd;
-    sd = sys_open(fname,sdat);
+int sys_save(FILE *sd ,_SYS_DAT2 *sdat){
+
     if(fwrite(sdat, sizeof(*sdat), 1, sd) != 1){
-        perror(fname);
+        perror(_TRACE_FILE_NAME);
         return 1;
     }
-    fclose(sd);
     return 0;
 }
 

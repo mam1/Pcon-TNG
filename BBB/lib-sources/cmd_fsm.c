@@ -382,7 +382,7 @@ int cmd_type(char *c)
 		return 1;
 	/* test for a integer */
 	if (is_valid_int(c))
-		return 0;
+		return 35;
 	/* test for a keyword */
 	for (i = 0; i < _CMD_TOKENS - 3; i++)
 	{
@@ -1333,7 +1333,10 @@ int c_39(_CMD_FSM_CB *cb)
 /* set real time clock */
 int c_40(_CMD_FSM_CB *cb)
 {
-
+#ifdef _TRACE
+	sprintf(trace_buf, "c_40 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+#endif
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter time, date and day of the week - <Hour>:<Min>:<Sec> <month>/<day>/<year> <dow>\r\n> ");
 	return 0;
@@ -1342,8 +1345,11 @@ int c_40(_CMD_FSM_CB *cb)
 /* set real time clock hours */
 int c_41(_CMD_FSM_CB *cb)
 {
+#ifdef _TRACE
+	sprintf(trace_buf, "c_41 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+#endif
 	tm.tm_hour = cb->token_value;
-
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter minutes\r\n> ");
 	return 0;
@@ -1477,14 +1483,18 @@ void cmd_fsm(_CMD_FSM_CB *cb)
 		// n_ptr = &num;
 		// s_ptr = NULL;
 	}
-#ifdef _TRACE	
-   printf("befor state[%i]\n\r",cb->state);
-#endif	
-	if (cmd_action[cb->token_type][cb->state](cb) == 0) { //fire off a fsm action routine
+#ifdef _TRACE
+	sprintf(trace_buf, "cmd_fsm called before setting new state: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+#endif
+
+	if (cmd_action[cb->token_type][cb->state](cb) == 0) {		// fire off a fsm action routine
 		cb->p_state = cb->state;
-		cb->state = cmd_new_state[cb->token_type][cb->state];
-#ifdef _TRACE	
-   printf("after state state[%i]\r\n",cb->state);
+		cb->state = cmd_new_state[cb->token_type][cb->state];	// update state
+
+#ifdef _TRACE
+	sprintf(trace_buf, "cmd_fsm called after setting new state: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif	
 	}         //transition to next state
 	else

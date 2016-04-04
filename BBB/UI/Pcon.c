@@ -75,8 +75,6 @@ int main(void) {
 	int 			fd;					//file descriptor for ipc data file
 	FILE 			*sys_file;
 
-
-
 	/*********************** setup console *******************************/
 	printf("\033\143"); 				//clear the terminal screen, preserve the scroll back
 	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version, _minor_revision);
@@ -117,8 +115,8 @@ int main(void) {
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
     /* load data from system data file and compare config data */
-    sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);  // handle missing file only need once
-    sys_load(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);
+    sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);  // create system file if it does not exist
+    sys_load(sys_file,&ipc_ptr->sys_data);
     if(sys_comp(&ipc_ptr->sys_data)){
     	printf("*** there are different configurations in the system file and in the application\n");
     	printf("\n  ignor problem? <y>|<n>: ");
@@ -129,7 +127,7 @@ int main(void) {
 			ipc_ptr->force_update = 1;			// force daemon to update relays
 
 
-			if(sys_save(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data)){
+			if(sys_save(sys_file,&ipc_ptr->sys_data)){
     			printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
 			}
 			else
@@ -143,10 +141,19 @@ int main(void) {
 	    	exit(1);
 	    }
     }
-    /* test to make sure save is working */
-    if(sys_save(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data))
-    	printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
+    fclose(sys_file);
 
+    /* test to make sure save is working */
+    sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);
+    if(sys_save(sys_file,&ipc_ptr->sys_data)){
+        printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
+        exit(1);	
+    }
+    fclose(sys_file);
+    
+#ifdef _TRACE
+	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system data loaded into shared memory", trace_flag);
+#endif
 	printf("  Pcon: system data loaded into shared memory\r\n");
 
 	/* setup control block pointers */
@@ -161,6 +168,9 @@ int main(void) {
 	cmd_fsm_cb.w_sch = ipc_ptr->sys_data.sys_sch; 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 	printf("  Pcon: system schedule copied to working schedule\r\n");
+#ifdef _TRACE
+	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system schedule copied to working schedule", trace_flag);
+#endif
 
 	/* initialize state machines */
 	work_buffer_ptr = (char *)work_buffer;  //initialize work buffer pointer
@@ -176,9 +186,10 @@ int main(void) {
 	fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
 
 #ifdef _TRACE
-	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "starting main event loop\n", trace_flag);
+	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "initializations complete\n", trace_flag);
+	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "starting main event loop\n", trace_flag);
 #endif
-	printf("\r\ninitialization complete\r\n\n");
+	printf("\r\ninitializations complete\r\n\n");
 	sys_disp(&ipc_ptr->sys_data);	        //display system info on serial terminal
 	printf("\r\n\n");
 	/* set initial prompt */
