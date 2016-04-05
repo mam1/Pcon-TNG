@@ -108,1088 +108,6 @@ char    *keyword[_CMD_TOKENS] = {
 	/* 37 */    "OTHER"
 };
 
-/* command definitions */
-char    *keyword_defs[_CMD_TOKENS][_CMD_STATES] = {{
-	// state 0
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{ 	// state 1
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "set channel mode to time",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{	// state 2
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{	// state 3
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{	// state 4
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{	// state 5
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{	// state 6
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-},
-{
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
-	/*  4 */    "display all commands valid in current state",
-	/*  5 */    "set the real time clock",
-	/*  6 */    "send a ping to the C3",
-	/*  7 */    "build time date structure to set PCF8563 real tim clock",
-	/*  8 */    "set PCF8563",
-	/*  9 */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
-	/* 11 */    "edit system schedule",
-	/* 12 */    "turn channel on, set channel control mode to manual",
-	/* 13 */    "turn channel off, set channel control mode to manual",
-	/* 14 */    "t",
-	/* 15 */    "",
-	/* 16 */    "display the time and date from the real time clock",
-	/* 17 */    "display status for all channels",
-	/* 18 */    "set channel control mode to time",
-	/* 19 */    "set channel control mode to time and sensor",
-	/* 20 */    "set channel control mode to cycle",
-	/* 21 */    "startup",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command",
-	/* 28 */    "display all valid commands",
-	/* 29 */    "terminate Pcon",
-	/* 30 */    "end function",
-	/* 31 */    "back up one state",
-	/* 32 */    "display system data",
-	/* 33 */    "display debug data",
-	/* 34 */	"",
-	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
-	/* 37 */	"any unrecognized token"
-}};
 
 /* state specific command definitions for INT */
 char    *INT_def[_CMD_STATES] = {
@@ -1273,8 +191,8 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 15  status      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 16  time        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
+	/* 15  status      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 16  time        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/* 17  sensor      */  { 0, 21,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 18  cycle       */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 19  startup     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
@@ -1365,11 +283,11 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  9  edit        */  { c_7,  c_7,  c_7,  c_7, c_28,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 10  delete      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_26,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 11  zero        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_22,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 13  off         */  { c_7, c_10,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 14  clear       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 15  status      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 16  time        */  { c_2, c_11,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_7,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 15  status      */  { c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6},
+	/* 16  time        */  { c_2, c_11,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2},
 	/* 17  sensor      */  { c_7, c_12,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 18  cycle       */  { c_7, c_13,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 19  startup     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -1378,12 +296,12 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 23  channel     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 24  load        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 25  set         */  { c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 25  set         */  { c_7,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_18, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
-	/* 29  system      */  { c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 30  debug       */  { c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 29  system      */  { c_7,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 30  debug       */  { c_7,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 31 disp_sys_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 32 disp_wrk_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 33 disp_sch_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -1615,7 +533,7 @@ int c_1(_CMD_FSM_CB *cb)
 			printf("  %s ", keyword[i]);
 	        for(ii=0;ii<((dots + 2)- strlen(keyword[i]));ii++)
 	            printf(".");
-	        printf(" %s",keyword_defs[i]);
+	        printf(" %s",cmd_def(i, cb->state));
 	        if(i == 35)
 	            printf(" (%s)",INT_def[cb->state]);
 	        printf("\r\n");
@@ -1656,9 +574,17 @@ int c_4(_CMD_FSM_CB *cb)
 		strcpy(cb->prompt_buffer, "enter action for channel ");
 		strcat(cb->prompt_buffer, cb->token);
 		strcat(cb->prompt_buffer, "\n\r> ");
+
+#ifdef _TRACE
+	sprintf(trace_buf, "c_4 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+	sprintf(trace_buf, "c_4 set working channel to %i\n", cb->w_channel);
+	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+#endif
+
 		return 0;
 	}
-	strcpy(cb->prompt_buffer, "channel number must be 0 to 7\r\n> ");
+	strcpy(cb->prompt_buffer, "channel number must be 0 to 15\r\n> ");
 	return 1;
 }
 /* set channel name for working channel */
@@ -1680,21 +606,20 @@ int c_5(_CMD_FSM_CB *cb)
 /* status - display channel data */
 int c_6(_CMD_FSM_CB *cb)
 {
-	// int         i;
-	// printf("  channel  state   mode  sensor id     name\n\r");
-	// printf("  ----------------------------------------------------------\n\r");
-	// for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
-	// 	printf("   <%2i> - ", i);
-	// 	printf(" %s    %s   ", onoff[ipc_ptr->c_dat[i].c_state], c_mode[ipc_ptr->c_dat[i].c_mode]);
+	int         i;
+	printf("  channel  state   mode  sensor id     name\n\r");
+	printf("  ----------------------------------------------------------\n\r");
+	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
+		printf("   <%2i> - ", i);
+		printf(" %s    %s   ", onoff[cb->sys_ptr->c_data[i].c_state], c_mode[cb->sys_ptr->c_data[i].c_mode]);
+		if (cb->sys_ptr->c_data[i].c_mode == 2)
+			printf("  %i     ", cb->sys_ptr->c_data[i].sensor_id);
+		else if (cb->sys_ptr->c_data[i].c_mode == 3)
+			printf(" (%i:%i)", cb->sys_ptr->c_data[i].on_sec, cb->sys_ptr->c_data[i].off_sec);
+		printf("%s\r\n",cb->sys_ptr->c_data[i].name);
 
-	// 	if (sdat.c_data[i].c_mode == 2)
-	// 		printf("  %i     ", ipc_ptr->c_dat[i].sensor_id);
-	// 	else if (sdat.c_data[i].c_mode == 3)
-	// 		printf(" (%i:%i)", sdat.c_data[i].on_sec, sdat.c_data[i].off_sec);
-	// 	printf("%s\r\n",sdat.c_data[i].name);
-
-	// }
-	// c_34(cb);  // state 0 prompt
+	}
+	c_34(cb);  // state 0 prompt
 	return 0;
 }
 /* command is not valid in current state */
@@ -1703,14 +628,14 @@ int c_7(_CMD_FSM_CB *cb)
 	char        numstr[2];
 	char        hold_prompt[_PROMPT_BUFFER_SIZE];
 	/* build prompt */
-	// strcpy(hold_prompt, cb->prompt_buffer);
-	// strcpy(cb->prompt_buffer, "'");
-	// strcat(cb->prompt_buffer, cb->token);
-	// strcat(cb->prompt_buffer, "' is not a valid command in state ");
-	// sprintf(numstr, "%d", cb->state);
-	// strcat(cb->prompt_buffer, numstr);
-	// strcat(cb->prompt_buffer, "\n\r");
-	// strcat(cb->prompt_buffer, hold_prompt);
+	strcpy(hold_prompt, cb->prompt_buffer);
+	strcpy(cb->prompt_buffer, "'");
+	strcat(cb->prompt_buffer, cb->token);
+	strcat(cb->prompt_buffer, "' is not a valid command in state ");
+	sprintf(numstr, "%d", cb->state);
+	strcat(cb->prompt_buffer, numstr);
+	strcat(cb->prompt_buffer, "\n\r");
+	strcat(cb->prompt_buffer, hold_prompt);
 
 	return 1;
 }
@@ -1727,25 +652,26 @@ int c_8(_CMD_FSM_CB *cb)
 /* set channel control mode to manual and turn channel on */
 int c_9(_CMD_FSM_CB *cb)
 {
-	// char        numstr[2];
+	char        numstr[2];
+	FILE 		*f;
 
-	// ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-	// ipc_ptr->force_update = 1;					// update ipc data
-	// ipc_ptr->c_dat[cb->w_channel].c_mode = 0;	// update ipc data
-	// ipc_ptr->c_dat[cb->w_channel].c_state = 1;	// update ipc data
-	// ipc_ptr->force_update = 1;					// force relays to be updated
+	cb->sys_ptr->c_data[cb->w_channel].c_mode = 0;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].c_state = 1;	// update ipc data
+	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
-	// ipc_sem_free(semid, &sb);					// free lock on shared memory
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	// sdat.c_data[cb->w_channel].c_mode = 0;
-	// sdat.c_data[cb->w_channel].c_state = 1;
-	// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);	// write data to disk
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "channel ");
-	// sprintf(numstr, "%d", cb->w_channel);
-	// strcat(cb->prompt_buffer, numstr);
-	// strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n");
+	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
+	sys_save(f,cb->sys_ptr);	// write data to disk
+	fclose(f);
+
+	/* build prompt */
+	strcpy(cb->prompt_buffer, "channel ");
+	sprintf(numstr, "%d", cb->w_channel);
+	strcat(cb->prompt_buffer, numstr);
+	strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n");
 	c_36(cb);   //append state 0 prompt to prompt buffer
 
 	return 0;
@@ -1753,25 +679,26 @@ int c_9(_CMD_FSM_CB *cb)
 /* set channel control mode to manual and turn channel off */
 int c_10(_CMD_FSM_CB *cb)
 {
-	// char        numstr[2];
+	char        numstr[2];
+	FILE 		*f;
 
-	// ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-	// ipc_ptr->force_update = 1;					// update ipc data
-	// ipc_ptr->c_dat[cb->w_channel].c_mode = 0;	// update ipc data
-	// ipc_ptr->c_dat[cb->w_channel].c_state = 0;	// update ipc data
-	// ipc_ptr->force_update = 1;					// force relays to be updated
+	cb->sys_ptr->c_data[cb->w_channel].c_mode = 0;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].c_state = 0;	// update ipc data
+	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
-	// ipc_sem_free(semid, &sb);					// free lock on shared memory
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	// sdat.c_data[cb->w_channel].c_mode = 0;
-	// sdat.c_data[cb->w_channel].c_state = 0;
-	// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "channel ");
-	// sprintf(numstr, "%d", cb->w_channel);
-	// strcat(cb->prompt_buffer, numstr);
-	// strcat(cb->prompt_buffer, " turned off and mode set to manual\r\n");
+	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
+	sys_save(f,cb->sys_ptr);	// write data to disk
+	fclose(f);
+
+	/* build prompt */
+	strcpy(cb->prompt_buffer, "channel ");
+	sprintf(numstr, "%d", cb->w_channel);
+	strcat(cb->prompt_buffer, numstr);
+	strcat(cb->prompt_buffer, " turned off and mode set to manual\r\n");
 	c_36(cb);   //append state 0 prompt to prompt buffer
 
 	return 0;
@@ -1779,24 +706,28 @@ int c_10(_CMD_FSM_CB *cb)
 /* set channel control mode to time */
 int c_11(_CMD_FSM_CB *cb)
 {
-	// char        numstr[2];
+	char        numstr[2];
+	FILE 		*f;
 
-	// printf("cb->w_channel <%i>\n\r", cb->w_channel);
+	printf("cb->w_channel <%i>\n\r", cb->w_channel);
 
-	// ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-	// ipc_ptr->c_dat[cb->w_channel].c_mode = 1;
-	// ipc_ptr->force_update = 1;					// force relays to be updated
+	cb->sys_ptr->c_data[cb->w_channel].c_mode = 1;	// update ipc data
+	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
-	// ipc_sem_free(semid, &sb);					// free lock on shared memory
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
 					
-	// sdat.c_data[cb->w_channel].c_mode = 1;
-	// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
-	// strcpy(cb->prompt_buffer, "channel ");
-	// sprintf(numstr, "%d", cb->w_channel);
-	// strcat(cb->prompt_buffer, numstr);
-	// strcat(cb->prompt_buffer, " mode set to time\r\n");
-	// c_36(cb);   //append state 0 prompt to prompt buffer
+	
+	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
+	sys_save(f,cb->sys_ptr);	// write data to disk
+	fclose(f);
+
+	strcpy(cb->prompt_buffer, "channel ");
+	sprintf(numstr, "%d", cb->w_channel);
+	strcat(cb->prompt_buffer, numstr);
+	strcat(cb->prompt_buffer, " mode set to time\r\n");
+	c_36(cb);   //append state 0 prompt to prompt buffer
 
 	return 0;
 }
@@ -2512,10 +1443,10 @@ void cmd_fsm(_CMD_FSM_CB *cb)
 		cb->token_value = 37;
 		cb->token_type = 37;
 	}
-	else if (cb->token_type == 0){		//integer
+	else if (cb->token_type == 35){		//integer
 		sscanf(cb->token, "%u", &num);
 		cb->token_value = num;
-		printf("****hit interir\n\r");
+		// printf("****hit interir\n\r");
 		// n_ptr = &num;
 		// s_ptr = NULL;
 	}
