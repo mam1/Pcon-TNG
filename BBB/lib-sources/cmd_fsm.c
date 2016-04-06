@@ -886,7 +886,7 @@ int c_19(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/* set working schedule hour */
+/* set schedule hour */
 int c_20(_CMD_FSM_CB *cb)
 {
 	if ((cb->token_value > 23) || (cb->token_value < 0)) {
@@ -894,6 +894,7 @@ int c_20(_CMD_FSM_CB *cb)
 		return 1;
 	}
 
+	/* update control block */
 	cb->w_hours = cb->token_value;
 	strcpy(cb->w_hours_str, cb->token);
 
@@ -907,7 +908,7 @@ int c_20(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/* set working schedule minute */
+/* set schedule minute */
 int c_21(_CMD_FSM_CB *cb)
 {
 	char            temp[_PROMPT_BUFFER_SIZE];
@@ -917,7 +918,7 @@ int c_21(_CMD_FSM_CB *cb)
 		strcpy(cb->prompt_buffer, "  minute must be 0 - 59\r\n  enter minute > ");
 		return 1;
 	}
-	/* update schedule record */
+	/* update control block */
 	cb->w_minutes = cb->token_value;
 	strcpy(cb->w_minutes_str, cb->token);
 
@@ -937,20 +938,20 @@ int c_21(_CMD_FSM_CB *cb)
 /* set schedule record to on */
 int c_22(_CMD_FSM_CB *cb)
 {
-	// char            temp[_PROMPT_BUFFER_SIZE];
-	// /*set the state of the schedule record to on */
-	// cb->w_srec_state = 1;       //set working state to on
-	// if(up_sch_rec_state(&cb->w_sch, cb->w_day, cb->w_channel, cb->w_hours, cb->w_minutes, cb->w_srec_state)){
-	// 	printf("problem schedule record\n");
-	// 	return 1;
-	// }
+	char            temp[_PROMPT_BUFFER_SIZE];
 
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "editing schedule template: ");
-	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	// strcat(cb->prompt_buffer, "\r\n");
-	// strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
-	// strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
+	/*set the state of the schedule record to on */
+	add_tem_rec2(_TMPL_DAT *t_sch, int hour, int minute, int state, int temp, int humid)
+
+	cb->w_srec_state = 1;       //set working state to on
+
+
+	/* build prompt */
+	strcpy(cb->prompt_buffer, "editing schedule template: ");
+	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
+	strcat(cb->prompt_buffer, "\r\n");
+	strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
+	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
 	return 0;
 }
 
