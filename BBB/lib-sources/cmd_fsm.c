@@ -176,13 +176,13 @@ char    *STR_def[_CMD_STATES] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*                       0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27*/
-	/*  0  temp        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/*  1  *           */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/*  0  temp        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 26,  0,  0,  0},
+	/*  1  *           */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 27,  0,  0, 27},
 	/*  2  humid       */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/*  3  schedule    */  { 4,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/*  3  schedule    */  { 4,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0, 27},
 	/*  4  ?           */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
-	/*  5  clock       */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
-	/*  6  yes         */  { 0,  1,  0,  3,  4,  4,  4,  0,  0,  0,  0,  6,  4, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/*  5  clock       */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/*  6  yes         */  { 0,  1,  0,  3,  4,  4,  4,  0,  0,  0,  0,  6,  4, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0, 27},
 	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 	/*  8  replace     */  { 0,  1,  2,  3,  4,  5,  6,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/*  9  edit        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
@@ -201,17 +201,17 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 22  template    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 23  channel     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 24  load        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 25  set         */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
+	/* 25  set         */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/* 26  q           */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 27  done        */  { 0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 28  back        */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0},
-	/* 29  system      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
-	/* 30  debug       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0,  0,  0,  0,  0},
-	/* 31 disp_sys_sch */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 32 disp_wrk_sch */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 33 disp_sch_lib */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 34 disp_tml_lib */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 35  INT         */  { 1,  1,  3,  0,  8,  6, 11,  8,  9,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0,  0,  0,  0,  0},
+	/* 27  done        */  { 0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  4},
+	/* 28  back        */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0, 24, 24},
+	/* 29  system      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 30  debug       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 31 disp_sys_sch */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 32 disp_wrk_sch */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 33 disp_sch_lib */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 34 disp_tml_lib */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 35  INT         */  { 1,  1,  3,  0,  8,  6, 11,  8, 24,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0,  0,  0,  0,  0},
 	/* 36  STR         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 37  OTHER       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0}};
 
@@ -271,10 +271,10 @@ int c_49(_CMD_FSM_CB *); /* set channel sensor_id */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*          STATE          0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21    22    23    24    25    26    27  */
-	/*  0  temp        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  0  temp        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7},
 	/*  1  *           */  { c_7,  c_8,  c_8,  c_7,  c_7,  c_7,  c_7, c_31, c_32,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  2  humid       */  { c_7,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  3  schedule    */  { c_7,  c_8,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  2  humid       */  { c_7,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7},
+	/*  3  schedule    */  {c_28,  c_8,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  4  ?           */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
 	/*  5  clock       */  {c_40,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  6  yes         */  { c_7, c_34,  c_7,  c_7, c_34,  c_7, c_18, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_48,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -306,7 +306,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 32 disp_wrk_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 33 disp_sch_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 34 disp_tml_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_27,  c_7, c_20, c_29, c_30, c_35, c_33, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20,  c_7, c_20, c_29, c_21, c_35, c_33, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49,  c_7,  c_7,  c_7,  c_7,  c_0,  c_0},
 	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7, c_19,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7}};
 
@@ -496,7 +496,7 @@ void print_tlist(_CMD_FSM_CB *cb) {
 /* do nothing */
 int c_0(_CMD_FSM_CB *cb)
 {
-	cb->prompt_buffer[0] = '>';
+	cb->prompt_buffer[0] = '\0';
 	cb->prompt_buffer[1] = ' ';
 	cb->prompt_buffer[2] = '\0';
 	return 0;
@@ -889,48 +889,48 @@ int c_19(_CMD_FSM_CB *cb)
 /* set working schedule hour */
 int c_20(_CMD_FSM_CB *cb)
 {
-	// if ((cb->token_value > 23) || (cb->token_value < 0)) {
-	// 	strcpy(cb->prompt_buffer, "  hour must be 0 - 23\r\n  enter hour > ");
-	// 	return 1;
-	// }
+	if ((cb->token_value > 23) || (cb->token_value < 0)) {
+		strcpy(cb->prompt_buffer, "  hour must be 0 - 23\r\n  enter hour > ");
+		return 1;
+	}
 
-	// cb->w_hours = cb->token_value;
-	// strcpy(cb->w_hours_str, cb->token);
+	cb->w_hours = cb->token_value;
+	strcpy(cb->w_hours_str, cb->token);
 
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "editing schedule template: ");
+	/* build prompt */
+	strcpy(cb->prompt_buffer, "editing schedule: ");
 	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	// strcat(cb->prompt_buffer, " ");
-	// strcat(cb->prompt_buffer, cb->w_hours_str);
-	// strcat(cb->prompt_buffer, ":\r\n");
-	// strcat(cb->prompt_buffer, "  enter minute > ");
+	strcat(cb->prompt_buffer, " ");
+	strcat(cb->prompt_buffer, cb->w_hours_str);
+	strcat(cb->prompt_buffer, ":\r\n");
+	strcat(cb->prompt_buffer, "  enter minute > ");
 	return 0;
 }
 
 /* set working schedule minute */
 int c_21(_CMD_FSM_CB *cb)
 {
-	// char            temp[_PROMPT_BUFFER_SIZE];
+	char            temp[_PROMPT_BUFFER_SIZE];
 
-	// /* check value */
-	// if ((cb->token_value > 59) || (cb->token_value < 0)) {
-	// 	strcpy(cb->prompt_buffer, "  minute must be 0 - 59\r\n  enter minute > ");
-	// 	return 1;
-	// }
-	// /* update schedule record */
-	// cb->w_minutes = cb->token_value;
-	// strcpy(cb->w_minutes_str, cb->token);
+	/* check value */
+	if ((cb->token_value > 59) || (cb->token_value < 0)) {
+		strcpy(cb->prompt_buffer, "  minute must be 0 - 59\r\n  enter minute > ");
+		return 1;
+	}
+	/* update schedule record */
+	cb->w_minutes = cb->token_value;
+	strcpy(cb->w_minutes_str, cb->token);
 
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "editing schedule template: ");
-	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	// strcat(cb->prompt_buffer, "\r\n");
-	// strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
-	// strcat(cb->prompt_buffer, "\r\n  enter action for ");
-	// strcat(cb->prompt_buffer, cb->w_hours_str);
-	// strcat(cb->prompt_buffer, ":");
-	// strcat(cb->prompt_buffer, cb->w_minutes_str);
-	// strcat(cb->prompt_buffer, " > ");
+	/* build prompt */
+	strcpy(cb->prompt_buffer, "editing schedule template: ");
+	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
+	strcat(cb->prompt_buffer, "\r\n");
+	strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
+	strcat(cb->prompt_buffer, "\r\n  enter action for ");
+	strcat(cb->prompt_buffer, cb->w_hours_str);
+	strcat(cb->prompt_buffer, ":");
+	strcat(cb->prompt_buffer, cb->w_minutes_str);
+	strcat(cb->prompt_buffer, " > ");
 	return 0;
 }
 
@@ -1141,8 +1141,8 @@ int c_28(_CMD_FSM_CB *cb)
 	// printf("copy of the system schedule\r\n");
 	// disp_all_schedules(&cb->sdat_ptr->sys_sch);
 
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "\r\n  enter channel{N(0...7)|*},day{N(1...7)|*},template{N}  > ");
+	strcpy(cmd_fsm_cb.prompt_buffer, "enter command or time HH:MM");
+
 	return 0;
 }
 
