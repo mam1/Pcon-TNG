@@ -3,8 +3,8 @@
 
 /* version info */
 #define _major_version 			8
-#define _minor_version 			0
-#define _minor_revision 		0
+#define _minor_version 			2
+#define _minor_revision 		1
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
@@ -103,7 +103,10 @@
 #define _ON 			1
 #define _OFF 			0
 
+/* macros */
 #define handle_error(msg) \
    do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
-#endif
+
+
+#endif	//_SHARE_H_

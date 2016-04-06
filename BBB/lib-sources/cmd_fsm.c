@@ -297,7 +297,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 23  channel     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 24  load        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 25  set         */  { c_7,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3},
 	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_18, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 29  system      */  { c_7,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -534,7 +534,7 @@ int c_1(_CMD_FSM_CB *cb)
 	        for(ii=0;ii<((dots + 2)- strlen(keyword[i]));ii++)
 	            printf(".");
 	        printf(" %s",cmd_def(i, cb->state));
-	        if(i == 35)
+	        if((i==35)  || (i==36))
 	            printf(" (%s)",INT_def[cb->state]);
 	        printf("\r\n");
 		}
@@ -573,7 +573,7 @@ int c_4(_CMD_FSM_CB *cb)
 		cb->w_hours = 0;
 		strcpy(cb->prompt_buffer, "enter action for channel ");
 		strcat(cb->prompt_buffer, cb->token);
-		strcat(cb->prompt_buffer, "\n\r> ");
+		// strcat(cb->prompt_buffer, "\n\r> ");
 
 #ifdef _TRACE
 	sprintf(trace_buf, "c_4 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
@@ -614,24 +614,31 @@ int c_5(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, "\r\n");
-	c_36(cb);   //append state 0 prompt to prompt buffer
+	c_34(cb);   //append state 0 prompt to prompt buffer
 	return 0;
 }
 /* status - display channel data */
 int c_6(_CMD_FSM_CB *cb)
 {
 	int         i;
-	printf("  channel  state   mode  sensor id     name\n\r");
-	printf("  ----------------------------------------------------------\n\r");
+	printf("  channel  state    mode  sensor id     name\n\r");
+	printf("  ----------------------------------------------------------");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
-		printf("   <%2i> - ", i);
+		printf("\n\r   <%2i> - ", i);
 		printf(" %s    %s   ", onoff[cb->sys_ptr->c_data[i].c_state], c_mode[cb->sys_ptr->c_data[i].c_mode]);
-		if (cb->sys_ptr->c_data[i].c_mode == 2)
-			printf("  %i     ", cb->sys_ptr->c_data[i].sensor_id);
-		else if (cb->sys_ptr->c_data[i].c_mode == 3)
-			printf(" (%i:%i)", cb->sys_ptr->c_data[i].on_sec, cb->sys_ptr->c_data[i].off_sec);
-		printf("%s\r\n",cb->sys_ptr->c_data[i].name);
-
+		switch(cb->sys_ptr->c_data[i].c_mode) {
+		   	case 2:	// time & sensor
+		      	printf("  %i     ", cb->sys_ptr->c_data[i].sensor_id);
+		      	break; 
+			
+		   	case 3:	// cycle
+		      	printf(" (%i:%i)", cb->sys_ptr->c_data[i].on_sec, cb->sys_ptr->c_data[i].off_sec);
+		      	break; 
+		  
+		   	default : 
+		   		printf("          ");
+		}
+		printf("%s", cb->sys_ptr->c_data[i].name);
 	}
 	c_34(cb);  // state 0 prompt
 	return 0;
@@ -686,7 +693,7 @@ int c_9(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n");
-	c_36(cb);   //append state 0 prompt to prompt buffer
+	c_34(cb);   //append state 0 prompt to prompt buffer
 
 	return 0;
 }
@@ -713,7 +720,7 @@ int c_10(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, " turned off and mode set to manual\r\n");
-	c_36(cb);   //append state 0 prompt to prompt buffer
+	c_34(cb);   //append state 0 prompt to prompt buffer
 
 	return 0;
 }
@@ -741,28 +748,33 @@ int c_11(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, " mode set to time\r\n");
-	c_36(cb);   //append state 0 prompt to prompt buffer
+	c_34(cb);   //append state 0 prompt to prompt buffer
 
 	return 0;
 }
 /* set channel control mode to time and sensor */
 int c_12(_CMD_FSM_CB *cb)
 {
-// 	char        numstr[2];
+	char        numstr[2];
+	FILE 		*f;
 
-// 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-// 	ipc_ptr->c_dat[cb->w_channel].c_mode = 2;
-// 	ipc_ptr->force_update = 1;					// force relays to be updated
+	cb->sys_ptr->c_data[cb->w_channel].c_mode = 2;
+	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
-// 	ipc_sem_free(semid, &sb);					// free lock on shared memory
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-// 	sdat.c_data[cb->w_channel].c_mode = 2;
-// 	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
-// 	strcpy(cb->prompt_buffer, "channel ");
-// 	sprintf(numstr, "%d", cb->w_channel);
-// 	strcat(cb->prompt_buffer, numstr);
-// 	strcat(cb->prompt_buffer, " mode set to time & sensor\r\n enter sensor id number > ");
+	// sdat.c_data[cb->w_channel].c_mode = 2;
+
+	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
+	sys_save(f,cb->sys_ptr);	// write data to disk
+	fclose(f);
+
+	strcpy(cb->prompt_buffer, "channel ");
+	sprintf(numstr, "%d", cb->w_channel);
+	strcat(cb->prompt_buffer, numstr);
+	strcat(cb->prompt_buffer, " mode set to time & sensor\r\nenter sensor id number");
 	return 0;
 }
 /* set channel control mode to cycle */
@@ -1236,10 +1248,8 @@ int c_33(_CMD_FSM_CB *cb)
 /* state 0 prompt */
 int c_34(_CMD_FSM_CB *cb)
 {
-
-
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter a command\r\n> ");
+	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter a command");
 	return 0;
 }
 
@@ -1254,13 +1264,11 @@ int c_35(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/* appenf state 0 prompt to prompt buffer */
+/* append state 0 prompt to prompt buffer */
 int c_36(_CMD_FSM_CB *cb)
 {
-
-
-	// /* build prompt */
-	// strcat(cmd_fsm_cb.prompt_buffer, "\r\nenter a command\r\n> ");
+	/* build prompt */
+	strcat(cmd_fsm_cb.prompt_buffer, "\r\nenter a command");
 	return 0;
 }
 
@@ -1419,21 +1427,26 @@ int c_48(_CMD_FSM_CB *cb)
 /* set sensor id  */
 int c_49(_CMD_FSM_CB *cb)
 {
-	// char        numstr[2];
+	char        numstr[2];
+	FILE 		*f;
 
-	// ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
-	// ipc_ptr->c_dat[cb->w_channel].sensor_id = cb->token_value; 	// update ipc data
-	// ipc_ptr->force_update = 1;									// force relays to be updated
-	// ipc_sem_free(semid, &sb);									// free lock on shared memory
+	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
+	cb->sys_ptr->c_data[cb->w_channel].sensor_id = cb->token_value;
+	cb->ipc_ptr->force_update  = 1;									// force relays to be updated
+	ipc_sem_free(semid, &sb);									// free lock on shared memory
+
+	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
+	sys_save(f,cb->sys_ptr);	// write data to disk
+	fclose(f);
 	
-	// /* build prompt */
-	// strcpy(cmd_fsm_cb.prompt_buffer, "\r\nsensor id for channel ");
-	// sprintf(numstr, "%d set to ", cb->w_channel);
-	// strcat(cb->prompt_buffer, numstr);
-	// sprintf(numstr, "%d", ipc_ptr->c_dat[cb->w_channel].sensor_id);
-	// strcat(cb->prompt_buffer, numstr);
+	/* build prompt */
+	strcpy(cmd_fsm_cb.prompt_buffer, "sensor id for channel ");
+	sprintf(numstr, "%d set to ", cb->w_channel);
+	strcat(cb->prompt_buffer, numstr);
+	sprintf(numstr, "%d", cb->sys_ptr->c_data[cb->w_channel].sensor_id);
+	strcat(cb->prompt_buffer, numstr);
 	// strcat(cb->prompt_buffer, "\r\n");
-	// c_36(cb);		
+	c_36(cb);		
 	return 0;
 }
 

@@ -54,13 +54,13 @@ char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 char *onoff[2] = {"off", " on"};
 char *con_mode[3] = {"manual", "  time", "time & sensor"};
 char *sch_mode[2] = {"day", "week"};
-char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
+char *c_mode[4] = {"manual", "  time", " sensor", " cycle"};
 
 /***************************** support routines ********************************/
 
 /* prompt for user input */
-void prompt(void) {
-	printf("%s", cmd_fsm_cb.prompt_buffer);
+void prompt(int s) {
+	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer,s);
 	return;
 }
 
@@ -95,6 +95,8 @@ int main(void) {
 	if (trace_flag == false)
 		printf(" program trace disabled\n");
 
+	
+
 	/************************ initializations ****************************/
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "starting initializations", trace_flag);
@@ -121,11 +123,14 @@ int main(void) {
     	printf("*** there are different configurations in the system file and in the application\n");
     	printf("\n  ignor problem? <y>|<n>: ");
 		if (getchar() == 'y') {
-			ipc_ptr->sys_data.config.major_version = _major_version;
-			ipc_ptr->sys_data.config.minor_version = _minor_version;
-			ipc_ptr->sys_data.config.minor_revision = _minor_revision;
-			ipc_ptr->force_update = 1;			// force daemon to update relays
 
+		    ipc_ptr->sys_data.config.major_version = _major_version;
+		    ipc_ptr->sys_data.config.minor_version = _minor_version;
+		    ipc_ptr->sys_data.config.minor_revision = _minor_revision;
+		    ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
+		    ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
+		    ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
+		    ipc_ptr->sys_data.config.states = _CMD_STATES;
 
 			if(sys_save(sys_file,&ipc_ptr->sys_data)){
     			printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
@@ -193,7 +198,7 @@ int main(void) {
 	sys_disp(&ipc_ptr->sys_data);	        //display system info on serial terminal
 	printf("\r\n\n");
 	/* set initial prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "enter a command\r\n> ");
+	strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
 
 	/************************************************************/
 	/**************** start main processing loop ****************/
@@ -208,7 +213,7 @@ int main(void) {
 		}
 		if (prompted == false) {				//display prompt if necessary
 			prompted = true;
-			prompt();
+			prompt(cmd_fsm_cb.state);
 		}
 		c = fgetc(stdin);
 		switch (c) {
@@ -224,7 +229,7 @@ int main(void) {
 				work_buffer[i] = '\0';
 			char_fsm_reset();						//reset char fsm
 			prompted = false;						//force a prompt
-			strcpy(cmd_fsm_cb.prompt_buffer, "command processor reset\r\n\nenter a command\r\n> ");
+			strcpy(cmd_fsm_cb.prompt_buffer, "command processor reset\nenter a command\n");
 			break;
 
 	/* CR */	case _CR:

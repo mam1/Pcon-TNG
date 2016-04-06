@@ -20,7 +20,7 @@ FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
  
     sys_file = fopen(fname,"r+");
     if(sys_file != NULL){
-        printf(" system data file <%s> opened\r\n",fname);
+        // printf(" system data file <%s> opened\r\n",fname);
         return sys_file;
     }
 
@@ -90,33 +90,63 @@ int sys_save(FILE *sd ,_SYS_DAT2 *sdat){
 
 int sys_comp(_SYS_DAT2 *sdat){
 
+    if(trace_flag == true) trace2(_TRACE_FILE_NAME, "sys_comp", sdat);
+
     if(sdat->config.major_version != _major_version){
         printf("\n*** major verions do not match\n");
+        if(trace_flag == true){
+            trace1(_TRACE_FILE_NAME, "sys_comp", "major verions do not match");
+            trace3(_TRACE_FILE_NAME, "sys_comp", "major version = ",_major_version);
+        }
         return 1;
     }
     if(sdat->config.minor_version != _minor_version){
         printf("\n*** minor versions do not match\n");
+        if(trace_flag == true){
+            trace1(_TRACE_FILE_NAME, "sys_comp", "minor verions do not match");
+            trace3(_TRACE_FILE_NAME, "sys_comp", "minor version = ",_minor_version);
+        }
         return 1;
     }
     if(sdat->config.minor_revision != _minor_revision){
         printf("\n*** minor revisions do nto match\n");
+        if(trace_flag == true){
+            trace1(_TRACE_FILE_NAME, "sys_comp", "minor revisions do not match");
+            trace3(_TRACE_FILE_NAME, "sys_comp", "minor revision = ",_minor_revision);
+        }
         return 1;
     }
     if(sdat->config.channels != _NUMBER_OF_CHANNELS){
         printf("\n*** number of channels do not match\n");
+        if(trace_flag == true){
+            trace1(_TRACE_FILE_NAME, "sys_comp", "number of channels do not match");
+            trace3(_TRACE_FILE_NAME, "sys_comp", "channels = ",_NUMBER_OF_CHANNELS);
+        }
         return 1;
     }
     if(sdat->config.sensors != _NUMBER_OF_SENSORS){
         printf("\n*** number of sensors do not match\n");
+        if(trace_flag == true){
+            trace1(_TRACE_FILE_NAME, "sys_comp", "number of sensors do not match");
+            trace3(_TRACE_FILE_NAME, "sys_comp", "sensors = ",_NUMBER_OF_SENSORS); 
+        }
         return 1;
     }
     if(sdat->config.commands != _CMD_TOKENS){
         printf("\n*** number of commands do not match\n");
+        if(trace_flag == true){
+            trace1(_TRACE_FILE_NAME, "sys_comp", "number of commands do not match");
+            trace3(_TRACE_FILE_NAME, "sys_comp", "tokens = ",_CMD_TOKENS);
+        }
         return 1;
     }
     if(sdat->config.states != _CMD_STATES){
         printf("\n*** number of states do not match\n");
-        return 1;
+        if(trace_flag == true){
+            trace1(_TRACE_FILE_NAME, "sys_comp", "number of states do not match");
+            trace3(_TRACE_FILE_NAME, "sys_comp", "states = ",_CMD_STATES);
+        }
+    return 1;
     }
 
     return 0;

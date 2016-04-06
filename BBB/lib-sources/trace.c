@@ -6,6 +6,8 @@
  */
 
 #include <stdio.h>
+#include "shared.h"
+#include "typedefs.h"
 #include "trace.h"
 
 int trace_on(char *name, int *flag) {
@@ -50,3 +52,34 @@ void strace(char *name, char *message,int flag){		//(trace filename, message, tr
 	return;
 }
 
+void trace1(char *name, char *caller, char *message){	//(trace filename, calling module, pointer to system data sturcture)
+	FILE *tracef;
+	tracef = fopen(name, "a");
+	fprintf(tracef,"%s: %s\n",caller,message);
+	fclose(tracef);
+	return;
+}
+
+void trace2(char *name, char *caller, _SYS_DAT2 *s){
+	FILE *tracef;
+	tracef = fopen(name, "a");
+	fprintf(tracef,"%s: major_version = %i, minor_version=%i, minor_revision=%i, channels=%i, sensors=%i, commands=%i, states=%i\n",
+		    caller,
+		    s->config.major_version,
+		    s->config.minor_version,
+		    s->config.minor_revision,
+		    s->config.channels,
+		    s->config.sensors,
+		    s->config.commands,
+		    s->config.states);
+	fclose(tracef);
+	return;
+}
+
+void trace3(char *name, char *caller, char *message, int number){
+	FILE *tracef;
+	tracef = fopen(name, "a");
+	fprintf(tracef,"%s: %s %i\n",caller,message,number);
+	fclose(tracef);
+	return;
+}

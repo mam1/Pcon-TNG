@@ -179,7 +179,6 @@ int ipc_sem_lock(int semid, struct sembuf *sb){
 
 #ifdef _TRACE
     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory locked\n", trace_flag);
-    printf(" ** %i locked\r\n",semid);
 #endif	
 
 	return 0;
@@ -196,7 +195,6 @@ int ipc_sem_free(int semid, struct sembuf *sb){
 
 #ifdef _TRACE
     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory unlocked\n", trace_flag);
-    printf(" ** %i unlocked\r\n",semid);
 #endif  	
 
 	return 0;

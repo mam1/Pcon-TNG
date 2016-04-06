@@ -81,7 +81,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 33 */    "display debug data",
 	/* 34 */	"",
 	/* 35 */	"integer",
-	/* 36 */	"alpha numeric string enclosed in quotes",
+	/* 36 */	"channel name enclosed in quotes",
 	/* 37 */	"any unrecognized token"
 },
 {	// state 2
