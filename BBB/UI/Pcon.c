@@ -255,6 +255,11 @@ int main(void) {
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "remove character from input buffer", trace_flag);
 #endif
 			break;
+	/* up arrow */ case _UPA:
+#ifdef _TRACE
+			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _UPA", trace_flag);
+#endif
+			break;		
 
 	/* OTHER */ default:
 			fputc(c, stdout);       				// echo char

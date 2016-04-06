@@ -212,7 +212,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 33 disp_sch_lib */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 34 disp_tml_lib */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 35  INT         */  { 1,  1,  3,  0,  8,  6, 11,  8,  9,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 36  STR         */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/* 36  STR         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 37  OTHER       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0}};
 
 /*cmd processor functions */
@@ -307,7 +307,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 33 disp_sch_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 34 disp_tml_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_27,  c_7, c_20, c_29, c_30, c_35, c_33, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 36  STR         */  { c_7,  c_7,  c_7,  c_7, c_19,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7, c_19,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7}};
 
 /*************** start fsm support functions ********************/
@@ -338,7 +338,7 @@ int cmd_type(char *c)
 		return 3;
 	/* test for a quoted string*/
 	if (*c == _QUOTE)
-		return 1;
+		return 36;
 	/* test for a integer */
 	if (is_valid_int(c))
 		return 35;
@@ -590,17 +590,31 @@ int c_4(_CMD_FSM_CB *cb)
 /* set channel name for working channel */
 int c_5(_CMD_FSM_CB *cb)
 {
-	// char        numstr[2];
+	char        numstr[2];
+	FILE 		*f;
 
-	// strcpy(sdat.c_data[cb->w_channel].name, dequote(cb->token));
-	// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
-	//         sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "name set for channel ");
-	// sprintf(numstr, "%d", cb->w_channel);
-	// strcat(cb->prompt_buffer, numstr);
-	// strcat(cb->prompt_buffer, "\r\n");
-	// c_36(cb);   //append state 0 prompt to prompt buffer
+	#ifdef _TRACE
+	sprintf(trace_buf, "c_5 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+	sprintf(trace_buf, "c_4 set working channel name to  %s\n", cb->token);
+	#endif
+	
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+
+	strcpy(cb->sys_ptr->c_data[cb->w_channel].name, dequote(cb->token));// update ipc data
+
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
+
+	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
+	sys_save(f,cb->sys_ptr);	// write data to disk
+	fclose(f);
+
+	/* build prompt */
+	strcpy(cb->prompt_buffer, "name set for channel ");
+	sprintf(numstr, "%d", cb->w_channel);
+	strcat(cb->prompt_buffer, numstr);
+	strcat(cb->prompt_buffer, "\r\n");
+	c_36(cb);   //append state 0 prompt to prompt buffer
 	return 0;
 }
 /* status - display channel data */

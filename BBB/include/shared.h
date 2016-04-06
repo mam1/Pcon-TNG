@@ -41,6 +41,7 @@
 #define _EOF		0
 #define _NO_CHAR    255
 #define _DELIMITER	28	
+#define _UPA		124
 
 /* buffers */
 #define _INPUT_BUFFER_SIZE		128
