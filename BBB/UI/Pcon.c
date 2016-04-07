@@ -64,6 +64,11 @@ void prompt(int s) {
 	return;
 }
 
+/* load buffer with previous command */
+void up_arrow(void){
+	return;
+}
+
 /********************************************************************/
 /************************** start main  *****************************/
 /********************************************************************/
@@ -223,6 +228,12 @@ int main(void) {
 #ifdef _TRACE
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "escape entered", trace_flag);
 #endif
+			/* detect up arrow */
+			c = fgetc(stdin);		// skip next character
+			c = fgetc(stdin);
+			if(c == 'A') up_arrow();
+
+			/* escape entered */
 			while (pop_cmd_q(cmd_fsm_cb.token)); 	//empty command queue
 			cmd_fsm_reset(&cmd_fsm_cb);				//reset command fsm
 			for (i = 0; i < _INPUT_BUFFER_SIZE; i++)//clean out work buffer
