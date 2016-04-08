@@ -112,9 +112,9 @@ typedef struct {
 	int 			w_temp;
 	int 			w_humid;
 	int 			w_sensor_id;
-
+	_TMPL_DAT 		w_template_buffer;
 	_S_TAB        	w_sch, *w_sch_ptr;
-	_S_CHAN         w_schedule;
+	_S_CHAN         w_tbuff;
 	int      		w_schedule_number;
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
 	int      		w_template_number;

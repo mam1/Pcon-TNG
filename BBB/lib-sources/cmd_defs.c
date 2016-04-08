@@ -1,6 +1,16 @@
+#include <sys/sem.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+#include <errno.h>
+#include <stdio.h>
+#include <unistd.h>		//sleep
+#include <stdint.h>		//uint_8, uint_16, uint_32, etc.
+#include <ctype.h> 		//isalnum, tolower
+#include <stdlib.h>
+#include <fcntl.h>
+#include <string.h>
 #include "shared.h"
 
-char *cmd_def(int token_number, int state){
 
 /* command definitions */
 char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
@@ -40,7 +50,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
 	/* 34 */	"",
-	/* 35 */	"integer",
+	/* 35 */	"channel number (0 - 15)",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
 },
@@ -844,7 +854,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
 },
-{
+{// state 21
 	/*  0 temp        */    "temperature",
 	/*  1 *           */    "",
 	/*  2 humid       */    "",
@@ -880,7 +890,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
 	/* 34 */	"",
-	/* 35 */	"integer",
+	/* 35 */	"sensor id",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
 },
@@ -1085,5 +1095,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 }};
 
-return keyword_defs[state][token_number];
+
+char *cmd_def(int state, int token_number){
+
+	// printf("cmd_def called with token %i and state %i\r\n", token_number, state);
+
+	return keyword_defs[state][token_number];
 }

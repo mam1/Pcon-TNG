@@ -272,9 +272,9 @@ int c_49(_CMD_FSM_CB *); /* set channel sensor_id */
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*          STATE          0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21    22    23    24    25    26    27  */
 	/*  0  temp        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7},
-	/*  1  *           */  { c_7,  c_8,  c_8,  c_7,  c_7,  c_7,  c_7, c_31, c_32,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  2  humid       */  { c_7,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7},
-	/*  3  schedule    */  {c_28,  c_8,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  1  *           */  { c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7, c_31, c_32,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  2  humid       */  { c_7,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7},
+	/*  3  schedule    */  {c_28,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  4  ?           */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
 	/*  5  clock       */  {c_40,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  6  yes         */  { c_7, c_34,  c_7,  c_7, c_34,  c_7, c_18, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_48,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -283,8 +283,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  9  edit        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 10  delete      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_26,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 11  zero        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 13  off         */  { c_7, c_10,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_22,  c_7,  c_7,  c_7},
+	/* 13  off         */  { c_7, c_10,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7},
 	/* 14  clear       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 15  status      */  { c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6},
 	/* 16  time        */  { c_2, c_11,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2},
@@ -300,8 +300,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3},
 	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_18, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
-	/* 29  system      */  { c_7,  c_7, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 30  debug       */  { c_7,  c_7, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 29  system      */  { c_7,  c_7, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 30  debug       */  { c_7,  c_7, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 31 disp_sys_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 32 disp_wrk_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 33 disp_sch_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -510,6 +510,7 @@ int c_1(_CMD_FSM_CB *cb)
 	printf("\r\ncurrent state %i \n", cb->state);
 	printf("\r\ncommands valid in any state\r\n  ESC .... reset command processor\r\n");
 	printf("  time ... display time and date read from the real time clock\r\n");
+	printf("  status . display channel state and data for all channels\r\n");
 	printf("  ? ...... display current state and list all valid commands\r\n");
 	printf("  q ...... terminate the application\r\n");
 	printf("\r\ncommands valid in any state other than state 0\r\n");
@@ -527,7 +528,8 @@ int c_1(_CMD_FSM_CB *cb)
 	/* print list of valid commands */
 	for (i = 0; i < _CMD_TOKENS; i++) {
 		if((cmd_action[i][cb->state] == c_8) || (cmd_action[i][cb->state] == c_7) || (cmd_action[i][cb->state] == c_0) 
-			|| (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3) || (cmd_action[i][cb->state] == c_34))
+			|| (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3) || (cmd_action[i][cb->state] == c_34)
+			|| (cmd_action[i][cb->state] == c_2) || (cmd_action[i][cb->state] == c_6))
 			continue;
 		else {
 			printf("  %s ", keyword[i]);
@@ -535,7 +537,7 @@ int c_1(_CMD_FSM_CB *cb)
 	            printf(".");
 	        // printf(" %s",cmd_def(i, cb->state));
 	        // if((i==35)  || (i==36))
-	        printf("%s",cmd_def(cb->state, cb->token_value));
+	        printf("%s",cmd_def(cb->state, i));
 	        printf("\r\n");
 		}
 	}
@@ -931,7 +933,7 @@ int c_21(_CMD_FSM_CB *cb)
 	strcat(cb->prompt_buffer, cb->w_hours_str);
 	strcat(cb->prompt_buffer, ":");
 	strcat(cb->prompt_buffer, cb->w_minutes_str);
-	strcat(cb->prompt_buffer, " > ");
+	// strcat(cb->prompt_buffer, " > ");
 	return 0;
 }
 
@@ -939,9 +941,30 @@ int c_21(_CMD_FSM_CB *cb)
 int c_22(_CMD_FSM_CB *cb)
 {
 	char            temp[_PROMPT_BUFFER_SIZE];
+	_S_CHAN 		hold;
+	int 			i;
+	int 			key;
+	_S_REC 			thold;
+
+	key = cb->w_hour * 60 + cb->w_minute;
 
 	/*set the state of the schedule record to on */
-	// add_tem_rec2(_TMPL_DAT *t_sch, int hour, int minute, int state, int temp, int humid)
+
+	if(cb->w_tbuff.rcnt < 1){
+		// add record
+		return 0;
+	}
+
+	for(i=0;i<cb->w_tbuff.rcnt){
+
+		if (cb->tbuff.rec[i] == key{
+
+
+
+		} )
+	}
+
+	up_templ_state(cb->w_tbuff, cb->w_hour, cb->w_minute, cb->w_state);
 
 	cb->w_srec_state = 1;       //set working state to on
 

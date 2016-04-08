@@ -148,7 +148,7 @@ int add_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute, int st
     return 1;
 }
 
-/* update state in schedule record */
+/* update state in template record */
 int up_sch_rec_state(_S_TAB *sch, int day, int channel, int hour, int minute, int state){
     _S_REC              *hrec_ptr, hrec;
 
