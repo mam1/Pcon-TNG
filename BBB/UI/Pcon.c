@@ -22,6 +22,7 @@
 #include "ipc.h"
 #include "sys_dat.h"
 #include "sch.h"
+#include "cmd_defs.h"
 
 /******************************** globals **************************************/
 int				trace_flag;							//control program trace
@@ -66,6 +67,8 @@ void prompt(int s) {
 
 /* load buffer with previous command */
 void up_arrow(void){
+
+	printf("up arrow detected\n\r");
 	return;
 }
 
@@ -79,7 +82,7 @@ int main(void) {
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
 	FILE 			*sys_file;
-	char 			*command_buffer[];	//
+	// char 			*command_buffer[];	//
 
 	/*********************** setup console *******************************/
 	printf("\033\143"); 				//clear the terminal screen, preserve the scroll back
@@ -232,10 +235,12 @@ int main(void) {
 			/* detect up arrow */
 			c = fgetc(stdin);		// skip next character
 			c = fgetc(stdin);
-			if(c == 'A') up_arrow(){
+			if(c == 'A') {
+				up_arrow();
 #ifdef _TRACE
-			tr
-			break;
+			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "up arrow entered", trace_flag);
+#endif
+				break;
 			}
 
 			/* escape entered */

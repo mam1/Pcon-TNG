@@ -5,10 +5,10 @@ char *cmd_def(int token_number, int state){
 /* command definitions */
 char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	// state 0
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -45,10 +45,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 { 	// state 1
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -85,10 +85,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {	// state 2
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -125,10 +125,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {	// state 3
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -165,10 +165,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {	// state 4
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -200,15 +200,15 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
 	/* 34 */	"",
-	/* 35 */	"integer",
+	/* 35 */	"schedule record hour",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
 },
 {	// state 5
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -245,10 +245,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {	// state 6
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -285,10 +285,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -325,10 +325,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -365,10 +365,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -405,10 +405,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -445,10 +445,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -485,10 +485,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -525,10 +525,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -565,10 +565,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -605,10 +605,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -645,10 +645,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -685,10 +685,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -725,10 +725,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -765,10 +765,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -805,10 +805,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -845,10 +845,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -885,10 +885,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -925,10 +925,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -965,10 +965,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -1005,10 +1005,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1*           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",
@@ -1045,10 +1045,10 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 37 */	"any unrecognized token"
 },
 {
-	/*  0 */    "temperature",
-	/*  1 */    "",
-	/*  2 */    "",
-	/*  3 */    "maintain system schedule",
+	/*  0 temp        */    "temperature",
+	/*  1 *           */    "",
+	/*  2 humid       */    "",
+	/*  3 schedule    */    "maintain system schedule",
 	/*  4 */    "display all commands valid in current state",
 	/*  5 */    "set the real time clock",
 	/*  6 */    "send a ping to the C3",

@@ -109,69 +109,69 @@ char    *keyword[_CMD_TOKENS] = {
 };
 
 
-/* state specific command definitions for INT */
-char    *INT_def[_CMD_STATES] = {
-	/*  0 */    "channel number",
-	/*  1 */    "",
-	/*  2 */    "on seconds",
-	/*  3 */    "off seconds",
-	/*  4 */    "template number",
-	/*  5 */    "",
-	/*  6 */    "hour",
-	/*  7 */    "day number",
-	/*  8 */    "channel number",
-	/*  9 */    "template number",
-	/* 10 */    "",
-	/* 11 */    "minute",
-	/* 12 */    "",
-	/* 13 */    "hour",
-	/* 14 */    "minute",
-	/* 15 */    "second",
-	/* 16 */    "day of the week",
-	/* 17 */    "date",
-	/* 18 */    "month",
-	/* 19 */    "year",
-	/* 20 */    "",
-	/* 21 */    "",
-	/* 22 */    "display",
-	/* 23 */    "save schedule template",
-	/* 24 */    "edit schedule template library",
-	/* 25 */    "channel",
-	/* 26 */    "load",
-	/* 27 */    "unrecognized command"
-};
+// /* state specific command definitions for INT */
+// char    *INT_def[_CMD_STATES] = {
+// 	/*  0 */    "channel number",
+// 	/*  1 */    "",
+// 	/*  2 */    "on seconds",
+// 	/*  3 */    "off seconds",
+// 	/*  4 */    "template number",
+// 	/*  5 */    "",
+// 	/*  6 */    "hour",
+// 	/*  7 */    "day number",
+// 	/*  8 */    "channel number",
+// 	/*  9 */    "template number",
+// 	/* 10 */    "",
+// 	/* 11 */    "minute",
+// 	/* 12 */    "",
+// 	/* 13 */    "hour",
+// 	/* 14 */    "minute",
+// 	/* 15 */    "second",
+// 	/* 16 */    "day of the week",
+// 	/* 17 */    "date",
+// 	/* 18 */    "month",
+// 	/* 19 */    "year",
+// 	/* 20 */    "",
+// 	/* 21 */    "",
+// 	/* 22 */    "display",
+// 	/* 23 */    "save schedule template",
+// 	/* 24 */    "edit schedule template library",
+// 	/* 25 */    "channel",
+// 	/* 26 */    "load",
+// 	/* 27 */    "unrecognized command"
+// };
 
-/* state specific command definitions for STR */
-char    *STR_def[_CMD_STATES] = {
-	/*  0 */    "",
-	/*  1 */    "channel name",
-	/*  2 */    "",
-	/*  3 */    "",
-	/*  4 */    "template name",
-	/*  5 */    "",
-	/*  6 */    "",
-	/*  7 */    "",
-	/*  8 */    "",
-	/*  9 */    "",
-	/* 10 */    "",
-	/* 11 */    "",
-	/* 12 */    "",
-	/* 13 */    "",
-	/* 14 */    "",
-	/* 15 */    "",
-	/* 16 */    "",
-	/* 17 */    "",
-	/* 18 */    "",
-	/* 19 */    "",
-	/* 20 */    "",
-	/* 21 */    "",
-	/* 22 */    "",
-	/* 23 */    "",
-	/* 24 */    "",
-	/* 25 */    "",
-	/* 26 */    "",
-	/* 27 */    ""
-};
+// /* state specific command definitions for STR */
+// char    *STR_def[_CMD_STATES] = {
+// 	/*  0 */    "",
+// 	/*  1 */    "channel name",
+// 	/*  2 */    "",
+// 	/*  3 */    "",
+// 	/*  4 */    "template name",
+// 	/*  5 */    "",
+// 	/*  6 */    "",
+// 	/*  7 */    "",
+// 	/*  8 */    "",
+// 	/*  9 */    "",
+// 	/* 10 */    "",
+// 	/* 11 */    "",
+// 	/* 12 */    "",
+// 	/* 13 */    "",
+// 	/* 14 */    "",
+// 	/* 15 */    "",
+// 	/* 16 */    "",
+// 	/* 17 */    "",
+// 	/* 18 */    "",
+// 	/* 19 */    "",
+// 	/* 20 */    "",
+// 	/* 21 */    "",
+// 	/* 22 */    "",
+// 	/* 23 */    "",
+// 	/* 24 */    "",
+// 	/* 25 */    "",
+// 	/* 26 */    "",
+// 	/* 27 */    ""
+// };
 
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
@@ -280,7 +280,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  6  yes         */  { c_7, c_34,  c_7,  c_7, c_34,  c_7, c_18, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_48,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  7  cancel      */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/*  8  replace     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_39,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  9  edit        */  { c_7,  c_7,  c_7,  c_7, c_28,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  9  edit        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 10  delete      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_26,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 11  zero        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -300,14 +300,14 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3},
 	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_18, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
-	/* 29  system      */  { c_7,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 30  debug       */  { c_7,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 29  system      */  { c_7,  c_7, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 30  debug       */  { c_7,  c_7, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7, c_37, c_37, c_37, c_37, c_37, c_37, c_37, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 31 disp_sys_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 32 disp_wrk_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 33 disp_sch_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 34 disp_tml_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20,  c_7, c_20, c_29, c_21, c_35, c_33, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49,  c_7,  c_7,  c_7,  c_7,  c_0,  c_0},
-	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7, c_19,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7}};
 
 /*************** start fsm support functions ********************/
@@ -531,11 +531,11 @@ int c_1(_CMD_FSM_CB *cb)
 			continue;
 		else {
 			printf("  %s ", keyword[i]);
-	        for(ii=0;ii<((dots + 2)- strlen(keyword[i]));ii++)
+	        for(ii=0;ii<((dots + 2) - strlen(keyword[i]));ii++)
 	            printf(".");
-	        printf(" %s",cmd_def(i, cb->state));
-	        if((i==35)  || (i==36))
-	            printf(" (%s)",INT_def[cb->state]);
+	        // printf(" %s",cmd_def(i, cb->state));
+	        // if((i==35)  || (i==36))
+	        printf("%s",cmd_def(cb->state, cb->token_value));
 	        printf("\r\n");
 		}
 	}
@@ -941,7 +941,7 @@ int c_22(_CMD_FSM_CB *cb)
 	char            temp[_PROMPT_BUFFER_SIZE];
 
 	/*set the state of the schedule record to on */
-	add_tem_rec2(_TMPL_DAT *t_sch, int hour, int minute, int state, int temp, int humid)
+	// add_tem_rec2(_TMPL_DAT *t_sch, int hour, int minute, int state, int temp, int humid)
 
 	cb->w_srec_state = 1;       //set working state to on
 
