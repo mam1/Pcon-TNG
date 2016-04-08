@@ -79,6 +79,7 @@ int main(void) {
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
 	FILE 			*sys_file;
+	char 			*command_buffer[];	//
 
 	/*********************** setup console *******************************/
 	printf("\033\143"); 				//clear the terminal screen, preserve the scroll back
@@ -231,7 +232,11 @@ int main(void) {
 			/* detect up arrow */
 			c = fgetc(stdin);		// skip next character
 			c = fgetc(stdin);
-			if(c == 'A') up_arrow();
+			if(c == 'A') up_arrow(){
+#ifdef _TRACE
+			tr
+			break;
+			}
 
 			/* escape entered */
 			while (pop_cmd_q(cmd_fsm_cb.token)); 	//empty command queue
@@ -269,11 +274,6 @@ int main(void) {
 			*work_buffer_ptr = '\0';
 #ifdef _TRACE
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "remove character from input buffer", trace_flag);
-#endif
-			break;
-	/* up arrow */ case _UPA:
-#ifdef _TRACE
-			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _UPA", trace_flag);
 #endif
 			break;		
 
