@@ -207,7 +207,7 @@ int main(void) {
 	sys_disp(&ipc_ptr->sys_data);	        //display system info on serial terminal
 	printf("\r\n\n");
 	/* set initial prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
+	strcpy(cmd_fsm_cb.prompt_buffer, " enter a command");
 
 	/************************************************************/
 	/**************** start main processing loop ****************/

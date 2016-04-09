@@ -68,7 +68,9 @@ typedef struct {
 /* schedule template */
 typedef struct {
 	char 			name[_TEMPLATE_NAME_SIZE];
-	_S_CHAN			temp_chan_sch;
+	int 			rcnt;
+	_S_REC			rec[_MAX_SCHEDULE_RECS];
+
 } _TMPL_DAT;
 
 typedef struct {

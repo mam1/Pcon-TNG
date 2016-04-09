@@ -387,13 +387,13 @@ char *sch2text(_S_CHAN *sch, char *buf) {
 	*buf = '\0';
 	sch_recs = sch->rcnt;
 	if (sch_recs == 0)
-		strcat(buf, "  no schedule records");
+		strcat(buf, " no schedule records");
 	else
 		for (i = 1; i < sch_recs + 1; i++) {
 			key = sch->rec[i].key;
 			h = key / 60;
 			m = key % 60;
-			sprintf(&buf[strlen(buf)], "  %2i:%02i ", h, m);
+			sprintf(&buf[strlen(buf)], " %2i:%02i ", h, m);
 			// strcat(buf, onoff[get_s(sch[i])]);
 			strcat(buf, "\n\r");
 		}
@@ -409,14 +409,14 @@ char *sch2text2(_S_CHAN *sch, char *buf) {
 	sch_recs = sch->rcnt;
 
 	if (sch_recs == 0)
-		strcat(buf, "  no schedule records");
+		strcat(buf, " no schedule records");
 	else
 		for (i = 1; i < sch_recs + 1; i++) {
 
 			key = sch->rec[i].key;
 			h = key / 60;
 			m = key % 60;
-			sprintf(&buf[strlen(buf)], "  %2i:%02i ", h, m);
+			sprintf(&buf[strlen(buf)], " %2i:%02i ", h, m);
 			// strcat(buf, onoff[get_s(sch[i])]);
 		}
 	return buf;
@@ -554,7 +554,7 @@ int c_2(_CMD_FSM_CB *cb)
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus 
 	get_tm(rtc, &tm);							// read the clock 
 	sleep(1);
-	printf("  %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
+	printf(" %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
 	close(rtc);
 
@@ -870,7 +870,7 @@ int c_18(_CMD_FSM_CB *cb)
 {
 
 	/* build prompt */
-	strcpy(cb->prompt_buffer, "schedule template maintenance\r\n\ntemplate library\r\n");
+	strcpy(cb->prompt_buffer, " schedule template maintenance\r\n\ntemplate library\r\n");
 	make_lib_list(cb->prompt_buffer, cb);
 	return 0;
 }
@@ -892,7 +892,7 @@ int c_19(_CMD_FSM_CB *cb)
 int c_20(_CMD_FSM_CB *cb)
 {
 	if ((cb->token_value > 23) || (cb->token_value < 0)) {
-		strcpy(cb->prompt_buffer, "  hour must be 0 - 23\r\n  enter hour > ");
+		strcpy(cb->prompt_buffer, " hour must be 0 - 23\r\n  enter hour");
 		return 1;
 	}
 
@@ -901,23 +901,23 @@ int c_20(_CMD_FSM_CB *cb)
 	strcpy(cb->w_hours_str, cb->token);
 
 	/* build prompt */
-	strcpy(cb->prompt_buffer, "editing schedule: ");
+	// strcpy(cb->prompt_buffer, "editing schedule: ");
 	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	strcat(cb->prompt_buffer, " ");
-	strcat(cb->prompt_buffer, cb->w_hours_str);
-	strcat(cb->prompt_buffer, ":\r\n");
-	strcat(cb->prompt_buffer, "  enter minute > ");
+	// strcat(cb->prompt_buffer, " ");
+	// strcat(cb->prompt_buffer, cb->w_hours_str);
+	// strcat(cb->prompt_buffer, ":\r\n");
+	strcpy(cb->prompt_buffer, " enter minute > ");
 	return 0;
 }
 
 /* set schedule minute */
 int c_21(_CMD_FSM_CB *cb)
 {
-	char            temp[_PROMPT_BUFFER_SIZE];
+	// char            temp[_PROMPT_BUFFER_SIZE];
 
 	/* check value */
 	if ((cb->token_value > 59) || (cb->token_value < 0)) {
-		strcpy(cb->prompt_buffer, "  minute must be 0 - 59\r\n  enter minute > ");
+		strcpy(cb->prompt_buffer, " minute must be 0 - 59\r\n  enter minute");
 		return 1;
 	}
 	/* update control block */
@@ -925,11 +925,14 @@ int c_21(_CMD_FSM_CB *cb)
 	strcpy(cb->w_minutes_str, cb->token);
 
 	/* build prompt */
-	strcpy(cb->prompt_buffer, "editing schedule template: ");
-	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	strcat(cb->prompt_buffer, "\r\n");
-	strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
-	strcat(cb->prompt_buffer, "\r\n  enter action for ");
+	// strcpy(cb->prompt_buffer, "editing schedule template: ");
+	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
+	// strcat(cb->prompt_buffer, "\r\n");
+
+
+	// load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+
+	strcpy(cb->prompt_buffer, " enter action for ");
 	strcat(cb->prompt_buffer, cb->w_hours_str);
 	strcat(cb->prompt_buffer, ":");
 	strcat(cb->prompt_buffer, cb->w_minutes_str);
@@ -940,41 +943,31 @@ int c_21(_CMD_FSM_CB *cb)
 /* set schedule record to on */
 int c_22(_CMD_FSM_CB *cb)
 {
-	char            temp[_PROMPT_BUFFER_SIZE];
-	_S_CHAN 		hold;
+	// char            temp[_PROMPT_BUFFER_SIZE];
+	// _S_CHAN 		hold;
 	int 			i;
 	int 			key;
-	_S_REC 			thold;
+	// _S_REC 			thold;
 
-	key = cb->w_hour * 60 + cb->w_minute;
-
-	/*set the state of the schedule record to on */
-
-	if(cb->w_tbuff.rcnt < 1){
-		// add record
-		return 0;
-	}
-
-	for(i=0;i<cb->w_tbuff.rcnt){
-
-		if (cb->tbuff.rec[i] == key{
-
-
-
-		} )
-	}
-
-	up_templ_state(cb->w_tbuff, cb->w_hour, cb->w_minute, cb->w_state);
-
-	cb->w_srec_state = 1;       //set working state to on
-
+	key = cb->w_hours * 60 + cb->w_minutes;
+	for(i=0;i<cb->w_template_buffer.rcnt;i++){
+		if (cb->w_template_buffer.rec[i].key == key)		// record exists
+			cb->w_template_buffer.rec[i].state = 1;			// change it
+			return 0;
+		} 
+	
+	/* add new schedule record */
+	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 1, 0, 0);
 
 	/* build prompt */
-	strcpy(cb->prompt_buffer, "editing schedule template: ");
+	strcpy(cb->prompt_buffer, " editing schedule template: ");
 	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
 	strcat(cb->prompt_buffer, "\r\n");
-	strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
-	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
+
+
+	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+
+	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM)");
 	return 0;
 }
 
@@ -1165,7 +1158,7 @@ int c_28(_CMD_FSM_CB *cb)
 	// printf("copy of the system schedule\r\n");
 	// disp_all_schedules(&cb->sdat_ptr->sys_sch);
 
-	strcpy(cmd_fsm_cb.prompt_buffer, "enter command or time HH:MM");
+	strcpy(cmd_fsm_cb.prompt_buffer, " enter command or time HH:MM");
 
 	return 0;
 }
@@ -1273,7 +1266,7 @@ int c_33(_CMD_FSM_CB *cb)
 int c_34(_CMD_FSM_CB *cb)
 {
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter a command");
+	strcpy(cmd_fsm_cb.prompt_buffer, "\r\n enter a command");
 	return 0;
 }
 
@@ -1292,7 +1285,7 @@ int c_35(_CMD_FSM_CB *cb)
 int c_36(_CMD_FSM_CB *cb)
 {
 	/* build prompt */
-	strcat(cmd_fsm_cb.prompt_buffer, "\r\nenter a command");
+	strcat(cmd_fsm_cb.prompt_buffer, "\r\n enter a command");
 	return 0;
 }
 
@@ -1423,7 +1416,7 @@ int c_46(_CMD_FSM_CB *cb)
 int c_47(_CMD_FSM_CB *cb)
 {
 	tm.tm_wday = cb->token_value;
-	printf("  set real time clock to:  %02i:%02i:%02i  %s %02i/%02i/%02i\n\n\r",
+	printf(" set real time clock to:  %02i:%02i:%02i  %s %02i/%02i/%02i\n\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "\r\n<yes><cancel>\r\n> ");

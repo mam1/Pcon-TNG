@@ -35,6 +35,12 @@ int add_tem_rec2(_TMPL_DAT *c_sch, int hour, int minute, int state, int temp, in
 /* print a template schedule */
 int dump_template(_TMPL_DAT *t_sch);
 
+/* load template dump into bufer */
+int load_temps(_TMPL_DAT *t_sch, char *b);
+
+/* add new template record */
+int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int humid);
+
 /* print a formated dump of all days for a channel */
 // void disp_channel_sch(_S_CHAN *c_dat,int header);
 
