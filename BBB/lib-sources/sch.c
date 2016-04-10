@@ -263,16 +263,26 @@ int dump_template(_TMPL_DAT *t_sch){
     return 0;
 }
 
-/* load template records into buffer */
+/* append template records to string */
 int load_temps(_TMPL_DAT *t_sch, char *b){
     int             i,h,m;
+    char 			tbuff[_PROMPT_BUFFER_SIZE];
+
+    printf("********************************************\n\rrcnt %i\n\r\n",t_sch->rcnt);
 
     // printf("    rcnt = %i\n", t_sch->rcnt);
+    if(t_sch->rcnt < 1){
+    	strcat(b, "\r\n  enter time (HH,MM)");
+    	return 0;
+    }
+
     for(i=0;i<t_sch->rcnt;i++){
         con_key(t_sch->rec[i].key,&h,&m);
-        sprintf(b,"    %02i:%02i - state %i temp %i humid %i\n",
+        sprintf(tbuff,"    %02i:%02i - state %i temp %i humid %i\n",
         	h,m,t_sch->rec[i].state,t_sch->rec[i].temp, t_sch->rec[i].humid);
+        strcat(b, tbuff);
     }
+    strcat(b, "\r\n  enter time (HH,MM)");
     return 0;
 }
 

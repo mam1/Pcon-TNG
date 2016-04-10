@@ -188,7 +188,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*  9  edit        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 10  delete      */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 11  zero        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0,  0,  0},
 	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 15  status      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
@@ -960,13 +960,11 @@ int c_22(_CMD_FSM_CB *cb)
 	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 1, 0, 0);
 
 	/* build prompt */
-	strcpy(cb->prompt_buffer, " editing schedule template: ");
-	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	strcat(cb->prompt_buffer, "\r\n");
-
+	// strcpy(cb->prompt_buffer, " editing schedule template: ");
+	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
+	// strcat(cb->prompt_buffer, "\r\n");
 
 	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-
 	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM)");
 	return 0;
 }
@@ -1157,8 +1155,9 @@ int c_28(_CMD_FSM_CB *cb)
 	// printf("\r\nsystem schedule copied to edit buffer\r\n");
 	// printf("copy of the system schedule\r\n");
 	// disp_all_schedules(&cb->sdat_ptr->sys_sch);
-
-	strcpy(cmd_fsm_cb.prompt_buffer, " enter command or time HH:MM");
+	printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\rrcnt %i\n\r\n",cb->w_template_buffer.rcnt);
+	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+	strcat(cmd_fsm_cb.prompt_buffer, " enter command or time HH:MM");
 
 	return 0;
 }
