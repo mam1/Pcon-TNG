@@ -948,24 +948,25 @@ int c_22(_CMD_FSM_CB *cb)
 	int 			i;
 	int 			key;
 	// _S_REC 			thold;
+// printf("c_22 called\n");
 
 	key = cb->w_hours * 60 + cb->w_minutes;
-	for(i=0;i<cb->w_template_buffer.rcnt;i++){
-		if (cb->w_template_buffer.rec[i].key == key)		// record exists
-			cb->w_template_buffer.rec[i].state = 1;			// change it
-			return 0;
-		} 
-	
+	// for(i=0;i<cb->w_template_buffer.rcnt;i++){
+	// 	if (cb->w_template_buffer.rec[i].key == key)		// record exists
+	// 		cb->w_template_buffer.rec[i].state = 1;			// change it
+	// 		return 0;
+	// 	} 
+// printf("\radding new schedlule record\n");
 	/* add new schedule record */
 	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 1, 0, 0);
-
+// printf("building prompt\n");
 	/* build prompt */
 	// strcpy(cb->prompt_buffer, " editing schedule template: ");
 	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	// strcat(cb->prompt_buffer, "\r\n");
+	strcpy(cb->prompt_buffer, "\0");
 
 	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-	strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM)");
+	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter command or time");
 	return 0;
 }
 
@@ -989,6 +990,8 @@ int c_23(_CMD_FSM_CB *cb)
 	// strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
 	return 0;
 }
+
+
 
 /* delete schedule record */
 int c_24(_CMD_FSM_CB *cb)
@@ -1155,9 +1158,10 @@ int c_28(_CMD_FSM_CB *cb)
 	// printf("\r\nsystem schedule copied to edit buffer\r\n");
 	// printf("copy of the system schedule\r\n");
 	// disp_all_schedules(&cb->sdat_ptr->sys_sch);
-	printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\rrcnt %i\n\r\n",cb->w_template_buffer.rcnt);
+	*cb->prompt_buffer = '\0';
+	strcpy(cmd_fsm_cb.prompt_buffer, "\r curent schedule buffer:\r\n");
 	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-	strcat(cmd_fsm_cb.prompt_buffer, " enter command or time HH:MM");
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r editing schedule buffer, enter command or time HH:MM");
 
 	return 0;
 }

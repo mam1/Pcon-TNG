@@ -154,7 +154,7 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
     // int          trec;
      _S_REC          hrec;
     int             i,ii;
-
+// printf("\r*****add_tmpl_rec called\n");
     key = hour * 60 + minute;
     if((t->rcnt + 1) > _MAX_SCHEDULE_RECS){    		// see if there is room to add another record
         printf("**** too many schedule records\n");
@@ -168,10 +168,11 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
 
     if(t->rcnt == 1){  //first record
         t->rec[0] = hrec;
-        printf("first record created, key=%i\n\r", t->rec[0].key);
+        printf("\rfirst record created, key=%i\n\r", t->rec[0].key);
         // printf("  rcnt=%i\n", t->rcnt);
         return 0;
     }
+    // printf("\rinserting schedule recorn\n");
     /* search schedule */
     for (i = 0; i < t->rcnt - 1; i++) {
         // trec = i;
@@ -267,22 +268,19 @@ int dump_template(_TMPL_DAT *t_sch){
 int load_temps(_TMPL_DAT *t_sch, char *b){
     int             i,h,m;
     char 			tbuff[_PROMPT_BUFFER_SIZE];
-
-    printf("********************************************\n\rrcnt %i\n\r\n",t_sch->rcnt);
-
-    // printf("    rcnt = %i\n", t_sch->rcnt);
+    // printf("\rappending     rcnt = %i\n", t_sch->rcnt);
     if(t_sch->rcnt < 1){
-    	strcat(b, "\r\n  enter time (HH,MM)");
+    	strcat(b, "    no records in schedule");
     	return 0;
     }
 
     for(i=0;i<t_sch->rcnt;i++){
         con_key(t_sch->rec[i].key,&h,&m);
-        sprintf(tbuff,"    %02i:%02i - state %i temp %i humid %i\n",
+        sprintf(tbuff,"\n\r    %02i:%02i - state %i temp %i humid %i",
         	h,m,t_sch->rec[i].state,t_sch->rec[i].temp, t_sch->rec[i].humid);
         strcat(b, tbuff);
     }
-    strcat(b, "\r\n  enter time (HH,MM)");
+    // strcat(b, "\r\n  enter time (HH,MM)");
     return 0;
 }
 
