@@ -152,7 +152,7 @@ int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute){
 int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int humid){
     int             key;
     // int          trec;
-    _S_REC          hrec;
+     _S_REC          hrec;
     int             i,ii;
 
     key = hour * 60 + minute;
@@ -160,10 +160,15 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
         printf("**** too many schedule records\n");
         return 1;
     }
-    t->rcnt += 1;        						//add a new record
+    t->rcnt += 1;
+    hrec.key = key;
+    hrec.temp = temp;
+    hrec.state = state;
+    hrec.humid = humid;   
+
     if(t->rcnt == 1){  //first record
         t->rec[0] = hrec;
-        printf("first record created, key=%i\n", t->rec[0].key);
+        printf("first record created, key=%i\n\r", t->rec[0].key);
         // printf("  rcnt=%i\n", t->rcnt);
         return 0;
     }
@@ -249,10 +254,10 @@ int dump_schedule(_S_TAB *sch, int day, int channel){
 int dump_template(_TMPL_DAT *t_sch){
     int             i,h,m;
 
-    printf("    rcnt = %i\n", t_sch->rcnt);
+    printf("    rcnt = %i\n\r", t_sch->rcnt);
     for(i=0;i<t_sch->rcnt;i++){
         con_key(t_sch->rec[i].key,&h,&m);
-        printf("    %02i:%02i - state %i temp %i humid %i\n",
+        printf("    %02i:%02i - state %i temp %i humid %i\n\r",
             h,m,t_sch->rec[i].state,t_sch->rec[i].temp, t_sch->rec[i].humid);
     }
     return 0;
@@ -262,7 +267,7 @@ int dump_template(_TMPL_DAT *t_sch){
 int load_temps(_TMPL_DAT *t_sch, char *b){
     int             i,h,m;
 
-    printf("    rcnt = %i\n", t_sch->rcnt);
+    // printf("    rcnt = %i\n", t_sch->rcnt);
     for(i=0;i<t_sch->rcnt;i++){
         con_key(t_sch->rec[i].key,&h,&m);
         sprintf(b,"    %02i:%02i - state %i temp %i humid %i\n",
