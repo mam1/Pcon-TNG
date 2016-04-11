@@ -82,11 +82,12 @@ int main(void) {
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
 	FILE 			*sys_file;
+	_CONFIG_DAT 	hold_config;
 	// char 			*command_buffer[];	//
 
 	/*********************** setup console *******************************/
 	printf("\033\143"); 				//clear the terminal screen, preserve the scroll back
-	printf("*** Pcon  %d.%d.%d ***\n\n\r", _major_version, _minor_version, _minor_revision);
+	printf("*** Pcon  %d.%d.%d ***\n\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
 
 	/************************* setup trace *******************************/
 #ifdef _TRACE
@@ -125,27 +126,34 @@ int main(void) {
 	ipc_ptr = data; 							// overlay data with _IPC_DAT data structure
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
+	/* setup control block pointers */
+	cmd_fsm_cb.w_sch_ptr = &cmd_fsm_cb.w_sch;		 //set pointer to working schedule
+	// cmd_fsm_cb.sdat_ptr = &ipc_ptr->sys_data;	 //set up pointer in cmd_fsm control block to allow acces to system data
+	cmd_fsm_cb.ipc_ptr = ipc_ptr;					 //set pointer to shared memory
+	cmd_fsm_cb.sys_ptr = &ipc_ptr->sys_data;		 //set pointer to system data in shared memory
+	cmd_fsm_cb.sch_ptr = &ipc_ptr->sys_data.sys_sch; //set pointer to active shecule in shared memory
+
     /* load data from system data file and compare config data */
     sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);  // create system file if it does not exist
     sys_load(sys_file,&ipc_ptr->sys_data);
-    if(sys_comp(&ipc_ptr->sys_data)){
-    	printf("*** there are different configurations in the system file and in the application\n");
-    	printf("\n  ignor problem? <y>|<n>: ");
+    hold_config = cmd_fsm_cb.sys_ptr->config;
+    if(sys_comp(cmd_fsm_cb.sys_ptr,&hold_config)){
+    	printf("*** there are different configurations in the system file and in the application\n update system file? (y)|(n) > ");
+    	// printf("\n  ignor problem? <y>|<n>: ");
 		if (getchar() == 'y') {
+		    cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION;
+		    cmd_fsm_cb.sys_ptr->config.minor_version = _MINOR_VERSION;
+		    cmd_fsm_cb.sys_ptr->config.minor_revision = _MINOR_REVISION;
+		    cmd_fsm_cb.sys_ptr->config.channels = _NUMBER_OF_CHANNELS;
+		    cmd_fsm_cb.sys_ptr->config.sensors = _NUMBER_OF_SENSORS;
+		    cmd_fsm_cb.sys_ptr->config.commands = _CMD_TOKENS;
+		    cmd_fsm_cb.sys_ptr->config.states = _CMD_STATES;
 
-		    ipc_ptr->sys_data.config.major_version = _major_version;
-		    ipc_ptr->sys_data.config.minor_version = _minor_version;
-		    ipc_ptr->sys_data.config.minor_revision = _minor_revision;
-		    ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
-		    ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
-		    ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
-		    ipc_ptr->sys_data.config.states = _CMD_STATES;
-
-			if(sys_save(sys_file,&ipc_ptr->sys_data)){
+			if(sys_save(sys_file,cmd_fsm_cb.sys_ptr)){
     			printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
 			}
 			else
-				printf("    Pcon: system data file updated\r\n");
+				printf("  Pcon: system data file updated\r\n");
 
 			c = fgetc(stdin);			// get rid of trailing CR
 		}
@@ -169,13 +177,6 @@ int main(void) {
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system data loaded into shared memory", trace_flag);
 #endif
 	printf("  Pcon: system data loaded into shared memory\r\n");
-
-	/* setup control block pointers */
-	cmd_fsm_cb.w_sch_ptr = &cmd_fsm_cb.w_sch;		//set pointer to working schedule
-	// cmd_fsm_cb.sdat_ptr = &ipc_ptr->sys_data;	//set up pointer in cmd_fsm control block to allow acces to system data
-	cmd_fsm_cb.ipc_ptr = ipc_ptr;					//set pointer to shared memory
-	cmd_fsm_cb.sys_ptr = &ipc_ptr->sys_data;		//set pointer to system data in shared memory
-	cmd_fsm_cb.sch_ptr = &ipc_ptr->sys_data.sys_sch;//set pointer to active shecule in shared memory
 
 	/* load working schedule from system schedule */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory

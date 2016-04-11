@@ -12,6 +12,8 @@
 #include "trace.h"
 #include "sys_dat.h"
 #include "sch.h"
+#include "typedefs.h"
+#include "shared.h"
 
 extern int              trace_flag;                     //trace file is active
 
@@ -32,9 +34,9 @@ FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
     }
 
     /* initialize config data */
-    sdat->config.major_version = _major_version;
-    sdat->config.minor_version = _minor_version;
-    sdat->config.minor_revision = _minor_revision;
+    sdat->config.major_version = _MAJOR_VERSION;
+    sdat->config.minor_version = _MINOR_VERSION;
+    sdat->config.minor_revision = _MINOR_REVISION;
     sdat->config.channels = _NUMBER_OF_CHANNELS;
     sdat->config.sensors = _NUMBER_OF_SENSORS;
     sdat->config.commands = _CMD_TOKENS;
@@ -88,35 +90,35 @@ int sys_save(FILE *sd ,_SYS_DAT2 *sdat){
     return 0;
 }
 
-int sys_comp(_SYS_DAT2 *sdat){
+int sys_comp(_SYS_DAT2 *sdat, _CONFIG_DAT *config){
 
     if(trace_flag == true) trace2(_TRACE_FILE_NAME, "sys_comp", sdat);
 
-    if(sdat->config.major_version != _major_version){
+    if(sdat->config.major_version != config->_MAJOR_VERSION){
         printf("\n*** major verions do not match\n");
         if(trace_flag == true){
             trace1(_TRACE_FILE_NAME, "sys_comp", "major verions do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "major version = ",_major_version);
+            trace3(_TRACE_FILE_NAME, "sys_comp", "major version = ",_MAJOR_VERSION);
         }
         return 1;
     }
-    if(sdat->config.minor_version != _minor_version){
+    if(sdat->config.minor_version != config->_MINOR_VERSION){
         printf("\n*** minor versions do not match\n");
         if(trace_flag == true){
             trace1(_TRACE_FILE_NAME, "sys_comp", "minor verions do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "minor version = ",_minor_version);
+            trace3(_TRACE_FILE_NAME, "sys_comp", "minor version = ",_MINOR_VERSION);
         }
         return 1;
     }
-    if(sdat->config.minor_revision != _minor_revision){
-        printf("\n*** minor revisions do nto match\n");
+    if(sdat->config.minor_revision != config->_MINOR_REVISION){
+        printf("\n*** minor revisions do not match\n");
         if(trace_flag == true){
             trace1(_TRACE_FILE_NAME, "sys_comp", "minor revisions do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "minor revision = ",_minor_revision);
+            trace3(_TRACE_FILE_NAME, "sys_comp", "minor revision = ",_MINOR_REVISION);
         }
         return 1;
     }
-    if(sdat->config.channels != _NUMBER_OF_CHANNELS){
+    if(sdat->config.channels != config->_NUMBER_OF_CHANNELS){
         printf("\n*** number of channels do not match\n");
         if(trace_flag == true){
             trace1(_TRACE_FILE_NAME, "sys_comp", "number of channels do not match");
@@ -124,7 +126,7 @@ int sys_comp(_SYS_DAT2 *sdat){
         }
         return 1;
     }
-    if(sdat->config.sensors != _NUMBER_OF_SENSORS){
+    if(sdat->config.sensors != config->_NUMBER_OF_SENSORS){
         printf("\n*** number of sensors do not match\n");
         if(trace_flag == true){
             trace1(_TRACE_FILE_NAME, "sys_comp", "number of sensors do not match");
@@ -132,7 +134,7 @@ int sys_comp(_SYS_DAT2 *sdat){
         }
         return 1;
     }
-    if(sdat->config.commands != _CMD_TOKENS){
+    if(sdat->config.commands != config->_CMD_TOKENS){
         printf("\n*** number of commands do not match\n");
         if(trace_flag == true){
             trace1(_TRACE_FILE_NAME, "sys_comp", "number of commands do not match");
@@ -140,7 +142,7 @@ int sys_comp(_SYS_DAT2 *sdat){
         }
         return 1;
     }
-    if(sdat->config.states != _CMD_STATES){
+    if(sdat->config.states != config->_CMD_STATES){
         printf("\n*** number of states do not match\n");
         if(trace_flag == true){
             trace1(_TRACE_FILE_NAME, "sys_comp", "number of states do not match");

@@ -1,10 +1,11 @@
+
 #ifndef _SHARE_H_
 #define _SHARE_H_
 
 /* version info */
-#define _major_version 			8
-#define _minor_version 			2
-#define _minor_revision 		3
+#define _MAJOR_VERSION 			8
+#define _MINOR_VERSION 			2
+#define _MINOR_REVISION			6
 
 /* file names */
 #define _FILE_NAME_SIZE 		50

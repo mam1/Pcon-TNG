@@ -276,7 +276,7 @@ int load_temps(_TMPL_DAT *t_sch, char *b){
 
     for(i=0;i<t_sch->rcnt;i++){
         con_key(t_sch->rec[i].key,&h,&m);
-        sprintf(tbuff,"\n\r    %02i:%02i - state %i temp %i humid %i",
+        sprintf(tbuff,"\r    %02i:%02i - state %i temp %i humid %i\r\n",
         	h,m,t_sch->rec[i].state,t_sch->rec[i].temp, t_sch->rec[i].humid);
         strcat(b, tbuff);
     }
