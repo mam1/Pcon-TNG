@@ -151,10 +151,9 @@ int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute){
 /* add new template record */
 int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int humid){
     int             key;
-    // int          trec;
-     _S_REC          hrec;
+    _S_REC          hrec;
     int             i,ii;
-// printf("\r*****add_tmpl_rec called\n");
+
     key = hour * 60 + minute;
     if((t->rcnt + 1) > _MAX_SCHEDULE_RECS){    		// see if there is room to add another record
         printf("**** too many schedule records\n");
@@ -172,16 +171,20 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
         // printf("  rcnt=%i\n", t->rcnt);
         return 0;
     }
-    // printf("\rinserting schedule recorn\n");
+
     /* search schedule */
     for (i = 0; i < t->rcnt - 1; i++) {
         // trec = i;
+        printf("rec key %i new key %i\r\n",t->rec[i].key, key );
         if ((t->rec[i].key) > key) {
+            // printf("rec key %i new key %i\r\n",t->rec[i].key, key );
             /* move records down */
             for (ii = t->rcnt; ii > i; ii--) {
+                printf("moving\r\n");
                 t->rec[ii] = t->rec[ii - 1];
             }
             /* insert new record */
+            printf("inserting\r\n");
             t->rec[i] = hrec;
             return 0;
         }

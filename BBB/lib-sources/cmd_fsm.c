@@ -943,28 +943,16 @@ int c_21(_CMD_FSM_CB *cb)
 /* set schedule record to on */
 int c_22(_CMD_FSM_CB *cb)
 {
-	// char            temp[_PROMPT_BUFFER_SIZE];
-	// _S_CHAN 		hold;
 	int 			i;
 	int 			key;
-	// _S_REC 			thold;
-// printf("c_22 called\n");
 
 	key = cb->w_hours * 60 + cb->w_minutes;
-	// for(i=0;i<cb->w_template_buffer.rcnt;i++){
-	// 	if (cb->w_template_buffer.rec[i].key == key)		// record exists
-	// 		cb->w_template_buffer.rec[i].state = 1;			// change it
-	// 		return 0;
-	// 	} 
-// printf("\radding new schedlule record\n");
+
 	/* add new schedule record */
 	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 1, 0, 0);
-// printf("building prompt\n");
-	/* build prompt */
-	// strcpy(cb->prompt_buffer, " editing schedule template: ");
-	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	strcpy(cb->prompt_buffer, "\0");
 
+	/*build prompt */
+	strcpy(cb->prompt_buffer, "\0");
 	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
 	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter command or time");
 	return 0;
@@ -973,21 +961,18 @@ int c_22(_CMD_FSM_CB *cb)
 /* set set schedule record to off */
 int c_23(_CMD_FSM_CB *cb)
 {
-	// // int                 sch_recs;
-	// char            temp[_PROMPT_BUFFER_SIZE];
+	int 			i;
+	int 			key;
 
-	// cb->w_srec_state = 0;       // set working state to off
-	// if(up_sch_rec_state(&cb->w_sch, cb->w_day, cb->w_channel, cb->w_hours, cb->w_minutes, cb->w_srec_state)){
-	// 	printf("problem schedule record\n");
-	// 	return 1;
-	// }
+	key = cb->w_hours * 60 + cb->w_minutes;
 
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "editing schedule template: ");
-	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	// strcat(cb->prompt_buffer, "\r\n");
-	// strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
-	// strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
+	/* add new schedule record */
+	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 0, 0, 0);
+
+	/*build prompt */
+	strcpy(cb->prompt_buffer, "\0");
+	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter command or time");
 	return 0;
 }
 

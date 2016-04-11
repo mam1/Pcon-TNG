@@ -137,7 +137,8 @@ int main(void) {
     sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);  // create system file if it does not exist
     sys_load(sys_file,&ipc_ptr->sys_data);
     hold_config = cmd_fsm_cb.sys_ptr->config;
-    if(sys_comp(cmd_fsm_cb.sys_ptr,&hold_config)){
+    printf("loaded minor_revision from system file %i\n",hold_config.minor_revision);
+    if(sys_comp(&hold_config)){
     	printf("*** there are different configurations in the system file and in the application\n update system file? (y)|(n) > ");
     	// printf("\n  ignor problem? <y>|<n>: ");
 		if (getchar() == 'y') {
