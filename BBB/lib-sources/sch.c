@@ -15,22 +15,22 @@
 #include "sys_dat.h"
 
 /* return a pointer to a schedule rec for a given key, day & channel */
-_S_REC *get_sch_rec(_S_TAB *sch, int day, int channel, int hour, int minute){
-    int             i;
-    int             key;
+// _S_REC *get_sch_rec(_S_TAB *sch, int day, int channel, int hour, int minute){
+//     int             i;
+//     int             key;
 
-    printf(" hour %i, minute %i\n", hour, minute);
-    key = (hour * 60) + minute;
-    for (i = 0; i < sch->schedule[day][channel].rcnt; i++){
-        printf("  key from rec %i test key %i\n", sch->schedule[day][channel].rec[i].key, key); 
-        if(sch->schedule[day][channel].rec[i].key == key){
-            printf("key match\n");
-            return &(sch->schedule[day][channel].rec[i]);
-        }
-    }
-    printf("no key match\n");
-    return NULL;
-}
+//     printf(" hour %i, minute %i\n", hour, minute);
+//     key = (hour * 60) + minute;
+//     for (i = 0; i < sch->schedule[day][channel].rcnt; i++){
+//         printf("  key from rec %i test key %i\n", sch->schedule[day][channel].rec[i].key, key); 
+//         if(sch->schedule[day][channel].rec[i].key == key){
+//             printf("key match\n");
+//             return &(sch->schedule[day][channel].rec[i]);
+//         }
+//     }
+//     printf("no key match\n");
+//     return NULL;
+// }
 
 /* delete a schedule record */
 int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute){
@@ -49,7 +49,7 @@ int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute){
     return 1;
 }
 
-/* serch for key in a schedule */
+/* serch for record in a schedule, return record number of match or -1 if no hit */
 int find_tmpl_key(_TMPL_DAT *t, int hour, int minute){
 	int 				i, key;
 
@@ -241,7 +241,7 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
 //     return 0;
 // }
 
-/* update humiduty in schedule record */
+/* set humiduty in schedule record */
 // int up_sch_rec_humid(_S_TAB *sch, int day, int channel, int hour, int minute, int humid){
 //     _S_REC              *hrec_ptr, hrec;
 
@@ -254,7 +254,7 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
 //     return 0;
 // }
 
-/* update temperature in schedule record */
+/* set temperature in schedule record */
 // int up_sch_rec_temp(_S_TAB *sch, int day, int channel, int hour, int minute, int temp){
 //     _S_REC              *hrec_ptr, hrec;
 
@@ -276,17 +276,17 @@ int con_key(int key,int *hour,int *minute){
 }
 
 /* print the schedule for a (day,channel) */
-int dump_schedule(_S_TAB *sch, int day, int channel){
-    int             i,h,m;
-    printf("  dumping schedule for day %i channel %i ", day, channel);
-    printf("    rcnt = %i\n", sch->schedule[day][channel].rcnt);
-    for(i=0;i<sch->schedule[day][channel].rcnt;i++){
-        con_key(sch->schedule[day][channel].rec[i].key,&h,&m);
-        printf("    %02i:%02i - state %i temp %i humid %i\n",
-            h,m,sch->schedule[day][channel].rec[i].state,sch->schedule[day][channel].rec[i].temp, sch->schedule[day][channel].rec[i].humid);
-    }
-    return 0;
-}
+// int dump_schedule(_S_TAB *sch, int day, int channel){
+//     int             i,h,m;
+//     printf("  dumping schedule for day %i channel %i ", day, channel);
+//     printf("    rcnt = %i\n", sch->schedule[day][channel].rcnt);
+//     for(i=0;i<sch->schedule[day][channel].rcnt;i++){
+//         con_key(sch->schedule[day][channel].rec[i].key,&h,&m);
+//         printf("    %02i:%02i - state %i temp %i humid %i\n",
+//             h,m,sch->schedule[day][channel].rec[i].state,sch->schedule[day][channel].rec[i].temp, sch->schedule[day][channel].rec[i].humid);
+//     }
+//     return 0;
+// }
 
 /* print a template schedule */
 int dump_template(_TMPL_DAT *t_sch){
@@ -301,23 +301,21 @@ int dump_template(_TMPL_DAT *t_sch){
     return 0;
 }
 
-/* append template records to string */
+/* append template record list to string */
 int load_temps(_TMPL_DAT *t_sch, char *b){
     int             i,h,m;
     char 			tbuff[_PROMPT_BUFFER_SIZE];
-    // printf("\rappending     rcnt = %i\n", t_sch->rcnt);
+
     if(t_sch->rcnt < 1){
     	strcat(b, "    no records in schedule");
     	return 0;
     }
-
     for(i=0;i<t_sch->rcnt;i++){
         con_key(t_sch->rec[i].key,&h,&m);
         sprintf(tbuff,"\r    %02i:%02i - state %i temp %i humid %i\r\n",
         	h,m,t_sch->rec[i].state,t_sch->rec[i].temp, t_sch->rec[i].humid);
         strcat(b, tbuff);
     }
-    // strcat(b, "\r\n  enter time (HH,MM)");
     return 0;
 }
 
