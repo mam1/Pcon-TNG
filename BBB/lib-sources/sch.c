@@ -49,6 +49,46 @@ int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute){
     return 1;
 }
 
+/* serch for key in a schedule */
+int find_tmpl_key(_TMPL_DAT *t, int hour, int minute){
+	int 				i, key;
+
+	key = hour * 60 + minute;
+	for (i = 0; i < t->rcnt; i++) 
+		if(t->rec[0].key == key)
+			return i;
+	return -1;
+}
+
+/* delete a template record */
+int del_tmpl_rec(_TMPL_DAT *t, int hour, int minute){
+    // _S_REC               rec;
+    int                 i,ii;
+    int                 key;
+
+    key = hour * 60 + minute;
+
+    if(t->rcnt == 1)
+    	if(t->rec[0].key == key){
+			t->rcnt = 0;
+			return 0;
+		}
+		
+    for (i = 0; i < t->rcnt; i++) {
+        if ((t->rec[i].key) == key){
+        	// printf("hit\n");
+        	for(ii = i;ii<t->rcnt - 1;ii++){
+        		// printf("moving\n");
+        	 	t->rec[ii] = t->rec[ii+1];
+        	}
+        	t->rcnt = t->rcnt -1;
+        	return 0;
+        } 
+	}
+
+	return 1;
+}
+
 // /* add or change a schedule template record */
 // int add_tem_rec2(_TMPL_DAT *t_sch, int hour, int minute, int state, int temp, int humid){
 //     int             key;
@@ -149,12 +189,18 @@ int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute){
 // }
 
 /* add new template record */
-int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int humid){
+int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int humid) {
     int             key;
     _S_REC          hrec;
     int             i,ii;
 
+    /* see if the record exists */
     key = hour * 60 + minute;
+    for (i = 0; i < t->rcnt - 1; i++) 
+    	if((t->rec[i].key) == key){
+			t->rec[i].state = 1;
+			return 0;
+		}
     if((t->rcnt + 1) > _MAX_SCHEDULE_RECS){    		// see if there is room to add another record
         printf("**** too many schedule records\n");
         return 1;
@@ -167,32 +213,20 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
 
     if(t->rcnt == 1){  //first record
         t->rec[0] = hrec;
-        printf("\rfirst record created, key=%i\n\r", t->rec[0].key);
-        // printf("  rcnt=%i\n", t->rcnt);
         return 0;
     }
-
     /* search schedule */
-    for (i = 0; i < t->rcnt - 1; i++) {
-        // trec = i;
-        printf("rec key %i new key %i\r\n",t->rec[i].key, key );
-        if ((t->rec[i].key) > key) {
-            // printf("rec key %i new key %i\r\n",t->rec[i].key, key );
+    for (i = 0; i < t->rcnt - 1; i++) 
+        if ((t->rec[i].key) > key){
             /* move records down */
-            for (ii = t->rcnt; ii > i; ii--) {
-                printf("moving\r\n");
+            for (ii = t->rcnt; ii > i; ii--) 
                 t->rec[ii] = t->rec[ii - 1];
-            }
             /* insert new record */
-            printf("inserting\r\n");
             t->rec[i] = hrec;
             return 0;
-        }
+  		}
         t->rec[t->rcnt - 1] = hrec;
         return 0;
-    }
-    printf("**** this should not be happening\n\n");
-    return 1;
 }
 
 /* update state in template record */

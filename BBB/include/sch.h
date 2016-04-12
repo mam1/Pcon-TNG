@@ -41,6 +41,12 @@ int load_temps(_TMPL_DAT *t_sch, char *b);
 /* add new template record */
 int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int humid);
 
+/* delete a template record */
+int del_tmpl_rec(_TMPL_DAT *t, int hour, int minute);
+
+/* serch for key in a schedule */
+int find_tmpl_key(_TMPL_DAT *t, int hour, int minute);
+
 /* print a formated dump of all days for a channel */
 // void disp_channel_sch(_S_CHAN *c_dat,int header);
 

@@ -186,10 +186,10 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
 	/*  8  replace     */  { 0,  1,  2,  3,  4,  5,  6,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/*  9  edit        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
-	/* 10  delete      */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/* 10  delete      */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0,  0,  0},
 	/* 11  zero        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0,  0,  0},
-	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
+	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0,  0,  0},
 	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0},
 	/* 15  status      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/* 16  time        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
@@ -281,10 +281,10 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  7  cancel      */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/*  8  replace     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_39,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  9  edit        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 10  delete      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_26,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 10  delete      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_26,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7},
 	/* 11  zero        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_22,  c_7,  c_7,  c_7},
-	/* 13  off         */  { c_7, c_10,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7},
+	/* 13  off         */  { c_7, c_10,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7},
 	/* 14  clear       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 15  status      */  { c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6},
 	/* 16  time        */  { c_2, c_11,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2},
@@ -945,11 +945,22 @@ int c_22(_CMD_FSM_CB *cb)
 {
 	int 			i;
 	int 			key;
+	_S_REC 			hold;
+
 
 	key = cb->w_hours * 60 + cb->w_minutes;
 
+	/* serch for key in a schedule */
+	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
+	if(i != -1)
+		hold = cb->w_template_buffer.rec[i];
+	else{
+		hold.temp = 0;
+		hold.humid = 0;
+	}
+
 	/* add new schedule record */
-	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 1, 0, 0);
+	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 1, hold.temp, hold.humid);
 
 	/*build prompt */
 	strcpy(cb->prompt_buffer, "\0");
@@ -963,11 +974,20 @@ int c_23(_CMD_FSM_CB *cb)
 {
 	int 			i;
 	int 			key;
+	_S_REC 			hold;
 
 	key = cb->w_hours * 60 + cb->w_minutes;
+		/* serch for key in a schedule */
+	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
+	if(i != -1)
+		hold = cb->w_template_buffer.rec[i];
+	else{
+		hold.temp = 0;
+		hold.humid = 0;
+	}
 
 	/* add new schedule record */
-	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 0, 0, 0);
+	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 0, hold.temp, hold.humid);
 
 	/*build prompt */
 	strcpy(cb->prompt_buffer, "\0");
@@ -981,17 +1001,12 @@ int c_23(_CMD_FSM_CB *cb)
 /* delete schedule record */
 int c_24(_CMD_FSM_CB *cb)
 {
+	del_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
 
-	// char            temp[_PROMPT_BUFFER_SIZE];
-
-	// del_sch_rec2(&cb->w_sch, cb->w_day, cb->w_channel, cb->w_hours, cb->w_minutes);
-
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "editing schedule template: ");
-	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	// strcat(cb->prompt_buffer, "\r\n");
-	// strcat(cb->prompt_buffer, sch2text(&cb->w_schedule, temp));
-	// strcat(cb->prompt_buffer, "\r\n  enter time (HH,MM) > ");
+	/*build prompt */
+	strcpy(cb->prompt_buffer, "\0");
+	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter command or time");
 	return 0;
 }
 
