@@ -21,6 +21,10 @@
 #define _CHAR_TOKENS     		5
 #define _CHAR_STATES     		4
 #define _MAX_TOKEN_SIZE			128
+#define _TT_INT					-1
+#define _TT_STR					-2
+#define _TT_NULL				-3
+#define _TT_UNREC				-4
 
 /* command parser fsm */
 #define _CMD_TOKENS     		38

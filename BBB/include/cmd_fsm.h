@@ -13,6 +13,9 @@ int cmd_type(char *);
 char *build_prompt(char *, int);
 void reset_active(void);
 void reset_edit(void);
+/* return token type; -1 -INT, -2 -QUOTE, -3 -unrecognized, -4 -NULL, command number (0 - xx) */
+int token_type(char *c);
+
 // void save_system_data(char *, SYS_DAT *);
 // void load_system_data(char *, SYS_DAT *);
 
