@@ -251,7 +251,7 @@ int c_31(_CMD_FSM_CB *); /* set working channel to all */
 int c_32(_CMD_FSM_CB *); /* set working day to all */
 int c_33(_CMD_FSM_CB *); /* build new schedule */
 int c_34(_CMD_FSM_CB *); /* state 0 prompt */
-int c_35(_CMD_FSM_CB *); /* set working template number */
+int c_35(_CMD_FSM_CB *); /* set schedule maint prompt */
 int c_36(_CMD_FSM_CB *); /* append state 0 prompt to prompt buffer */
 int c_37(_CMD_FSM_CB *); /* set humidity prompt */
 int c_38(_CMD_FSM_CB *); /* set temperature prompt */
@@ -274,7 +274,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  0  temp        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_38,  c_7,  c_7,  c_7},
 	/*  1  *           */  { c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7, c_31, c_32,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  2  humid       */  { c_7,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_37,  c_7,  c_7,  c_7},
-	/*  3  schedule    */  {c_28,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  3  schedule    */  {c_35,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  4  ?           */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
 	/*  5  clock       */  {c_40,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  6  yes         */  { c_7, c_34,  c_7,  c_7, c_34,  c_7, c_18, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_48,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -306,7 +306,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 32 disp_wrk_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 33 disp_sch_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 34 disp_tml_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20,  c_7, c_20, c_29, c_21, c_35, c_33, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49,  c_7,  c_7,  c_7,  c_7, c_27, c_28},
+	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20,  c_7, c_20, c_29, c_21,  c_7, c_33, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49,  c_7,  c_7,  c_7,  c_7, c_27, c_28},
 	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7}};
 
@@ -979,6 +979,7 @@ int c_22(_CMD_FSM_CB *cb)
 	// int 			key;
 	_S_REC 			hold;
 
+printf("c_22 called\r\n");
 
 	// key = cb->w_hours * 60 + cb->w_minutes;
 
@@ -1296,14 +1297,13 @@ int c_34(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/* set working template number */
-int c_35(_CMD_FSM_CB *cb)
+/* set schedule maint prompt */
+int  c_35(_CMD_FSM_CB *cb)
 {
-	// cb->w_template_num = cb->token_value;
-	// c_33(cb);
-
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "\r\n  enter channel{N(0...7)|*},day{N(1...7)|*},template{N}  > ");
+	/* build prompt */
+	cb->prompt_buffer[0] = '\0';
+	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+	strcat(cb->prompt_buffer, "\r\n enter a command or time");
 	return 0;
 }
 
@@ -1326,8 +1326,6 @@ int c_37(_CMD_FSM_CB *cb)
 /* set temperature prompt */
 int c_38(_CMD_FSM_CB *cb)
 {
-
-
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer,"\r\n enter trigger temperature");
 
