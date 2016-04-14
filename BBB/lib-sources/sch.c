@@ -49,7 +49,7 @@ int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute){
     return 1;
 }
 
-/* serch for record in a schedule, return record number of match or -1 if no hit */
+/* serch for record key match in a schedule, return record number of match or -1 if no hit */
 int find_tmpl_key(_TMPL_DAT *t, int hour, int minute){
 	int 				i, key;
 
@@ -196,9 +196,11 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
 
     /* see if the record exists */
     key = hour * 60 + minute;
-    for (i = 0; i < t->rcnt - 1; i++) 
+    for (i = 0; i < t->rcnt; i++) 
     	if((t->rec[i].key) == key){
-			t->rec[i].state = 1;
+			t->rec[i].state = state;
+			t->rec[i].temp = temp;
+			t->rec[i].humid = humid;
 			return 0;
 		}
     if((t->rcnt + 1) > _MAX_SCHEDULE_RECS){    		// see if there is room to add another record

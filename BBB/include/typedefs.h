@@ -81,9 +81,9 @@ typedef struct {
 typedef struct {
 	_CONFIG_DAT 	config;							// system configuration	
   	_S_TAB  		sys_sch;						// system schedule
-  	_T_TAB 			sys_tpl;						// schedule template library
-  	_CHN_DAT     	c_data[_NUMBER_OF_CHANNELS];	// persistent channel data
-    int 			schlib_index;					// points to the next available template record (maybe)
+  	_TMPL_DAT 		sys_tpl[_MAX_TEMPLATES];		// schedule template library
+  	int 			schlib_index;					// points to the next available template record 
+	 _CHN_DAT     	c_data[_NUMBER_OF_CHANNELS];	// persistent channel data
 } _SYS_DAT2;
 
 /* ipc data - memory mapped */

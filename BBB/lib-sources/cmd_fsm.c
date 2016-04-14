@@ -179,10 +179,10 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*  0  temp        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 26,  0, 26, 27},
 	/*  1  *           */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/*  2  humid       */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 27,  0, 26, 27},
-	/*  3  schedule    */  { 4,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/*  3  schedule    */  { 4,  1,  2,  3,  4,  0, 11,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/*  4  ?           */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/*  5  clock       */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
-	/*  6  yes         */  { 0,  1,  0,  3,  4,  4,  4,  0,  0,  0,  0,  6,  4, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/*  6  yes         */  { 0,  1,  0,  3,  4,  4,  6,  0,  0,  0,  0,  6,  4, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  4,  4,  4,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  8,  8},
 	/*  8  replace     */  { 0,  1,  2,  3,  4,  5,  6,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/*  9  edit        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
@@ -197,8 +197,8 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 18  cycle       */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/* 19  startup     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/* 20  display     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 21  save        */  { 6,  1,  2,  3,  4,  5,  4,  5,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 22  template    */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 21  save        */  { 6,  1,  2,  3,  6,  5,  4,  5,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 22  template    */  { 0,  1,  2,  3,  4,  5, 10,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/* 23  channel     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/* 24  load        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/* 25  set         */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
@@ -266,6 +266,7 @@ int c_46(_CMD_FSM_CB *); /* set real time clock year */
 int c_47(_CMD_FSM_CB *); /* set real time clock day of the week */
 int c_48(_CMD_FSM_CB *); /* set PCF8563 */
 int c_49(_CMD_FSM_CB *); /* set channel sensor_id */
+int c_50(_CMD_FSM_CB *); /* set "set"  */
 
 /* cmd processor action table - initialized with fsm functions */
 
@@ -292,7 +293,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 18  cycle       */  { c_7, c_13,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 19  startup     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 20  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 21  save        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_25,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 21  save        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7, c_25,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 23  channel     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 24  load        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -569,7 +570,7 @@ int c_1(_CMD_FSM_CB *cb)
 	            printf(".");
 	        // printf(" %s",cmd_def(i, cb->state));
 	        // if((i==35)  || (i==36))
-	        printf("%s",cmd_def(cb->state, i));
+	        printf(" %s",cmd_def(cb->state, i));
 	        printf("\r\n");
 		}
 	}
@@ -1476,6 +1477,15 @@ int c_49(_CMD_FSM_CB *cb)
 	return 0;
 }
 
+
+/* set save prompt */
+int c_50(_CMD_FSM_CB *cb)
+{
+	
+	/* build prompt */
+	strcpy(cmd_fsm_cb.prompt_buffer, " save template or schedule? (temp)|(sch)");	
+	return 0;
+}
 /**************** end command fsm action routines ******************/
 
 /* cycle state machine */
@@ -1486,34 +1496,10 @@ void cmd_fsm(_CMD_FSM_CB *cb)
 
 	// cb->token_type = cmd_type(cb->token);
 
-#ifdef _TRACE
-	sprintf(trace_buf, "cmd_fsm called: token <%s>, token value <%i>, token type <%i>, state <%i>, new token type <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state, token_type(cb->token));
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-#endif
-
-	// /* set up control block values based on token type */
-
-	// if (cb->token_type == 1){			// string
-	// 	// n_ptr = NULL;
-	// 	// s_ptr = cb->token;
-	// }
-	// else if (cb->token_type == 2){ 		// unrecognized
-	// 	cb->token_value = 37;
-	// 	cb->token_type = 37;
-	// }
-	// else if (cb->token_type == 35){		//integer
-	// 	sscanf(cb->token, "%u", &num);
-	// 	cb->token_value = num;
-	// 	// printf("****hit interir\n\r");
-	// 	// n_ptr = &num;
-	// 	// s_ptr = NULL;
-	// }
-	// else
-	// {
-	// 	num = cb->token_type;
-	// 	// n_ptr = &num;
-	// 	// s_ptr = NULL;
-	// }
+// #ifdef _TRACE
+// 	sprintf(trace_buf, "cmd_fsm called: token <%s>, token value <%i>, token type <%i>, state <%i>, new token type <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state, token_type(cb->token));
+// 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+// #endif
 
 	/* set up control block values based on token type */
 	cb->token_type = token_type(cb->token);
@@ -1548,13 +1534,13 @@ void cmd_fsm(_CMD_FSM_CB *cb)
 	}
 
 #ifdef _TRACE
-	sprintf(trace_buf, "cmd_fsm called before setting new state: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+	sprintf(trace_buf, "cmd_fsm called before setting new state: index <%i>token <%s>, token value <%i>, token type <%i>, state <%i>\n", index, cb->token, cb->token_value, cb->token_type, cb->state);
 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
 
 	if (cmd_action[index][cb->state](cb) == 0) {		// fire off a fsm action routine
 		cb->p_state = cb->state;
-		cb->state = cmd_new_state[cb->token_type][cb->state];	// update state
+		cb->state = cmd_new_state[index][cb->state];	// update state
 
 #ifdef _TRACE
 	sprintf(trace_buf, "cmd_fsm called after setting new state: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
