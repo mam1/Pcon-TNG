@@ -91,6 +91,7 @@ int sys_save(FILE *sd ,_SYS_DAT2 *sdat){
 }
 
 int sys_comp(_CONFIG_DAT *config){
+    // printf("sys_comp called with minor revision = %i, system = %i\n",config->minor_revision, _MINOR_REVISION);
 
 
     if(_MAJOR_VERSION != config->major_version){

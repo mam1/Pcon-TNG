@@ -4,7 +4,7 @@
 /* version info */
 #define _MAJOR_VERSION		8
 #define _MINOR_VERSION 		2
-#define _MINOR_REVISION		8
+#define _MINOR_REVISION		12
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
@@ -62,9 +62,10 @@
 /* schedule parameters */
 #define _SCHEDULE_NAME_SIZE		40
 #define _MAX_SCHEDULE_RECS		20
+#define  _MAX_SCHEDULES			4
 
 /* template library parameters */
-#define _MAX_TEMPLATES			20
+#define _MAX_TEMPLATES			10
 #define _TEMPLATE_NAME_SIZE		40
 
 // #define _SCHEDULE_SIZE			_MAX_SCHEDULE_RECS + 1

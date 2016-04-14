@@ -120,6 +120,8 @@ int main(void) {
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores id set", trace_flag);
 #endif	
+
+	/* set up shared memory */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
@@ -127,20 +129,21 @@ int main(void) {
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	/* setup control block pointers */
-	cmd_fsm_cb.w_sch_ptr = &cmd_fsm_cb.w_sch;		 //set pointer to working schedule
-	// cmd_fsm_cb.sdat_ptr = &ipc_ptr->sys_data;	 //set up pointer in cmd_fsm control block to allow acces to system data
 	cmd_fsm_cb.ipc_ptr = ipc_ptr;					 //set pointer to shared memory
 	cmd_fsm_cb.sys_ptr = &ipc_ptr->sys_data;		 //set pointer to system data in shared memory
+	cmd_fsm_cb.sch_ptr = &ipc_ptr->sys_data.sys_sch; //set pointer to active shecule in shared memory
+
+	cmd_fsm_cb.w_sch_ptr = &cmd_fsm_cb.w_sch;		 //set pointer to working schedule
 	cmd_fsm_cb.sch_ptr = &ipc_ptr->sys_data.sys_sch; //set pointer to active shecule in shared memory
 
     /* load data from system data file and compare config data */
     sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);  // create system file if it does not exist
     sys_load(sys_file,&ipc_ptr->sys_data);
     hold_config = cmd_fsm_cb.sys_ptr->config;
-    printf("loaded minor_revision from system file %i\n",hold_config.minor_revision);
+    // printf("loaded minor_revision from system file %i\n",hold_config.minor_revision);
     if(sys_comp(&hold_config)){
     	printf("*** there are different configurations in the system file and in the application\n update system file? (y)|(n) > ");
-    	// printf("\n  ignor problem? <y>|<n>: ");
+    	printf("\n  overwrite system file? <y>|<n>: ");
 		if (getchar() == 'y') {
 		    cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION;
 		    cmd_fsm_cb.sys_ptr->config.minor_version = _MINOR_VERSION;
@@ -154,7 +157,7 @@ int main(void) {
     			printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
 			}
 			else
-				printf("  Pcon: system data file updated\r\n");
+				printf(" system data file updated\r\n");
 
 			c = fgetc(stdin);			// get rid of trailing CR
 		}
@@ -176,16 +179,17 @@ int main(void) {
     
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system data loaded into shared memory", trace_flag);
-#endif
 	printf("  Pcon: system data loaded into shared memory\r\n");
+#endif
 
 	/* load working schedule from system schedule */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	cmd_fsm_cb.w_sch = ipc_ptr->sys_data.sys_sch; 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
-	printf("  Pcon: system schedule copied to working schedule\r\n");
+
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system schedule copied to working schedule", trace_flag);
+	printf("  Pcon: system schedule copied to working schedule\r\n");
 #endif
 
 	/* initialize state machines */
@@ -205,9 +209,10 @@ int main(void) {
 	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "initializations complete\n", trace_flag);
 	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "starting main event loop\n", trace_flag);
 #endif
-	printf("\r\ninitializations complete\r\n\n");
-	sys_disp(&ipc_ptr->sys_data);	        //display system info on serial terminal
-	printf("\r\n\n");
+	printf(" initializations complete\r\n\n");
+	// sys_disp(&ipc_ptr->sys_data);	        //display system info on serial terminal
+	// printf("\r\n\n");
+
 	/* set initial prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, " enter a command");
 
