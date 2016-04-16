@@ -9,26 +9,26 @@
 
 /* time data structure */
 typedef struct {
-    int tm_sec;         // seconds
-    int tm_min;         // minutes
-    int tm_hour;        // hours
-    int tm_mday;        // day of the month
-    int tm_mon;         // month
-    int tm_year;        // year
-    int tm_wday;        // day of the week
-    int tm_yday;        // day in the year
-    int tm_isdst;       // daylight saving time
+	int tm_sec;         // seconds
+	int tm_min;         // minutes
+	int tm_hour;        // hours
+	int tm_mday;        // day of the month
+	int tm_mon;         // month
+	int tm_year;        // year
+	int tm_wday;        // day of the week
+	int tm_yday;        // day in the year
+	int tm_isdst;       // daylight saving time
 } _tm;
 
 /* application configuration data */
 typedef struct {
-    int         major_version;
-    int         minor_version;
-    int         minor_revision;
-    int 		channels;
-    int 		sensors;
-    int 		commands;
-    int 		states;
+	int         major_version;
+	int         minor_version;
+	int         minor_revision;
+	int 		channels;
+	int 		sensors;
+	int 		commands;
+	int 		states;
 } _CONFIG_DAT;
 
 /* channel data */
@@ -61,10 +61,9 @@ typedef struct {
 	int 		rcnt;
 } _S_CHAN;				// combine schedule records into a schedule for a channel
 
-typedef struct {	
-	_S_CHAN 	schedule[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];	
-} _S_TAB; 
-
+// typedef struct {
+// 	_S_CHAN 	schedule[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];
+// } _S_TAB;
 /* schedule template */
 typedef struct {
 	char 			name[_TEMPLATE_NAME_SIZE];
@@ -74,25 +73,32 @@ typedef struct {
 } _TMPL_DAT;
 
 typedef struct {
+
+	_TMPL_DAT 	sch[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];
+} _S_TAB;
+
+
+
+typedef struct {
 	_TMPL_DAT 		t_lib[_MAX_TEMPLATES];
 } _T_TAB;
 
 /* structure of system file record */
 typedef struct {
-	_CONFIG_DAT 	config;							// system configuration	
-  	_S_TAB  		sys_sch;						// system schedule
-  	_TMPL_DAT 		tpl_lib[_MAX_TEMPLATES];		// schedule template library
-  	int 			sch_index;					// points to the next available template record
-  	_S_TAB 			sch_lib[_MAX_SCHEDULES];
-  	int 			tpl_index;
-	 _CHN_DAT     	c_data[_NUMBER_OF_CHANNELS];	// persistent channel data
+	_CONFIG_DAT 	config;							// system configuration
+	_S_TAB  		sys_sch;						// system schedule
+	_TMPL_DAT 		tpl_lib[_MAX_TEMPLATES];		// schedule template library
+	int 			sch_index;					// points to the next available template record
+	_S_TAB 			sch_lib[_MAX_SCHEDULES];
+	int 			tpl_index;
+	_CHN_DAT     	c_data[_NUMBER_OF_CHANNELS];	// persistent channel data
 } _SYS_DAT2;
 
 /* ipc data - memory mapped */
 typedef	struct {
 	int				force_update;				// force daemon to update relays
 	_SYS_DAT2		sys_data;					// persistant system data
-	_SEN_DAT		s_dat[_NUMBER_OF_SENSORS];  // current sensor values - set by cgi 
+	_SEN_DAT		s_dat[_NUMBER_OF_SENSORS];  // current sensor values - set by cgi
 } _IPC_DAT;
 
 /* cmd_fsm control block */
@@ -117,7 +123,7 @@ typedef struct {
 	int 			w_humid;
 	int 			w_sensor_id;
 	_TMPL_DAT 		w_template_buffer;
-	_S_TAB        	w_sch, *w_sch_ptr;
+	_S_TAB        	w_sch;   // *w_sch_ptr;
 	_S_CHAN         w_tbuff;
 	int      		w_schedule_number;
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
@@ -127,15 +133,17 @@ typedef struct {
 	int				w_template_index;
 
 	/* pointers */
-	_IPC_DAT 		*ipc_ptr;			//pointer to shared memory
-	_SYS_DAT2		*sys_ptr;			//pointer to system data in shared memory
-	_S_TAB 			*sch_ptr;			//pointer to active schedule in shared memory
+	_IPC_DAT 		*ipc_ptr;			// pointer to shared memory
+	_SYS_DAT2		*sys_ptr;			// pointer to system data in shared memory
+	_S_TAB 			*ssch_ptr;			// pointer to active schedule in shared memory
+	_S_TAB 			*wsch_ptr;			// pointer to working schedule
+	_CHN_DAT 		*cdat_ptr; 			// pointer to channel data in shared memory
 
 
 } _CMD_FSM_CB;
 
 /* buffer for semaphores */
-typedef struct sembuf SEMBUF;  
+typedef struct sembuf SEMBUF;
 
 
 /* action routine definitions */

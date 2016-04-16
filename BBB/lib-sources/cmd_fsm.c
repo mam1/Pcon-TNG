@@ -68,21 +68,21 @@ _tm 			tm;
 
 /* command list */
 char    *keyword[_CMD_TOKENS] = {
-	/*  0 */    "temp",    
+	/*  0 */    "temp",
 	/*  1 */    "*",
-	/*  2 */    "humid",        
+	/*  2 */    "humid",
 	/*  3 */    "schedule",
 	/*  4 */    "?",
 	/*  5 */    "clock",
-	/*  6 */    "yes",     
-	/*  7 */    "cancel",     
+	/*  6 */    "yes",
+	/*  7 */    "cancel",
 	/*  8 */    "replace",
 	/*  9 */    "edit",
 	/* 10 */    "delete",
 	/* 11 */    "zero",
 	/* 12 */    "on",
 	/* 13 */    "off",
-	/* 14 */    "clear",   
+	/* 14 */    "clear",
 	/* 15 */    "status",
 	/* 16 */    "time",
 	/* 17 */    "sensor",
@@ -99,10 +99,10 @@ char    *keyword[_CMD_TOKENS] = {
 	/* 28 */    "back",
 	/* 29 */    "system",
 	/* 30 */    "debug",
-	/* 31 */    "disp_sys_sch",
-	/* 32 */    "disp_wrk_sch",
-	/* 33 */    "disp_sch_lib",
-	/* 34 */    "disp_tml_lib",
+	/* 31 */    "ssch",
+	/* 32 */    "wsch",
+	/* 33 */    "slib",
+	/* 34 */    "tlib"     ,
 	/* 35 */    "INT",
 	/* 36 */    "STR",
 	/* 37 */    "OTHER"
@@ -176,44 +176,45 @@ char    *keyword[_CMD_TOKENS] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*                       0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27*/
-	/*  0  temp        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 26,  0, 26, 27},
-	/*  1  *           */  { 0,  1,  2,  3,  4,  5,  6,  8,  9,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/*  2  humid       */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 27,  0, 26, 27},
-	/*  3  schedule    */  { 4,  1,  2,  3,  4,  0, 11,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/*  0  temp        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 26,  0, 26, 27},
+	/*  1  *           */  { 0,  1,  2,  3,  4,  9,  6,  8,  9,  4, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/*  2  humid       */  { 0,  1,  2,  3,  4,  0,  0,  0,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 27,  0, 26, 27},
+	/*  3  schedule    */  { 4,  1,  2,  3,  4,  0, 11,  0,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/*  4  ?           */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/*  5  clock       */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
-	/*  6  yes         */  { 0,  1,  0,  3,  4,  4,  6,  0,  0,  0,  0,  6,  4, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/*  6  yes         */  { 0,  1,  0,  3,  4,  0,  6,  0,  0,  0, 10, 11,  4, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  4,  4,  4,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  8,  8},
-	/*  8  replace     */  { 0,  1,  2,  3,  4,  5,  6,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/*  9  edit        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 10  delete      */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0, 26, 27},
-	/* 11  zero        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0, 26, 27},
-	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0, 26, 27},
-	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/*  8  replace     */  { 0,  1,  2,  3,  4,  5,  6,  0,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/*  9  edit        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 10  delete      */  { 0,  1,  2,  3,  4,  5,  4,  7,  8,  9, 10, 11,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0, 26, 27},
+	/* 11  zero        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0, 26, 27},
+	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4,  0, 26, 27},
+	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
 	/* 15  status      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/* 16  time        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
-	/* 17  sensor      */  { 0, 21,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 18  cycle       */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 19  startup     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 20  display     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 21  save        */  { 6,  1,  2,  3,  6,  5,  4,  5,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 22  template    */  { 0,  1,  2,  3,  4,  5, 10,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 23  channel     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 24  load        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 25  set         */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 17  sensor      */  { 0, 21,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 18  cycle       */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 19  startup     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 20  display     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 21  save        */  { 6,  1,  2,  3,  6,  5,  4,  5,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 22  template    */  { 0,  1,  2,  3,  4,  5, 10,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 23  channel     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 24  load        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 25  set         */  { 0,  1,  2,  3,  5,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/* 26  q           */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0},
-	/* 27  done        */  { 0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  4},
-	/* 28  back        */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0, 24, 24},
+	/* 27  done        */  { 0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  4,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  4},
+	/* 28  back        */  { 0,  0,  1,  2,  0,  0,  4,  4,  7,  0,  4,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,  0, 24, 24},
 	/* 29  system      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
 	/* 30  debug       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
-	/* 31 disp_sys_sch */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
-	/* 32 disp_wrk_sch */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
-	/* 33 disp_sch_lib */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
-	/* 34 disp_tml_lib */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
-	/* 35  INT         */  { 1,  1,  3,  0,  8,  6,  6,  8, 24,  7,  0, 12,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0, 24,  0,  4,  4},
-	/* 36  STR         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
-	/* 37  OTHER       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27}};
+	/* 31  ssch        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 32  wsch        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 33  slib        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 34  tlib        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27},
+	/* 35  INT         */  { 1,  1,  3,  0,  8,  9,  6,  8, 24,  0, 10, 11,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  0,  0, 24,  0,  4,  4},
+	/* 36  STR         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9,  4,  4,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27},
+	/* 37  OTHER       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0, 21,  0,  0, 24,  0, 26, 27}
+};
 
 /*cmd processor functions */
 int c_0(_CMD_FSM_CB *); /* nop */
@@ -241,7 +242,7 @@ int c_21(_CMD_FSM_CB *); /* set working schedule minute */
 int c_22(_CMD_FSM_CB *); /* set schedule record to on */
 int c_23(_CMD_FSM_CB *); /* set set schedule record to off */
 int c_24(_CMD_FSM_CB *); /* delete schedule record */
-int c_25(_CMD_FSM_CB *); /* save schedule template */
+int c_25(_CMD_FSM_CB *); /* save schedule template */ //********************************************************
 int c_26(_CMD_FSM_CB *); /* delete schedule template */
 int c_27(_CMD_FSM_CB *); /* update temperature in a schedule record */
 int c_28(_CMD_FSM_CB *); /* update humidity in a schedule record */
@@ -266,15 +267,27 @@ int c_46(_CMD_FSM_CB *); /* set real time clock year */
 int c_47(_CMD_FSM_CB *); /* set real time clock day of the week */
 int c_48(_CMD_FSM_CB *); /* set PCF8563 */
 int c_49(_CMD_FSM_CB *); /* set channel sensor_id */
-int c_50(_CMD_FSM_CB *); /* set "set"  */
+int c_50(_CMD_FSM_CB *); /* set save prompt */
+int c_51(_CMD_FSM_CB *); /* save template  */
+int c_52(_CMD_FSM_CB *); /* save schedule */
+int c_53(_CMD_FSM_CB *); /* set template name prompt  */
+int c_54(_CMD_FSM_CB *); /* set schedule name prompt */
+int c_55(_CMD_FSM_CB *); /* display template lib */
+int c_56(_CMD_FSM_CB *); /* display schedule lib */
+int c_57(_CMD_FSM_CB *); /* display system schedule */
+int c_58(_CMD_FSM_CB *); /* display working schedule */
+int c_59(_CMD_FSM_CB *); /* set set day prompt */
+int c_60(_CMD_FSM_CB *); /* set set channel prompt */
+
+
 
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*          STATE          0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21    22    23    24    25    26    27  */
 	/*  0  temp        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_38,  c_7,  c_7,  c_7},
-	/*  1  *           */  { c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7, c_31, c_32,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  2  humid       */  { c_7,  c_3,  c_7,  c_3,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_37,  c_7,  c_7,  c_7},
+	/*  1  *           */  { c_7,  c_8,  c_7,  c_7,  c_7, c_32, c_31,  c_7,  c_7, c_31,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  2  humid       */  { c_7,  c_3,  c_7,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_3,  c_7,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_37,  c_7,  c_7,  c_7},
 	/*  3  schedule    */  {c_35,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  4  ?           */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
 	/*  5  clock       */  {c_40,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -294,22 +307,23 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 19  startup     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 20  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 21  save        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_53,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 23  channel     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 24  load        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 25  set         */  { c_7,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 25  set         */  { c_7,  c_7,  c_1,  c_1, c_59,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3},
 	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_18, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
-	/* 29  system      */  { c_7,  c_7, c_14, c_14,  c_7,  c_7, c_14, c_14, c_14, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 29  system      */  { c_7,  c_7, c_14, c_14,  c_7,  c_7, c_14,  c_7,  c_7, c_14, c_14, c_14, c_14,  c_7, c_14, c_14, c_14, c_14, c_14, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 30  debug       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 31 disp_sys_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 32 disp_wrk_sch */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 33 disp_sch_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 34 disp_tml_lib */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20,  c_7, c_20, c_29, c_21,  c_7, c_33, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49,  c_7,  c_7,  c_7,  c_7, c_27, c_28},
-	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7}};
+	/* 31  ssch        */  {c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57},
+	/* 32  wsch        */  {c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58},
+	/* 33  slib        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 34  tlib        */  {c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55},
+	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20, c_29, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49,  c_7,  c_7,  c_7,  c_7, c_27, c_28},
+	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7}
+};
 
 /*************** start fsm support functions ********************/
 int is_valid_int(const char *str)
@@ -362,7 +376,7 @@ int cmd_type(char *c)
 }
 
 /* return token type or command number */
-int token_type(char *c){
+int token_type(char *c) {
 	int     i;
 	char    *p;
 
@@ -486,7 +500,7 @@ char *make_lib_list(char *buf, _CMD_FSM_CB *cb) {
 	// 			for (ii = 0; ii < pad_size; ii++)
 	// 				strcat(pad, " ");
 	// 			// printf("    %i - %s%s  %s\r\n",i,cb->sdat_ptr->schlib_index,pad,sch2text2(cb->sdat_ptr->s_data[i].schedule,buf));
-	// 			sprintf(&cb->prompt_buffer[strlen(cb->prompt_buffer)], "    %i - %s%s  %s\r\n", 
+	// 			sprintf(&cb->prompt_buffer[strlen(cb->prompt_buffer)], "    %i - %s%s  %s\r\n",
 	// 				i, cb->sdat_ptr->t_data[i].name, pad, sch2text2(&cb->sdat_ptr->t_data[i].temp_chan_sch, sbuf));
 	// 		}
 	// 	}
@@ -518,7 +532,7 @@ void print_tlist(_CMD_FSM_CB *cb) {
 	// 	pad[0] = '\0';
 	// 	for (ii = 0; ii < pad_size; ii++)
 	// 		strcat(pad, " ");
-	// 	printf("    %i - %s%s  %s\r\n", 
+	// 	printf("    %i - %s%s  %s\r\n",
 	// 		i, cb->sdat_ptr->t_data[i].name, pad, sch2text2(&cb->sdat_ptr->t_data[i].temp_chan_sch, buf));
 	// }
 
@@ -549,7 +563,7 @@ int c_1(_CMD_FSM_CB *cb)
 	printf("\r\ncommands valid in any state other than state 0\r\n");
 	printf("  done ... terminate active function\r\n");
 	printf("  back ... return to previous state\r\n");
-	printf("\r\nadditional commands valid in state %i\r\n",cb->state);
+	printf("\r\nadditional commands valid in state %i\r\n", cb->state);
 
 	/* figure how many spacer dots are required */
 	dots = 0;
@@ -560,18 +574,18 @@ int c_1(_CMD_FSM_CB *cb)
 	}
 	/* print list of valid commands */
 	for (i = 0; i < _CMD_TOKENS; i++) {
-		if((cmd_action[i][cb->state] == c_8) || (cmd_action[i][cb->state] == c_7) || (cmd_action[i][cb->state] == c_0) 
-			|| (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3) || (cmd_action[i][cb->state] == c_34)
-			|| (cmd_action[i][cb->state] == c_2) || (cmd_action[i][cb->state] == c_6))
+		if ((cmd_action[i][cb->state] == c_8) || (cmd_action[i][cb->state] == c_7) || (cmd_action[i][cb->state] == c_0)
+		        || (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3) || (cmd_action[i][cb->state] == c_34)
+		        || (cmd_action[i][cb->state] == c_2) || (cmd_action[i][cb->state] == c_6))
 			continue;
 		else {
 			printf("  %s ", keyword[i]);
-	        for(ii=0;ii<((dots + 2) - strlen(keyword[i]));ii++)
-	            printf(".");
-	        // printf(" %s",cmd_def(i, cb->state));
-	        // if((i==35)  || (i==36))
-	        printf(" %s",cmd_def(cb->state, i));
-	        printf("\r\n");
+			for (ii = 0; ii < ((dots + 2) - strlen(keyword[i])); ii++)
+				printf(".");
+			// printf(" %s",cmd_def(i, cb->state));
+			// if((i==35)  || (i==36))
+			printf(" %s", cmd_def(cb->state, i));
+			printf("\r\n");
 		}
 	}
 	/* build prompt */
@@ -584,8 +598,8 @@ int c_2(_CMD_FSM_CB *cb)
 	_tm         tm;
 	int         rtc;
 
-	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus 
-	get_tm(rtc, &tm);							// read the clock 
+	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
+	get_tm(rtc, &tm);							// read the clock
 	sleep(1);
 	printf(" %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
@@ -611,10 +625,10 @@ int c_4(_CMD_FSM_CB *cb)
 		// strcat(cb->prompt_buffer, "\n\r> ");
 
 #ifdef _TRACE
-	sprintf(trace_buf, "c_4 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-	sprintf(trace_buf, "c_4 set working channel to %i\n", cb->w_channel);
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+		sprintf(trace_buf, "c_4 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+		sprintf(trace_buf, "c_4 set working channel to %i\n", cb->w_channel);
+		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
 
 		return 0;
@@ -628,20 +642,20 @@ int c_5(_CMD_FSM_CB *cb)
 	char        numstr[2];
 	FILE 		*f;
 
-	#ifdef _TRACE
+#ifdef _TRACE
 	sprintf(trace_buf, "c_5 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 	sprintf(trace_buf, "c_4 set working channel name to  %s\n", cb->token);
-	#endif
-	
+#endif
+
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
 	strcpy(cb->sys_ptr->c_data[cb->w_channel].name, dequote(cb->token));// update ipc data
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
-	sys_save(f,cb->sys_ptr);	// write data to disk
+	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
 	/* build prompt */
@@ -661,17 +675,17 @@ int c_6(_CMD_FSM_CB *cb)
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("\n\r   <%2i> - ", i);
 		printf(" %s    %s   ", onoff[cb->sys_ptr->c_data[i].c_state], c_mode[cb->sys_ptr->c_data[i].c_mode]);
-		switch(cb->sys_ptr->c_data[i].c_mode) {
-		   	case 2:	// time & sensor
-		      	printf("  %i     ", cb->sys_ptr->c_data[i].sensor_id);
-		      	break; 
-			
-		   	case 3:	// cycle
-		      	printf(" (%i:%i)", cb->sys_ptr->c_data[i].on_sec, cb->sys_ptr->c_data[i].off_sec);
-		      	break; 
-		  
-		   	default : 
-		   		printf("          ");
+		switch (cb->sys_ptr->c_data[i].c_mode) {
+		case 2:	// time & sensor
+			printf("  %i     ", cb->sys_ptr->c_data[i].sensor_id);
+			break;
+
+		case 3:	// cycle
+			printf(" (%i:%i)", cb->sys_ptr->c_data[i].on_sec, cb->sys_ptr->c_data[i].off_sec);
+			break;
+
+		default :
+			printf("          ");
 		}
 		printf("%s", cb->sys_ptr->c_data[i].name);
 	}
@@ -701,7 +715,7 @@ int c_8(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "'");
 	strcat(cb->prompt_buffer, cb->token);
 	strcat(cb->prompt_buffer, "' is not a valid command\n\r> ");
-	printf("%s",cb->prompt_buffer);
+	printf("%s", cb->prompt_buffer);
 	strcpy(cb->prompt_buffer, "\0");
 	return 1;
 }
@@ -719,8 +733,8 @@ int c_9(_CMD_FSM_CB *cb)
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
-	sys_save(f,cb->sys_ptr);	// write data to disk
+	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
 	/* build prompt */
@@ -746,8 +760,8 @@ int c_10(_CMD_FSM_CB *cb)
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
-	sys_save(f,cb->sys_ptr);	// write data to disk
+	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
 	/* build prompt */
@@ -773,10 +787,10 @@ int c_11(_CMD_FSM_CB *cb)
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
-					
-	
-	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
-	sys_save(f,cb->sys_ptr);	// write data to disk
+
+
+	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
 	strcpy(cb->prompt_buffer, "channel ");
@@ -802,8 +816,8 @@ int c_12(_CMD_FSM_CB *cb)
 
 	// sdat.c_data[cb->w_channel].c_mode = 2;
 
-	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
-	sys_save(f,cb->sys_ptr);	// write data to disk
+	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
 	strcpy(cb->prompt_buffer, "channel ");
@@ -986,9 +1000,9 @@ int c_22(_CMD_FSM_CB *cb)
 
 	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
-	if(i != -1)
+	if (i != -1)
 		hold = cb->w_template_buffer.rec[i];
-	else{
+	else {
 		hold.temp = 0;
 		hold.humid = 0;
 	}
@@ -1011,11 +1025,11 @@ int c_23(_CMD_FSM_CB *cb)
 	_S_REC 			hold;
 
 	// key = cb->w_hours * 60 + cb->w_minutes;
-		/* serch for key in a schedule */
+	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
-	if(i != -1)
+	if (i != -1)
 		hold = cb->w_template_buffer.rec[i];
-	else{
+	else {
 		hold.temp = 0;
 		hold.humid = 0;
 	}
@@ -1067,7 +1081,7 @@ int c_25(_CMD_FSM_CB *cb)
 	// }
 
 	// strcpy(cb->sdat_ptr->t_data[index].name, (char *)cb->w_schedule_name);      //copy name
-	
+
 
 	// for (i = 0; i < _SCHEDULE_SIZE; i++) {
 	// 	cb->sdat_ptr->t_data[index].schedule[i]  = cb->w_schedule[i];   //copy schedule
@@ -1120,7 +1134,7 @@ int c_26(_CMD_FSM_CB *cb)
 	// cb->w_template_index = cb->w_template_index - 1;
 
 
-	
+
 	// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
 
 	// /* build prompt */
@@ -1145,9 +1159,9 @@ int c_27(_CMD_FSM_CB *cb)
 
 	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
-	if(i != -1)
+	if (i != -1)
 		hold = cb->w_template_buffer.rec[i];
-	else{
+	else {
 		hold.state = 0;
 		hold.humid = 0;
 	}
@@ -1174,15 +1188,15 @@ int c_28(_CMD_FSM_CB *cb)
 
 	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
-	if(i != -1)
+	if (i != -1)
 		hold = cb->w_template_buffer.rec[i];
-	else{
+	else {
 		hold.state = 0;
 		hold.temp = 0;
 	}
 
 	/* add new schedule record */
-	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, hold.state,hold.temp, cb->token_value);
+	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, hold.state, hold.temp, cb->token_value);
 
 	/*build prompt */
 	strcpy(cb->prompt_buffer, "\0");
@@ -1192,58 +1206,77 @@ int c_28(_CMD_FSM_CB *cb)
 }
 
 /* set working channel */
-int c_29(_CMD_FSM_CB *cb)
-{
+int c_29(_CMD_FSM_CB *cb) {
+	char 				numstr[2];
+	int 				i;
 
-// 	// printf("editing system schedule\r\n");
-// 	cb->w_channel = cb->token_value;
+	cb->w_channel = cb->token_value;
+	if (cb->w_day == _ALL_DAYS) 
+		for (i = 0; i < _DAYS_PER_WEEK; i++) {
+			cb->wsch_ptr->sch[i][cb->w_channel] = cb->w_template_buffer;
+			strcpy(cb->prompt_buffer, " schedule loaded into working schedule table all days");
+		}
+		else {
+			printf(" %i records to copy\r\n",cb->w_template_buffer.rcnt);
+			cb->wsch_ptr->sch[cb->w_day][cb->w_channel] = cb->w_template_buffer;
+			printf(" %i records copied\r\n",cb->wsch_ptr->sch[cb->w_day][cb->w_channel].rcnt);
+			strcpy(cb->prompt_buffer, " schedule loaded into working schedule table (day ");
+			sprintf(numstr, "%2d", cb->w_day);
+			strcat(cb->prompt_buffer, numstr);
+		}
 
-// 	/* build prompt */
-// 	strcpy(cb->prompt_buffer, "\r\n  enter day number or *  > ");
-	return 0;
-}
+		strcat(cb->prompt_buffer, " channel ");
+		sprintf(numstr, "%2d)", cb->w_channel);
+		strcat(cb->prompt_buffer, numstr);
+		strcat(cb->prompt_buffer, "\r\n enter command");
+		return 0;
 
-/* set working day */
-int c_30(_CMD_FSM_CB *cb)
-{
-// 	if ((cb->token_value > 0) && (cb->token_value < _DAYS_PER_WEEK + 1)) {
-// 		cb->w_day = cb->token_value - 1;
-// 		return 0;
-// 	}
-// 	strcpy(cb->prompt_buffer, "\r\n  day number must be 1 to 7 > ");
-// 	return 1;
+	}
 
-// 	/* build prompt */
-// 	strcpy(cb->prompt_buffer, "\r\n  enter day number or * > ");
+	/* set working day */
+	int c_30(_CMD_FSM_CB * cb)
+	{
+		char 				numstr[2];
 
-	return 0;
+		if ((cb->token_value > 0) && (cb->token_value < _DAYS_PER_WEEK + 1)) {
+			cb->w_day = cb->token_value - 1;
+			/* build prompt */
+			strcpy(cb->prompt_buffer, "day set to ");
+			sprintf(numstr, "%d", cb->w_day);
+			strcat(cb->prompt_buffer, numstr);
+			strcat(cb->prompt_buffer, " enter channel number or * > ");
 
-}
+			return 0;
+		}
+		strcpy(cb->prompt_buffer, " day number must be 1 to 7 > ");
+		return 1;
 
-/* set working channel to all */
-int c_31(_CMD_FSM_CB *cb)
-{
-	// // printf("editing system schedule\r\n");
-	// cb->w_channel = _ALL_CHANNELS;
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "\r\n  enter day number or * > ");
-	return 0;
-}
+	}
 
-/* set working day to all */
-int c_32(_CMD_FSM_CB *cb)
-{
-	// // printf("editing system schedule\r\n");
-	// cb->w_day = _ALL_DAYS;
+	/* set working channel to all */
+	int c_31(_CMD_FSM_CB * cb)
+	{
+		// printf("editing system schedule\r\n");
+		cb->w_channel = _ALL_CHANNELS;
+		/* build prompt */
+		strcpy(cb->prompt_buffer, "\r\n  enter day number or * > ");
+		return 0;
+	}
 
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "\r\n  enter template number  > ");
-	return 0;
-}
+	/* set working day to all */
+	int c_32(_CMD_FSM_CB * cb)
+	{
+		// printf("editing system schedule\r\n");
+		cb->w_day = _ALL_DAYS;
 
-/* update schedule data*/
-int c_33(_CMD_FSM_CB *cb)
-{
+		/* build prompt */
+		strcpy(cb->prompt_buffer, " day set to all, enter channel number or * for all channels");
+		return 0;
+	}
+
+	/* update schedule data*/
+	int c_33(_CMD_FSM_CB * cb)
+	{
 // 	int             channel, template, day;
 // 	// int              i, ii, iii;
 
@@ -1287,258 +1320,353 @@ int c_33(_CMD_FSM_CB *cb)
 
 // 	        /* build prompt */
 // 	        strcpy(cb->prompt_buffer, "\r\n  enter channel{N(0...7)|*},day{N(1...7)|*},template{N}  > ");
-	        return 0;
-}
-
-/* state 0 prompt */
-int c_34(_CMD_FSM_CB *cb)
-{
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\n enter a command");
-	return 0;
-}
-
-/* set schedule maint prompt */
-int  c_35(_CMD_FSM_CB *cb)
-{
-	/* build prompt */
-	cb->prompt_buffer[0] = '\0';
-	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-	strcat(cb->prompt_buffer, "\r\n enter a command or time");
-	return 0;
-}
-
-/* append state 0 prompt to prompt buffer */
-int c_36(_CMD_FSM_CB *cb)
-{
-	/* build prompt */
-	strcat(cmd_fsm_cb.prompt_buffer, "\r\n enter a command");
-	return 0;
-}
-
-/* display debug data */
-int c_37(_CMD_FSM_CB *cb)
-{
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer,"\r\n enter trigger humidity");
-	return 0;
-}
-
-/* set temperature prompt */
-int c_38(_CMD_FSM_CB *cb)
-{
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer,"\r\n enter trigger temperature");
-
-	return 0;
-}
-
-/* replace system schedule */
-int c_39(_CMD_FSM_CB *cb)
-{
-	// // char            temp_buf[128];
-
-	// ipc_sem_lock(semid, &sb);																// wait for a lock on shared memory
-	// memcpy(ipc_ptr->sch, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));					// move working schedule from fsm controol block to shared memory
-	// ipc_ptr->force_update = 1;																// force relays to be updated
-	// ipc_sem_free(semid, &sb);																// free lock on shared memory
-	// memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));	// move working schedule to system schedule in fsm control block
-	// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
-	// printf("\r\n*** system schedule replaced ***\r\n");
-
-	// /* build prompt */
-	// c_34(cb);
-
-	return 0;
-}
-
-/* set real time clock */
-int c_40(_CMD_FSM_CB *cb)
-{
-#ifdef _TRACE
-	sprintf(trace_buf, "c_40 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-#endif
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter time, date and day of the week - <Hour>:<Min>:<Sec> <month>/<day>/<year> <dow>\r\n> ");
-	return 0;
-}
-
-/* set real time clock hours */
-int c_41(_CMD_FSM_CB *cb)
-{
-#ifdef _TRACE
-	sprintf(trace_buf, "c_41 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-#endif
-	tm.tm_hour = cb->token_value;
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter minutes\r\n> ");
-	return 0;
-}
-
-/* set real time clock minutes */
-int c_42(_CMD_FSM_CB *cb)
-{
-	tm.tm_min = cb->token_value;
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter seconds\r\n> ");
-	return 0;
-}
-
-/* set real time clock seconds */
-int c_43(_CMD_FSM_CB *cb)
-{
-	tm.tm_sec = cb->token_value;
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter month\r\n> ");
-	return 0;
-}
-
-/* set real time clock month */
-int c_44(_CMD_FSM_CB *cb)
-{
-	tm.tm_mon = cb->token_value;
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter day\r\n> ");
-	return 0;
-}
-
-/* set real time clock day */
-int c_45(_CMD_FSM_CB *cb)
-{
-	tm.tm_mday = cb->token_value;
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter year\r\n> ");
-	return 0;
-}
-
-/* set real time clock year */
-int c_46(_CMD_FSM_CB *cb)
-{
-	tm.tm_year = cb->token_value;
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter day of the week number <sun=0, mon=1, ...>\r\n> ");
-	return 0;
-}
-
-/* set real time clock day of the week */
-int c_47(_CMD_FSM_CB *cb)
-{
-	tm.tm_wday = cb->token_value;
-	printf(" set real time clock to:  %02i:%02i:%02i  %s %02i/%02i/%02i\n\n\r",
-	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\n<yes><cancel>\r\n> ");
-	return 0;
-}
-
-/* set PCF8563  */
-int c_48(_CMD_FSM_CB *cb)
-{
-	int         rtc;
-
-	/* Open the i2c-0 bus */
-	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);
-	/* read the clock */
-	set_tm(rtc, &tm);
-	close(rtc);
-
-	c_2(cb);
-
-	/* build prompt */
-	c_34(cb);
-	return 0;
-}
-
-/* set sensor id  */
-int c_49(_CMD_FSM_CB *cb)
-{
-	char        numstr[2];
-	FILE 		*f;
-
-	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
-	cb->sys_ptr->c_data[cb->w_channel].sensor_id = cb->token_value;
-	cb->ipc_ptr->force_update  = 1;									// force relays to be updated
-	ipc_sem_free(semid, &sb);									// free lock on shared memory
-
-	f = sys_open(_SYSTEM_DATA_FILE,cb->sys_ptr);
-	sys_save(f,cb->sys_ptr);	// write data to disk
-	fclose(f);
-	
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "sensor id for channel ");
-	sprintf(numstr, "%d set to ", cb->w_channel);
-	strcat(cb->prompt_buffer, numstr);
-	sprintf(numstr, "%d", cb->sys_ptr->c_data[cb->w_channel].sensor_id);
-	strcat(cb->prompt_buffer, numstr);
-	// strcat(cb->prompt_buffer, "\r\n");
-	c_36(cb);		
-	return 0;
-}
-
-
-/* set save prompt */
-int c_50(_CMD_FSM_CB *cb)
-{
-	
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, " save template or schedule?");	
-	return 0;
-}
-
-/* save template */
-int c_51(_CMD_FSM_CB *cb)
-{
-	/* test for first record */
-	if(cb->sys_ptr->tpl_index == 0){
-		cb->sys_ptr->tpl_index = 1;
-		strcpy(cmd_fsm_cb.prompt_buffer, " template saved");
-		c_36(cb);
+		return 0;
 	}
-	/* see if there is room to save template */
-	if((cb->sys_ptr->tpl_index + 1 ) > _MAX_TEMPLATES){
-		strcpy(cmd_fsm_cb.prompt_buffer, " no room for another template\n template not saved");
+
+	/* state 0 prompt */
+	int c_34(_CMD_FSM_CB * cb)
+	{
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\n enter a command");
+		return 0;
+	}
+
+	/* set schedule maint prompt */
+	int  c_35(_CMD_FSM_CB * cb)
+	{
+		/* build prompt */
+		cb->prompt_buffer[0] = '\0';
+		load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+		strcat(cb->prompt_buffer, "\r\n enter a command or time");
+		return 0;
+	}
+
+	/* append state 0 prompt to prompt buffer */
+	int c_36(_CMD_FSM_CB * cb)
+	{
+		/* build prompt */
+		strcat(cmd_fsm_cb.prompt_buffer, "\r\n enter a command");
+		return 0;
+	}
+
+	/* display debug data */
+	int c_37(_CMD_FSM_CB * cb)
+	{
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\n enter trigger humidity");
+		return 0;
+	}
+
+	/* set temperature prompt */
+	int c_38(_CMD_FSM_CB * cb)
+	{
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\n enter trigger temperature");
+
+		return 0;
+	}
+
+	/* replace system schedule */
+	int c_39(_CMD_FSM_CB * cb)
+	{
+		// // char            temp_buf[128];
+
+		// ipc_sem_lock(semid, &sb);																// wait for a lock on shared memory
+		// memcpy(ipc_ptr->sch, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));					// move working schedule from fsm controol block to shared memory
+		// ipc_ptr->force_update = 1;																// force relays to be updated
+		// ipc_sem_free(semid, &sb);																// free lock on shared memory
+		// memcpy(cmd_fsm_cb.sdat_ptr->sch_ptr, cmd_fsm_cb.w_sch_ptr, sizeof(cmd_fsm_cb.w_sch));	// move working schedule to system schedule in fsm control block
+		// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
+		// printf("\r\n*** system schedule replaced ***\r\n");
+
+		// /* build prompt */
+		// c_34(cb);
+
+		return 0;
+	}
+
+	/* set real time clock */
+	int c_40(_CMD_FSM_CB * cb)
+	{
+#ifdef _TRACE
+		sprintf(trace_buf, "c_40 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+#endif
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter time, date and day of the week - <Hour>:<Min>:<Sec> <month>/<day>/<year> <dow>\r\n> ");
+		return 0;
+	}
+
+	/* set real time clock hours */
+	int c_41(_CMD_FSM_CB * cb)
+	{
+#ifdef _TRACE
+		sprintf(trace_buf, "c_41 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+#endif
+		tm.tm_hour = cb->token_value;
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter minutes\r\n> ");
+		return 0;
+	}
+
+	/* set real time clock minutes */
+	int c_42(_CMD_FSM_CB * cb)
+	{
+		tm.tm_min = cb->token_value;
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter seconds\r\n> ");
+		return 0;
+	}
+
+	/* set real time clock seconds */
+	int c_43(_CMD_FSM_CB * cb)
+	{
+		tm.tm_sec = cb->token_value;
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter month\r\n> ");
+		return 0;
+	}
+
+	/* set real time clock month */
+	int c_44(_CMD_FSM_CB * cb)
+	{
+		tm.tm_mon = cb->token_value;
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter day\r\n> ");
+		return 0;
+	}
+
+	/* set real time clock day */
+	int c_45(_CMD_FSM_CB * cb)
+	{
+		tm.tm_mday = cb->token_value;
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter year\r\n> ");
+		return 0;
+	}
+
+	/* set real time clock year */
+	int c_46(_CMD_FSM_CB * cb)
+	{
+		tm.tm_year = cb->token_value;
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter day of the week number <sun=0, mon=1, ...>\r\n> ");
+		return 0;
+	}
+
+	/* set real time clock day of the week */
+	int c_47(_CMD_FSM_CB * cb)
+	{
+		tm.tm_wday = cb->token_value;
+		printf(" set real time clock to:  %02i:%02i:%02i  %s %02i/%02i/%02i\n\n\r",
+		       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "\r\n<yes><cancel>\r\n> ");
+		return 0;
+	}
+
+	/* set PCF8563  */
+	int c_48(_CMD_FSM_CB * cb)
+	{
+		int         rtc;
+
+		/* Open the i2c-0 bus */
+		rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);
+		/* read the clock */
+		set_tm(rtc, &tm);
+		close(rtc);
+
+		c_2(cb);
+
+		/* build prompt */
+		c_34(cb);
+		return 0;
+	}
+
+	/* set sensor id  */
+	int c_49(_CMD_FSM_CB * cb)
+	{
+		char        numstr[2];
+		FILE 		*f;
+
+		ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
+		cb->sys_ptr->c_data[cb->w_channel].sensor_id = cb->token_value;
+		cb->ipc_ptr->force_update  = 1;									// force relays to be updated
+		ipc_sem_free(semid, &sb);									// free lock on shared memory
+
+		f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+		sys_save(f, cb->sys_ptr);	// write data to disk
+		fclose(f);
+
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, "sensor id for channel ");
+		sprintf(numstr, "%d set to ", cb->w_channel);
+		strcat(cb->prompt_buffer, numstr);
+		sprintf(numstr, "%d", cb->sys_ptr->c_data[cb->w_channel].sensor_id);
+		strcat(cb->prompt_buffer, numstr);
+		// strcat(cb->prompt_buffer, "\r\n");
 		c_36(cb);
 		return 0;
 	}
-	cb->sys_ptr->tpl_lib[cb->sys_ptr->tpl_index] = cb->w_template_buffer;
-	cb->sys_ptr->tpl_index += 1;
-	
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, " template saved");
-	c_36(cb);	
-	return 0;
-}
-
-/* save sched */
-int c_52(_CMD_FSM_CB *cb)
-{
-	
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, " save template or schedule?");	
-	return 0;
-}
 
 
-/**************** end command fsm action routines ******************/
+	/* set save prompt */
+	int c_50(_CMD_FSM_CB * cb)
+	{
 
-/* cycle state machine */
-void cmd_fsm(_CMD_FSM_CB *cb)
-{
-	int         num, index;
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, " save template or schedule?");
+		return 0;
+	}
+
+	/* save template */
+	int c_51(_CMD_FSM_CB * cb)
+	{
+		FILE 			*f;
+
+		/* see if there is room to save template */
+		printf("index %i\n\r", cb->sys_ptr->tpl_index);
+		if ((cb->sys_ptr->tpl_index + 1 ) > _MAX_TEMPLATES) {
+			strcpy(cmd_fsm_cb.prompt_buffer, " no room for another template\n template not saved");
+			c_36(cb);
+			return 0;
+		}
+
+		cb->sys_ptr->tpl_lib[cb->sys_ptr->tpl_index] = cb->w_template_buffer;
+		strcpy(cb->sys_ptr->tpl_lib[cb->sys_ptr->tpl_index].name, dequote(cb->token));
+		cb->sys_ptr->tpl_index += 1;
+		f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+		sys_save(f, cb->sys_ptr);	// write data to disk
+		fclose(f);
+
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, " template saved");
+		c_36(cb);
+		return 0;
+	}
+
+	/* save sched */
+	int c_52(_CMD_FSM_CB * cb)
+	{
+
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, " save template or schedule?");
+		return 0;
+	}
+
+	/* set template name prompt */
+	int c_53(_CMD_FSM_CB * cb)
+	{
+
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, " enter template name");
+		return 0;
+	}
+
+	/* set schedule name prompt */
+	int c_54(_CMD_FSM_CB * cb)
+	{
+
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, " enter schedule name");
+		return 0;
+	}
+
+	/* display template library */
+	int c_55(_CMD_FSM_CB * cb)
+	{
+		int 			i;
+		if (cb->sys_ptr->tpl_index == 0)
+			printf(" no saved templates\r\n");
+		else
+			for (i = 0; i < cb->sys_ptr->tpl_index; i++) {
+				printf(" <%i> ", i);
+				list_template(&cb->sys_ptr->tpl_lib[i]);
+				printf("\n\r");
+			}
+
+		/* build prompt */
+		c_34(cb);
+		return 0;
+	}
+
+	/* display schedule library */
+	int c_56(_CMD_FSM_CB * cb)
+	{
+		int 			i;
+		if (cb->sys_ptr->tpl_index == 0)
+			printf(" no saved templates\r\n");
+		else
+			for (i = 0; i < cb->sys_ptr->tpl_index; i++) {
+				printf(" <%i> ", i);
+				list_template(&cb->sys_ptr->tpl_lib[i]);
+				printf("\n\r");
+			}
+
+		/* build prompt */
+		c_34(cb);
+		return 0;
+	}
+
+	/* display system schedule */
+	int c_57(_CMD_FSM_CB * cb)
+	{
+
+		sch_print(cb);  // print a formated dump od schedules for each channel and day
+
+		/* build prompt */
+		c_34(cb);
+		return 0;
+	}
+
+	/* display working schedule */
+	int c_58(_CMD_FSM_CB * cb)
+	{
+
+		sch_print(cb);  // print a formated dump od schedules for each channel and day
+
+		/* build prompt */
+		c_34(cb);
+		return 0;
+	}
+
+	/* set set day prompt */
+	int c_59(_CMD_FSM_CB * cb)
+	{
+
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, " enter day number or * for all days");
+		return 0;
+	}
+
+	/* set set channel prompt */
+	int c_60(_CMD_FSM_CB * cb)
+	{
+
+		/* build prompt */
+		strcpy(cmd_fsm_cb.prompt_buffer, " enter channel number or * for all channels");
+		return 0;
+	}
+
+	/**************** end command fsm action routines ******************/
+
+	/* cycle state machine */
+	void cmd_fsm(_CMD_FSM_CB * cb)
+	{
+		int         num, index;
 
 
-	// cb->token_type = cmd_type(cb->token);
+		// cb->token_type = cmd_type(cb->token);
 
 // #ifdef _TRACE
 // 	sprintf(trace_buf, "cmd_fsm called: token <%s>, token value <%i>, token type <%i>, state <%i>, new token type <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state, token_type(cb->token));
 // 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 // #endif
 
-	/* set up control block values based on token type */
-	cb->token_type = token_type(cb->token);
-	switch(cb->token_type){
+		/* set up control block values based on token type */
+		cb->token_type = token_type(cb->token);
+		switch (cb->token_type) {
 		case _TT_INT:
 			sscanf(cb->token, "%u", &num);
 			cb->token_value = num;
@@ -1557,40 +1685,40 @@ void cmd_fsm(_CMD_FSM_CB *cb)
 			break;
 		default:
 			cb->token_value = cb->token_type;
-			if((cb->token_value < 0) || (cb->token_value > _CMD_TOKENS )){
+			if ((cb->token_value < 0) || (cb->token_value > _CMD_TOKENS )) {
 				printf("\n\r****************************************\n\r");
 				printf("**** command number out of range *******\n\r");
-				printf("************** %2i **********************\n\r",cb->token_value);
+				printf("************** %2i **********************\n\r", cb->token_value);
 				printf("****************************************\n\r");
 				printf("\r\naborting application\n\r");
 				term1();
 			}
 			index = cb->token_value;
-	}
+		}
 
 #ifdef _TRACE
-	sprintf(trace_buf, "cmd_fsm called before setting new state: index <%i>token <%s>, token value <%i>, token type <%i>, state <%i>\n", index, cb->token, cb->token_value, cb->token_type, cb->state);
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+		sprintf(trace_buf, "cmd_fsm called before setting new state: index <%i>token <%s>, token value <%i>, token type <%i>, state <%i>\n", index, cb->token, cb->token_value, cb->token_type, cb->state);
+		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
 
-	if (cmd_action[index][cb->state](cb) == 0) {		// fire off a fsm action routine
-		cb->p_state = cb->state;
-		cb->state = cmd_new_state[index][cb->state];	// update state
+		if (cmd_action[index][cb->state](cb) == 0) {		// fire off a fsm action routine
+			cb->p_state = cb->state;
+			cb->state = cmd_new_state[index][cb->state];	// update state
 
 #ifdef _TRACE
-	sprintf(trace_buf, "cmd_fsm called after setting new state: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-#endif	
-	}         //transition to next state
-	else
-	{
-#ifdef _TRACE	
-   printf("error returned from action routine\n\r");
-#endif	
-		while (pop_cmd_q(cmd_fsm_cb.token)); //empty command queue
+			sprintf(trace_buf, "cmd_fsm called after setting new state: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
+			strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+#endif
+		}         //transition to next state
+		else
+		{
+#ifdef _TRACE
+			printf("error returned from action routine\n\r");
+#endif
+			while (pop_cmd_q(cmd_fsm_cb.token)); //empty command queue
+		}
+		return;
 	}
-	return;
-}
 
 
 

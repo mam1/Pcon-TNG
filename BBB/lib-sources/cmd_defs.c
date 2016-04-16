@@ -49,7 +49,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"channel number (0 - 15)",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -89,7 +89,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"channel name enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -129,7 +129,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -169,7 +169,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -200,7 +200,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 22 */    "display",
 	/* 23 */    "save schedule template",
 	/* 24 */    "edit schedule template library",
-	/* 25 set         */    "",
+	/* 25 set         */    "load the active schedule into the working schedule table",
 	/* 26 */    "load",
 	/* 27 */    "unrecognized command",
 	/* 28 */    "display all valid commands",
@@ -209,7 +209,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"schedule record hour",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -249,7 +249,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -289,7 +289,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -329,7 +329,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -369,7 +369,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -409,7 +409,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -449,7 +449,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -489,7 +489,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -529,7 +529,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -569,7 +569,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -609,7 +609,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -649,7 +649,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -689,7 +689,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -729,7 +729,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -769,7 +769,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -809,7 +809,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -849,7 +849,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -889,7 +889,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"sensor id",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -929,7 +929,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -969,7 +969,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -1009,7 +1009,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -1049,7 +1049,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"
@@ -1089,7 +1089,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/* 31 */    "back up one state",
 	/* 32 */    "display system data",
 	/* 33 */    "display debug data",
-	/* 34 */	"",
+	/* 34  disp_tlib  */	"display contents of template library",
 	/* 35 */	"integer",
 	/* 36 */	"alpha numeric string enclosed in quotes",
 	/* 37 */	"any unrecognized token"

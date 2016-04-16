@@ -65,9 +65,9 @@ void sys_load(FILE *sd, _SYS_DAT2 *sdat){
 
 #ifdef _TRACE
     trace(_TRACE_FILE_NAME, "sys_load", 0, NULL, "loading system data", 1);
-    printf("  file handle %i\n",(int)sd);
-    printf("  size of sys_dat %i\r\n",(int)sizeof(*sdat));
-    printf("  read system data\r\n");
+    printf("   file handle %i\n",(int)sd);
+    printf("   size of sys_dat %i\r\n",(int)sizeof(*sdat));
+    printf("   read system data\r\n");
 #endif 
     rtn = fread(sdat, sizeof(*sdat), 1, sd);
 #ifdef _TRACE
@@ -159,10 +159,10 @@ void sys_disp(_SYS_DAT2 *s){
 	printf(" Pcon  %d.%d.%d \n\r", s->config.major_version, s->config.minor_version, s->config.minor_revision);
 	printf(" configured for controlling %i channels\n\r",s->config.channels);
 	printf(" configured for reading %i sensors\n\r",s->config.sensors);
-	printf(" input buffer size: %d characters\n\r", _INPUT_BUFFER_SIZE);
-	printf(" system data size: %d bytes\r\n", sizeof(*s));
-	printf(" system schedule size: %d bytes\r\n", sizeof(s->sys_sch));
-	printf(" stored schedule templates: %i\r\n", s->schlib_index);
+	// printf(" input buffer size: %d characters\n\r", _INPUT_BUFFER_SIZE);
+	// printf(" system data size: %d bytes\r\n", sizeof(*s));
+	// printf(" system schedule size: %d bytes\r\n", sizeof(s->sys_sch));
+	// printf(" stored schedule templates: %i\r\n", s->schlib_index);
 
 	return;
 }

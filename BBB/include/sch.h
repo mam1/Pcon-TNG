@@ -47,6 +47,12 @@ int del_tmpl_rec(_TMPL_DAT *t, int hour, int minute);
 /* serch for key in a schedule */
 int find_tmpl_key(_TMPL_DAT *t, int hour, int minute);
 
+/* print a one line template schedule */
+int list_template(_TMPL_DAT *t_sch);
+
+/* print a formated dump od schedules for each channel and day */
+void sch_print(_CMD_FSM_CB *cb);
+
 /* print a formated dump of all days for a channel */
 // void disp_channel_sch(_S_CHAN *c_dat,int header);
 
