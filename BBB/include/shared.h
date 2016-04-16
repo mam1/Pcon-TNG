@@ -3,8 +3,8 @@
 
 /* version info */
 #define _MAJOR_VERSION		8
-#define _MINOR_VERSION 		2
-#define _MINOR_REVISION		12
+#define _MINOR_VERSION 		3
+#define _MINOR_REVISION		0
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
