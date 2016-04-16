@@ -14,7 +14,6 @@
 #include "PCF8563.h"
 #include "sys_dat.h"
 
-
 /* code to text conversion */
 extern char *day_names_long[7];
 extern char *day_names_short[7];
@@ -22,24 +21,6 @@ extern char *onoff[2];
 extern char *con_mode[3];
 extern char *sch_mode[2];
 extern char *c_mode[4];
-
-/* return a pointer to a schedule rec for a given key, day & channel */
-// _S_REC *get_sch_rec(_S_TAB *sch, int day, int channel, int hour, int minute){
-//     int             i;
-//     int             key;
-
-//     printf(" hour %i, minute %i\n", hour, minute);
-//     key = (hour * 60) + minute;
-//     for (i = 0; i < sch->schedule[day][channel].rcnt; i++){
-//         printf("  key from rec %i test key %i\n", sch->schedule[day][channel].rec[i].key, key);
-//         if(sch->schedule[day][channel].rec[i].key == key){
-//             printf("key match\n");
-//             return &(sch->schedule[day][channel].rec[i]);
-//         }
-//     }
-//     printf("no key match\n");
-//     return NULL;
-// }
 
 /* delete a schedule record */
 int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute) {
@@ -94,108 +75,8 @@ int del_tmpl_rec(_TMPL_DAT *t, int hour, int minute) {
 			return 0;
 		}
 	}
-
 	return 1;
 }
-
-// /* add or change a schedule template record */
-// int add_tem_rec2(_TMPL_DAT *t_sch, int hour, int minute, int state, int temp, int humid){
-//     int             key;
-//     // int          trec;
-//     _S_REC          hrec;
-//     int             i,ii;
-
-//     key = hour * 60 + minute;
-//     hrec.key = key;
-//     hrec.state = state;
-//     hrec.temp = temp;
-//     hrec.humid = humid;
-
-//     for(i=0;i<t_sch->temp_chan_sch.rcnt;i++){
-//         if(t_sch->temp_chan_sch.rec[i].key == key){      // record exists, change it
-//             t_sch->temp_chan_sch.rec[i] = hrec;
-//             return 0;
-//         }
-//     }
-//     if((t_sch->temp_chan_sch.rcnt + 1) > _MAX_SCHEDULE_RECS){    // see if there is room to add another record
-//         printf("  too many schedule records\n");
-//         return 1;
-//     }
-//     t_sch->temp_chan_sch.rcnt = t_sch->temp_chan_sch.rcnt + 1;        //add a new record
-//     if(t_sch->temp_chan_sch.rcnt == 1){  //first record
-//         t_sch->temp_chan_sch.rec[0] = hrec;
-//         printf("  first record created, key=%i\n", t_sch->temp_chan_sch.rec[0].key);
-//         printf("  rcnt=%i\n", t_sch->temp_chan_sch.rcnt);
-//         return 0;
-//     }
-//     /* search schedule */
-//     for (i = 0; i < t_sch->temp_chan_sch.rcnt - 1; i++) {
-//         // trec = i;
-//         if ((t_sch->temp_chan_sch.rec[i].key) > key) {
-//             /* move records down */
-//             for (ii = t_sch->temp_chan_sch.rcnt; ii > i; ii--) {
-//                 t_sch->temp_chan_sch.rec[ii] = t_sch->temp_chan_sch.rec[ii - 1];
-//             }
-//             /* insert new record */
-//             t_sch->temp_chan_sch.rec[i] = hrec;
-//             return 0;
-//         }
-//         t_sch->temp_chan_sch.rec[t_sch->temp_chan_sch.rcnt - 1] = hrec;
-//         return 0;
-//     }
-//     printf("**** this should not be happening\n\n");
-//     return 1;
-// }
-
-
-// /* add or change a schedule record */
-// int add_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute, int state, int temp, int humid){
-//     int             key;
-//     // int          trec;
-//     _S_REC          hrec;
-//     int             i,ii;
-
-//     key = hour * 60 + minute;
-//     hrec.key = key;
-//     hrec.state = state;
-//     hrec.temp = temp;
-//     hrec.humid = humid;
-
-//     for(i=0;i<sch->schedule[day][channel].rcnt;i++){
-//         if(sch->schedule[day][channel].rec[i].key == key){      // record exists, change it
-//             sch->schedule[day][channel].rec[i] = hrec;
-//             return 0;
-//         }
-//     }
-//     if((sch->schedule[day][channel].rcnt + 1) > _MAX_SCHEDULE_RECS){    // see if there is room to add another record
-//         printf("  too many schedule records\n");
-//         return 1;
-//     }
-//     sch->schedule[day][channel].rcnt = sch->schedule[day][channel].rcnt + 1;        //add a new record
-//     if(sch->schedule[day][channel].rcnt == 1){  //first record
-//         sch->schedule[day][channel].rec[0] = hrec;
-//         printf("  first record created, key=%i\n", sch->schedule[day][channel].rec[0].key);
-//         printf("  rcnt=%i\n", sch->schedule[day][channel].rcnt);
-//         return 0;
-//     }
-//     /* search schedule */
-//     for (i = 0; i < sch->schedule[day][channel].rcnt - 1; i++) {
-//         // trec = i;
-//         if ((sch->schedule[day][channel].rec[i].key) > key) {
-//             /* move records down */
-//             for (ii = sch->schedule[day][channel].rcnt; ii > i; ii--) {
-//                 sch->schedule[day][channel].rec[ii] = sch->schedule[day][channel].rec[ii - 1];
-//             }
-//             /* insert new record */
-//             sch->schedule[day][channel].rec[i] = hrec;
-//             return 0;
-//         }
-//         sch->schedule[day][channel].rec[sch->schedule[day][channel].rcnt - 1] = hrec;
-//         return 0;
-//     }
-//     printf("**** this should not be happening\n\n");
-//     return 1;
-// }
 
 /* add new template record */
 int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int humid) {
@@ -240,64 +121,12 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
 	return 0;
 }
 
-/* update state in template record */
-// int up_sch_rec_state(_S_TAB *sch, int day, int channel, int hour, int minute, int state){
-//     _S_REC              *hrec_ptr, hrec;
-
-//     hrec_ptr = get_sch_rec(sch, day, channel, hour, minute);
-//     if(hrec_ptr == NULL)
-//         return 1;
-//     hrec = *hrec_ptr;
-//     add_sch_rec2(sch, day, channel, hour, minute, state, hrec.temp, hrec.humid);
-//     return 0;
-// }
-
-/* set humiduty in schedule record */
-// int up_sch_rec_humid(_S_TAB *sch, int day, int channel, int hour, int minute, int humid){
-//     _S_REC              *hrec_ptr, hrec;
-
-//     hrec_ptr = get_sch_rec(sch, day, channel, hour, minute);
-//     if(hrec_ptr == NULL)
-//         return 1;
-//     hrec = *hrec_ptr;
-
-//     add_sch_rec2(sch, day, channel, hour, minute, hrec.state, hrec.temp, humid);
-//     return 0;
-// }
-
-/* set temperature in schedule record */
-// int up_sch_rec_temp(_S_TAB *sch, int day, int channel, int hour, int minute, int temp){
-//     _S_REC              *hrec_ptr, hrec;
-
-//     /* record */
-//     hrec_ptr = get_sch_rec(sch, day, channel, hour, minute);
-//     printf("get_sch_rec returned %i\n",(int)hrec_ptr );
-//     if(hrec_ptr == NULL)
-//         return 1;
-//     hrec = *hrec_ptr;
-//     printf("add_sch_rec2 returned %i\n", add_sch_rec2(sch, day, channel, hour, minute, hrec.state, temp, hrec.humid));
-//     return 0;
-// }
-
 /* convert a key to hous and minutes */
 int con_key(int key, int *hour, int *minute) {
 	*hour = key / 60;
 	*minute = key % 60;
 	return key;
 }
-
-/* print the schedule for a (day,channel) */
-// int dump_schedule(_S_TAB *sch, int day, int channel){
-//     int             i,h,m;
-//     printf("  dumping schedule for day %i channel %i ", day, channel);
-//     printf("    rcnt = %i\n", sch->schedule[day][channel].rcnt);
-//     for(i=0;i<sch->schedule[day][channel].rcnt;i++){
-//         con_key(sch->schedule[day][channel].rec[i].key,&h,&m);
-//         printf("    %02i:%02i - state %i temp %i humid %i\n",
-//             h,m,sch->schedule[day][channel].rec[i].state,sch->schedule[day][channel].rec[i].temp, sch->schedule[day][channel].rec[i].humid);
-//     }
-//     return 0;
-// }
 
 /* print a template schedule */
 int dump_template(_TMPL_DAT *t_sch) {
@@ -346,7 +175,7 @@ int load_temps(_TMPL_DAT *t_sch, char *b) {
 }
 
 /* print a formated dump of schedules for each channel and day */
-void sch_print(_CMD_FSM_CB *cb) {
+void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 	// uint32_t        *rec_ptr;
 	int             i;
 	int             day, channel;
@@ -369,8 +198,9 @@ void sch_print(_CMD_FSM_CB *cb) {
 		mrcnt = 0;
 		for (day=0; day < _DAYS_PER_WEEK; day++)
 		{
-			if (cb->wsch_ptr->sch[day][channel].rcnt > mrcnt)
-				mrcnt = cb->wsch_ptr->sch[day][channel].rcnt;        //max number of records for the week
+
+			if (s->sch[day][channel].rcnt > mrcnt)
+				mrcnt = s->sch[day][channel].rcnt;        //max number of records for the week
 		}
 		// printf(" max records  %i\n\r",mrcnt);
 
@@ -378,11 +208,11 @@ void sch_print(_CMD_FSM_CB *cb) {
 		for (i = 0; i < mrcnt; i++) {
 			for (day = 0; day < _DAYS_PER_WEEK; day++) {
 				// printf("records in schedule %i\n\r",cb->sys_ptr->sys_sch.sch[day][channel].rcnt);
-				if (cb->wsch_ptr->sch[day][channel].rcnt <= i)
+				if (s->sch[day][channel].rcnt <= i)
 					strcpy(time_state, "         ");
 				else {
-					con_key(cb->wsch_ptr->sch[day][channel].rec[i].key, &hour, &minute);
-					sprintf(time_state, "%02i:%02i %s", hour, minute, onoff[cb->wsch_ptr->sch[day][channel].rec[i].state]);
+					con_key(s->sch[day][channel].rec[i].key, &hour, &minute);
+					sprintf(time_state, "%02i:%02i %s", hour, minute, onoff[s->sch[day][channel].rec[i].state]);
 				}
 				printf("%s   ", time_state);
 			}
