@@ -22,22 +22,22 @@ extern char *con_mode[3];
 extern char *sch_mode[2];
 extern char *c_mode[4];
 
-/* delete a schedule record */
-int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute) {
-	// _S_REC               rec;
-	int                 i, ii;
-	int                 key;
+// /* delete a schedule record */
+// int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute) {
+// 	// _S_REC               rec;
+// 	int                 i, ii;
+// 	int                 key;
 
-	key = hour * 60 + minute;
-	for (i = 0; i < sch->sch[day][channel].rcnt; i++)
-		if (sch->sch[day][channel].rec[i].key == key) {
-			for (ii = i; ii < sch->sch[day][channel].rcnt - 1; ii++)
-				sch->sch[day][channel].rec[i] = sch->sch[day][channel].rec[i + 1];
-			sch->sch[day][channel].rcnt = sch->sch[day][channel].rcnt - 1;
-			return 0;
-		}
-	return 1;
-}
+// 	key = hour * 60 + minute;
+// 	for (i = 0; i < sch->sch[day][channel].rcnt; i++)
+// 		if (sch->sch[day][channel].rec[i].key == key) {
+// 			for (ii = i; ii < sch->sch[day][channel].rcnt - 1; ii++)
+// 				sch->sch[day][channel].rec[i] = sch->sch[day][channel].rec[i + 1];
+// 			sch->sch[day][channel].rcnt = sch->sch[day][channel].rcnt - 1;
+// 			return 0;
+// 		}
+// 	return 1;
+// }
 
 /* serch for record key match in a schedule, return record number of match or -1 if no hit */
 int find_tmpl_key(_TMPL_DAT *t, int hour, int minute) {

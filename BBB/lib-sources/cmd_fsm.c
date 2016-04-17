@@ -231,11 +231,11 @@ int c_10(_CMD_FSM_CB *); /* set channel control mode to manual and turn channel 
 int c_11(_CMD_FSM_CB *); /* set channel control mode to time */
 int c_12(_CMD_FSM_CB *); /* set channel control mode to time & sensor */
 int c_13(_CMD_FSM_CB *); /* set channel control mode to cycle */
-int c_14(_CMD_FSM_CB *); /*  */ //**********************************************************************************
+int c_14(_CMD_FSM_CB *); /* delete entery in template library */ //**********************************************************************************
 int c_15(_CMD_FSM_CB *); /* revert to previous state */
 int c_16(_CMD_FSM_CB *); /* set on cycle time */
 int c_17(_CMD_FSM_CB *); /* set off cycle time */
-int c_18(_CMD_FSM_CB *); /*  */ //**********************************************************************************
+int c_18(_CMD_FSM_CB *); /* delete entry in the schedule table library */ //**********************************************************************************
 int c_19(_CMD_FSM_CB *); /* set working schedule name */
 int c_20(_CMD_FSM_CB *); /* set working schedule hour */
 int c_21(_CMD_FSM_CB *); /* set working schedule minute */
@@ -311,7 +311,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 19  startup     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 20  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 21  save        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_53, c_63,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_53, c_63,  c_7,  c_7,  c_7,  c_7, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 23  channel     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 24  load        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 25  set         */  { c_7,  c_7,  c_1,  c_1, c_59,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -858,20 +858,19 @@ int c_13(_CMD_FSM_CB *cb)
 // 	strcat(cb->prompt_buffer, "\r\n  enter on seconds > ");
 	return 0;
 }
-/* */
+/* delete entry in the template library*/
 int c_14(_CMD_FSM_CB *cb)
 {
-	// // char            temp_buf[128];
+	int 				i,ii;
 
-	// printf("\r\ncurrent state %i\r\n\n", cb->state);
-	// printf("\r\n******* system data ***************************************************************\r\n\n");
-	// sys_disp(cb->sdat_ptr);
-	// printf("\r\n******* schedule templates ********************************************************\r\n\n");
-	// print_tlist(cb);
-	// printf("\r\n******* system schedule ***********************************************************\r\n");
-	// disp_all_schedules(&cb->sdat_ptr->sys_sch);
+	if((cb->token_value < 0) || (cb->token_value > cb->sys_ptr->tpl_index - 1)){
+		printf(" schedule number must be 0 - %i\n", cb->sys_ptr->tpl_index - 1);
+		return 1;
+	}
+	for(i=0;i<cb->sys_ptr->tpl_index - 1;i++)
+		if(cb->w_hours * 60 + cb->w_minutes) == cb->sys_ptr->tpl_lib[sys_ptr->tpl_index])
+			for(ii = i; )
 
-	// c_34(cb);   // state 0 prompt
 	return 0;
 }
 /* move back to previous state */
