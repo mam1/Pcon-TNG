@@ -28,7 +28,7 @@
 
 /* command parser fsm */
 #define _CMD_TOKENS     		38
-#define _CMD_STATES     		28 
+#define _CMD_STATES     		29 
 
 /* key codes */
 #define _ESC        27

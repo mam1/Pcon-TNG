@@ -51,7 +51,7 @@ int find_tmpl_key(_TMPL_DAT *t, int hour, int minute);
 int list_template(_TMPL_DAT *t_sch);
 
 /* print a formated dump od schedules for each channel and day */
-void sch_print(_CMD_FSM_CB *cb);
+void sch_print(_CMD_FSM_CB *cb,  _S_TAB *s);
 
 /* print a formated dump of all days for a channel */
 // void disp_channel_sch(_S_CHAN *c_dat,int header);
