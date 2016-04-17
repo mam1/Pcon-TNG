@@ -211,7 +211,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 32  wsch        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/* 33  slib        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/* 34  tlib        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
-	/* 35  INT         */  { 1,  1,  3,  0,  8,  9,  6, 21, 24,  0, 10, 11,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  4,  4, 24,  0,  4,  4, 28},
+	/* 35  INT         */  { 1,  1,  3,  0,  8,  9,  6, 21, 24,  0, 10, 11,  0, 14, 15, 16, 17, 18, 19, 20,  0,  0,  4,  4, 24,  4,  4,  4, 28},
 	/* 36  STR         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9,  4,  4,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28},
 	/* 37  OTHER       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28}
 };
@@ -231,7 +231,7 @@ int c_10(_CMD_FSM_CB *); /* set channel control mode to manual and turn channel 
 int c_11(_CMD_FSM_CB *); /* set channel control mode to time */
 int c_12(_CMD_FSM_CB *); /* set channel control mode to time & sensor */
 int c_13(_CMD_FSM_CB *); /* set channel control mode to cycle */
-int c_14(_CMD_FSM_CB *); /* delete entery in template library */ //**********************************************************************************
+int c_14(_CMD_FSM_CB *); /* delete entery in template library */ 
 int c_15(_CMD_FSM_CB *); /* revert to previous state */
 int c_16(_CMD_FSM_CB *); /* set on cycle time */
 int c_17(_CMD_FSM_CB *); /* set off cycle time */
@@ -311,7 +311,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 19  startup     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 20  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 21  save        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_53, c_63,  c_7,  c_7,  c_7,  c_7, c_14,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_53, c_63,  c_7,  c_7,  c_7,  c_7, c_63,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 23  channel     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 24  load        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 25  set         */  { c_7,  c_7,  c_1,  c_1, c_59,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -324,7 +324,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 32  wsch        */  {c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58},
 	/* 33  slib        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 34  tlib        */  {c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55},
-	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7,  c_7, c_27, c_28,  c_7},
+	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7, c_14, c_27, c_28,  c_7},
 	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7}
 };
@@ -861,15 +861,23 @@ int c_13(_CMD_FSM_CB *cb)
 /* delete entry in the template library*/
 int c_14(_CMD_FSM_CB *cb)
 {
-	int 				i,ii;
+	int 				i;
+	FILE 				*f;
 
 	if((cb->token_value < 0) || (cb->token_value > cb->sys_ptr->tpl_index - 1)){
 		printf(" schedule number must be 0 - %i\n", cb->sys_ptr->tpl_index - 1);
 		return 1;
 	}
-	for(i=0;i<cb->sys_ptr->tpl_index - 1;i++)
-		if(cb->w_hours * 60 + cb->w_minutes) == cb->sys_ptr->tpl_lib[sys_ptr->tpl_index])
-			for(ii = i; )
+
+	for(i=cb->token_value;i<cb->sys_ptr->tpl_index - 1;i++)
+		cb->sys_ptr->tpl_lib[i] = cb->sys_ptr->tpl_lib[i+1];
+	cb->sys_ptr->tpl_index -= 1;
+
+	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	sys_save(f, cb->sys_ptr);							// write data to disk
+	fclose(f);
+	printf("template deleted \n\r");
+	c_35(cb);
 
 	return 0;
 }
@@ -1285,7 +1293,7 @@ int c_34(_CMD_FSM_CB * cb)
 int  c_35(_CMD_FSM_CB * cb)
 {
 	/* build prompt */
-	cb->prompt_buffer[0] = '\0';
+	// cb->prompt_buffer[0] = '\0';
 	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
 	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter a command or time");
 	return 0;
@@ -1480,7 +1488,7 @@ int c_51(_CMD_FSM_CB * cb)
 	FILE 			*f;
 
 	/* see if there is room to save template */
-	printf("index %i\n\r", cb->sys_ptr->tpl_index);
+	// printf("index %i\n\r", cb->sys_ptr->tpl_index);
 	if ((cb->sys_ptr->tpl_index + 1 ) > _MAX_TEMPLATES) {
 		strcpy(cmd_fsm_cb.prompt_buffer, " no room for another template\n template not saved");
 		c_36(cb);
@@ -1495,8 +1503,8 @@ int c_51(_CMD_FSM_CB * cb)
 	fclose(f);
 
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, " template saved");
-	c_36(cb);
+	printf("\n\r template saved\n\r");
+	c_33(cb);
 	return 0;
 }
 
@@ -1514,7 +1522,7 @@ int c_53(_CMD_FSM_CB * cb)
 {
 
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, " enter template name");
+	strcpy(cmd_fsm_cb.prompt_buffer, " enter template description");
 	return 0;
 }
 
@@ -1613,7 +1621,7 @@ int c_61(_CMD_FSM_CB * cb)
 
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, " schedule loaded from library\n\r ");
-	c_36(cb);
+	c_35(cb);
 	return 0;
 }
 
