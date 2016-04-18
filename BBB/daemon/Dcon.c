@@ -20,9 +20,10 @@
 #include "shared.h"
 #include "bitlit.h"
 #include "PCF8563.h"
-#include "schedule.h"
+#include "sch.h"
 #include "BBBiolib.h"
 #include "trace.h"
+#include "typedefs.h"
 
 /*********************** globals **************************/
 #ifdef _TRACE
@@ -39,7 +40,7 @@ char *sch_mode[2] = {"day", "week"};
 char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
-IPC_DAT        	ipc_dat, *ipc_ptr;                    		// ipc data
+_IPC_DAT       	ipc_dat, *ipc_ptr;                    		// ipc data
 char           	ipc_file[] = {_IPC_FILE};   				// name of ipc file
 void           	*data;                      				// pointer to ipc data
 int            	fd;                        				 	// file descriptor for ipc data file
@@ -82,9 +83,9 @@ void dispdat(void) {
 	printf("  ---------------------------------\n\r");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("   <%2i> - ", i);
-		printf(" %s     %s", onoff[ipc_ptr->c_dat[i].c_state], c_mode[ipc_ptr->c_dat[i].c_mode]);
-		if ((ipc_ptr->c_dat[i].c_mode) == 3)
-			printf(" (%i:%i)", ipc_ptr->c_dat[i].on_sec, ipc_ptr->c_dat[i].off_sec);
+		printf(" %s     %s", onoff[ipc_ptr->sys_data.c_data[i].c_state], c_mode[ipc_ptr->sys_data.c_data[i].c_mode]);
+		if ((ipc_ptr->sys_data.c_data[i].c_mode) == 3)
+			printf(" (%i:%i)", ipc_ptr->sys_data.c_data[i].on_sec, ipc_ptr->sys_data.c_data[i].off_sec);
 		printf("\r\n");
 	}
 	return;
@@ -110,7 +111,7 @@ void send_ccb(uint8_t byte)         //send control byte to dio board
     return;
  }
 
-void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
+void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 
 	int 				key;
 	uint32_t			*s_ptr;		// *r_ptr;
@@ -128,9 +129,9 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
-		switch (ipc_ptr->c_dat[channel].c_mode) {
+		switch (ipc_ptr->sys_data.c_data[channel].c_mode) {
 		case 0:	// manual
-			state = ipc_ptr->c_dat[channel].c_state;
+			state = ipc_ptr->sys_data.c_data[channel].c_state;
 			break;
 		case 1:	// time
 			key =  make_key(tm->tm_hour, tm->tm_min);								// generate key
@@ -139,7 +140,7 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 			// dump_sch(s_ptr);
 			state =  test_sch(s_ptr, key);
 			// printf("  cmd_fsm:  <%i> returned from test_sch\n", state);
-			ipc_ptr->c_dat[channel].c_state = state;
+			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;
 		case 2:	// time & sensor
 			printf("*** error mode set to <2>\n");
@@ -148,7 +149,7 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 			printf("*** error mode set to <3>\n");
 			break;
 		default: // error
-			printf("*** error mode set to <%i>\n", ipc_ptr->c_dat[channel].c_mode);
+			printf("*** error mode set to <%i>\n", ipc_ptr->sys_data.c_data[channel].c_mode);
 		}
 #ifdef _TRACE
 		sprintf(trace_buf, "    Dcon:update_relays:  relay %i set to %i\n", channel, state);
@@ -166,7 +167,7 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 	/* update on board relays channels 0-7 */    	
 	for (channel = 0;channel < 8; channel++) {
 		gpio_index = channel + 8;
-		if (ipc_ptr->c_dat[channel].c_state){
+		if (ipc_ptr->sys_data.c_data[channel].c_state){
 			pin_high(header[gpio_index], pin[gpio_index]);
 		}
 		else{ 
@@ -178,7 +179,7 @@ void update_relays(_tm *tm, IPC_DAT *ipc_ptr) {
 #endif
 	/* update DBIO relays channels 8-15 */
 	for (channel = 8; channel < 16; channel++) {
-	    if(ipc_ptr->c_dat[channel].c_state)
+	    if(ipc_ptr->sys_data.c_data[channel].c_state)
 	        ccb |= (1<<((channel - 8)));
 	    else
 	        ccb &= ~(1<<((channel - 8)));
@@ -245,7 +246,7 @@ int main(void) {
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
-	ipc_ptr = (IPC_DAT *)data;					// overlay ipc data structure on shared memory
+	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
 	ipc_ptr->force_update = 1;
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 #ifdef _TRACE
