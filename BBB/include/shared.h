@@ -2,8 +2,8 @@
 #define _SHARE_H_
 
 /* version info */
-#define _MAJOR_VERSION		8
-#define _MINOR_VERSION 		6
+#define _MAJOR_VERSION		9
+#define _MINOR_VERSION 		0
 #define _MINOR_REVISION		0
 
 /* file names */

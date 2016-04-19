@@ -129,21 +129,23 @@ int con_key(int key, int *hour, int *minute) {
 }
 
 /* given a key and schedsule return the state new state based on time of day */
-int test_time_sch(int key, _TMPL_DAT *t) {
+int test_sch_time(int key, _TMPL_DAT *t) {
 	int 			state;
 	int 			i;
 
 	for (i = 0; i < t->rcnt; i++){
 		if(t->rec[i].key == key)
-			return t->rec[i].c_state;
-		if(t->rec[i].key > key)
+			return t->rec[i].state;
+
+		if((t->rec[i].key) > key)
 			if(i>0)
-				return t->rec[i].state;
+				return t->rec[i-1].state;
 			else
 				return t->rec[t->rcnt-1].state;
 	}
-
-	return t->rec[0].state;
+	if(i >0)
+		return t->rec[i-1].state;
+	t->rec[t->rcnt-1].state;
 }
 
 
