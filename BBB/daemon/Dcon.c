@@ -119,26 +119,23 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	int 				channel;
 	uint8_t 			ccb;
 	int 				gpio_index;
-
 	static int 			pin[_NUMBER_OF_GPIOS] = {_PINS};
 	static int 			header[_NUMBER_OF_GPIOS] = {_HEADERS};
 
-
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	// printf("got the lock\n\n");
+	key =  tm->tm_hour * 60 + tm->tm_min;		// generate key
 	
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 		switch (ipc_ptr->sys_data.c_data[channel].c_mode) {
 		case 0:	// manual
-			// state = ipc_ptr->sys_data.c_data[channel].c_state;
+			state = ipc_ptr->sys_data.c_data[channel].c_state;
 			break;
 		case 1:	// time
-			key =  tm->tm_hour * 60 + tm->tm_min;								// generate key
-			// s_ptr = get_schedule(((uint32_t *)ipc_ptr->sch), tm->tm_wday, channel); // get a pointer to the schedule for (day,channel)
 			printf("  cmd:fsm testing schedule for day %i channel %i\n", tm->tm_wday, channel);
 			// dump_sch(s_ptr);
-			// state =  test_sch(s_ptr, key);
+			state =  test_sch(key,&ipc_ptr->sys_data.sys_sch);
 			// printf("  cmd_fsm:  <%i> returned from test_sch\n", state);
 			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;
