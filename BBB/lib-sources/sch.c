@@ -181,7 +181,7 @@ void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 	int             day, channel;
 	int 			hour, minute;
 	char            time_state[9];
-	int             rcnt[_DAYS_PER_WEEK], mrcnt;
+	int             mrcnt;
 
 	for (channel=0; channel < _NUMBER_OF_CHANNELS; channel++)
 	{

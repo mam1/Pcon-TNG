@@ -41,6 +41,7 @@ FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
     sdat->config.sensors = _NUMBER_OF_SENSORS;
     sdat->config.commands = _CMD_TOKENS;
     sdat->config.states = _CMD_STATES;
+    
 
     if(fwrite(sdat, 1, sizeof(*sdat), sys_file) != sizeof(*sdat)){
         printf("\n*** error initializing system data file\r\n");

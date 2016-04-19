@@ -131,14 +131,14 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 		switch (ipc_ptr->sys_data.c_data[channel].c_mode) {
 		case 0:	// manual
-			state = ipc_ptr->sys_data.c_data[channel].c_state;
+			// state = ipc_ptr->sys_data.c_data[channel].c_state;
 			break;
 		case 1:	// time
-			key =  make_key(tm->tm_hour, tm->tm_min);								// generate key
-			s_ptr = get_schedule(((uint32_t *)ipc_ptr->sch), tm->tm_wday, channel); // get a pointer to the schedule for (day,channel)
+			key =  tm->tm_hour * 60 + tm->tm_min;								// generate key
+			// s_ptr = get_schedule(((uint32_t *)ipc_ptr->sch), tm->tm_wday, channel); // get a pointer to the schedule for (day,channel)
 			printf("  cmd:fsm testing schedule for day %i channel %i\n", tm->tm_wday, channel);
 			// dump_sch(s_ptr);
-			state =  test_sch(s_ptr, key);
+			// state =  test_sch(s_ptr, key);
 			// printf("  cmd_fsm:  <%i> returned from test_sch\n", state);
 			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;

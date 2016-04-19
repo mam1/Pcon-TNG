@@ -192,7 +192,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4, 25, 26, 27, 28},
 	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/* 15  status      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
-	/* 16  time        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
+	/* 16  time        */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/* 17  sensor      */  { 0, 21,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28},
 	/* 18  cycle       */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28},
 	/* 19  startup     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28},
@@ -685,7 +685,9 @@ int c_6(_CMD_FSM_CB *cb)
 	printf("  ----------------------------------------------------------");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("\n\r   <%2i> - ", i);
+
 		printf(" %s    %s   ", onoff[cb->sys_ptr->c_data[i].c_state], c_mode[cb->sys_ptr->c_data[i].c_mode]);
+	// printf(" %i    %i   ", cb->sys_ptr->c_data[i].c_state, cb->sys_ptr->c_data[i].c_mode);
 		switch (cb->sys_ptr->c_data[i].c_mode) {
 		case 2:	// time & sensor
 			printf("  %i     ", cb->sys_ptr->c_data[i].sensor_id);
@@ -795,10 +797,10 @@ int c_11(_CMD_FSM_CB *cb)
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
 	cb->sys_ptr->c_data[cb->w_channel].c_mode = 1;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].c_state = 0;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
-
 
 	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
@@ -808,7 +810,7 @@ int c_11(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, " mode set to time\r\n");
-	c_34(cb);   //append state 0 prompt to prompt buffer
+	c_36(cb);   //append state 0 prompt to prompt buffer
 
 	return 0;
 }
@@ -821,6 +823,7 @@ int c_12(_CMD_FSM_CB *cb)
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
 	cb->sys_ptr->c_data[cb->w_channel].c_mode = 2;
+	cb->sys_ptr->c_data[cb->w_channel].c_state = 0;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
