@@ -234,6 +234,7 @@ int main(void) {
 			prompted = true;
 			prompt(cmd_fsm_cb.state);
 		}
+		
 		c = fgetc(stdin);
 		switch (c) {
 	/* NOCR */ case _NO_CHAR:

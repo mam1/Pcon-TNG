@@ -109,8 +109,8 @@ char    *keyword[_CMD_TOKENS] = {
 };
 
 
-// /* state specific command definitions for INT */
-// char    *INT_def[_CMD_STATES] = {
+// /* state specific prompts */
+// char    		*prompt[_CMD_STATES] = {
 // 	/*  0 */    "channel number",
 // 	/*  1 */    "",
 // 	/*  2 */    "on seconds",
@@ -139,6 +139,7 @@ char    *keyword[_CMD_TOKENS] = {
 // 	/* 25 */    "channel",
 // 	/* 26 */    "load",
 // 	/* 27 */    "unrecognized command"
+// 	/* 28 */    "unrecognized command"
 // };
 
 // /* state specific command definitions for STR */
@@ -615,6 +616,8 @@ int c_2(_CMD_FSM_CB *cb)
 	printf(" %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
 	close(rtc);
+
+	strcpy(cb->prompt_buffer, "");
 
 	return 0;
 }
