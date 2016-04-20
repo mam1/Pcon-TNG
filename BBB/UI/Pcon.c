@@ -61,6 +61,8 @@ char *c_mode[4] = {"manual", "  time", " sensor", " cycle"};
 
 /* prompt for user input */
 void prompt(int s) {
+
+	build_prompt(&cmd_fsm_cb);
 	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer,s);
 	return;
 }
@@ -218,8 +220,6 @@ int main(void) {
 	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "starting main event loop\n", trace_flag);
 #endif
 	printf(" initializations complete\r\n\n");
-	// sys_disp(&ipc_ptr->sys_data);	        //display system info on serial terminal
-	// printf("\r\n\n");
 
 	/* set initial prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, " enter a command");

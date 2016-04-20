@@ -544,6 +544,20 @@ void print_tlist(_CMD_FSM_CB *cb) {
 	return;
 }
 
+void build_prompt(_CMD_FSM_CB * cb){
+	switch(cb->state){
+		case 4:
+
+			strcpy(cb->prompt_buffer, "\r\n editing schedule buffer\n\r");
+			load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+			strcat(cb->prompt_buffer, "\r\n enter a command or time");
+			break;
+
+	}
+
+	return;
+}
+
 /**************** start command fsm action routines ******************/
 /* do nothing */
 int c_0(_CMD_FSM_CB *cb)
@@ -1206,18 +1220,14 @@ int c_29(_CMD_FSM_CB *cb) {
 	int 				i;
 
 	cb->w_channel = cb->token_value;
-	if (cb->w_day == _ALL_DAYS)
-		for (i = 0; i < _DAYS_PER_WEEK; i++) {
+	if (cb->w_day == _ALL_DAYS){
+		for (i = 0; i < _DAYS_PER_WEEK; i++) 
 			cb->wsch_ptr->sch[i][cb->w_channel] = cb->w_template_buffer;
-			strcpy(cb->prompt_buffer, " schedule loaded into working schedule table all days");
-		}
+		printf(" schedule loaded into working schedule table (all days, channel %i)\n\r",cb->w_channel );
+	}
 	else {
-		// printf(" %i records to copy\r\n",cb->w_template_buffer.rcnt);
 		cb->wsch_ptr->sch[cb->w_day][cb->w_channel] = cb->w_template_buffer;
-		// printf(" %i records copied\r\n",cb->wsch_ptr->sch[cb->w_day][cb->w_channel].rcnt);
-		strcpy(cb->prompt_buffer, " schedule loaded into working schedule table (day");
-		sprintf(numstr, "%2d", cb->w_day);
-		strcat(cb->prompt_buffer, numstr);
+		printf(" schedule loaded into working schedule table (day %i, channel %i)\n\r",cb->w_day,cb->w_channel );
 	}
 
 	strcat(cb->prompt_buffer, " channel");

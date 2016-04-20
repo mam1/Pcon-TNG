@@ -4,7 +4,7 @@
 /* version info */
 #define _MAJOR_VERSION		10
 #define _MINOR_VERSION 		0
-#define _MINOR_REVISION		0
+#define _MINOR_REVISION		1
 
 /* file names */
 #define _FILE_NAME_SIZE 		50

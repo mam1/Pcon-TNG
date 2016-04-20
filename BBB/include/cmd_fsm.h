@@ -10,7 +10,7 @@
 void cmd_fsm(_CMD_FSM_CB *);
 void cmd_fsm_reset(_CMD_FSM_CB *);
 int cmd_type(char *);
-char *build_prompt(char *, int);
+void build_prompt(_CMD_FSM_CB * cb);
 void reset_active(void);
 void reset_edit(void);
 /* return token type; -1 -INT, -2 -QUOTE, -3 -unrecognized, -4 -NULL, command number (0 - xx) */

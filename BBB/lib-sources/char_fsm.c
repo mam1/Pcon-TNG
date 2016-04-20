@@ -236,8 +236,6 @@ int cr(char *c) {
 }
 
 int cr2(char *c) {
-//	if(char_type(*input_buffer_ptr)!=0) *input_buffer_ptr++ = ' ';	//make sure that the buffer is terminated
-//	input_buffer_ptr--;
 	*input_buffer_ptr = '\0';
 
 #ifdef _TRACE
@@ -247,9 +245,7 @@ int cr2(char *c) {
 #ifdef _TRACE
 	system ("/bin/stty cooked");			//switch to buffered iput
 	system("stty echo");					//turn on terminal echo
-	// char	bbb[128];
-	// printf("\npopping command queue\n");
-	// while(pop_cmd_q(bbb)) printf("<%s>\n",bbb);
+
 	system("stty -echo");					//turn off terminal echo
 	system("/bin/stty raw");				// use system call to make terminal send all keystrokes directly to stdin
 #endif
