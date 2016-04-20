@@ -81,7 +81,7 @@ int main(void) {
 	int 			prompted = false;	//has a prompt been sent
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
-	FILE 			*sys_file;
+	FILE 			*sys_file, f;
 	_CONFIG_DAT 	hold_config;
 	// char 			*command_buffer[];	//
 
@@ -141,12 +141,14 @@ int main(void) {
 
     /* load data from system data file and compare config data */
     sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);  // create system file if it does not exist
-    sys_load(sys_file,&ipc_ptr->sys_data);
+    // sys_load(sys_file,&ipc_ptr->sys_data);
+    sys_load(sys_file,cmd_fsm_cb.sys_ptr);
+    fclose(sys_file);
+
     hold_config = cmd_fsm_cb.sys_ptr->config;
     // printf("loaded minor_revision from system file %i\n",hold_config.minor_revision);
     if(sys_comp(&hold_config)){
     	printf("*** there are different configurations in the system file and in the application\n update system file? (y)|(n) > ");
-    	printf("\n  overwrite system file? <y>|<n>: ");
 		if (getchar() == 'y') {
 		    cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION;
 		    cmd_fsm_cb.sys_ptr->config.minor_version = _MINOR_VERSION;
@@ -156,13 +158,16 @@ int main(void) {
 		    cmd_fsm_cb.sys_ptr->config.commands = _CMD_TOKENS;
 		    cmd_fsm_cb.sys_ptr->config.states = _CMD_STATES;
 
+		    sys_file = sys_open(_SYSTEM_DATA_FILE, cmd_fsm_cb.sys_ptr);
 			if(sys_save(sys_file,cmd_fsm_cb.sys_ptr)){
     			printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
+				exit(1);
 			}
 			else
-				printf(" system data file updated\r\n");
+				printf("  system data file updated\r\n");
 
 			c = fgetc(stdin);			// get rid of trailing CR
+			fclose(sys_file);
 		}
 		else {
 			c = fgetc(stdin);			// get rid of trailing CR
@@ -170,10 +175,10 @@ int main(void) {
 	    	exit(1);
 	    }
     }
-    fclose(sys_file);
+    // fclose(sys_file);
 
     /* test to make sure save is working */
-    sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);
+    sys_file = sys_open(_SYSTEM_DATA_FILE,cmd_fsm_cb.sys_ptr);
     if(sys_save(sys_file,&ipc_ptr->sys_data)){
         printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
         exit(1);	

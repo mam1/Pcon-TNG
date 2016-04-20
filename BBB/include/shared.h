@@ -2,7 +2,7 @@
 #define _SHARE_H_
 
 /* version info */
-#define _MAJOR_VERSION		9
+#define _MAJOR_VERSION		10
 #define _MINOR_VERSION 		0
 #define _MINOR_REVISION		0
 

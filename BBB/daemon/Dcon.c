@@ -135,7 +135,7 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 		case 1:	// time
 			printf("  cmd:fsm testing schedule for day %i channel %i\n", tm->tm_wday, channel);
 			// dump_sch(s_ptr);
-			state =  test_sch_time(key,&ipc_ptr->sys_data.sys_sch);
+			state =  test_sch_time(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
 			// printf("  cmd_fsm:  <%i> returned from test_sch\n", state);
 			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;

@@ -150,7 +150,7 @@ int test_sch_time(int key, _TMPL_DAT *t) {
 				return t->rec[t->rcnt].state;
 	}
 
-	return t->rec[0].state;
+	return t->rec[i-1].state;
 	
 }
 

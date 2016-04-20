@@ -66,9 +66,9 @@ void sys_load(FILE *sd, _SYS_DAT2 *sdat){
 
 #ifdef _TRACE
     trace(_TRACE_FILE_NAME, "sys_load", 0, NULL, "loading system data", 1);
-    printf("   file handle %i\n",(int)sd);
-    printf("   size of sys_dat %i\r\n",(int)sizeof(*sdat));
-    printf("   read system data\r\n");
+    printf("    file handle %i\n",(int)sd);
+    printf("    size of sys_dat %i\r\n",(int)sizeof(*sdat));
+    printf("  Pcon: loading system data from system file\r\n");
 #endif 
     rtn = fread(sdat, sizeof(*sdat), 1, sd);
 #ifdef _TRACE
@@ -83,7 +83,9 @@ void sys_load(FILE *sd, _SYS_DAT2 *sdat){
 }
 
 int sys_save(FILE *sd ,_SYS_DAT2 *sdat){
-
+#ifdef _TRACE
+    printf("  Pcon: saving system file with major_version = %i\n", sdat->config.major_version);   
+#endif
     if(fwrite(sdat, sizeof(*sdat), 1, sd) != 1){
         perror(_TRACE_FILE_NAME);
         return 1;
