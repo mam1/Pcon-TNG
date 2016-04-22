@@ -46,6 +46,7 @@ The BBB provides a state machine driven user interface to configure channels, bu
         P8      9      69     Led 3 on WaveShare Misc Cape
         P8     10      68     Led 4 on WaveShare Misc Cape
 
+
      DIOB serial interface
         P8     11      45     DIN on DIOB serial header 		connected to DATA_RLY on cape
         P8     11      45     DATA_RLY on DIOB serial header 	connected to DIN on cape
@@ -67,7 +68,7 @@ The BBB provides a state machine driven user interface to configure channels, bu
 
 
 ######I2c connection between the BBB and PCF8563 real time clock on the Misc Cape 
-A DS3231 real time clock module is connected to the BBB's i2c bus (pins 28,29) to provide a time reference. 
+The WaveShare cape is jumbered to use i2c2 on the bone.
 
 #####Serial connection between BBB and DIOB
 The serial interface (2x5 header) reduces the number of pins required to control the Digital I/O Board by serially shifting data to/from the board over a synchronous serial interface. Whereas full control requires 16 I/O pins using the parallel interface, the serial interface can provide full control with as few as 4 I/O pins.
@@ -93,24 +94,8 @@ When cross compiling for the Bone on OS X I am using a tool chain I got from htt
 * BeagleBone Black (rev C)- Debian
 * ESP8266 (nodeMCU dev board r2) - nodeMCU firmware 
 
-####Channels
-Each channel can switch 120 volt 8 amp load.  The channel is controlled by a schedule for the current day of the week.  There can be a different schedule for each day of the week. Each channel has it own set of schedules, so for any one day of the week there are 8 (number of channels) schedules active. The schedule for a picticular day is created my selecting a schedule "template" from the schedule libaray.  A template can be assigned to; a specific day for a specific channel, all days for a specific channel, all channels for a specific day. 
-
-####Application Architecture
-The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the application handle backspace/delete. The app maintains a buffer which matches the user's screen. When a CR is entered the screen buffer is passed to a state machine(char_fsm) which parses the screen buffer into a fifo stack of tokens. 
-
-![character parser state diagram](./support_docs/state_diagrams/char_fsm.jpg?raw=true "character parser FSM")
-
-
-When the main event loop detects a non-empty token stack it passes the stack to a second state machine (cmd_fsm) which processes the token stack. 
-
-![command parser state diagram](./support_docs/state_diagrams/cmd_fsm.jpg?raw=true "command parser FSM")
-
-A third state machine handles communication with the C3. 
-
-It runs on a BeagleBone Black and uses a comm
-
-A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, headers and terminals for the external connections are mounted on an additional board connected to the C3. 
+####Channels and Schedules 
+A channel is controlled by a schedule. There is a different schedule for each day of the week. Each channel has it own set of schedules. Channels 0-7 can switch a 60 volt 1.1 amp loads.  Channels 8 -15 can switch 120 volt 8 amp loads.  Each channel can be set manually to on or off.  Channels and also be controlled by time of day, i.e. on at 8:00 off at 14:30 or sensor value and time.  When a channel is controlled by time and sensor once a minute the remote sensor value is compared to the value stored in the schedule for current time and day of the week. If the actual values exceeds the schedule value the channel is turned off when. If the schedule values is less than the actual value the channel is turned on.  
 
 #####Schedules:
 A schedule  is a list of times and corresponding states.  A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
@@ -169,8 +154,24 @@ In the following format:
 
 
 
-####BeagleBone Black Pins
 
+
+
+####Application Architecture
+The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the application handle backspace/delete. The app maintains a buffer which matches the user's screen. When a CR is entered the screen buffer is passed to a state machine(char_fsm) which parses the screen buffer into a fifo stack of tokens. 
+
+![character parser state diagram](./support_docs/state_diagrams/char_fsm.jpg?raw=true "character parser FSM")
+
+
+When the main event loop detects a non-empty token stack it passes the stack to a second state machine (cmd_fsm) which processes the token stack. 
+
+![command parser state diagram](./support_docs/state_diagrams/cmd_fsm.jpg?raw=true "command parser FSM")
+
+A third state machine handles communication with the C3. 
+
+It runs on a BeagleBone Black and uses a comm
+
+A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, headers and terminals for the external connections are mounted on an additional board connected to the C3. 
 
 
  
