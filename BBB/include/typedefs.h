@@ -43,6 +43,7 @@ typedef struct {
 } _CHN_DAT;
 
 typedef struct {
+	int 		sensor_id;
 	int			temp;
 	int			humidity;
 	_tm 		ts;

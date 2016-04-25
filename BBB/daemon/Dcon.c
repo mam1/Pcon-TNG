@@ -1,4 +1,4 @@
-/********************************************************************/
+ /********************************************************************/
 /*	Dcon.c - daemon updates the channel relays once a minute unless */
 /*	the user requests an immediate update							*/
 /********************************************************************/
@@ -140,7 +140,9 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;
 		case 2:	// time & sensor
-			printf("*** error mode set to <2>\n");
+			state =  test_sch_sensor(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
+
+			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;
 		case 3:	// cycle
 			printf("*** error mode set to <3>\n");

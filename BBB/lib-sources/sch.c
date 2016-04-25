@@ -130,7 +130,7 @@ int con_key(int key, int *hour, int *minute) {
 
 /* given a key and schedsule return the state new state based on time of day */
 int test_sch_time(int key, _TMPL_DAT *t) {
-	int 			state;
+	// int 			state;
 	int 			i;
 
 	if(t->rcnt == 0)
@@ -143,18 +143,55 @@ int test_sch_time(int key, _TMPL_DAT *t) {
 		if(t->rec[i].key == key)
 			return t->rec[i].state;
 
-		if((t->rec[i].key) > key)
+		if((t->rec[i].key) > key){
 			if(i>0)
 				return t->rec[i-1].state;
-			else
-				return t->rec[t->rcnt].state;
+		}
+		return t->rec[t->rcnt].state;
 	}
 
 	return t->rec[i-1].state;
 	
 }
 
+/* given a key and schedsule return state based on time of day and value of a sensor */
+int test_sch_sensor(int key, _TMPL_DAT *t, int sensor) {
+	int 			state;
+	int 			delta, h_limit, l_limit, i;
 
+	l_limit = 1;
+	if(t->rcnt == 0)
+		return 0;
+
+	if(t->rcnt == 1){
+		delta = sensor - t->rec[0].temp;
+		l_limit = 10;
+
+		if(delta < 0)
+			return 0;
+
+		if(delta > l_limit)
+			return 1;
+
+		return 0;
+	}
+
+	// for (i = 0; i < t->rcnt; i++){
+	// 	if(t->rec[i].key == key)
+	// 		return t->rec[i].state;
+
+	// 	if((t->rec[i].key) > key)
+	// 		if(i>0)
+	// 			return t->rec[i-1].state;
+	// 		else
+	// 			return t->rec[t->rcnt].state;
+	// }
+
+	// return t->rec[i-1].state;
+	
+
+	return 0;
+}
 /* print a template schedule */
 int dump_template(_TMPL_DAT *t_sch) {
 	int             i, h, m;
@@ -239,7 +276,23 @@ void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 					strcpy(time_state, "         ");
 				else {
 					con_key(s->sch[day][channel].rec[i].key, &hour, &minute);
-					sprintf(time_state, "%02i:%02i %s", hour, minute, onoff[s->sch[day][channel].rec[i].state]);
+
+					switch(cb->sys_ptr->c_data[channel].c_mode){ //Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
+						case 0:
+							sprintf(time_state, "%02i:%02i %s", hour, minute, onoff[s->sch[day][channel].rec[i].state]);
+							break;
+						case 1:
+							break;
+							sprintf(time_state, "%02i:%02i %s", hour, minute, onoff[s->sch[day][channel].rec[i].state]);
+						case 2:
+							sprintf(time_state, "%02i:%02i %i", hour, minute, s->sch[day][channel].rec[i].temp);
+							break;
+						case 3:
+							printf("**** error  bad chnannel mode <%i>\r\n", cb->sys_ptr->c_data[channel].c_mode);
+							break;
+						default:
+							printf("**** error  bad chnannel mode <%i>\r\n", cb->sys_ptr->c_data[channel].c_mode);
+					}
 				}
 				printf("%s   ", time_state);
 			}

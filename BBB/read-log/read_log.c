@@ -10,13 +10,14 @@
 #include "shared.h"
 #include "ipc.h"
 #include "Pcon.h"
-#include "shared.h"
 #include "bitlit.h"
 #include "PCF8563.h"
 // #include "gpio.h"
 // #include "led.h"
-#include "schedule.h"
+// #include "schedule.h"
 #include "BBBiolib.h"
+#include "typedefs.h"
+
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -29,23 +30,28 @@ char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 int main (void) {
 
 	FILE 			*cgi_data;
+	char 			cgi_file_name[_FILE_NAME_SIZE];
 	struct{
+		int 		sensor_id;
 		int			temp;
 		int			humidity;
 		_tm 		ts;
 	} buffer;
 
-	cgi_data = fopen(_CGI_DATA_FILE,"r");
+	int 		parm =2;
+
+	snprintf(cgi_file_name, _FILE_NAME_SIZE, "%s%i%s", _CGI_DATA_FILE_PREFIX, parm, _CGI_DATA_FILE_SUFIX);
+	cgi_data = fopen(cgi_file_name,"r");
 	if(cgi_data == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to open %s\n\n application terminated\n\n", _CGI_DATA_FILE);
+		printf("    attempting to open %s\n\n application terminated\n\n", cgi_file_name);
 		return 1;
 	}
-	printf("  %s opened\n",_CGI_DATA_FILE);
+	printf("  %s opened\n",cgi_file_name);
 	while(fread(&buffer, sizeof(buffer), 1, cgi_data) == 1){
 		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %i humidity %i\n",
 	       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
-	       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year,buffer.temp,buffer.humidity);
+	       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
 	}
 
 	fclose(cgi_data);

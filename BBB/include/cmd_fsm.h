@@ -13,6 +13,7 @@ int cmd_type(char *);
 void build_prompt(_CMD_FSM_CB * cb);
 void reset_active(void);
 void reset_edit(void);
+
 /* return token type; -1 -INT, -2 -QUOTE, -3 -unrecognized, -4 -NULL, command number (0 - xx) */
 int token_type(char *c);
 

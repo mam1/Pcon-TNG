@@ -283,7 +283,7 @@ int c_61(_CMD_FSM_CB *); /* load template  */
 int c_62(_CMD_FSM_CB *); /* load schedule table*/
 int c_63(_CMD_FSM_CB *); /* set template number prompt  */
 int c_64(_CMD_FSM_CB *); /* set schedule number prompt */
-
+int c_65(_CMD_FSM_CB *); /* display current sensor values*/
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -307,7 +307,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 14  clear       */  { c_7,  c_7,  c_7,  c_7, c_33,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 15  status      */  { c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_7},
 	/* 16  time        */  { c_2, c_11,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_7},
-	/* 17  sensor      */  { c_7, c_12,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 17  sensor      */  {c_65, c_12,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 18  cycle       */  { c_7, c_13,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 19  startup     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 20  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -1668,6 +1668,28 @@ int c_64(_CMD_FSM_CB * cb)
 	strcpy(cmd_fsm_cb.prompt_buffer, " enter enter table number");
 	return 0;
 }
+
+/* display curent sensor values */
+int c_65(_CMD_FSM_CB * cb)
+{
+	int 			channel;
+
+
+	printf("  channel  sensor id  temperature  humidity\r\n");
+	printf("  -------------------------------------------\r\n");
+	for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
+		printf("%6i%11i%12i%10i\r\n", 
+			channel, 
+			cb->sys_ptr->c_data[channel].sensor_id, 
+			cb->ipc_ptr->s_dat[cb->sys_ptr->c_data[channel].sensor_id].temp,
+			cb->ipc_ptr->s_dat[cb->sys_ptr->c_data[channel].sensor_id].humidity);
+
+	/* build prompt */
+	c_34(cb);
+	// strcpy(cmd_fsm_cb.prompt_buffer, " enter enter table number");
+	return 0;
+}
+
 
 
 

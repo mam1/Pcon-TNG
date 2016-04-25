@@ -20,7 +20,7 @@
 #include "shared.h"
 #include "bitlit.h"
 #include "PCF8563.h"
-#include "schedule.h"
+// #include "schedule.h"
 #include "BBBiolib.h"
 #include "trace.h"
 #include "typedefs.h"
@@ -42,7 +42,7 @@ char *sch_mode[2] = {"day", "week"};
 char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
-IPC_DAT        	ipc_dat, *ipc_ptr;                    		// ipc data
+_IPC_DAT        ipc_dat, *ipc_ptr;                    		// ipc data
 char           	ipc_file[] = {_IPC_FILE};   				// name of ipc file
 void           	*data;                      				// pointer to ipc data
 int            	fd;                        				 	// file descriptor for ipc data file
@@ -169,7 +169,7 @@ int main(void) {
 	char 			*eptr;
 
 	printf("Content-type: text/html\n\n");
-	printf("\n  **** cgi active 0.10 ****\n\r");
+	printf("\n  **** cgi active 1.0 ****\n\r");
 	// printf("Status: 200 OK\n");
 	// printf("%s = <%s>\n\r", "QUERY_STRING", getenv("QUERY_STRING"));
 
@@ -187,7 +187,7 @@ int main(void) {
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
-	ipc_ptr = (IPC_DAT *)data;					// overlay ipc data structure on shared memory
+	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
 	printf("  %s copied to shared memory\n", ipc_file);
 
 	/*********** start main process *******************************************************************/
@@ -219,11 +219,12 @@ int main(void) {
 	printf("\n******* file name <%s>\n",cgi_file_name);
 
 	/* move sensor data to shared memory */
-	get_tm(rtc, &(ipc_ptr->s_dat[l_num].ts));				// read the clock
-	ipc_ptr->s_dat[l_num].temp = (int)l_temp;
-	ipc_ptr->s_dat[l_num].humidity = (int)l_humid;
+	get_tm(rtc, &(ipc_ptr->s_dat[(int)l_num].ts));				// read the clock
+	ipc_ptr->s_dat[(int)l_num].sensor_id = (int)l_num;
+	ipc_ptr->s_dat[(int)l_num].temp = (int)l_temp;
+	ipc_ptr->s_dat[(int)l_num].humidity = (int)l_humid;
 	printf("  sensor data copied to shared memory\n");
-	ipc_ptr->force_update = 1;
+	// ipc_ptr->force_update = 1;
 	ipc_sem_free(semid, &sb);		// free lock on shared memory
 
 	/* log sensor data */
@@ -241,7 +242,7 @@ int main(void) {
 		printf("    attempting to append data to %s\n\n application terminated\n\n", cgi_file_name);
 		return 1;
 	}
-	printf("  data for sensor %i appended to %s\n", l_num, cgi_file_name);
+	printf("  data for sensor %i appended to %s\n", (int)l_num, cgi_file_name);
 	printf("  dow = %i\n", ipc_ptr->s_dat[l_num].ts.tm_wday);
 
 	fclose(cgi_data);

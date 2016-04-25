@@ -133,7 +133,6 @@ int main(void) {
 	/* setup control block pointers */
 	cmd_fsm_cb.ipc_ptr = ipc_ptr;					 	//set pointer to shared memory
 	cmd_fsm_cb.sys_ptr = &ipc_ptr->sys_data;		 	//set pointer to system data in shared memory
-
 	cmd_fsm_cb.ssch_ptr = &ipc_ptr->sys_data.sys_sch; 	//set pointer to active shecule in shared memory
 	cmd_fsm_cb.wsch_ptr = &cmd_fsm_cb.w_sch;		 	//set pointer to working schedule
 
