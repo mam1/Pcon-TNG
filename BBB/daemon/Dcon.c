@@ -133,15 +133,13 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 			state = ipc_ptr->sys_data.c_data[channel].c_state;
 			break;
 		case 1:	// time
-			printf("  cmd:fsm testing schedule for day %i channel %i\n", tm->tm_wday, channel);
-			// dump_sch(s_ptr);
 			state =  test_sch_time(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
-			// printf("  cmd_fsm:  <%i> returned from test_sch\n", state);
 			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;
 		case 2:	// time & sensor
-			state =  test_sch_sensor(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 
+			state =  test_sch_sensor(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
+			printf("  state %i returned from test_sch_sensor\r\n", state);
 			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;
 		case 3:	// cycle

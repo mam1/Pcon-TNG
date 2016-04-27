@@ -1465,7 +1465,7 @@ int c_48(_CMD_FSM_CB * cb)
 /* set sensor id  */
 int c_49(_CMD_FSM_CB * cb)
 {
-	char        numstr[2];
+	char        numstr[15];
 	FILE 		*f;
 
 	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
@@ -1476,7 +1476,7 @@ int c_49(_CMD_FSM_CB * cb)
 	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
-
+ printf("starting to build prompt\r\n");
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "sensor id for channel ");
 	sprintf(numstr, "%d set to ", cb->w_channel);

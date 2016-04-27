@@ -154,17 +154,21 @@ int test_sch_time(int key, _TMPL_DAT *t) {
 	
 }
 
-/* given a key and schedsule return state based on time of day and value of a sensor */
+/* given a key and schedule return state based on time of day and value of a sensor */
 int test_sch_sensor(int key, _TMPL_DAT *t, int sensor) {
 	int 			state;
 	int 			delta, h_limit, l_limit, i;
 
-	l_limit = 1;
+	printf("schedule %i\n\r\n",t->rec[0].temp);
+	printf("sensor %i\n\r\n",sensor);
+	delta = t->rec[0].temp - sensor;
+	printf("delta %i\n\r\n",delta);
+
 	if(t->rcnt == 0)
 		return 0;
 
 	if(t->rcnt == 1){
-		delta = sensor - t->rec[0].temp;
+
 		l_limit = 10;
 
 		if(delta < 0)
