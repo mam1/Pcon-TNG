@@ -10,14 +10,39 @@
 #include <fcntl.h>
 #include <string.h>
 
-int tpid(int t, int c){
-	
-		if(t < c)
-			return 0;
-		if(t > c )
-			return 1;
+int 	hold_temp;
 
-	return -1;
+int tpid(int setpoint, int actual){
+
+	int 	direction, delta, delta_old;
+
+
+	if(hold_temp == actual)
+		direction =  0;
+	else if(hold_temp > actual)
+		direction =  -1;
+	else
+		direction = 1;
+	hold_temp = actual;
+	printf("\ndirection %i\n", direction);
+
+	if(direction == -1){
+		if(setpoint < actual)
+			return 0;
+		if(setpoint > actual)
+			return 1;
+		else
+			return 0;
+	}
+	else{
+		if(setpoint < actual + 10)
+			return 0;
+		if(setpoint > actual +10)
+			return 1;
+		else
+			return 0;
+	}
+	printf(" ************* error \n");
 }
 
 
@@ -29,7 +54,7 @@ int main(void){
 	printf("enter target -1 to exit\n");
 
 	while(1){
-		printf(" enter tagret temp > ");
+		printf(" enter tagret temp  > ");
 		scanf ("%d",&target);
 		if(target < 0)
 			return 0;
