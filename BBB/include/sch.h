@@ -53,10 +53,10 @@ int list_template(_TMPL_DAT *t_sch);
 /* print a formated dump od schedules for each channel and day */
 void sch_print(_CMD_FSM_CB *cb,  _S_TAB *s);
 
-/* given a key and schedsule return the state new state based on time of day */
+/* given a key and schedule return the state new state based on time of day */
 int test_sch_time(int key, _TMPL_DAT *t);
 
-/* given a key and schedsule return state based on time of day and value of a sensor */
+/* given a key and schedule return state based on time of day and value of a sensor */
 int test_sch_sensor(int key, _TMPL_DAT *t, int sensor);
 
 /* print a formated dump of all days for a channel */
