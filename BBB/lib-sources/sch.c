@@ -111,7 +111,7 @@ int con_key(int key, int *hour, int *minute) {
 	return key;
 }
 
-/* given a key and schedsule return the state based on time of day */
+/* given a key and schedule return the state based on time of day */
 int test_sch_time(int key, _TMPL_DAT *t) {
 	// int 			state;
 	int 			i;
@@ -158,6 +158,33 @@ int test_sch_sensor(int key, _TMPL_DAT *t, int sensor) {
 	}
 
 	return slabcon(t->rec[i-1].temp, sensor);
+}
+
+/* given a key and schedule return the target temperature */
+int get_tar_temp(int key, _TMPL_DAT *t) {
+	int 			state;
+	// int 			delta, h_limit, l_limit, i;
+
+	int 			i;
+
+	if(t->rcnt == 0)
+		return 0;
+	if(t->rcnt == 1)	
+		return t->rec[0].temp;
+	for (i = 0; i < t->rcnt; i++){
+		if(t->rec[i].key == key)
+			return t->rec[i].temp;
+
+		if((t->rec[i].key) > key){
+			if(i>0)
+
+				return t->rec[i-1].temp;
+		}
+
+		return t->rec[t->rcnt].temp;
+	}
+
+	return t->rec[i-1].temp;
 }
 
 	// printf("schedule %i\n\r\n",t->rec[0].temp);

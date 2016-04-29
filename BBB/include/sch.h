@@ -59,6 +59,10 @@ int test_sch_time(int key, _TMPL_DAT *t);
 /* given a key and schedule return state based on time of day and value of a sensor */
 int test_sch_sensor(int key, _TMPL_DAT *t, int sensor);
 
+
+/* given a key and schedule return the target temperature */
+int get_tar_temp(int key, _TMPL_DAT *t);
+
 /* print a formated dump of all days for a channel */
 // void disp_channel_sch(_S_CHAN *c_dat,int header);
 
