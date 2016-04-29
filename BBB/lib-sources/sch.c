@@ -22,23 +22,6 @@ extern char *con_mode[3];
 extern char *sch_mode[2];
 extern char *c_mode[4];
 
-// /* delete a schedule record */
-// int del_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute) {
-// 	// _S_REC               rec;
-// 	int                 i, ii;
-// 	int                 key;
-
-// 	key = hour * 60 + minute;
-// 	for (i = 0; i < sch->sch[day][channel].rcnt; i++)
-// 		if (sch->sch[day][channel].rec[i].key == key) {
-// 			for (ii = i; ii < sch->sch[day][channel].rcnt - 1; ii++)
-// 				sch->sch[day][channel].rec[i] = sch->sch[day][channel].rec[i + 1];
-// 			sch->sch[day][channel].rcnt = sch->sch[day][channel].rcnt - 1;
-// 			return 0;
-// 		}
-// 	return 1;
-// }
-
 /* serch for record key match in a schedule, return record number of match or -1 if no hit */
 int find_tmpl_key(_TMPL_DAT *t, int hour, int minute) {
 	int 				i, key;
@@ -128,17 +111,15 @@ int con_key(int key, int *hour, int *minute) {
 	return key;
 }
 
-/* given a key and schedsule return the state new state based on time of day */
+/* given a key and schedsule return the state based on time of day */
 int test_sch_time(int key, _TMPL_DAT *t) {
 	// int 			state;
 	int 			i;
 
 	if(t->rcnt == 0)
 		return 0;
-
 	if(t->rcnt == 1)
 		return t->rec[0].state;
-
 	for (i = 0; i < t->rcnt; i++){
 		if(t->rec[i].key == key)
 			return t->rec[i].state;
@@ -149,36 +130,56 @@ int test_sch_time(int key, _TMPL_DAT *t) {
 		}
 		return t->rec[t->rcnt].state;
 	}
-
 	return t->rec[i-1].state;
-	
 }
 
 /* given a key and schedule return state based on time of day and value of a sensor */
 int test_sch_sensor(int key, _TMPL_DAT *t, int sensor) {
 	int 			state;
-	int 			delta, h_limit, l_limit, i;
+	// int 			delta, h_limit, l_limit, i;
 
-	printf("schedule %i\n\r\n",t->rec[0].temp);
-	printf("sensor %i\n\r\n",sensor);
-	delta = t->rec[0].temp - sensor;
-	printf("delta %i\n\r\n",delta);
+	int 			i;
 
 	if(t->rcnt == 0)
 		return 0;
+	if(t->rcnt == 1)	
+		return slabcon(t->rec[0].temp, sensor);
+	for (i = 0; i < t->rcnt; i++){
+		if(t->rec[i].key == key)
+			return slabcon(t->rec[i].temp, sensor);
 
-	if(t->rcnt == 1){
+		if((t->rec[i].key) > key){
+			if(i>0)
 
-		l_limit = 10;
+				return slabcon(t->rec[i-1].temp, sensor);
+		}
 
-		if(delta < 0)
-			return 0;
-
-		if(delta > l_limit)
-			return 1;
-
-		return 0;
+		return slabcon(t->rec[t->rcnt].temp, sensor);
 	}
+
+	return slabcon(t->rec[i-1].temp, sensor);
+}
+
+	// printf("schedule %i\n\r\n",t->rec[0].temp);
+	// printf("sensor %i\n\r\n",sensor);
+	// delta = t->rec[0].temp - sensor;
+	// printf("delta %i\n\r\n",delta);
+
+	// if(t->rcnt == 0)
+	// 	return 0;
+
+	// if(t->rcnt == 1){
+
+	// 	l_limit = 10;
+
+	// 	if(delta < 0)
+	// 		return 0;
+
+	// 	if(delta > l_limit)
+	// 		return 1;
+
+	// 	return 0;
+	// }
 
 	// for (i = 0; i < t->rcnt; i++){
 	// 	if(t->rec[i].key == key)
@@ -194,8 +195,8 @@ int test_sch_sensor(int key, _TMPL_DAT *t, int sensor) {
 	// return t->rec[i-1].state;
 	
 
-	return 0;
-}
+	// return 0;
+// }
 /* print a template schedule */
 int dump_template(_TMPL_DAT *t_sch) {
 	int             i, h, m;

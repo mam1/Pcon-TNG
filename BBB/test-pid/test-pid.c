@@ -9,59 +9,82 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
+#include "slab_control.h"
 
-int 	hold_temp;
+// int 	hold_temp;
 
-int tpid(int setpoint, int actual){
+// int direction(int n){
 
-	int 	direction, delta, delta_old;
+// 	static int 		hold;
 
+// 	if(hold == n)
+// 		return 0;
 
-	if(hold_temp == actual)
-		direction =  0;
-	else if(hold_temp > actual)
-		direction =  -1;
-	else
-		direction = 1;
-	hold_temp = actual;
-	printf("\ndirection %i\n", direction);
+// 	if(hold > n){
+// 		hold = n;
+// 		return -1;
+// 	}
+// 	hold = n;
+// 	return 1;
+// }
 
-	if(direction == -1){
-		if(setpoint < actual)
-			return 0;
-		if(setpoint > actual)
-			return 1;
-		else
-			return 0;
-	}
-	else{
-		if(setpoint < actual + 10)
-			return 0;
-		if(setpoint > actual +10)
-			return 1;
-		else
-			return 0;
-	}
-	printf(" ************* error \n");
-}
+// int tpid(int target, int actual){
+// 	if(direction(actual) == -1){ // actual falling
+// 		if(target < actual)
+// 			return 0;
+// 		if(target >= actual)
+// 			return 1;
+// 		else
+// 			return 0;
+// 	}
+// 	else{						// actual rising
+// 		if(target < actual + 10)
+// 			return 0;
+// 		if(target > actual +10)
+// 			return 1;
+// 		else
+// 			return 0;
+// 	}
+// 	printf(" ************* error \n");
+// }
 
 
 int main(void){
 
-	int  		target, current;
+	int  		target, current, i;
 
-	printf("\n *** test pid code ***\n\n");
-	printf("enter target -1 to exit\n");
+	printf("\n ******************* test pid code ******************\n");
 
-	while(1){
-		printf(" enter tagret temp  > ");
-		scanf ("%d",&target);
-		if(target < 0)
-			return 0;
-		printf(" enter current temp > ");
-		scanf ("%d",&current);
+	target = 100;
+	printf("\n target  current  returned \n");
+	for(current=88;current<125;current++)
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
 
-		printf(" tpid given target %i and current %i returned %i\n\n",target,current, tpid(target, current));
+	printf("\n target  current returned \n");
+	for(current=125;current>88;current--)
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
 
-	}
+	printf("\n target  current returned \n");
+	for(current=88;current<125;current++)
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
+
+	printf("\n target  current returned \n");
+	for(current=125;current>88;current--)
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
+
+
+	// printf("enter target -1 to exit\n");
+
+	// while(1){
+	// 	printf(" enter tagret temp  > ");
+	// 	scanf ("%d",&target);
+	// 	if(target < 0)
+	// 		return 0;
+	// 	printf(" enter current temp > ");
+	// 	scanf ("%d",&current);
+
+	// 	printf(" tpid given target %i and current %i returned %i\n\n",target,current, tpid(target, current));
+
+	// }
+	return 0;
 }
