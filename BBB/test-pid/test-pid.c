@@ -65,13 +65,20 @@ int main(void){
 		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
 
 	printf("\n target  current returned \n");
-	for(current=88;current<125;current++)
+	for(current=88;current<125;current++){
 		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
+	}
 
 	printf("\n target  current returned \n");
-	for(current=125;current>88;current--)
+	for(current=125;current>88;current--){
 		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
-
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
+		printf("%6i%8i%9i\n",target,current, slabcon(target, current));
+	}
 
 	// printf("enter target -1 to exit\n");
 

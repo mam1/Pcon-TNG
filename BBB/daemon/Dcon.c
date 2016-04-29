@@ -111,6 +111,34 @@ void send_ccb(uint8_t byte)         //send control byte to dio board
     return;
  }
 
+void log_state(int state,int channel,int temp){
+	FILE 			* log;
+	char 		numbuf[20];
+
+	snprintf(numbuf, sizeof(numbuf), "%i,%i,%i\n", channel, temp, state);
+	printf("%i,%i,%i\n", channel, temp, state);
+
+	/* log sensor data */
+	log = fopen("/home/Pcon-data/plog.dat", "a");
+	if (log == NULL) {
+		printf("  Error: %d (%s)\n", errno, strerror(errno));
+		printf("    attempting to open %s\n\n application terminated\n\n", "/home/Pcon-data/plog.dat");
+		return;
+	}
+	printf("  %s opened\n", "/home/Pcon-data/plog.dat");
+	printf("  write buffer size %i\n", sizeof(numbuf));
+
+	if (fwrite(&numbuf, sizeof(numbuf), 1, log) != 1) {
+		printf("  Error: %d (%s)\n", errno, strerror(errno));
+		printf("    attempting to append data to %s\n\n application terminated\n\n", "/home/Pcon-data/plog.dat");
+		return;
+	}
+	printf("  data for sensor %i appended to %s\n", 2, "/home/Pcon-data/plog.dat");
+
+	fclose(log);
+
+	return;
+}
 void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 
 	int 				key;
@@ -137,9 +165,9 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;
 		case 2:	// time & sensor
-
 			state =  test_sch_sensor(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
-			printf("  state %i returned from test_sch_sensor\r\n", state);
+			printf("  state %i returned from test_sch_sensor for channel %i\r\n", state, channel);
+			log_state(state,channel,ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 			ipc_ptr->sys_data.c_data[channel].c_state = state;
 			break;
 		case 3:	// cycle

@@ -10,7 +10,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-#define _H_SETBACK		10
+#define _H_SETBACK		5
 #define _L_SETBACK		5
 
 /* compare values for the last two calls */
@@ -33,29 +33,29 @@ int slabcon(int target, int actual){
 	int 			dir;
 	dir = direction(actual);
 	if(dir == -1){ 							// actual falling
-		if(target < actual)
+		if(target <= actual)
 			return 0;
-		if(target >= actual)
+		if(target > actual)
 			return 1;
 		else
 			return 0;
 	}
 	else if(dir == 1){						// actual rising
 		if(target < actual + _H_SETBACK)
-			return 1;
-		if(target >= actual + _L_SETBACK)
 			return 0;
+		if(target >= actual - _L_SETBACK)
+			return 1;
 		else
 			return 0;
 	}
-	else if(dir == 0){						// actrual stable
+	else if(dir == 0){						// actual stable
 		if(target < actual + _H_SETBACK)
 			return 0;
-		if(target >= actual + _L_SETBACK)
+		if(target >= actual - _L_SETBACK)
 			return 1;
 		else
 			return 0;
 	}
-	printf(" ************* error \n");
+	printf(" ************* slab controller error \n");
 	return 2000;
 }
