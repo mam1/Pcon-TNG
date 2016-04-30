@@ -41,7 +41,7 @@ char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
 _IPC_DAT       	ipc_dat, *ipc_ptr;                    		// ipc data
-char           	ipc_file[] = {_IPC_FILE};   				// name of ipc file
+char           	ipc_file[] = {_IPC_FILE_NAME};   				// name of ipc file
 void           	*data;                      				// pointer to ipc data
 int            	fd;                        				 	// file descriptor for ipc data file
 int         	rtc;										// file descriptor for PCF8563 RTC
@@ -113,27 +113,29 @@ void send_ccb(uint8_t byte)         //send control byte to dio board
 
 void log_state(int state,int channel,int actual, int target){
 	FILE 			* log;
-	char 		numbuf[25];
+	char 			numbuf[25];
 
-	snprintf(numbuf, sizeof(numbuf), "%i,%i,%i,%i\r\n", channel, target, actual, state);
-	printf("%i,%i,%i,%i\r\n", channel, target, actual, state);
+	memset(numbuf, '\0', sizeof(numbuf));
+	snprintf(numbuf, sizeof(numbuf), "%2d,%3d,%3d,%1d\n", channel, target, actual, state);
+	printf("%2i,%3i,%3i,%1i\r\n", channel, target, actual, state);
+printf("%s\n",numbuf);
 
 	/* log sensor data */
-	log = fopen("/home/Pcon-data/plog.dat", "a");
+	log = fopen(_LOG_FILE_NAME, "a");
 	if (log == NULL) {
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to open %s\n\n application terminated\n\n", "/home/Pcon-data/plog.dat");
+		printf("    attempting to open %s\n\n application terminated\n\n", _LOG_FILE_NAME);
 		return;
 	}
-	printf("  %s opened\n", "/home/Pcon-data/plog.dat");
-	printf("  write buffer size %i\n", sizeof(numbuf));
-
-	if (fwrite(&numbuf, sizeof(numbuf), 1, log) != 1) {
+	printf("  %s opened\n", _LOG_FILE_NAME);
+	printf("  write buffer size %i\n", strlen(numbuf));
+	printf("%s\n",numbuf);
+	if (fwrite(numbuf, strlen(numbuf), 1, log) != 1) {
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to append data to %s\n\n application terminated\n\n", "/home/Pcon-data/plog.dat");
+		printf("    attempting to append data to %s\n\n application terminated\n\n", _LOG_FILE_NAME);
 		return;
 	}
-	printf("  data for sensor %i appended to %s\n", 2, "/home/Pcon-data/plog.dat");
+	printf("  data for sensor %i appended to %s\n", 2, _LOG_FILE_NAME);
 
 	fclose(log);
 
@@ -167,8 +169,11 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 		case 2:	// time & sensor
 			state =  test_sch_sensor(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 			printf("  state %i returned from test_sch_sensor for channel %i\r\n", state, channel);
-			log_state(state,channel,ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp, get_tar_temp(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel])));
 			ipc_ptr->sys_data.c_data[channel].c_state = state;
+			printf("actual %i, target %i\n", ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp, get_tar_temp(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel])));
+			log_state(state,channel,ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp, get_tar_temp(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel])));
+
+	
 			break;
 		case 3:	// cycle
 			printf("*** error mode set to <3>\n");

@@ -30,7 +30,7 @@ int 			bbb;								//UART1 file descriptor
 _CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 _IPC_DAT 		*ipc_ptr; 							//ipc data
 void			*data = NULL;						//pointer to ipc data
-char           	ipc_file[] = {_IPC_FILE};  			//name of ipc file
+char           	ipc_file[] = {_IPC_FILE_NAME};  			//name of ipc file
 uint8_t 		cmd_state, char_state;				//fsm current state
 char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
@@ -141,7 +141,7 @@ int main(void) {
 	// cmd_fsm_cb.cdat_ptr = &ipc_ptr->sys_data.c_data; //set pointer to channel data array in shared memory
 
     /* load data from system data file and compare config data */
-    sys_file = sys_open(_SYSTEM_DATA_FILE,&ipc_ptr->sys_data);  // create system file if it does not exist
+    sys_file = sys_open(_SYSTEM_FILE_NAME,&ipc_ptr->sys_data);  // create system file if it does not exist
     // sys_load(sys_file,&ipc_ptr->sys_data);
     sys_load(sys_file,cmd_fsm_cb.sys_ptr);
     fclose(sys_file);
@@ -159,9 +159,9 @@ int main(void) {
 		    cmd_fsm_cb.sys_ptr->config.commands = _CMD_TOKENS;
 		    cmd_fsm_cb.sys_ptr->config.states = _CMD_STATES;
 
-		    sys_file = sys_open(_SYSTEM_DATA_FILE, cmd_fsm_cb.sys_ptr);
+		    sys_file = sys_open(_SYSTEM_FILE_NAME, cmd_fsm_cb.sys_ptr);
 			if(sys_save(sys_file,cmd_fsm_cb.sys_ptr)){
-    			printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
+    			printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_FILE_NAME);
 				exit(1);
 			}
 			else
@@ -179,9 +179,9 @@ int main(void) {
     // fclose(sys_file);
 
     /* test to make sure save is working */
-    sys_file = sys_open(_SYSTEM_DATA_FILE,cmd_fsm_cb.sys_ptr);
+    sys_file = sys_open(_SYSTEM_FILE_NAME,cmd_fsm_cb.sys_ptr);
     if(sys_save(sys_file,&ipc_ptr->sys_data)){
-        printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_DATA_FILE);
+        printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_FILE_NAME);
         exit(1);	
     }
     fclose(sys_file);

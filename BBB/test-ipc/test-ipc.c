@@ -10,7 +10,7 @@
 
 IPC_DAT        ipc_dat;                   //ipc data
 IPC_DAT        *ipc_ptr;
-char           ipc_file[] = {_IPC_FILE};  //name of ipc file
+char           ipc_file[] = {_IPC_FILE_NAME};  //name of ipc file
 void           *data;                     //pointer to ipc data
 int            fd;                        //file descriptor for ipc data file
 

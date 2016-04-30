@@ -682,7 +682,7 @@ int c_5(_CMD_FSM_CB *cb)
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
@@ -763,7 +763,7 @@ int c_9(_CMD_FSM_CB *cb)
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
@@ -790,7 +790,7 @@ int c_10(_CMD_FSM_CB *cb)
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
@@ -819,7 +819,7 @@ int c_11(_CMD_FSM_CB *cb)
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
@@ -847,7 +847,7 @@ int c_12(_CMD_FSM_CB *cb)
 
 	// sdat.c_data[cb->w_channel].c_mode = 2;
 
-	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 
@@ -870,7 +870,7 @@ int c_13(_CMD_FSM_CB *cb)
 // 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 // 	sdat.c_data[cb->w_channel].c_mode = 3;
-// 	sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
+// 	sys_save(_SYSTEM_FILE_NAME,cb->sdat_ptr);
 
 // 	strcpy(cb->prompt_buffer, "  setting cycle mode for channel ");
 // 	sprintf(sbuf, "%d", cb->w_channel);
@@ -893,7 +893,7 @@ int c_14(_CMD_FSM_CB *cb)
 		cb->sys_ptr->tpl_lib[i] = cb->sys_ptr->tpl_lib[i+1];
 	cb->sys_ptr->tpl_index -= 1;
 
-	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);							// write data to disk
 	fclose(f);
 	printf("template deleted \n\r");
@@ -916,7 +916,7 @@ int c_16(_CMD_FSM_CB *cb)
 	// char            sbuf[20];  //max number of digits for a int
 
 	// sdat.c_data[cb->w_channel].on_sec = cb->token_value;
-	// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
+	// sys_save(_SYSTEM_FILE_NAME,cb->sdat_ptr);
 
 	// /* build prompt */
 	// strcpy(cb->prompt_buffer, "  setting cycle mode for channel ");
@@ -935,7 +935,7 @@ int c_17(_CMD_FSM_CB *cb)
 	// char            sbuf[20];  //max number of digits for a int
 
 	// sdat.c_data[cb->w_channel].off_sec = cb->token_value;
-	// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
+	// sys_save(_SYSTEM_FILE_NAME,cb->sdat_ptr);
 	// /* build prompt */
 	// strcpy(cb->prompt_buffer, "  channel ");
 	// sprintf(sbuf, "%d", cb->w_channel);
@@ -1144,7 +1144,7 @@ int c_26(_CMD_FSM_CB *cb)
 
 
 
-	// sys_save(_SYSTEM_DATA_FILE,cb->sdat_ptr);
+	// sys_save(_SYSTEM_FILE_NAME,cb->sdat_ptr);
 
 	// /* build prompt */
 	// strcpy(cb->prompt_buffer, "\r\nschedule template: ");
@@ -1352,7 +1352,7 @@ int c_39(_CMD_FSM_CB * cb)
 
 
 
-	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);							// write data to disk
 	fclose(f);
 
@@ -1473,7 +1473,7 @@ int c_49(_CMD_FSM_CB * cb)
 	cb->ipc_ptr->force_update  = 1;									// force relays to be updated
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
 
-	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
  printf("starting to build prompt\r\n");
@@ -1514,7 +1514,7 @@ int c_51(_CMD_FSM_CB * cb)
 	cb->sys_ptr->tpl_lib[cb->sys_ptr->tpl_index] = cb->w_template_buffer;
 	strcpy(cb->sys_ptr->tpl_lib[cb->sys_ptr->tpl_index].name, dequote(cb->token));
 	cb->sys_ptr->tpl_index += 1;
-	f = sys_open(_SYSTEM_DATA_FILE, cb->sys_ptr);
+	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
 	fclose(f);
 

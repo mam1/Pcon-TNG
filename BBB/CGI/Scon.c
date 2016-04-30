@@ -43,7 +43,7 @@ char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
 _IPC_DAT        ipc_dat, *ipc_ptr;                    		// ipc data
-char           	ipc_file[] = {_IPC_FILE};   				// name of ipc file
+char           	ipc_file[] = {_IPC_FILE_NAME};   				// name of ipc file
 void           	*data;                      				// pointer to ipc data
 int            	fd;                        				 	// file descriptor for ipc data file
 int         	rtc;										// file descriptor for PCF8563 RTC
