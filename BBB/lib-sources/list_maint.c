@@ -28,8 +28,9 @@ void add_elm(int *array_start, int *index, int value, int array_size){
 
 	elm = array_start;
 	if(*index == 0){					// add first element
+		// printf("adding first element\n");
 		*elm = value;
-		*index++;
+		(*index)++;
 		return;
 	}
 	i = 0;
@@ -43,7 +44,7 @@ void add_elm(int *array_start, int *index, int value, int array_size){
 
 	if((*index + 1) < array_size){ 		// check if there is room to add another element
 		*(array_start + *index) = value;
-		*index++;
+		(*index)++;
 		return;
 	}
 

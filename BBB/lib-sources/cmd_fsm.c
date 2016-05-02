@@ -956,26 +956,26 @@ int c_18(_CMD_FSM_CB *cb)
 	int 		i,ii;
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	cb->ipc_ptr->s_dat[sensor].num_chan_ass
-	cb->sys_ptr->c_data[cb->w_channel].sensor_assigned = 0;
-	cb->sys_ptr->c_data[cb->w_channel].sensor_assigned
-	for(i=0;i<_NUMBER_OF_SENSORS){
-		for(ii=0;ii<cb->ipc_ptr->s_dat[sensor].num_chan_ass)
-			if(cb->ipc_ptr->s_dat[sensor].channel[ii] == cb->w_channel)
-				swwitch(ii){
-					case 1:
-						cb->ipc_ptr->s_dat[sensor].num_chan_ass--;
-						break;
-					case (ipc_ptr->s_dat[sensor].num_chan_ass - 1):
-						cb->ipc_ptr->s_dat[sensor].num_chan_ass--;
-						break;
-					default:
+	// cb->ipc_ptr->s_dat[sensor].num_chan_ass
+	// cb->sys_ptr->c_data[cb->w_channel].sensor_assigned = 0;
+	// cb->sys_ptr->c_data[cb->w_channel].sensor_assigned
+	// for(i=0;i<_NUMBER_OF_SENSORS){
+	// 	for(ii=0;ii<cb->ipc_ptr->s_dat[sensor].num_chan_ass)
+	// 		if(cb->ipc_ptr->s_dat[sensor].channel[ii] == cb->w_channel)
+	// 			swwitch(ii){
+	// 				case 1:
+	// 					cb->ipc_ptr->s_dat[sensor].num_chan_ass--;
+	// 					break;
+	// 				case (ipc_ptr->s_dat[sensor].num_chan_ass - 1):
+	// 					cb->ipc_ptr->s_dat[sensor].num_chan_ass--;
+	// 					break;
+	// 				default:
 							
-				}
+	// 			}
 
 
 
-	}
+	// }
 
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
