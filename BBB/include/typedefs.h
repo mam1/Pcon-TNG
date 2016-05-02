@@ -33,17 +33,20 @@ typedef struct {
 
 /* channel data */
 typedef struct {
-	int 		time_on; 	// accumulated minutes of on time for channel
-	int			on_sec;		//on cycle in seconds
-	int 		off_sec;	//off cycle in seconds
-	int 		c_mode; 	//Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
-	int 		c_state;	//0 = off, 1 = on
-	int 		sensor_id; // sensor id of sensor associated with the channel
+	int 		time_on; 			// accumulated minutes of on time for channel
+	int			on_sec;				// on cycle in seconds
+	int 		off_sec;			// off cycle in seconds
+	int 		c_mode; 			// control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
+	int 		c_state;			// 0 = off, 1 = on
+	int 		sensor_id;  		// sensor id of sensor associated with the channel
+	int 		sensor_assigned;
 	char 		name[_CHANNEL_NAME_SIZE];
 } _CHN_DAT;
 
 typedef struct {
 	int 		sensor_id;
+	int 		channel[_NUMBER_OF_CHANNELS];
+	int 		num_chan_ass;
 	int			temp;
 	int			humidity;
 	_tm 		ts;

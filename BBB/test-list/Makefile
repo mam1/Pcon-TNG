@@ -3,7 +3,7 @@
 ############################################################################# 
 
 # scan directory 
-program_NAME := Pcon
+program_NAME := test-list
 program_C_SRCS := $(wildcard *.c)
 program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
@@ -15,12 +15,12 @@ UNAME_S := $(shell uname -s)
 
 # set directories
 ifeq ($(UNAME_S),Darwin)
-	program_DIR := /Users/mam1/Git/Pcon-TNG/BBB/UI
+	program_DIR := /Users/mam1/Git/Pcon-TNG/BBB/test-list
 	program_INCLUDE_DIRS := ../include
 	program_LIBRARY_DIRS := ../lib
 	program_LIBRARIES := Pcon
 else
-	program_DIR := /home/mam1/Git/Pcon-TNG/BBB/UI
+	program_DIR := /home/mam1/Git/Pcon-TNG/BBB/test-list
 	program_INCLUDE_DIRS := ../include
 	program_LIBRARY_DIRS := ../lib
 	program_LIBRARIES := Pcon

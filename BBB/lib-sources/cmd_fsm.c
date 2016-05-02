@@ -34,11 +34,11 @@ extern char            	c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
 extern int 		    	exit_flag;		              	//exit man loop if TRUE
 extern int             	trace_flag;                   	//trace file is active
 extern int             	bbb;				          	//UART1 file descriptor
-extern _CMD_FSM_CB      	cmd_fsm_cb, *cmd_fsm_cb_ptr;  	//cmd_fsm control block
-extern _SYS_DAT2         	sdat;                         	//system data structure
+extern _CMD_FSM_CB      cmd_fsm_cb, *cmd_fsm_cb_ptr;  	//cmd_fsm control block
+extern _SYS_DAT2         sdat;                         	//system data structure
 extern _IPC_DAT			ipc_dat;					  	//ipc data
 extern void				*data; 							//pointer for shared memory
-extern _IPC_DAT 			*ipc_ptr;
+extern _IPC_DAT 		*ipc_ptr;
 extern key_t 			skey;
 extern int 				semid;
 extern unsigned short 	semval;
@@ -191,7 +191,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 11  zero        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28},
 	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4, 25, 26, 27, 28},
 	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  6, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  4, 25, 26, 27, 28},
-	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
+	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,  0, 22, 23, 24, 25, 26, 27, 28},
 	/* 15  status      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/* 16  time        */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/* 17  sensor      */  { 0, 21,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28},
@@ -236,7 +236,7 @@ int c_14(_CMD_FSM_CB *); /* delete entery in template library */
 int c_15(_CMD_FSM_CB *); /* revert to previous state */
 int c_16(_CMD_FSM_CB *); /* set on cycle time */
 int c_17(_CMD_FSM_CB *); /* set off cycle time */
-int c_18(_CMD_FSM_CB *); /* delete entry in the schedule table library */ //**********************************************************************************
+int c_18(_CMD_FSM_CB *); /* clear sensor assignment for a channel */ 
 int c_19(_CMD_FSM_CB *); /* set working schedule name */
 int c_20(_CMD_FSM_CB *); /* set working schedule hour */
 int c_21(_CMD_FSM_CB *); /* set working schedule minute */
@@ -304,7 +304,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 11  zero        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_22,  c_7,  c_7,  c_7,  c_7},
 	/* 13  off         */  { c_7, c_10,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7},
-	/* 14  clear       */  { c_7,  c_7,  c_7,  c_7, c_33,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 14  clear       */  { c_7,  c_7,  c_7,  c_7, c_33,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_18,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 15  status      */  { c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_7},
 	/* 16  time        */  { c_2, c_11,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_7},
 	/* 17  sensor      */  {c_65, c_12,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -698,16 +698,15 @@ int c_5(_CMD_FSM_CB *cb)
 int c_6(_CMD_FSM_CB *cb)
 {
 	int         i;
-	printf("  channel  state    mode  sensor id     name\n\r");
+	printf("\n  channel  state   mode  sensor    name\n\r");
 	printf("  ----------------------------------------------------------");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
-		printf("\n\r   <%2i> - ", i);
-
-		printf(" %s    %s   ", onoff[cb->sys_ptr->c_data[i].c_state], c_mode[cb->sys_ptr->c_data[i].c_mode]);
+		printf("\n\r%6i", i);
+		printf("%9s%9s", onoff[cb->sys_ptr->c_data[i].c_state], c_mode[cb->sys_ptr->c_data[i].c_mode]);
 	// printf(" %i    %i   ", cb->sys_ptr->c_data[i].c_state, cb->sys_ptr->c_data[i].c_mode);
 		switch (cb->sys_ptr->c_data[i].c_mode) {
 		case 2:	// time & sensor
-			printf("  %i     ", cb->sys_ptr->c_data[i].sensor_id);
+			printf("%5i", cb->sys_ptr->c_data[i].sensor_id);
 			break;
 
 		case 3:	// cycle
@@ -719,6 +718,7 @@ int c_6(_CMD_FSM_CB *cb)
 		}
 		printf("%s", cb->sys_ptr->c_data[i].name);
 	}
+	printf("\n\r");
 	c_34(cb);  // state 0 prompt
 	return 0;
 }
@@ -950,9 +950,35 @@ int c_17(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/*  */
+/*  clear sensor assignment to a channel*/
 int c_18(_CMD_FSM_CB *cb)
 {
+	int 		i,ii;
+
+	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	cb->ipc_ptr->s_dat[sensor].num_chan_ass
+	cb->sys_ptr->c_data[cb->w_channel].sensor_assigned = 0;
+	cb->sys_ptr->c_data[cb->w_channel].sensor_assigned
+	for(i=0;i<_NUMBER_OF_SENSORS){
+		for(ii=0;ii<cb->ipc_ptr->s_dat[sensor].num_chan_ass)
+			if(cb->ipc_ptr->s_dat[sensor].channel[ii] == cb->w_channel)
+				swwitch(ii){
+					case 1:
+						cb->ipc_ptr->s_dat[sensor].num_chan_ass--;
+						break;
+					case (ipc_ptr->s_dat[sensor].num_chan_ass - 1):
+						cb->ipc_ptr->s_dat[sensor].num_chan_ass--;
+						break;
+					default:
+							
+				}
+
+
+
+	}
+
+	cb->ipc_ptr->force_update = 1;					// force relays to be updated
+	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, " ");
@@ -1469,8 +1495,12 @@ int c_49(_CMD_FSM_CB * cb)
 	FILE 		*f;
 
 	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
+
 	cb->sys_ptr->c_data[cb->w_channel].sensor_id = cb->token_value;
-	cb->ipc_ptr->force_update  = 1;									// force relays to be updated
+	cb->ipc_ptr->s_dat[cb->token_value].channel[cb->ipc_ptr->s_dat[cb->token_value].num_chan_ass]  =  cb->w_channel;
+	if(cb->ipc_ptr->s_dat[cb->token_value].num_chan_ass < _NUMBER_OF_CHANNELS)
+		cb->ipc_ptr->s_dat[cb->token_value].num_chan_ass++;
+	cb->ipc_ptr->force_update  = 1;								// force relays to be updated
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
 
 	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
@@ -1672,17 +1702,22 @@ int c_64(_CMD_FSM_CB * cb)
 /* display curent sensor values */
 int c_65(_CMD_FSM_CB * cb)
 {
-	int 			channel;
+	int 			sensor,i;
 
+	printf("\n  sensor temp  humid channels\r\n");
+	printf("  ------------------------------------------------\r\n");
+	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++){
+		printf("%6i%7i%6i", sensor, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
+		if(cb->ipc_ptr->s_dat[sensor].num_chan_ass == 1){
+			printf("  %i", ipc_ptr->s_dat[sensor].channel[i]);
+			continue;
+		}
+		else
+			for(i=2;i<cb->ipc_ptr->s_dat[sensor].num_chan_ass;i++)
+				printf(", %i", ipc_ptr->s_dat[sensor].channel[i]);
+		printf("\r\n");
 
-	printf("  channel  sensor id  temperature  humidity\r\n");
-	printf("  -------------------------------------------\r\n");
-	for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
-		printf("%6i%11i%12i%10i\r\n", 
-			channel, 
-			cb->sys_ptr->c_data[channel].sensor_id, 
-			cb->ipc_ptr->s_dat[cb->sys_ptr->c_data[channel].sensor_id].temp,
-			cb->ipc_ptr->s_dat[cb->sys_ptr->c_data[channel].sensor_id].humidity);
+	}
 
 	/* build prompt */
 	c_34(cb);

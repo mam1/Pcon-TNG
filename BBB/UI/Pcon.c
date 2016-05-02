@@ -55,7 +55,7 @@ char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 char *onoff[2] = {"off", " on"};
 char *con_mode[3] = {"manual", "  time", "time & sensor"};
 char *sch_mode[2] = {"day", "week"};
-char *c_mode[4] = {"manual", "  time", " sensor", " cycle"};
+char *c_mode[4] = {"manual", "  time", "sensor", " cycle"};
 
 /***************************** support routines ********************************/
 
