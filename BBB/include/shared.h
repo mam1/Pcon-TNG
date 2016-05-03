@@ -62,8 +62,8 @@
 
 /* schedule parameters */
 #define _SCHEDULE_NAME_SIZE		40
-#define _MAX_SCHEDULE_RECS		20
-#define  _MAX_SCHEDULES			4
+#define _MAX_SCHEDULE_RECS		24
+#define _MAX_SCHEDULES			24
 
 /* template library parameters */
 #define _MAX_TEMPLATES			10

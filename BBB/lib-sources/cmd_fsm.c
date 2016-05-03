@@ -362,47 +362,47 @@ void cmd_fsm_reset(_CMD_FSM_CB *cb) {
 }
 
 /* load buffer with a list of all records in a schedule */
-char *sch2text(_S_CHAN *sch, char *buf) {
-	int         sch_recs,  i, key, h, m;
+// char *sch2text(_S_CHAN *sch, char *buf) {
+// 	// int         sch_recs,  i, key, h, m;
 
-	/*build list of schedule records for prompt */
-	*buf = '\0';
-	sch_recs = sch->rcnt;
-	if (sch_recs == 0)
-		strcat(buf, " no schedule records");
-	else
-		for (i = 1; i < sch_recs + 1; i++) {
-			key = sch->rec[i].key;
-			h = key / 60;
-			m = key % 60;
-			sprintf(&buf[strlen(buf)], " %2i:%02i ", h, m);
-			// strcat(buf, onoff[get_s(sch[i])]);
-			strcat(buf, "\n\r");
-		}
-	return buf;
-}
+// 	// /*build list of schedule records for prompt */
+// 	// *buf = '\0';
+// 	// sch_recs = sch->rcnt;
+// 	// if (sch_recs == 0)
+// 	// 	strcat(buf, " no schedule records");
+// 	// else
+// 	// 	for (i = 1; i < sch_recs + 1; i++) {
+// 	// 		key = sch->rec[i].key;
+// 	// 		h = key / 60;
+// 	// 		m = key % 60;
+// 	// 		sprintf(&buf[strlen(buf)], " %2i:%02i ", h, m);
+// 	// 		// strcat(buf, onoff[get_s(sch[i])]);
+// 	// 		strcat(buf, "\n\r");
+// 	// 	}
+// 	// return buf;
+// }
 
 /* load schedule template list into buffer  */
-char *sch2text2(_S_CHAN *sch, char *buf) {
-	int         sch_recs,  i, key, h, m;
+// char *sch2text2(_S_CHAN *sch, char *buf) {
+// 	// int         sch_recs,  i, key, h, m;
 
-	/*build list of schedule */
-	*buf = '\0';
-	sch_recs = sch->rcnt;
+// 	// /*build list of schedule */
+// 	// *buf = '\0';
+// 	// sch_recs = sch->rcnt;
 
-	if (sch_recs == 0)
-		strcat(buf, " no schedule records");
-	else
-		for (i = 1; i < sch_recs + 1; i++) {
+// 	// if (sch_recs == 0)
+// 	// 	strcat(buf, " no schedule records");
+// 	// else
+// 	// 	for (i = 1; i < sch_recs + 1; i++) {
 
-			key = sch->rec[i].key;
-			h = key / 60;
-			m = key % 60;
-			sprintf(&buf[strlen(buf)], " %2i:%02i ", h, m);
-			// strcat(buf, onoff[get_s(sch[i])]);
-		}
-	return buf;
-}
+// 	// 		key = sch->rec[i].key;
+// 	// 		h = key / 60;
+// 	// 		m = key % 60;
+// 	// 		sprintf(&buf[strlen(buf)], " %2i:%02i ", h, m);
+// 	// 		// strcat(buf, onoff[get_s(sch[i])]);
+// 	// 	}
+// 	// return buf;
+// }
 
 /* append schedule template list to buffer  */
 char *make_lib_list(char *buf, _CMD_FSM_CB *cb) {

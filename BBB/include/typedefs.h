@@ -60,10 +60,10 @@ typedef struct {
 	int 		humid;
 } _S_REC;				// format of schedule record
 
-typedef struct {
-	_S_REC 		rec[_MAX_SCHEDULE_RECS];
-	int 		rcnt;
-} _S_CHAN;				// combine schedule records into a schedule for a channel
+// typedef struct {
+// 	_S_REC 		rec[_MAX_SCHEDULE_RECS];
+// 	int 		rcnt;
+// } _S_CHAN;				// combine schedule records into a schedule for a channel
 
 // typedef struct {
 // 	_S_CHAN 	schedule[_DAYS_PER_WEEK][_NUMBER_OF_CHANNELS];
@@ -128,7 +128,7 @@ typedef struct {
 	int 			w_sensor_id;
 	_TMPL_DAT 		w_template_buffer;
 	_S_TAB        	w_sch;   // *w_sch_ptr;
-	_S_CHAN         w_tbuff;
+	// _S_CHAN         w_tbuff;
 	int      		w_schedule_number;
 	int             w_schedule_name[_SCHEDULE_NAME_SIZE];
 	int      		w_template_number;
