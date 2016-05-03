@@ -22,7 +22,7 @@
 #include "cmd_fsm.h"
 #include "trace.h"
 #include "PCF8563.h"
-// #include "schedule.h"
+#include "list_maint.h"
 #include "ipc.h"
 #include "sys_dat.h"
 #include "sch.h"
@@ -44,8 +44,6 @@ extern int 				semid;
 extern unsigned short 	semval;
 extern struct sembuf	sb;
 
-
-
 /* code to text conversion */
 extern char *day_names_long[7];
 extern char *day_names_short[7];
@@ -55,12 +53,10 @@ extern char *sch_mode[2];
 extern char *c_mode[4];
 
 /*********************** globals **************************/
-
 #ifdef _TRACE
 char			trace_buf[128];
 #endif
-
-_tm 			tm;
+_tm 			tm;			// buffer fir time abd date
 
 /***************************************/
 /*****  command  parser fsm start ******/
@@ -102,77 +98,11 @@ char    *keyword[_CMD_TOKENS] = {
 	/* 31 */    "ssch",
 	/* 32 */    "wsch",
 	/* 33 */    "slib",
-	/* 34 */    "tlib"     ,
+	/* 34 */    "tlib",
 	/* 35 */    "INT",
 	/* 36 */    "STR",
 	/* 37 */    "OTHER"
 };
-
-
-// /* state specific prompts */
-// char    		*prompt[_CMD_STATES] = {
-// 	/*  0 */    "channel number",
-// 	/*  1 */    "",
-// 	/*  2 */    "on seconds",
-// 	/*  3 */    "off seconds",
-// 	/*  4 */    "template number",
-// 	/*  5 */    "",
-// 	/*  6 */    "hour",
-// 	/*  7 */    "day number",
-// 	/*  8 */    "channel number",
-// 	/*  9 */    "template number",
-// 	/* 10 */    "",
-// 	/* 11 */    "minute",
-// 	/* 12 */    "",
-// 	/* 13 */    "hour",
-// 	/* 14 */    "minute",
-// 	/* 15 */    "second",
-// 	/* 16 */    "day of the week",
-// 	/* 17 */    "date",
-// 	/* 18 */    "month",
-// 	/* 19 */    "year",
-// 	/* 20 */    "",
-// 	/* 21 */    "",
-// 	/* 22 */    "display",
-// 	/* 23 */    "save schedule template",
-// 	/* 24 */    "edit schedule template library",
-// 	/* 25 */    "channel",
-// 	/* 26 */    "load",
-// 	/* 27 */    "unrecognized command"
-// 	/* 28 */    "unrecognized command"
-// };
-
-// /* state specific command definitions for STR */
-// char    *STR_def[_CMD_STATES] = {
-// 	/*  0 */    "",
-// 	/*  1 */    "channel name",
-// 	/*  2 */    "",
-// 	/*  3 */    "",
-// 	/*  4 */    "template name",
-// 	/*  5 */    "",
-// 	/*  6 */    "",
-// 	/*  7 */    "",
-// 	/*  8 */    "",
-// 	/*  9 */    "",
-// 	/* 10 */    "",
-// 	/* 11 */    "",
-// 	/* 12 */    "",
-// 	/* 13 */    "",
-// 	/* 14 */    "",
-// 	/* 15 */    "",
-// 	/* 16 */    "",
-// 	/* 17 */    "",
-// 	/* 18 */    "",
-// 	/* 19 */    "",
-// 	/* 20 */    "",
-// 	/* 21 */    "",
-// 	/* 22 */    "",
-// 	/* 23 */    "",
-// 	/* 24 */    "",
-// 	/* 25 */    "",
-// 	/* 26 */    "",
-// 	/* 27 */    ""
-// };
 
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
@@ -706,7 +636,8 @@ int c_6(_CMD_FSM_CB *cb)
 	// printf(" %i    %i   ", cb->sys_ptr->c_data[i].c_state, cb->sys_ptr->c_data[i].c_mode);
 		switch (cb->sys_ptr->c_data[i].c_mode) {
 		case 2:	// time & sensor
-			printf("%5i", cb->sys_ptr->c_data[i].sensor_id);
+			if(cb->sys_ptr->c_data[i].sensor_assigned == 1)
+				printf("%5i", cb->sys_ptr->c_data[i].sensor_id);
 			break;
 
 		case 3:	// cycle
@@ -837,15 +768,11 @@ int c_12(_CMD_FSM_CB *cb)
 	char        numstr[2];
 	FILE 		*f;
 
-	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-
+	ipc_sem_lock(semid, &sb);						// wait for a lock on shared memory
 	cb->sys_ptr->c_data[cb->w_channel].c_mode = 2;
-	cb->sys_ptr->c_data[cb->w_channel].c_state = 0;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].c_state = 0;	
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
-
-	ipc_sem_free(semid, &sb);					// free lock on shared memory
-
-	// sdat.c_data[cb->w_channel].c_mode = 2;
+	ipc_sem_free(semid, &sb);						// free lock on shared memory
 
 	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
@@ -854,7 +781,7 @@ int c_12(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "channel ");
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, " mode set to time & sensor\r\nenter sensor id number");
+	strcat(cb->prompt_buffer, " mode set to sensor\r\nenter sensor id");
 	return 0;
 }
 /* set channel control mode to cycle */
@@ -953,35 +880,20 @@ int c_17(_CMD_FSM_CB *cb)
 /*  clear sensor assignment to a channel*/
 int c_18(_CMD_FSM_CB *cb)
 {
-	int 		i,ii;
+	int 		i;
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	// cb->ipc_ptr->s_dat[sensor].num_chan_ass
-	// cb->sys_ptr->c_data[cb->w_channel].sensor_assigned = 0;
-	// cb->sys_ptr->c_data[cb->w_channel].sensor_assigned
-	// for(i=0;i<_NUMBER_OF_SENSORS){
-	// 	for(ii=0;ii<cb->ipc_ptr->s_dat[sensor].num_chan_ass)
-	// 		if(cb->ipc_ptr->s_dat[sensor].channel[ii] == cb->w_channel)
-	// 			swwitch(ii){
-	// 				case 1:
-	// 					cb->ipc_ptr->s_dat[sensor].num_chan_ass--;
-	// 					break;
-	// 				case (ipc_ptr->s_dat[sensor].num_chan_ass - 1):
-	// 					cb->ipc_ptr->s_dat[sensor].num_chan_ass--;
-	// 					break;
-	// 				default:
-							
-	// 			}
-
-
-
-	// }
-
+	cb->sys_ptr->c_data[cb->w_channel].sensor_assigned = 0;		// set false
+	for(i=0;i<_NUMBER_OF_SENSORS;i++)
+		del_elm(cb->ipc_ptr->s_dat[i].channel, 
+		&(cb->ipc_ptr->s_dat[i].channel_index), 
+		cb->w_channel, 
+		sizeof(cb->ipc_ptr->s_dat[i].channel));
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	/* build prompt */
-	strcpy(cb->prompt_buffer, " ");
+	// strcpy(cb->prompt_buffer, " ");
 
 	return 0;
 }
@@ -1493,13 +1405,22 @@ int c_49(_CMD_FSM_CB * cb)
 {
 	char        numstr[15];
 	FILE 		*f;
+	int  		i;
 
 	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
+	for(i=0;i<_NUMBER_OF_SENSORS;i++)
+	del_elm(cb->ipc_ptr->s_dat[i].channel, 
+		&(cb->ipc_ptr->s_dat[i].channel_index), 
+		cb->w_channel, 
+		sizeof(cb->ipc_ptr->s_dat[i].channel));
 
 	cb->sys_ptr->c_data[cb->w_channel].sensor_id = cb->token_value;
-	cb->ipc_ptr->s_dat[cb->token_value].channel[cb->ipc_ptr->s_dat[cb->token_value].num_chan_ass]  =  cb->w_channel;
-	if(cb->ipc_ptr->s_dat[cb->token_value].num_chan_ass < _NUMBER_OF_CHANNELS)
-		cb->ipc_ptr->s_dat[cb->token_value].num_chan_ass++;
+	cb->sys_ptr->c_data[cb->w_channel].sensor_assigned = 1;		// set true
+	add_elm(cb->ipc_ptr->s_dat[cb->token_value].channel, 
+		&(cb->ipc_ptr->s_dat[cb->token_value].channel_index), 
+		cb->w_channel, 
+		sizeof(cb->ipc_ptr->s_dat[cb->token_value].channel));
+
 	cb->ipc_ptr->force_update  = 1;								// force relays to be updated
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
 
@@ -1708,16 +1629,14 @@ int c_65(_CMD_FSM_CB * cb)
 	printf("  ------------------------------------------------\r\n");
 	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++){
 		printf("%6i%7i%6i", sensor, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
-		if(cb->ipc_ptr->s_dat[sensor].num_chan_ass == 1){
-			printf("  %i", ipc_ptr->s_dat[sensor].channel[i]);
-			continue;
-		}
-		else
-			for(i=2;i<cb->ipc_ptr->s_dat[sensor].num_chan_ass;i++)
-				printf(", %i", ipc_ptr->s_dat[sensor].channel[i]);
-		printf("\r\n");
-
+		for(i=0;i<cb->ipc_ptr->s_dat[sensor].channel_index;i++)
+			if(i==0)
+				printf("   %i",cb->ipc_ptr->s_dat[sensor].channel[i]);
+			else
+				printf(", %i",cb->ipc_ptr->s_dat[sensor].channel[i]);
+		printf("\n\r");
 	}
+	printf("\n\r");
 
 	/* build prompt */
 	c_34(cb);

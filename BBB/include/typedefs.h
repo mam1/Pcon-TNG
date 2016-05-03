@@ -46,7 +46,7 @@ typedef struct {
 typedef struct {
 	int 		sensor_id;
 	int 		channel[_NUMBER_OF_CHANNELS];
-	int 		num_chan_ass;
+	int 		channel_index;
 	int			temp;
 	int			humidity;
 	_tm 		ts;
