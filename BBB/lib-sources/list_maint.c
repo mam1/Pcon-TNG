@@ -4,15 +4,15 @@ void del_elm(int *array_start, int *index, int value, int array_size){
 
 	i = 0;
 	elm = array_start;
-	array_end = array_start + *index;
+	array_end = array_start + *index - 1;
 	while (i < *index){
 		if(*elm == value){
 			while(elm < array_end){
 				*elm = *(elm+1);
 				elm++;
-				*index--;
-				return;
 			}
+			*index = *index - 1;
+			return;
 		}
 
 		elm++;
