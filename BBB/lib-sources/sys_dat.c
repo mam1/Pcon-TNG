@@ -17,7 +17,7 @@
 
 extern int              trace_flag;                     //trace file is active
 
-FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
+FILE *sys_open(char *fname,_SYS_DAT *sdat){
     FILE            *sys_file;
  
     sys_file = fopen(fname,"r+");
@@ -61,7 +61,7 @@ FILE *sys_open(char *fname,_SYS_DAT2 *sdat){
     return sys_file;
 }
 
-void sys_load(FILE *sd, _SYS_DAT2 *sdat){
+void sys_load(FILE *sd, _SYS_DAT *sdat){
     int     rtn;
 
 #ifdef _TRACE
@@ -82,7 +82,7 @@ void sys_load(FILE *sd, _SYS_DAT2 *sdat){
     return;
 }
 
-int sys_save(FILE *sd ,_SYS_DAT2 *sdat){
+int sys_save(FILE *sd ,_SYS_DAT *sdat){
 #ifdef _TRACE
     printf("  Pcon: saving system file with major_version = %i\n", sdat->config.major_version);   
 #endif
@@ -158,7 +158,7 @@ int sys_comp(_CONFIG_DAT *config){
 }
 
 /* write system info to stdout */
-void sys_disp(_SYS_DAT2 *s){
+void sys_disp(_SYS_DAT *s){
 	printf(" Pcon  %d.%d.%d \n\r", s->config.major_version, s->config.minor_version, s->config.minor_revision);
 	printf(" configured for controlling %i channels\n\r",s->config.channels);
 	printf(" configured for reading %i sensors\n\r",s->config.sensors);

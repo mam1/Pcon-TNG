@@ -39,7 +39,7 @@ char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 char *onoff[2] = {"off", " on"};
 char *con_mode[3] = {"manual", "  time", "time & sensor"};
 char *sch_mode[2] = {"day", "week"};
-char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
+char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
 _IPC_DAT        ipc_dat, *ipc_ptr;                    		// ipc data
@@ -188,7 +188,7 @@ int main(void) {
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
-	printf("  %s copied to shared memory\n", ipc_file);
+	printf(" CGI:  %s copied to shared memory\n", ipc_file);
 
 	/*********** start main process *******************************************************************/
 
@@ -214,19 +214,20 @@ int main(void) {
 		printf("Conversion error occurred: %d", errno);
 		exit(0);
 	}
-	printf("  sensor %i, temp %i, humidity %i\n", (int)l_num, (int)l_temp, (int)l_humid);
-	snprintf(cgi_file_name, _FILE_NAME_SIZE, "%s%i%s", _CGI_DATA_FILE_PREFIX, (int)l_num, _CGI_DATA_FILE_SUFIX);
-	printf("\n******* file name <%s>\n",cgi_file_name);
+	printf(" CGI: sensor %i, temp %i, humidity %i\n", (int)l_num, (int)l_temp, (int)l_humid);
+	// snprintf(cgi_file_name, _FILE_NAME_SIZE, "%s%i%s", _CGI_DATA_FILE_PREFIX, (int)l_num, _CGI_DATA_FILE_SUFIX);
+	// printf("\n******* file name <%s>\n",cgi_file_name);
 
 	/* move sensor data to shared memory */
-	get_tm(rtc, &(ipc_ptr->s_dat[(int)l_num].ts));				// read the clock
+	ipc_sem_lock(semid, &sb);							// wait for a lock on shared memory
+	get_tm(rtc, &(ipc_ptr->s_dat[(int)l_num].ts));		// read the clock
 	ipc_ptr->s_dat[(int)l_num].sensor_id = (int)l_num;
 	ipc_ptr->s_dat[(int)l_num].temp = (int)l_temp;
 	ipc_ptr->s_dat[(int)l_num].humidity = (int)l_humid;
-	printf("  sensor data copied to shared memory\n");
-	// ipc_ptr->force_update = 1;
-	ipc_sem_free(semid, &sb);		// free lock on shared memory
 
+	// ipc_ptr->force_update = 1;
+	ipc_sem_free(semid, &sb);							// free lock on shared memory
+	printf(" CGI: sensor data copied to shared memory %02i:%02i:%02i\n\r", ipc_ptr->s_dat[(int)l_num].ts.tm_hour,ipc_ptr->s_dat[(int)l_num].ts.tm_min,ipc_ptr->s_dat[(int)l_num].ts.tm_sec);
 	/* log sensor data */
 	// cgi_data = fopen(cgi_file_name, "a");
 	// if (cgi_data == NULL) {
@@ -246,6 +247,6 @@ int main(void) {
 	// printf("  dow = %i\n", ipc_ptr->s_dat[l_num].ts.tm_wday);
 
 	// fclose(cgi_data);
-	printf("\nnormal termination\n\n");
+	printf(" CGI: normal termination\n\n");
 	return 0;
 }

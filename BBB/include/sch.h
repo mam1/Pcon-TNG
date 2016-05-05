@@ -12,7 +12,7 @@ _S_REC *get_sch_rec(_S_TAB *sch, int day, int channel, int hour, int minute);
 // int add_sch_rec2(_S_TAB *sch, int day, int channel, int hour, int minute, int state, int temp, int humid);
 
 /* update state in schedule record */
-int up_sch_rec_state(_S_TAB *sch, int day, int channel, int hour, int minute, int state);
+int up_sch_restate(_S_TAB *sch, int day, int channel, int hour, int minute, int state);
 
 /* update humiduty in schedule record */
 int up_sch_rec_humid(_S_TAB *sch, int day, int channel, int hour, int minute, int humid);

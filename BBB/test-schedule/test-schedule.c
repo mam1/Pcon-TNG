@@ -25,14 +25,14 @@ char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 char *onoff[2] = {"off", " on"};
 char *con_mode[3] = {"manual", "  time", "time & sensor"};
 char *sch_mode[2] = {"day", "week"};
-char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
+char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /*******************************************/
 
 int main (void) {
 
     _S_TAB      sch;
-    _SYS_DAT2   sys_data;
+    _SYS_DAT   sys_data;
     FILE 		*sys_file;
     int         day;
     int         channel;

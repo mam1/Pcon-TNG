@@ -35,7 +35,7 @@ extern int 		    	exit_flag;		              	//exit man loop if TRUE
 extern int             	trace_flag;                   	//trace file is active
 extern int             	bbb;				          	//UART1 file descriptor
 extern _CMD_FSM_CB      cmd_fsm_cb, *cmd_fsm_cb_ptr;  	//cmd_fsm control block
-extern _SYS_DAT2         sdat;                         	//system data structure
+extern _SYS_DAT         sdat;                         	//system data structure
 extern _IPC_DAT			ipc_dat;					  	//ipc data
 extern void				*data; 							//pointer for shared memory
 extern _IPC_DAT 		*ipc_ptr;
@@ -50,7 +50,7 @@ extern char *day_names_short[7];
 extern char *onoff[2];
 extern char *con_mode[3];
 extern char *sch_mode[2];
-extern char *c_mode[4];
+extern char *mode[4];
 
 /*********************** globals **************************/
 #ifdef _TRACE
@@ -167,14 +167,14 @@ int c_15(_CMD_FSM_CB *); /* revert to previous state */
 int c_16(_CMD_FSM_CB *); /* set on cycle time */
 int c_17(_CMD_FSM_CB *); /* set off cycle time */
 int c_18(_CMD_FSM_CB *); /* clear sensor assignment for a channel */ 
-int c_19(_CMD_FSM_CB *); /* set working schedule name */
+int c_19(_CMD_FSM_CB *); /*  */ //******************************************************************************
 int c_20(_CMD_FSM_CB *); /* set working schedule hour */
 int c_21(_CMD_FSM_CB *); /* set working schedule minute */
 int c_22(_CMD_FSM_CB *); /* set schedule record to on */
 int c_23(_CMD_FSM_CB *); /* set set schedule record to off */
 int c_24(_CMD_FSM_CB *); /* delete schedule record */
-int c_25(_CMD_FSM_CB *); /* set load prompt */
-int c_26(_CMD_FSM_CB *); /* delete schedule template */
+int c_25(_CMD_FSM_CB *); /*  */
+int c_26(_CMD_FSM_CB *); /*  */	//*******************************************************************************
 int c_27(_CMD_FSM_CB *); /* update temperature in a schedule record */
 int c_28(_CMD_FSM_CB *); /* update humidity in a schedule record */
 int c_29(_CMD_FSM_CB *); /* set working channel */
@@ -632,9 +632,9 @@ int c_6(_CMD_FSM_CB *cb)
 	printf("  ----------------------------------------------------------");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("\n\r%6i", i);
-		printf("%9s%9s", onoff[cb->sys_ptr->c_data[i].c_state], c_mode[cb->sys_ptr->c_data[i].c_mode]);
-	// printf(" %i    %i   ", cb->sys_ptr->c_data[i].c_state, cb->sys_ptr->c_data[i].c_mode);
-		switch (cb->sys_ptr->c_data[i].c_mode) {
+		printf("%9s%9s", onoff[cb->sys_ptr->c_data[i].state], mode[cb->sys_ptr->c_data[i].mode]);
+	// printf(" %i    %i   ", cb->sys_ptr->c_data[i].state, cb->sys_ptr->c_data[i].mode);
+		switch (cb->sys_ptr->c_data[i].mode) {
 		case 2:	// time & sensor
 			if(cb->sys_ptr->c_data[i].sensor_assigned == 1)
 				printf("%5i", cb->sys_ptr->c_data[i].sensor_id);
@@ -688,8 +688,8 @@ int c_9(_CMD_FSM_CB *cb)
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-	cb->sys_ptr->c_data[cb->w_channel].c_mode = 0;	// update ipc data
-	cb->sys_ptr->c_data[cb->w_channel].c_state = 1;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].mode = 0;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].state = 1;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
@@ -715,8 +715,8 @@ int c_10(_CMD_FSM_CB *cb)
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-	cb->sys_ptr->c_data[cb->w_channel].c_mode = 0;	// update ipc data
-	cb->sys_ptr->c_data[cb->w_channel].c_state = 0;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].mode = 0;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].state = 0;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
@@ -744,8 +744,8 @@ int c_11(_CMD_FSM_CB *cb)
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-	cb->sys_ptr->c_data[cb->w_channel].c_mode = 1;	// update ipc data
-	cb->sys_ptr->c_data[cb->w_channel].c_state = 0;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].mode = 1;	// update ipc data
+	cb->sys_ptr->c_data[cb->w_channel].state = 0;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
@@ -769,8 +769,8 @@ int c_12(_CMD_FSM_CB *cb)
 	FILE 		*f;
 
 	ipc_sem_lock(semid, &sb);						// wait for a lock on shared memory
-	cb->sys_ptr->c_data[cb->w_channel].c_mode = 2;
-	cb->sys_ptr->c_data[cb->w_channel].c_state = 0;	
+	cb->sys_ptr->c_data[cb->w_channel].mode = 2;
+	cb->sys_ptr->c_data[cb->w_channel].state = 0;	
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 	ipc_sem_free(semid, &sb);						// free lock on shared memory
 
@@ -791,12 +791,12 @@ int c_13(_CMD_FSM_CB *cb)
 
 // 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
-// 	ipc_ptr->c_dat[cb->w_channel].c_mode = 3;
+// 	ipc_ptr->c_dat[cb->w_channel].mode = 3;
 // 	ipc_ptr->force_update = 1;					// force relays to be updated
 
 // 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-// 	sdat.c_data[cb->w_channel].c_mode = 3;
+// 	sdat.c_data[cb->w_channel].mode = 3;
 // 	sys_save(_SYSTEM_FILE_NAME,cb->sdat_ptr);
 
 // 	strcpy(cb->prompt_buffer, "  setting cycle mode for channel ");
@@ -898,7 +898,7 @@ int c_18(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/* set working template name */
+/*  */
 int c_19(_CMD_FSM_CB *cb)
 {
 	// strcpy((char *)cb->w_schedule_name, cb->token);
@@ -990,6 +990,7 @@ int c_22(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "\0");
 	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
 	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter command or time");
+	printf(" ** c_22 returning\n\r");
 	return 0;
 }
 
@@ -1034,22 +1035,22 @@ int c_24(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/* set load prompt */
+/*  */
 int c_25(_CMD_FSM_CB *cb)
 {
 
 
-	/* build prompt */
-	strcpy(cb->prompt_buffer, "\r\nschedule template: ");
-	strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	strcat(cb->prompt_buffer, " is saved\r\n\n");
-	strcat(cb->prompt_buffer, "schedule maintenance\r\n");
-	make_lib_list(cb->prompt_buffer, cb);
+	// /* build prompt */
+	// strcpy(cb->prompt_buffer, "\r\nschedule template: ");
+	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
+	// strcat(cb->prompt_buffer, " is saved\r\n\n");
+	// strcat(cb->prompt_buffer, "schedule maintenance\r\n");
+	// make_lib_list(cb->prompt_buffer, cb);
 
 	return 0;
 }
 
-/* delete schedule template */
+/*  */
 int c_26(_CMD_FSM_CB *cb)
 {
 

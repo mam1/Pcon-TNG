@@ -21,15 +21,13 @@ function rdDHT22(pin)
 end
  
  tmr.alarm(0,60000, 1, function()
- snum = 2
+ snum = 2 
  temp,humidity = rdDHT22(7)
  --temp = 55
  --humidity = 15
  conn=net.createConnection(net.TCP, 0)
  conn:on("receive", function(conn, payload) print(payload) end )
  conn:connect(8080,"192.168.254.34")
--- mess = "GET /cgi-bin/Scon?snesor=" .. snum .. "&temp=" .. temp .. "&humid=" .. humidity .. " HTTP/1.1\r\nHost: 192.168.254.34\r\n"
---.."Connection: keep-alive\r\nAccept: */*\r\nUser-Agent: Mozilla/4.0 (compatible; esp8266 Lua; Windows NT 5.1)\r\n\r\n"
  mess = "GET /cgi-bin/Scon?snesor=" .. snum .. "&temp=" .. temp .. "&humid=" .. humidity .. "\r\n"
  conn:send(mess)
  end)

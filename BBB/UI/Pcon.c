@@ -46,7 +46,7 @@ union semun {
 union 			semun dummy;
 struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
 
-// _SYS_DAT2 		sys_data;								//system data
+// _SYS_DAT 		sys_data;								//system data
 
 
 /***************** global code to text conversion ********************/
@@ -55,7 +55,7 @@ char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 char *onoff[2] = {"off", " on"};
 char *con_mode[3] = {"manual", "  time", "time & sensor"};
 char *sch_mode[2] = {"day", "week"};
-char *c_mode[4] = {"manual", "  time", "sensor", " cycle"};
+char *mode[4] = {"manual", "  time", "sensor", " cycle"};
 
 /***************************** support routines ********************************/
 

@@ -60,7 +60,7 @@ void trace1(char *name, char *caller, char *message){	//(trace filename, calling
 	return;
 }
 
-void trace2(char *name, char *caller, _SYS_DAT2 *s){
+void trace2(char *name, char *caller, _SYS_DAT *s){
 	FILE *tracef;
 	tracef = fopen(name, "a");
 	fprintf(tracef,"%s: major_version = %i, minor_version=%i, minor_revision=%i, channels=%i, sensors=%i, commands=%i, states=%i\n",

@@ -37,7 +37,7 @@ char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 char *onoff[2] = {"off", " on"};
 char *con_mode[3] = {"manual", "  time", "time & sensor"};
 char *sch_mode[2] = {"day", "week"};
-char *c_mode[4] = {"manual", "  time", "   t&s", " cycle"};
+char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
 _IPC_DAT       	ipc_dat, *ipc_ptr;                    		// ipc data
@@ -83,8 +83,8 @@ void dispdat(void) {
 	printf("  ---------------------------------\n\r");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("   <%2i> - ", i);
-		printf(" %s     %s", onoff[ipc_ptr->sys_data.c_data[i].c_state], c_mode[ipc_ptr->sys_data.c_data[i].c_mode]);
-		if ((ipc_ptr->sys_data.c_data[i].c_mode) == 3)
+		printf(" %s     %s", onoff[ipc_ptr->sys_data.c_data[i].state], mode[ipc_ptr->sys_data.c_data[i].mode]);
+		if ((ipc_ptr->sys_data.c_data[i].mode) == 3)
 			printf(" (%i:%i)", ipc_ptr->sys_data.c_data[i].on_sec, ipc_ptr->sys_data.c_data[i].off_sec);
 		printf("\r\n");
 	}
@@ -158,18 +158,18 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
-		switch (ipc_ptr->sys_data.c_data[channel].c_mode) {
+		switch (ipc_ptr->sys_data.c_data[channel].mode) {
 		case 0:	// manual
-			state = ipc_ptr->sys_data.c_data[channel].c_state;
+			state = ipc_ptr->sys_data.c_data[channel].state;
 			break;
 		case 1:	// time
 			state =  test_sch_time(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
-			ipc_ptr->sys_data.c_data[channel].c_state = state;
+			ipc_ptr->sys_data.c_data[channel].state = state;
 			break;
 		case 2:	// time & sensor
 			state =  test_sch_sensor(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 			printf("  state %i returned from test_sch_sensor for channel %i\r\n", state, channel);
-			ipc_ptr->sys_data.c_data[channel].c_state = state;
+			ipc_ptr->sys_data.c_data[channel].state = state;
 			printf("actual %i, target %i\n", ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp, get_tar_temp(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel])));
 			log_state(state,channel,ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp, get_tar_temp(key,&(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel])));
 
@@ -179,7 +179,7 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 			printf("*** error mode set to <3>\n");
 			break;
 		default: // error
-			printf("*** error mode set to <%i>\n", ipc_ptr->sys_data.c_data[channel].c_mode);
+			printf("*** error mode set to <%i>\n", ipc_ptr->sys_data.c_data[channel].mode);
 		}
 #ifdef _TRACE
 		sprintf(trace_buf, "    Dcon:update_relays:  relay %i set to %i\n", channel, state);
@@ -197,7 +197,7 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	/* update on board relays channels 0-7 */    	
 	for (channel = 0;channel < 8; channel++) {
 		gpio_index = channel + 8;
-		if (ipc_ptr->sys_data.c_data[channel].c_state){
+		if (ipc_ptr->sys_data.c_data[channel].state){
 			pin_high(header[gpio_index], pin[gpio_index]);
 		}
 		else{ 
@@ -209,7 +209,7 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 #endif
 	/* update DBIO relays channels 8-15 */
 	for (channel = 8; channel < 16; channel++) {
-	    if(ipc_ptr->sys_data.c_data[channel].c_state)
+	    if(ipc_ptr->sys_data.c_data[channel].state)
 	        ccb |= (1<<((channel - 8)));
 	    else
 	        ccb &= ~(1<<((channel - 8)));

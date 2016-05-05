@@ -20,7 +20,7 @@ extern char *day_names_short[7];
 extern char *onoff[2];
 extern char *con_mode[3];
 extern char *sch_mode[2];
-extern char *c_mode[4];
+extern char *mode[4];
 
 /* serch for record key match in a schedule, return record number of match or -1 if no hit */
 int find_tmpl_key(_TMPL_DAT *t, int hour, int minute) {
@@ -97,9 +97,11 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
 			for (ii = t->rcnt; ii > i; ii--)
 				t->rec[ii] = t->rec[ii - 1];
 			/* insert new record */
+			printf(" ** i = %i\n\r\n", i );
 			t->rec[i] = hrec;
 			return 0;
 		}
+	printf(" ** t->rcnt = %i\n\r\n", t->rcnt );
 	t->rec[t->rcnt - 1] = hrec;
 	return 0;
 }
@@ -309,7 +311,7 @@ void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 				else {
 					con_key(s->sch[day][channel].rec[i].key, &hour, &minute);
 
-					switch(cb->sys_ptr->c_data[channel].c_mode){ //Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
+					switch(cb->sys_ptr->c_data[channel].mode){ //Control mode: 0-manual, 1-time, 2-time & sensor, 3-cycle
 						case 0:
 							sprintf(time_state, "%02i:%02i %s", hour, minute, onoff[s->sch[day][channel].rec[i].state]);
 							break;
@@ -320,10 +322,10 @@ void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 							sprintf(time_state, "%02i:%02i %i", hour, minute, s->sch[day][channel].rec[i].temp);
 							break;
 						case 3:
-							printf("**** error  bad chnannel mode <%i>\r\n", cb->sys_ptr->c_data[channel].c_mode);
+							printf("**** error  bad chnannel mode <%i>\r\n", cb->sys_ptr->c_data[channel].mode);
 							break;
 						default:
-							printf("**** error  bad chnannel mode <%i>\r\n", cb->sys_ptr->c_data[channel].c_mode);
+							printf("**** error  bad chnannel mode <%i>\r\n", cb->sys_ptr->c_data[channel].mode);
 					}
 				}
 				printf("%s   ", time_state);
