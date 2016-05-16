@@ -350,27 +350,28 @@ UsedLibrary="/Applications/EAGLE-7.5.2/lbr/zilog.lbr"
 UsedLibrary="/Users/mam1/Git/Pcon-TNG/support_docs/board_layouts/diy-modules.lbr"
 UsedLibrary="/Users/mam1/Git/Pcon-TNG/support_docs/board_layouts/local.lbr"
 UsedLibrary="/Users/mam1/Git/Pcon-TNG/support_docs/board_layouts/adafruit-Adafruit-Eagle-Library-4abf84c/adafruit.lbr"
+UsedLibrary="/Users/mam1/Git/Pcon-TNG/support_docs/board_layouts/eagle/plib.lbr"
 
 [Win_1]
 Type="Control Panel"
-Loc="384 23 1711 965"
+Loc="340 53 1667 995"
 State=2
 Number=0
 
 [Win_2]
-Type="Board Editor"
-Loc="724 717 1605 1374"
+Type="Library Editor"
+Loc="623 61 1794 991"
 State=2
-Number=2
-File="t1.brd"
-View="-197.346 -42.9776 105.83 98.392"
-WireWidths=" 0 0.254 0.3048 0.6096 0.8128 1.016 1.27 1.4224 1.6764 1.778 1.9304 2.1844 2.54 3.81 6.4516 0.4064"
+Number=1
+File="/Users/mam1/Git/Pcon-TNG/support_docs/board_layouts/eagle/plib.lbr"
+View="-26.2598 -46.9237 -19.3748 43.6473"
+WireWidths=" 0 0.3048 0.6096 0.8128 1.016 1.27 1.4224 1.6764 1.778 1.9304 2.1844 2.54 3.81 6.4516 0.4064 0.127"
 PadDiameters=" 0.254 0.3048 0.4064 0.6096 0.8128 1.016 1.27 1.4224 1.6764 1.778 1.9304 2.1844 2.54 3.81 6.4516 0"
 PadDrills=" 0.5 0.6 0.7 0.9 1 1.1 1.2 1.3 1.4 1.5 1.6 2 2.2 2.8 3.2 0.8"
 ViaDiameters=" 0.254 0.3048 0.4064 0.6096 0.8128 1.016 1.27 1.4224 1.6764 1.778 1.9304 2.1844 2.54 3.81 6.4516 0"
 ViaDrills=" 0.5 0.7 0.8 0.9 1 1.1 1.2 1.3 1.4 1.5 1.6 2 2.2 2.8 3.2 0.6"
 HoleDrills=" 0.5 0.7 0.8 0.9 1 1.1 1.2 1.3 1.4 1.5 1.6 2 2.2 2.8 3.2 0.6"
-TextSizes=" 0.254 0.3048 0.4064 0.6096 0.8128 1.016 1.27 1.4224 1.6764 1.9304 2.1844 2.54 3.81 5.08 6.4516 1.778"
+TextSizes=" 0.254 0.3048 0.4064 0.6096 0.8128 1.016 1.4224 1.6764 1.9304 2.1844 2.54 3.81 5.08 6.4516 1.778 1.27"
 PolygonSpacings=" 0.254 0.3048 0.4064 0.6096 0.8128 1.016 1.4224 1.6764 1.778 1.9304 2.1844 2.54 3.81 5.08 6.4516 1.27"
 PolygonIsolates=" 0.254 0.3048 0.4064 0.6096 0.8128 1.016 1.27 1.4224 1.6764 1.778 1.9304 2.1844 2.54 3.81 6.4516 0"
 MiterRadiuss=" 0.254 0.3175 0.635 1.27 2.54 1 2 2.5 5 7.5 10 0"
@@ -386,7 +387,7 @@ MiterStyle=0
 PadShape=0
 ViaShape=0
 PolygonPour=0
-PolygonRank=1
+PolygonRank=0
 PolygonThermals=1
 PolygonOrphans=0
 TextRatio=8
@@ -401,7 +402,8 @@ SwapLevel=0
 ArcDirection=0
 AddLevel=2
 PadsSameType=0
-Layer=16
+Layer=27
+Package="BBBHEADER"
 
 [Desktop]
 Screen="1920 1080"
