@@ -3,8 +3,8 @@
 ############################################################################# 
 
 # scan directory 
-git_DIR := Git/Pcon-TNG/BBB/test-socket/server
-program_NAME := serve
+git_DIR := Git/Pcon-TNG/BBB/test-exec
+program_NAME := ex
 program_C_SRCS := $(wildcard *.c)
 program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
