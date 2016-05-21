@@ -70,7 +70,7 @@ int get_tm(int rtc, _tm *tm){
     tm->tm_hour = BCDToDecimal(reg_buf[2] & 0x3f);
     tm->tm_mday = BCDToDecimal(reg_buf[3] & 0x3f);
     tm->tm_wday = reg_buf[4] & 0x7;
-    tm->tm_mon = BCDToDecimal(reg_buf[5] & 0x1f) + 1;    /* rtc mn 1-12 */
+    tm->tm_mon = BCDToDecimal(reg_buf[5] & 0x1f);    /* rtc mn 1-12 */
     tm->tm_year = BCDToDecimal(reg_buf[6]) + 2000;
     // snprintf(&tm->tm_stamp[0], sizeof(tm->tm_stamp), "%4d%2d%2d%2d%2d",tm->tm_year,tm->tm_mon,tm->tm_mday,tm->tm_hour,tm->tm_min);
     // for(i=0;i<15;i++)
@@ -100,7 +100,7 @@ int set_tm(int rtc,_tm *tm){
   reg_buf[4] = DecimalToBCD((uint8_t)tm->tm_mday);
  
   reg_buf[5] = tm->tm_wday;
-  reg_buf[6] = DecimalToBCD((uint8_t)tm->tm_mon - 1);
+  reg_buf[6] = DecimalToBCD((uint8_t)tm->tm_mon);
   reg_buf[7] = DecimalToBCD((uint8_t)tm->tm_year - 2000);
 
   printf("  set_time: reg_buf[4] = %i\n\r",reg_buf[4]);
