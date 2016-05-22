@@ -113,7 +113,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*  3  schedule    */  { 4,  1,  2,  3,  4,  0, 11, 23,  8,  9, 10, 11, 28, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28},
 	/*  4  ?           */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/*  5  clock       */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
-	/*  6  yes         */  { 0,  1,  0,  3,  4,  0,  6,  0,  0,  0, 10, 11,  4, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28},
+	/*  6  yes         */  { 0,  1,  0,  3,  4,  0,  6,  0,  0,  0, 10, 11,  4, 13, 14, 15, 16, 17, 18, 19,  0, 21,  0,  0, 24, 25, 26, 27, 28},
 	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  4,  4,  4,  4,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8, 25,  8,  8, 28},
 	/*  8  replace     */  { 0,  1,  2,  3,  4,  5,  6,  0,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28},
 	/*  9  edit        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11,  0, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28},
@@ -475,9 +475,11 @@ void print_tlist(_CMD_FSM_CB *cb) {
 }
 
 void build_prompt(_CMD_FSM_CB * cb){
+	printf("*********** build_prompt called\r\n");
+	printf("*********** switching on cb_state = %i\r\n", cb->state);
+	printf("********** record count before call to load_temps %i\r\n", cb->w_template_buffer.rcnt);
 	switch(cb->state){
 		case 4:
-
 			strcpy(cb->prompt_buffer, "\r\n editing schedule buffer\n\r");
 			load_temps(&cb->w_template_buffer, cb->prompt_buffer);
 			strcat(cb->prompt_buffer, "\r\n enter a command or time");
@@ -967,13 +969,9 @@ int c_21(_CMD_FSM_CB *cb)
 int c_22(_CMD_FSM_CB *cb)
 {
 	int 			i;
-	// int 			key;
 	_S_REC 			hold;
 
-// printf("c_22 called\r\n");
-
-	// key = cb->w_hours * 60 + cb->w_minutes;
-
+	printf("********** c_22 called, record count %i\r\n",cb->w_template_buffer.rcnt);
 	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
 	if (i != -1)
@@ -983,14 +981,27 @@ int c_22(_CMD_FSM_CB *cb)
 		hold.humid = 0;
 	}
 
+	printf(" ** c_22 after search, record count %i\r\n",cb->w_template_buffer.rcnt);
+
 	/* add new schedule record */
 	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 1, hold.temp, hold.humid);
 
+	printf(" ** c_22 after add_tmpl_rec, record count %i\r\n",cb->w_template_buffer.rcnt);
+
 	/*build prompt */
 	strcpy(cb->prompt_buffer, "\0");
+	printf(" ** c_22 before call to load_temps, record count %i, prompt_buffer <%s>\r\n",cb->w_template_buffer.rcnt, cb->prompt_buffer);
 	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+
+
+printf(" ** c_22 after call to load_temps, record count i, prompt_buffer <s>\r\n");
+printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",99, "xxxxx");
+
+	printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",cb->w_template_buffer.rcnt, cb->prompt_buffer);
+	
 	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter command or time");
-	printf(" ** c_22 returning\n\r");
+
+	printf(" ** c_22 returning, record count %i\r\n",cb->w_template_buffer.rcnt);
 	return 0;
 }
 

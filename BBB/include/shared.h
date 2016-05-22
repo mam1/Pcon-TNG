@@ -51,7 +51,7 @@
 /* buffers */
 #define _INPUT_BUFFER_SIZE		128
 #define _TOKEN_BUFFER_SIZE		60
-#define _PROMPT_BUFFER_SIZE		200
+#define _PROMPT_BUFFER_SIZE		500
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		8
@@ -62,7 +62,7 @@
 
 /* schedule parameters */
 #define _SCHEDULE_NAME_SIZE		40
-#define _MAX_SCHEDULE_RECS		24
+#define _MAX_SCHEDULE_RECS		50
 #define _MAX_SCHEDULES			24
 
 /* template library parameters */

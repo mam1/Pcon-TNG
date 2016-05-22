@@ -59,11 +59,18 @@ char *mode[4] = {"manual", "  time", "sensor", " cycle"};
 
 /***************************** support routines ********************************/
 
+/* check system status */
+
+
+
 /* prompt for user input */
 void prompt(int s) {
 
+	printf("************** prompt called\r\n");
+	printf("********** record count before call to build_prompt %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);	
 	build_prompt(&cmd_fsm_cb);
 	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer,s);
+	printf("************** prompt returning\r\n");	
 	return;
 }
 
@@ -231,10 +238,16 @@ int main(void) {
 		/* check the token stack */
 		while (pop_cmd_q(cmd_fsm_cb.token))
 		{
+			printf("************ before cycle\r\n");
+			printf("********** record count before cycle %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
 			cmd_fsm(&cmd_fsm_cb);   	//cycle cmd fsm until queue is empty
+			printf("************ after cycle\r\n");
+			printf("********** record count after cycle %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
 			prompted = false;
 		}
 		if (prompted == false) {				//display prompt if necessary
+			printf("************* before prompt\r\n");
+			printf("********** record count before call prompt %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
 			prompted = true;
 			prompt(cmd_fsm_cb.state);
 		}

@@ -31,66 +31,98 @@ char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 int main (void) {
 
-    _S_TAB      sch;
-    _SYS_DAT   sys_data;
-    FILE 		*sys_file;
-    int         day;
-    int         channel;
-    int         hour;
-    int         minute;
-    int         state;
-    int         temp;
-    int         humid;
-    char 		*fname = "test_sys.dat";
+    int         	hour;
+    int         	minute;
+    int         	state = 0;
+    int         	temp = 0;
+    int         	humid = 0;
+    _TMPL_DAT 		sch;
 
     printf("\n **** starting\n");
     printf("  size of schedule %i bytes\n", sizeof(sch));
 
-    /* load data from system data file and compare config data */
-    sys_file = sys_open(fname,&sys_data);  // handle missing file only need once
-    sys_load(fname,&sys_data);
-    if(sys_comp(&sys_data)){
-    	printf("*** there are different configurations in the system file and in the application\n");
-    	printf("*** application terminated\n");
-    	exit(1);
-    }
-    /* test to make sure save is working */
-    if(sys_save(fname,&sys_data))
-    	printf("\n *\n*** unable to save system data to file <%s>\n", fname);
 
-    /* create schedule records */
-    printf("  enter channel number > ");
-    scanf("%i", &channel);
-    printf("  enter day number > ");
-    scanf("%i", &day);
+
+    /* create base schedule record */
     printf("  enter hour > ");
     scanf("%i", &hour);
-    printf("  enter minute > ");
-    scanf("%i", &minute);
-    printf("  enter state > ");
-    scanf("%i", &state);
-    printf("  enter temp > ");
-    scanf("%i", &temp);
-    printf("  enter humid > ");
-    scanf("%i", &humid);
+    // printf("  enter state > ");
+    // scanf("%i", &state);
+    // printf("  enter temp > ");
+    // scanf("%i", &temp);
+    // printf("  enter humid > ");
+    // scanf("%i", &humid);
 
-    printf("\n  creating schedule record for channel %i, day %i, time %02i:%02i, state %i, temp %i humid %i\n\n",
-        channel,day, hour, minute, state, temp, humid);
+    minute = 30;
+    printf("\n  creating schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
 
-    add_sch_rec2(&sch,day,channel,hour,minute,state,temp,humid);
-    add_sch_rec2(&sch,day,channel,hour+5,minute,state,temp+1,humid);
-    add_sch_rec2(&sch,day,channel,hour-2,minute,state,temp+2,humid);
-    add_sch_rec2(&sch,day,channel,hour-7,minute,state,temp+3,humid);
-    dump_schedule(&sch,day,channel);
+    minute = minute - 5;
+    printf("\n  creating schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
 
-    printf("delete day %i channel %i %02i:%02i\n",day, channel, hour, minute);
-    del_sch_rec2(&sch,day,channel,hour,minute);
-    dump_schedule(&sch,day,channel);
+    minute = minute + 20;
+    printf("\n  creating schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
 
-    temp = 99;
-    printf("update temp to %i for day %i channel %i %02i:%02i\n",temp, day, channel, hour-2, minute);
-    up_sch_rec_temp(&sch, day, channel, hour-2, minute, temp);
-    dump_schedule(&sch,day,channel);
+    minute = minute - 7;
+    printf("\n  creating schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
+
+    minute = minute + 10;
+    printf("\n  creating schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
+  
+    minute = minute + 2;
+    printf("\n  creating schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
+
+        minute = minute - 8;
+    printf("\n  creating schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
+
+        minute = minute - 8;
+    printf("\n  creating schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
+
+  	humid = 99;
+    printf("\n  changeing schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
+
+        minute = 57;
+    printf("\n  creating schedule record for time %02i:%02i, state %i, temp %i humid %i\n\n",
+        hour, minute, state, temp, humid);
+    add_tmpl_rec(&sch,hour,minute,state,temp,humid);
+    dump_template(&sch);
+
+
+    minute = 25;
+    printf("\ndelete  %02i:%02i\n", hour, minute);
+    del_tmpl_rec(&sch,hour,minute);
+    dump_template(&sch);
+
+    // temp = 99;
+    // printf("update temp to %i for day %i channel %i %02i:%02i\n",temp, day, channel, hour-2, minute);
+    // up_sch_rec_temp(&sch, day, channel, hour-2, minute, temp);
+    // dump_template(&sch);
 
     printf("\n **** ending\n");
     return (0);
