@@ -475,9 +475,9 @@ void print_tlist(_CMD_FSM_CB *cb) {
 }
 
 void build_prompt(_CMD_FSM_CB * cb){
-	printf("*********** build_prompt called\r\n");
-	printf("*********** switching on cb_state = %i\r\n", cb->state);
-	printf("********** record count before call to load_temps %i\r\n", cb->w_template_buffer.rcnt);
+	// printf("*********** build_prompt called\r\n");
+	// printf("*********** switching on cb_state = %i\r\n", cb->state);
+	// printf("********** record count before call to load_temps %i\r\n", cb->w_template_buffer.rcnt);
 	switch(cb->state){
 		case 4:
 			strcpy(cb->prompt_buffer, "\r\n editing schedule buffer\n\r");
@@ -971,7 +971,7 @@ int c_22(_CMD_FSM_CB *cb)
 	int 			i;
 	_S_REC 			hold;
 
-	printf("********** c_22 called, record count %i\r\n",cb->w_template_buffer.rcnt);
+	// printf("********** c_22 called, record count %i\r\n",cb->w_template_buffer.rcnt);
 	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
 	if (i != -1)

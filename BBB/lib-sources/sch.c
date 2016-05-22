@@ -290,34 +290,34 @@ int load_temps(_TMPL_DAT *t_sch, char *b) {
 
 	tbuff[0] = '\0';
 	// printf(" ^^^^^^ tbuff <%s>\r\n", tbuff);
-	printf("************** load temps called, record count %i\r\n", t_sch->rcnt);
+	// printf("************** load temps called, record count %i\r\n", t_sch->rcnt);
 	if (t_sch->rcnt < 1) {
 		strcat(b, "    no records in schedule");
 		return 0;
 	}
 	// printf("************** record 2 count %i\r\n", t_sch->rcnt);
 	if(t_sch->rcnt > _MAX_SCHEDULE_RECS){
-		printf("************* your screwed aborting\r\n");
+		printf("************* your screwed record count trashed\n\r\n aborting\r\n");
 		term1();
 	}
 
 	for (i = 0; i < t_sch->rcnt; i++) {
-		printf(" @@ loop i %i\r\n", i);
-		printf("           record count %i\r\n", t_sch->rcnt);
+		// printf(" @@ loop i %i\r\n", i);
+		// printf("           record count %i\r\n", t_sch->rcnt);
 		con_key(t_sch->rec[i].key, &h, &m);
-		printf("           record count a %i\r\n", t_sch->rcnt);
-		printf("           tbuff ((%s))\r\n",tbuff);
+		// printf("           record count a %i\r\n", t_sch->rcnt);
+		// printf("           tbuff ((%s))\r\n",tbuff);
 		sprintf(tbuff, "\r    %02i:%02i - state %i temp %i humid %i\r\n",
 		        h, m, t_sch->rec[i].state, t_sch->rec[i].temp, t_sch->rec[i].humid);
-		printf("           record count %i\r\n", t_sch->rcnt);
+		// printf("           record count %i\r\n", t_sch->rcnt);
 
-		printf("\n\r      tbuff ((%s))\r\n", tbuff);
-		printf("\n\r      b ((%s))\n\r", b);
+		// printf("\n\r      tbuff ((%s))\r\n", tbuff);
+		// printf("\n\r      b ((%s))\n\r", b);
 		strcat(b, tbuff);
-		printf("           record count end of loop  %i\r\n", t_sch->rcnt);
+		// printf("           record count end of loop  %i\r\n", t_sch->rcnt);
 	}
 
-	printf("************** load temps returning, record count %i\r\n", t_sch->rcnt);
+	// printf("************** load temps returning, record count %i\r\n", t_sch->rcnt);
 	return 0;
 }
 
