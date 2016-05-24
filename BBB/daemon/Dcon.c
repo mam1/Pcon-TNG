@@ -1,4 +1,4 @@
- /********************************************************************/
+/********************************************************************/
 /*	Dcon.c - daemon updates the channel relays once a minute unless */
 /*	the user requests an immediate update							*/
 /********************************************************************/
@@ -14,10 +14,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
-#include "shared.h"
-#include "ipc.h"
 #include "Pcon.h"
-#include "shared.h"
+#include "ipc.h"
 #include "bitlit.h"
 #include "PCF8563.h"
 #include "sch.h"

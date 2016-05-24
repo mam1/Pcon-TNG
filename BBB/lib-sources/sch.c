@@ -298,7 +298,7 @@ int load_temps(_TMPL_DAT *t_sch, char *b) {
 	// printf("************** record 2 count %i\r\n", t_sch->rcnt);
 	if(t_sch->rcnt > _MAX_SCHEDULE_RECS){
 		printf("************* your screwed record count trashed\n\r\n aborting\r\n");
-		term1();
+		exit(1);
 	}
 
 	for (i = 0; i < t_sch->rcnt; i++) {

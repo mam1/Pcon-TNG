@@ -114,8 +114,6 @@ int main(void) {
 	if (trace_flag == false)
 		printf(" program trace disabled\n");
 
-	
-
 	/************************ initializations ****************************/
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "starting initializations", trace_flag);

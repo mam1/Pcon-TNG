@@ -69,10 +69,20 @@ $(program_NAME): $(program_OBJS)
 clean:
 	@- $(RM) -v $(program_NAME)
 	@- $(RM) -v $(program_OBJS)
+	cd .. && $(MAKE) clean
 
 # rebuild the project ibrary from lib-sources 
 lib:
+	cd .. && $(MAKE) clean
 	cd .. && $(MAKE)
+
+# build all project moduals
+project:
+	cd .. && $(MAKE) clean
+	cd .. && $(MAKE)
+	cd ../CGI && $(MAKE)
+	cd ../UI && $(MAKE)
+	cd ../daemon && $(MAKE)	
 
 dump:
 	@echo CC $(CC)

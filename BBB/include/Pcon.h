@@ -2,10 +2,7 @@
 #define PCON_H_
 
 #define _TRACE 				// turn on trace
-
 #include "shared.h"
-
-
 
 /* fuctions */
 int term(int);

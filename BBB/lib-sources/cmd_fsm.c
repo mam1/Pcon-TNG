@@ -705,7 +705,7 @@ int c_9(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n");
-	c_34(cb);   //append state 0 prompt to prompt buffer
+	c_36(cb);   //append state 0 prompt to prompt buffer
 
 	return 0;
 }
