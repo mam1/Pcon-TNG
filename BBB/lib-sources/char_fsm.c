@@ -226,7 +226,7 @@ int dlm(char *c) {
 }
 /* process buffer */
 int cr(char *c) {
-	if(char_type(*input_buffer_ptr)!=0) *input_buffer_ptr++ = ' ';	//make sure that the buffer is terminated
+	if(char_type(*input_buffer_ptr)!=0) *input_buffer_ptr++ = ' ';	//make sure the buffer ends with white space
 	*input_buffer_ptr++ = '\0';
 #ifdef _TRACE
 	trace(_TRACE_FILE_NAME,"cr",char_state,input_buffer,"process buffer",trace_flag);
@@ -252,15 +252,15 @@ int cr2(char *c) {
 
 	return 0;
 }
-/* 5 -  add QUOTE to buffer, add char to buffer,  process buffer */
-int crq(char *c) {
+/* 5 -  send a empty buffer  */
+int snul(char *c) {
 #ifdef _TRACE
-	trace(_TRACE_FILE_NAME,"crq",char_state,input_buffer,"add quote, process buffer",trace_flag);
+	trace(_TRACE_FILE_NAME,"snul",char_state,input_buffer,"add quote, process buffer",trace_flag);
 #endif
-	*input_buffer_ptr++ = _QUOTE;
-	*input_buffer_ptr++ = ' ';
-	*input_buffer_ptr++ = '\0';
-	process_buffer();
+// 	*input_buffer_ptr++ = _QUOTE;
+// 	*input_buffer_ptr++ = ' ';
+// 	*input_buffer_ptr++ = '\0';
+// 	process_buffer();
 	return 0;
 }
 
@@ -294,16 +294,16 @@ int adq(char *);	//delim  + quote to input buffer
 //int dlm(char *);	//add delimiter to buffer
 int cr(char *);		//process input buffer, reset char_fsm
 int cr2(char *);	//remove trailing delimiter, process buffer, reset char_fsm
-int crq(char *);
+int snul(char *);
 
 /* character processor action table - initialized with fsm functions */
 
 CHAR_ACTION_PTR char_action[_CHAR_TOKENS][_CHAR_STATES] = {
-/* DELIM */{nop, add, add, nop},
-/* QUOTE */{add, aqd, adq, add},
-/*   DEL */{del, del, del, del},
-/*    CR */{nop,  cr,  cr,  cr2},
-/* OTHER */{add, add, add, add}};
+/* DELIM */{nop,  add,  add,  nop},
+/* QUOTE */{add,  aqd,  adq,  add},
+/*   DEL */{del,  del,  del,  del},
+/*    CR */{snul,  cr,   cr,   cr2},
+/* OTHER */{add,  add,  add,  add}};
 
 /* character processor state transition table */
 int char_new_state[_CHAR_TOKENS][_CHAR_STATES] = {
