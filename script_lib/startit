@@ -3,21 +3,15 @@
 
 
 echo " 
-*************************
-  starting setup script
+********************************
+  starting setup script v 0.0
+********************************
 
   checking for active processes
 "
-
-
-
-pidof /usr/local/sbin/Dcon
-
-
 list=$(pidof /usr/local/sbin/Dcon)
-echo $list
 if [ "$list" != "" ]; then
-	echo "there is an instance of Dcon active"
+	echo "there is an instance of Dcon active pid "$(list)
 	echo "killing it"
 	kill $list
 else
@@ -27,14 +21,14 @@ fi
 list=$(pidof /usr/local/sbin/Pcon)
 echo $list
 if [ "$list" != "" ]; then
-	echo "there is an instance of Pcon active"
+	echo "there is an instance of Pcon active pid "$(list)
 	echo "killing it"
 	kill $list
 else
 	echo "there are no instances of Pcon active"
 fi
 
-Dcon > /home/Pcon-data/Dcon.log
+Dcon > /home/Pcon-data/Dcon.log &
 Pcon
 
 exit 0
