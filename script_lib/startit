@@ -1,14 +1,16 @@
 #!/bin/bash
 # start up script for 16 channel controller
-
+stty cooked		# switch to buffered iput
+stty echo		# turn on terminal echo
+echo "reinitializing terminal io"
 
 echo " 
 ********************************
   starting setup script v 0.0
 ********************************
 
-  checking for active processes
 "
+echo "checking for active processes"
 list=$(pidof /usr/local/sbin/Dcon)
 if [ "$list" != "" ]; then
 	echo "there is an instance of Dcon active pid "$(list)
@@ -19,7 +21,6 @@ else
 fi
 
 list=$(pidof /usr/local/sbin/Pcon)
-echo $list
 if [ "$list" != "" ]; then
 	echo "there is an instance of Pcon active pid "$(list)
 	echo "killing it"
@@ -27,7 +28,8 @@ if [ "$list" != "" ]; then
 else
 	echo "there are no instances of Pcon active"
 fi
-
+echo "starting daemon"
+sleep 10
 Dcon > /home/Pcon-data/Dcon.log &
 Pcon
 
