@@ -95,8 +95,8 @@ int main(void) {
 	// char 			*command_buffer[];	//
 
 	/*********************** setup console *******************************/
-	printf("\033\143"); 				//clear the terminal screen, preserve the scroll back
-	printf("*** Pcon  %d.%d.%d ***\n\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
+
+	printf("*** Pcon  %d.%d.%d starting ***\n\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
 
 	/************************* setup trace *******************************/
 #ifdef _TRACE
