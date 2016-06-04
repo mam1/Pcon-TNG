@@ -96,7 +96,7 @@ int main(void) {
 
 	/*********************** setup console *******************************/
 
-	printf("*** Pcon  %d.%d.%d starting ***\n\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
+	printf("\nPcon  %d.%d.%d starting\n\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
 
 	/************************* setup trace *******************************/
 #ifdef _TRACE

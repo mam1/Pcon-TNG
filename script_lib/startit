@@ -11,9 +11,9 @@ echo "********************************
 echo "terminal io reinitialized"
 echo "checking for active processes"
 
-echo $(pidof /usr/local/sbin/Dcon)
+# echo $(pidof /usr/local/sbin/Dcon)
 	plist=$(pidof /usr/local/sbin/Dcon)
-echo $plist
+# echo $plist
 if [ "$plist" != "" ]; then
 		hlist="there is an instance of Dcon active pid " 
 		hlist=$hlist$plist
@@ -24,17 +24,19 @@ if [ "$plist" != "" ]; then
 		echo "there are no instances of Dcon active"
 fi
 
-# plist=$(pidof /usr/local/sbin/Pcon)
-# if [ "$plist" != "" ]; then
-# 	echo "there is an instance(s) of Pcon active pid " $(plist)
-# 	echo "killing list"
-# 	kill $(list)
-# else
-# 	echo "there are no instances of Pcon active"
-# fi
-# echo "starting daemon"
+plist=$(pidof /usr/local/sbin/Pcon)
+if [ "$plist" != "" ]; then
+		hlist="there is an instance of Pcon active pid " 
+		hlist=$hlist$plist
+		echo $hlist
+		echo "killing it"
+		kill $plist
+else
+	echo "there are no instances of Pcon active"
+fi
+echo "starting daemon"
+Dcon > /home/Pcon-data/Dcon.log &
 # sleep 10
-# Dcon > /home/Pcon-data/Dcon.log &
-# Pcon
+Pcon 
 
 exit 0
