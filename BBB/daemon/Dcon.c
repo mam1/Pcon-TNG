@@ -24,7 +24,7 @@
 #include "typedefs.h"
 
 /*********************** globals **************************/
-#ifdef _ATRACE || DTRACE
+#if defined (_ATRACE) || defined (_DTRACE)
 char			trace_buf[128];
 #endif
 int             	trace_flag;                   	//trace file is active
@@ -179,14 +179,14 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 		default: // error
 			printf("*** error mode set to <%i>\n", ipc_ptr->sys_data.c_data[channel].mode);
 		}
-#ifdef _ATRACE || DTRACE
+#if defined (_ATRACE) || defined (_DTRACE)
 		sprintf(trace_buf, "    Dcon:update_relays:  relay %i set to %i\n", channel, state);
 		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
 
 	}
 
-#ifdef _ATRACE || DTRACE 
+#if defined (_ATRACE) || defined (_DTRACE) 
 	// printf("moving on\n"); 
 	// dispdat();
 	// printf("\nupdating relays\n");
@@ -202,7 +202,7 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 			pin_low(header[gpio_index], pin[gpio_index]);
 		}
 	}
-#ifdef _ATRACE || DTRACE
+#if defined (_ATRACE) || defined (_DTRACE)
 	printf("\nchannels 0-7 set\n");
 #endif
 	/* update DBIO relays channels 8-15 */
@@ -213,7 +213,7 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	        ccb &= ~(1<<((channel - 8)));
 	}
 	send_ccb(ccb);         		// send a control byte to the DIOB 
-#ifdef _ATRACE || DTRACE
+#if defined (_ATRACE) || defined (_DTRACE)
 	printf("\nchannels 8-15 set\n");
 	printf("control byte: ");
 	bin_prnt_byte(ccb);
@@ -248,7 +248,7 @@ int main(void) {
 /********** initializations *******************************************************************/
 
 	/* setup trace */
-#ifdef _ATRACE || DTRACE
+#if defined (_ATRACE) || defined (_DTRACE)
 	trace_flag = true;
 #else
 	trace_flag = false;
@@ -265,7 +265,7 @@ int main(void) {
 
 	/* setup PCF8563 RTC */
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
-#ifdef _ATRACE || DTRACE
+#if defined (_ATRACE) || defined (_DTRACE)
 	printf("PCF8563 opened\n");
 #endif
 	/* setup shared memory */
@@ -277,7 +277,7 @@ int main(void) {
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
 	ipc_ptr->force_update = 1;
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
-#ifdef _ATRACE || DTRACE
+#if defined (_ATRACE) || defined (_DTRACE)
 	printf("shared memory setup completed\n");
 #endif
 	/* initialise gpio access */
