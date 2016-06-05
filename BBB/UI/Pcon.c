@@ -90,41 +90,38 @@ int main(void) {
 	int 			prompted = false;	//has a prompt been sent
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
-	FILE 			*sys_file, f;
+	FILE 			*sys_file;
 	_CONFIG_DAT 	hold_config;
 	// char 			*command_buffer[];	//
 
 	/*********************** setup console *******************************/
 
-	printf("\nPcon  %d.%d.%d starting\n\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
+	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
 
 	/************************* setup trace *******************************/
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 	trace_flag = true;
+	printf(" trace active,");
+	if (trace_on(_TRACE_FILE_NAME, &trace_flag)) {
+		printf("trace_on returned error\n");
+		trace_flag = false;
+	}
 #else
 	trace_flag = false;
+	printf(" program trace disabled\n");
 #endif
-	if (trace_flag == true) {
-		printf(" program trace active,");
-		if (trace_on(_TRACE_FILE_NAME, &trace_flag)) {
-			printf("trace_on returned error\n");
-			trace_flag = false;
-		}
-	}
-	if (trace_flag == false)
-		printf(" program trace disabled\n");
 
 	/************************ initializations ****************************/
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "starting initializations", trace_flag);
 #endif
 	/* set up file mapped shared memory for inter process communication */
 	ipc_sem_init();								// setup semaphores
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores initialized", trace_flag);
 #endif	
 	semid = ipc_sem_id(skey);					// set semaphor id		
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores id set", trace_flag);
 #endif	
 
@@ -191,9 +188,9 @@ int main(void) {
     }
     fclose(sys_file);
     
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system data loaded into shared memory", trace_flag);
-	printf("  Pcon: system data loaded into shared memory\r\n");
+	// printf("  Pcon: system data loaded into shared memory\r\n");
 #endif
 
 	/* load working schedule from system schedule */
@@ -201,9 +198,9 @@ int main(void) {
 	cmd_fsm_cb.w_sch = ipc_ptr->sys_data.sys_sch; 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system schedule copied to working schedule", trace_flag);
-	printf("  Pcon: system schedule copied to working schedule\r\n");
+	// printf("  Pcon: system schedule copied to working schedule\r\n");
 #endif
 
 	/* initialize state machines */
@@ -219,7 +216,7 @@ int main(void) {
 	int flags = fcntl(STDOUT_FILENO, F_GETFL);
 	fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
 
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "initializations complete\n", trace_flag);
 	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "starting main event loop\n", trace_flag);
 #endif
@@ -255,7 +252,7 @@ int main(void) {
 	/* NOCR */ case _NO_CHAR:
 			break;
 	/* ESC */  case _ESC:
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "escape entered", trace_flag);
 #endif
 			/* detect up arrow */
@@ -263,7 +260,7 @@ int main(void) {
 			c = fgetc(stdin);
 			if(c == 'A') {
 				up_arrow();
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "up arrow entered", trace_flag);
 #endif
 				break;
@@ -280,7 +277,7 @@ int main(void) {
 			break;
 
 	/* CR */	case _CR:
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _CR", trace_flag);
 #endif
 			fputc(_CR, stdout);						//make the scree look right
@@ -295,7 +292,7 @@ int main(void) {
 			work_buffer_ptr = work_buffer;			//reset pointer
 			break;
 	/* DEL */   case _DEL:
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _BS", trace_flag);
 #endif
 			fputc(_BS, stdout);
@@ -303,7 +300,7 @@ int main(void) {
 			fputc(_BS, stdout);
 			*work_buffer_ptr-- = '\0';
 			*work_buffer_ptr = '\0';
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "remove character from input buffer", trace_flag);
 #endif
 			break;		
@@ -311,7 +308,7 @@ int main(void) {
 	/* OTHER */ default:
 			fputc(c, stdout);       				// echo char
 			*work_buffer_ptr++ = c;
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_PTRACE)
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "add character to work buffer", trace_flag);
 #endif
 		}

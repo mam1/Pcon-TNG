@@ -16,7 +16,7 @@ char input_buffer[_INPUT_BUFFER_SIZE], *input_buffer_ptr;
 
 /***************************** globals ******************************/
 TQ *head, *tail;
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	char			trace_buf[128];
 #endif
 /***************************** externals ************************/
@@ -34,7 +34,7 @@ extern struct {
 } edit;
 /********************** support functions ****************************/
 TQ *process_buffer(void) {
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"process_buffer", char_state, input_buffer, "called",trace_flag);
 #endif
 	char tb[_INPUT_BUFFER_SIZE], *t_ptr, *start_char;        //
@@ -47,14 +47,14 @@ TQ *process_buffer(void) {
 	while (*input_buffer_ptr != '\0') {
 
 /* QUOTE */ if (*input_buffer_ptr == _QUOTE) {
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 			trace(_TRACE_FILE_NAME,"process_buffer",char_state,input_buffer,"found a quote",trace_flag);
 #endif
 				*t_ptr++ = *input_buffer_ptr++;
 				while ((*input_buffer_ptr != _QUOTE) && (*input_buffer_ptr != '\0'))
 					*t_ptr++ = *input_buffer_ptr++;
 				*t_ptr++ = _QUOTE;
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 			trace(_TRACE_FILE_NAME,"process_buffer",char_state,input_buffer,"found a second quote",trace_flag);
 #endif
 				*(++input_buffer_ptr) = '\0';
@@ -71,14 +71,14 @@ TQ *process_buffer(void) {
 			tail->next = '\0';
 			start_char = input_buffer_ptr;
 			start_char++;
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 		    sprintf(trace_buf, "pusn token <%s>", tail->tptr);
 			trace(_TRACE_FILE_NAME,"process_buffer",char_state,input_buffer,trace_buf,trace_flag);
 #endif
 		}
 
 /* DELIM */ if(char_type(*input_buffer_ptr)==0) {					//test for a delimiter
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 			trace(_TRACE_FILE_NAME,"process_buffer",char_state,input_buffer,"found a delimiter",trace_flag);
 #endif
 			*input_buffer_ptr = '\0';
@@ -95,21 +95,21 @@ TQ *process_buffer(void) {
 			tail->next = '\0';
 			start_char = input_buffer_ptr;
 			start_char++;
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 		    sprintf(trace_buf, "pusn token <%s>", tail->tptr);
 			trace(_TRACE_FILE_NAME,"process_buffer",char_state,tb,trace_buf,trace_flag);
 #endif
 		}
 
 		*t_ptr++ = *input_buffer_ptr++;
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 		trace(_TRACE_FILE_NAME,"process_buffer",char_state,tb,"character added to temp buffer",trace_flag);
 #endif
 	}
 	for (i = 0; i < _INPUT_BUFFER_SIZE; i++)					//clean out input buffer
 		input_buffer[i] = '\0';
 	input_buffer_ptr = input_buffer;					//reset pointer
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"process_buffer",char_state,input_buffer,"done processing, clean up",trace_flag);
 #endif
 
@@ -135,7 +135,7 @@ int char_type(char c) {
 
 
 int char_fsm_reset(void) {
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"char_fsm_reset",char_state,input_buffer,"resetting",trace_flag);
 #endif
 	char_state = 0;
@@ -146,7 +146,7 @@ int char_fsm_reset(void) {
 }
 
 int reset_cmd_fsm(void) {
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"reset_cmd_fsm",char_state,input_buffer,"resetting",trace_flag);
 #endif
 	abort();
@@ -181,7 +181,7 @@ int nop(char *c) {
 /* add char to buffer */
 int add(char *c) {
 	*input_buffer_ptr++ = *c;
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"add",char_state,input_buffer,"adding character to buffer",trace_flag);
 #endif
 	return 0;
@@ -191,7 +191,7 @@ int adq(char *c) {
 	*input_buffer_ptr++ = ' ';
 	*input_buffer_ptr++ = *c;
 
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"add",char_state,input_buffer,"adding character to buffer",trace_flag);
 #endif
 	return 0;
@@ -201,7 +201,7 @@ int aqd(char *c) {
 	*input_buffer_ptr++ = *c;
 	*input_buffer_ptr++ = ' ';
 
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"add",char_state,input_buffer,"adding character to buffer",trace_flag);
 #endif
 	return 0;
@@ -210,7 +210,7 @@ int aqd(char *c) {
 int del(char *c) {
 	input_buffer_ptr--;
 	*input_buffer_ptr = '\0';
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"del",char_state,input_buffer,"removing character from buffer",trace_flag);
 #endif
 	return 0;
@@ -219,7 +219,7 @@ int del(char *c) {
 /*  add delimitier to buffer */
 int dlm(char *c) {
 	*input_buffer_ptr++ = *c;
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"dlm",char_state,input_buffer,"add delimiter to buffer",trace_flag);
 #endif
 	return 0;
@@ -228,7 +228,7 @@ int dlm(char *c) {
 int cr(char *c) {
 	if(char_type(*input_buffer_ptr)!=0) *input_buffer_ptr++ = ' ';	//make sure the buffer ends with white space
 	*input_buffer_ptr++ = '\0';
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"cr",char_state,input_buffer,"process buffer",trace_flag);
 #endif										//with a blank folowed by a NULL
 	process_buffer();
@@ -238,11 +238,11 @@ int cr(char *c) {
 int cr2(char *c) {
 	*input_buffer_ptr = '\0';
 
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"cr2",char_state,input_buffer,"process buffer",trace_flag);
 #endif										//with a blank folowed by a NULL
 	process_buffer();
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	system ("/bin/stty cooked");			//switch to buffered iput
 	system("stty echo");					//turn on terminal echo
 
@@ -254,7 +254,7 @@ int cr2(char *c) {
 }
 /* 5 -  send a empty buffer  */
 int snul(char *c) {
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"snul",char_state,input_buffer,"add quote, process buffer",trace_flag);
 #endif
 // 	*input_buffer_ptr++ = _QUOTE;
@@ -319,14 +319,14 @@ int char_new_state[_CHAR_TOKENS][_CHAR_STATES] = {
 /*****************************************************/
 
 void char_fsm(int c_type, int *state, char *c) {
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
     sprintf(trace_buf, "called with - c_type %d, char<%u>, state %d", c_type,*c,*state);
 	trace(_TRACE_FILE_NAME,"char_fsm",*state,input_buffer,trace_buf,trace_flag);
 #endif
 
 	char_action[c_type][*state](c);
 	*state = char_new_state[c_type][*state];
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME,"char_fsm",*state,input_buffer,"after state change",trace_flag);
 #endif
 	return;
@@ -341,7 +341,7 @@ int test_cmd_q(void) {
 
 /* pop token into buffer, return: 0 empty queue, -1 data placed in buffer  */
 int pop_cmd_q(char *buf) {
-//#ifdef _TRACE
+//#if defined (_ATRACE) || defined (_FTRACE)
 //	trace(_TRACE_FILE_NAME,"pop_cmd_q: called");
 //#endif
 	TQ *hold;

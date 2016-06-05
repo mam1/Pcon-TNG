@@ -53,7 +53,7 @@ extern char *sch_mode[2];
 extern char *mode[4];
 
 /*********************** globals **************************/
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 char			trace_buf[128];
 #endif
 _tm 			tm;			// buffer fir time abd date
@@ -584,7 +584,7 @@ int c_4(_CMD_FSM_CB *cb)
 		strcat(cb->prompt_buffer, cb->token);
 		// strcat(cb->prompt_buffer, "\n\r> ");
 
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 		sprintf(trace_buf, "c_4 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
 		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 		sprintf(trace_buf, "c_4 set working channel to %i\n", cb->w_channel);
@@ -602,7 +602,7 @@ int c_5(_CMD_FSM_CB *cb)
 	char        numstr[2];
 	FILE 		*f;
 
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	sprintf(trace_buf, "c_5 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 	sprintf(trace_buf, "c_4 set working channel name to  %s\n", cb->token);
@@ -1316,7 +1316,7 @@ int c_39(_CMD_FSM_CB * cb)
 /* set real time clock */
 int c_40(_CMD_FSM_CB * cb)
 {
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	sprintf(trace_buf, "c_40 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
@@ -1328,7 +1328,7 @@ int c_40(_CMD_FSM_CB * cb)
 /* set real time clock hours */
 int c_41(_CMD_FSM_CB * cb)
 {
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	sprintf(trace_buf, "c_41 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
@@ -1670,7 +1670,7 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 
 	// cb->token_type = cmd_type(cb->token);
 
-// #ifdef _TRACE
+// #if defined (_ATRACE) || defined (_FTRACE)
 // 	sprintf(trace_buf, "cmd_fsm called: token <%s>, token value <%i>, token type <%i>, state <%i>, new token type <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state, token_type(cb->token));
 // 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 // #endif
@@ -1707,7 +1707,7 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 		index = cb->token_value;
 	}
 
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 	sprintf(trace_buf, "cmd_fsm called before setting new state: index <%i>token <%s>, token value <%i>, token type <%i>, state <%i>\n", index, cb->token, cb->token_value, cb->token_type, cb->state);
 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
@@ -1716,14 +1716,14 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 		cb->p_state = cb->state;
 		cb->state = cmd_new_state[index][cb->state];	// update state
 
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 		sprintf(trace_buf, "cmd_fsm called after setting new state: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
 		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
 	}         //transition to next state
 	else
 	{
-#ifdef _TRACE
+#if defined (_ATRACE) || defined (_FTRACE)
 		printf("error returned from action routine\n\r");
 #endif
 		while (pop_cmd_q(cmd_fsm_cb.token)); //empty command queue

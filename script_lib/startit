@@ -5,9 +5,9 @@ echo -e \\033c		# clear the terminal screen
 stty cooked			# switch to buffered iput
 stty echo			# turn on terminal echo
 
-echo "********************************
-  starting setup script v 0.0
-********************************"
+echo "************************
+  starting Pcon system
+************************"
 echo "terminal io reinitialized"
 echo "checking for active processes"
 

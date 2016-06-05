@@ -1,7 +1,7 @@
 #ifndef PCON_H_
 #define PCON_H_
 
-#define _TRACE 				// turn on trace
+// #define _TRACE 				// turn on trace
 #include "shared.h"
 
 /* fuctions */
