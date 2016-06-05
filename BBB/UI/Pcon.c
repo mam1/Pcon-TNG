@@ -39,14 +39,16 @@ int 			semid;
 unsigned short 	semval;
 struct sembuf 	wait, signal;
 union semun {
-	int 				val;        //used for SETVAL only 
-	struct semid_ds 	*buf; 		//for IPC_STAT and IPC_SET 
-	uint8_t 			*array;     //used for GETALL and SETALL 
+	int 				val;        //used for SETVAL only
+	struct semid_ds 	*buf; 		//for IPC_STAT and IPC_SET
+	uint8_t 			*array;     //used for GETALL and SETALL
 };
 union 			semun dummy;
 struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
 
-// _SYS_DAT 		sys_data;								//system data
+int 		cmd_buffer_push_index, cmd_buffer_pop_index;
+char 		cmd_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE]; // array to hold multiple single arrays of characters
+
 
 
 /***************** global code to text conversion ********************/
@@ -67,17 +69,52 @@ char *mode[4] = {"manual", "  time", "sensor", " cycle"};
 void prompt(int s) {
 
 	// printf("************** prompt called\r\n");
-	// printf("********** record count before call to build_prompt %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);	
+	// printf("********** record count before call to build_prompt %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
 	build_prompt(&cmd_fsm_cb);
-	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer,s);
-	// printf("************** prompt returning\r\n");	
+	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer, s);
+	// printf("************** prompt returning\r\n");
 	return;
 }
 
-/* load buffer with previous command */
-void up_arrow(void){
+/* push a copy of the current cmd line into the cmd buffer  */
+void push_cmd_buffer(char *cbuff) {
+	cmd_buffer_push_index += 1;
+	if (cmd_buffer_push_index > _CMD_BUFFER_DEPTH)
+		cmd_buffer_push_index = 0;
+	strcpy(&cmd_buffer[cmd_buffer_push_index][0], cbuff);
+	return;
+}
 
-	printf("up arrow detected\n\r");
+/* pop a copy of the current cmd line into the cmd buffer  */
+char *pop_cmd_buffer(void) {
+	if (cmd_buffer_pop_index -1 < 0)
+		cmd_buffer_pop_index = cmd_buffer_push_index;
+
+	return &(cmd_buffer[cmd_buffer_pop_index--][0]);
+}
+
+/* load buffer with previous command */
+void up_arrow(void) {
+	char    *ptr;
+	int 	l,i;
+
+	/* fix screen */
+	while(*(work_buffer_ptr - 1) != '\0'){
+		fputc(_BS, stdout);
+		fputc(' ', stdout);
+		fputc(_BS, stdout);
+		*work_buffer_ptr-- = '\0';
+		*work_buffer_ptr = '\0';
+	}
+
+	ptr = pop_cmd_buffer();
+	work_buffer_ptr = work_buffer;
+	l = strlen(ptr);
+	for(i=0;i<l;i++){
+			fputc(*ptr, stdout);       				// echo char
+			*work_buffer_ptr++ = *ptr++;
+	}
+
 	return;
 }
 
@@ -119,11 +156,11 @@ int main(void) {
 	ipc_sem_init();								// setup semaphores
 #if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores initialized", trace_flag);
-#endif	
-	semid = ipc_sem_id(skey);					// set semaphor id		
+#endif
+	semid = ipc_sem_id(skey);					// set semaphor id
 #if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores id set", trace_flag);
-#endif	
+#endif
 
 	/* set up shared memory */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
@@ -142,28 +179,28 @@ int main(void) {
 	// cmd_fsm_cb.sch_ptr = &ipc_ptr->sys_data.sys_sch; //set pointer to active shecule in shared memory
 	// cmd_fsm_cb.cdat_ptr = &ipc_ptr->sys_data.c_data; //set pointer to channel data array in shared memory
 
-    /* load data from system data file and compare config data */
-    sys_file = sys_open(_SYSTEM_FILE_NAME,&ipc_ptr->sys_data);  // create system file if it does not exist
-    // sys_load(sys_file,&ipc_ptr->sys_data);
-    sys_load(sys_file,cmd_fsm_cb.sys_ptr);
-    fclose(sys_file);
+	/* load data from system data file and compare config data */
+	sys_file = sys_open(_SYSTEM_FILE_NAME, &ipc_ptr->sys_data); // create system file if it does not exist
+	// sys_load(sys_file,&ipc_ptr->sys_data);
+	sys_load(sys_file, cmd_fsm_cb.sys_ptr);
+	fclose(sys_file);
 
-    hold_config = cmd_fsm_cb.sys_ptr->config;
-    // printf("loaded minor_revision from system file %i\n",hold_config.minor_revision);
-    if(sys_comp(&hold_config)){
-    	printf("*** there are different configurations in the system file and in the application\n update system file? (y)|(n) > ");
+	hold_config = cmd_fsm_cb.sys_ptr->config;
+	// printf("loaded minor_revision from system file %i\n",hold_config.minor_revision);
+	if (sys_comp(&hold_config)) {
+		printf("*** there are different configurations in the system file and in the application\n update system file? (y)|(n) > ");
 		if (getchar() == 'y') {
-		    cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION;
-		    cmd_fsm_cb.sys_ptr->config.minor_version = _MINOR_VERSION;
-		    cmd_fsm_cb.sys_ptr->config.minor_revision = _MINOR_REVISION;
-		    cmd_fsm_cb.sys_ptr->config.channels = _NUMBER_OF_CHANNELS;
-		    cmd_fsm_cb.sys_ptr->config.sensors = _NUMBER_OF_SENSORS;
-		    cmd_fsm_cb.sys_ptr->config.commands = _CMD_TOKENS;
-		    cmd_fsm_cb.sys_ptr->config.states = _CMD_STATES;
+			cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION;
+			cmd_fsm_cb.sys_ptr->config.minor_version = _MINOR_VERSION;
+			cmd_fsm_cb.sys_ptr->config.minor_revision = _MINOR_REVISION;
+			cmd_fsm_cb.sys_ptr->config.channels = _NUMBER_OF_CHANNELS;
+			cmd_fsm_cb.sys_ptr->config.sensors = _NUMBER_OF_SENSORS;
+			cmd_fsm_cb.sys_ptr->config.commands = _CMD_TOKENS;
+			cmd_fsm_cb.sys_ptr->config.states = _CMD_STATES;
 
-		    sys_file = sys_open(_SYSTEM_FILE_NAME, cmd_fsm_cb.sys_ptr);
-			if(sys_save(sys_file,cmd_fsm_cb.sys_ptr)){
-    			printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_FILE_NAME);
+			sys_file = sys_open(_SYSTEM_FILE_NAME, cmd_fsm_cb.sys_ptr);
+			if (sys_save(sys_file, cmd_fsm_cb.sys_ptr)) {
+				printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_FILE_NAME);
 				exit(1);
 			}
 			else
@@ -174,20 +211,20 @@ int main(void) {
 		}
 		else {
 			c = fgetc(stdin);			// get rid of trailing CR
-	    	printf("*** application terminated\n");
-	    	exit(1);
-	    }
-    }
-    // fclose(sys_file);
+			printf("*** application terminated\n");
+			exit(1);
+		}
+	}
+	// fclose(sys_file);
 
-    /* test to make sure save is working */
-    sys_file = sys_open(_SYSTEM_FILE_NAME,cmd_fsm_cb.sys_ptr);
-    if(sys_save(sys_file,&ipc_ptr->sys_data)){
-        printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_FILE_NAME);
-        exit(1);	
-    }
-    fclose(sys_file);
-    
+	/* test to make sure save is working */
+	sys_file = sys_open(_SYSTEM_FILE_NAME, cmd_fsm_cb.sys_ptr);
+	if (sys_save(sys_file, &ipc_ptr->sys_data)) {
+		printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_FILE_NAME);
+		exit(1);
+	}
+	fclose(sys_file);
+
 #if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system data loaded into shared memory", trace_flag);
 	// printf("  Pcon: system data loaded into shared memory\r\n");
@@ -195,7 +232,7 @@ int main(void) {
 
 	/* load working schedule from system schedule */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	cmd_fsm_cb.w_sch = ipc_ptr->sys_data.sys_sch; 
+	cmd_fsm_cb.w_sch = ipc_ptr->sys_data.sys_sch;
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 #if defined (_ATRACE) || defined (_PTRACE)
@@ -246,7 +283,7 @@ int main(void) {
 			prompted = true;
 			prompt(cmd_fsm_cb.state);
 		}
-		
+
 		c = fgetc(stdin);
 		switch (c) {
 	/* NOCR */ case _NO_CHAR:
@@ -258,11 +295,12 @@ int main(void) {
 			/* detect up arrow */
 			c = fgetc(stdin);		// skip next character
 			c = fgetc(stdin);
-			if(c == 'A') {
+			if (c == 'A') {
 				up_arrow();
 #if defined (_ATRACE) || defined (_PTRACE)
-			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "up arrow entered", trace_flag);
+				trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "up arrow entered", trace_flag);
 #endif
+
 				break;
 			}
 
@@ -280,11 +318,17 @@ int main(void) {
 #if defined (_ATRACE) || defined (_PTRACE)
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _CR", trace_flag);
 #endif
-			fputc(_CR, stdout);						//make the scree look right
+			push_cmd_buffer(work_buffer);
+			cmd_buffer_pop_index = cmd_buffer_push_index;
+
+			fputc(_CR, stdout);						//make the screen look right
 			fputc(_NL, stdout);
+
 			*work_buffer_ptr = c;					// load the CR into the work buffer
 			work_buffer_ptr = work_buffer;			// reset pointer
 			char_fsm_reset();
+
+
 			while (*work_buffer_ptr != '\0')			//send the work buffer content to the fsm
 				char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr++); //cycle fsm
 			for (i = 0; i < _INPUT_BUFFER_SIZE; i++)		//clean out work buffer
@@ -295,15 +339,17 @@ int main(void) {
 #if defined (_ATRACE) || defined (_PTRACE)
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _BS", trace_flag);
 #endif
-			fputc(_BS, stdout);
-			fputc(' ', stdout);
-			fputc(_BS, stdout);
-			*work_buffer_ptr-- = '\0';
-			*work_buffer_ptr = '\0';
+			if (*(work_buffer_ptr - 1) != '\0') {
 #if defined (_ATRACE) || defined (_PTRACE)
-			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "remove character from input buffer", trace_flag);
+				trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "remove character from input buffer", trace_flag);
 #endif
-			break;		
+				fputc(_BS, stdout);
+				fputc(' ', stdout);
+				fputc(_BS, stdout);
+				*work_buffer_ptr-- = '\0';
+				*work_buffer_ptr = '\0';
+			}
+			break;
 
 	/* OTHER */ default:
 			fputc(c, stdout);       				// echo char

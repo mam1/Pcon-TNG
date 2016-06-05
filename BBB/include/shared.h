@@ -59,6 +59,7 @@
 #define _INPUT_BUFFER_SIZE		128
 #define _TOKEN_BUFFER_SIZE		60
 #define _PROMPT_BUFFER_SIZE		500
+#define _CMD_BUFFER_DEPTH 		10 		
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		8
