@@ -314,7 +314,7 @@ CHAR_ACTION_PTR char_action[_CHAR_TOKENS][_CHAR_STATES] = {
 	/* DELIM */{nop,  add,  add,  nop},
 	/* QUOTE */{add,  aqd,  adq,  add},
 	/*   DEL */{del,  del,  del,  del},
-	/*    CR */{snul,  cr,   cr,   cr2},
+	/*    CR */{cr,  cr,   cr,   cr2},
 	/* OTHER */{add,  add,  add,  add}
 };
 

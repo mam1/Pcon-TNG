@@ -272,13 +272,12 @@ int dump_template(_TMPL_DAT *t_sch) {
 int list_template(_TMPL_DAT *t_sch) {
 	int             i, h, m;
 
-	// printf("    rcnt = %i\n\r", t_sch->rcnt);
+	printf(" %s \n\r", t_sch->name);
 	for (i = 0; i < t_sch->rcnt; i++) {
 		con_key(t_sch->rec[i].key, &h, &m);
-		printf(" %02i:%02i-%i,%i,%i ",
+		printf("            %02i:%02i-%i,%i,%i \n\r",
 		       h, m, t_sch->rec[i].state, t_sch->rec[i].temp, t_sch->rec[i].humid);
 	}
-	printf(" %s ", t_sch->name);
 	return 0;
 }
 

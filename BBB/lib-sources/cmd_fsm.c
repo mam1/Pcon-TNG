@@ -562,9 +562,7 @@ int c_2(_CMD_FSM_CB *cb)
 	printf(" %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
 	close(rtc);
-
 	strcpy(cb->prompt_buffer, "");
-
 	return 0;
 }
 /* terminate program */
@@ -651,8 +649,9 @@ int c_6(_CMD_FSM_CB *cb)
 		}
 		printf("%s", cb->sys_ptr->c_data[i].name);
 	}
-	printf("\n\r");
-	c_34(cb);  // state 0 prompt
+	printf("\n\n\r");
+	strcpy(cb->prompt_buffer, "");
+	// c_34(cb);  // state 0 prompt
 	return 0;
 }
 /* command is not valid in current state */
@@ -1528,7 +1527,7 @@ int c_55(_CMD_FSM_CB * cb)
 		}
 
 	/* build prompt */
-	c_34(cb);
+	// strcpy(cb->prompt_buffer, "");
 	return 0;
 }
 
@@ -1541,7 +1540,7 @@ int c_56(_CMD_FSM_CB * cb)
 	else
 		for (i = 0; i < cb->sys_ptr->tpl_index; i++) {
 			printf(" <%i> ", i);
-			list_template(&cb->sys_ptr->tpl_lib[i]);
+			// list_template(&cb->sys_ptr->tpl_lib[i]);
 			printf("\n\r");
 		}
 
@@ -1649,9 +1648,10 @@ int c_65(_CMD_FSM_CB * cb)
 		printf("\n\r");
 	}
 	printf("\n\r");
+	strcpy(cb->prompt_buffer, "");
 
 	/* build prompt */
-	c_34(cb);
+	// c_34(cb);
 	// strcpy(cmd_fsm_cb.prompt_buffer, " enter enter table number");
 	return 0;
 }
