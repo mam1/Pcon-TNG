@@ -1,5 +1,5 @@
 [Eagle]
-Version="07 05 02"
+Version="07 06 00"
 Platform="Mac OS X"
 Serial="62191E841E-LSR-WLM-1EL"
 Globals="Globals"
@@ -397,11 +397,12 @@ ArcDirection=0
 AddLevel=2
 PadsSameType=0
 Layer=91
+Views=" 1: -16.256 -14.986 168.656 103.886"
 Sheet="1"
 
 [Win_2]
 Type="Control Panel"
-Loc="340 51 1667 993"
+Loc="481 51 1808 993"
 State=2
 Number=0
 
