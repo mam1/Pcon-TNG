@@ -6,7 +6,7 @@
 #include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
-#include <sys/stat.h>
+#include <sys/stat.h> 
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -26,6 +26,7 @@
 #include "BBBiolib.h"
 #include "trace.h"
 #include "typedefs.h"
+#include "sys_dat.h"
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -154,8 +155,10 @@ int main(void) {
 
 	/* Our process ID and Session ID */
 	pid_t 		pid, sid;
-	FILE 		*dlog;
+	FILE 		*dlog, *sys_file;
 	int 		toggle;
+	_SYS_DAT 	sdat;
+	int 		h_min;
 
 
 	/* Fork off the parent process */
@@ -209,8 +212,13 @@ int main(void) {
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
+
+	/* load data from system data file and compare config data */
+	sys_file = sys_open(_SYSTEM_FILE_NAME, &sdat); // create system file if it does not exist
+	sys_load(sys_file, &sdat);
 	ipc_ptr->force_update = 1;
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
+	fclose(sys_file);
 
 	/* initialise gpio access */
 	init_gpio();
@@ -261,7 +269,7 @@ int main(void) {
 
 	/* The Big Loop */
 		
-	fprintf(dlog,"deamon starting\n");
+	fprintf(dlog,"daemon starting\n");
 	while (1) {
 		if (ipc_ptr->force_update == 1) {
 			ipc_ptr->force_update = 0;
