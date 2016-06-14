@@ -20,18 +20,9 @@
 #include "shared.h"
 #include "bitlit.h"
 #include "PCF8563.h"
-// #include "schedule.h"
 #include "BBBiolib.h"
 #include "trace.h"
 #include "typedefs.h"
-
-// #define _TRACE
-
-// /*********************** globals **************************/
-// #ifdef _TRACE
-// char			trace_buf[128];
-// #endif
-int             	trace_flag;                   	//trace file is active
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -159,27 +150,42 @@ static int xctod(int c)
 	else	return 0;
 }
 
-
 /********** main routine ************************************************************************/
 int main(void) {
-	FILE 			*cgi_data;					// cgi log file handle
+	FILE 			*cgi_data;					// sensor data file
+	FILE 			*cgi_log;					// cgi log
 	char 			*s_num, *s_temp, *s_humid;
 	long 			l_num, l_temp, l_humid;
 	char 			cgi_file_name[_FILE_NAME_SIZE];
 	char 			*eptr;
+	struct{
+		int 		sensor_id;
+		int			temp;
+		int			humidity;
+		_tm 		ts;
+	} buffer;
 
 	printf("Content-type: text/html\n\n");
 	printf("\n  **** cgi active 1.0 ****\n\r");
-	// printf("Status: 200 OK\n");
-	// printf("%s = <%s>\n\r", "QUERY_STRING", getenv("QUERY_STRING"));
 
 	/********** initializations *******************************************************************/
-	// printf("  starting initializations\n");
 
 	/* setup PCF8563 RTC */
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 
-	/* build cgi file name */
+	/* open files */
+	sensor_data = fopen(_SENSOR_LOG_FILE_NAME,"a");
+	if(sensor_data == NULL){
+		printf("  Error: %d (%s)\n", errno, strerror(errno));
+		printf("    attempting to open %s\n\n application terminated\n\n", _SENSOR_LOG_FILE_NAME);
+		return 1;
+	}
+	cgi_log = fopen(_CGI_LOG_FILE_NAME,"a");
+	if(cgi_log == NULL){
+		printf("  Error: %d (%s)\n", errno, strerror(errno));
+		printf("    attempting to open %s\n\n application terminated\n\n", _CGI_LOG_FILE_NAME);
+		return 1;
+	}
 
 	/* setup shared memory */
 	ipc_sem_init();
@@ -188,7 +194,6 @@ int main(void) {
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
-	printf(" CGI:  %s copied to shared memory\n", ipc_file);
 
 	/*********** start main process *******************************************************************/
 
@@ -214,9 +219,6 @@ int main(void) {
 		printf("Conversion error occurred: %d", errno);
 		exit(0);
 	}
-	printf(" CGI: sensor %i, temp %i, humidity %i\n", (int)l_num, (int)l_temp, (int)l_humid);
-	// snprintf(cgi_file_name, _FILE_NAME_SIZE, "%s%i%s", _CGI_DATA_FILE_PREFIX, (int)l_num, _CGI_DATA_FILE_SUFIX);
-	// printf("\n******* file name <%s>\n",cgi_file_name);
 
 	/* move sensor data to shared memory */
 	ipc_sem_lock(semid, &sb);							// wait for a lock on shared memory
@@ -224,29 +226,18 @@ int main(void) {
 	ipc_ptr->s_dat[(int)l_num].sensor_id = (int)l_num;
 	ipc_ptr->s_dat[(int)l_num].temp = (int)l_temp;
 	ipc_ptr->s_dat[(int)l_num].humidity = (int)l_humid;
-
-	// ipc_ptr->force_update = 1;
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
-	printf(" CGI: sensor data copied to shared memory %02i:%02i:%02i\n\r", ipc_ptr->s_dat[(int)l_num].ts.tm_hour,ipc_ptr->s_dat[(int)l_num].ts.tm_min,ipc_ptr->s_dat[(int)l_num].ts.tm_sec);
+
 	/* log sensor data */
-	// cgi_data = fopen(cgi_file_name, "a");
-	// if (cgi_data == NULL) {
-	// 	printf("  Error: %d (%s)\n", errno, strerror(errno));
-	// 	printf("    attempting to open %s\n\n application terminated\n\n", cgi_file_name);
-	// 	return 1;
-	// }
-	// printf("  %s opened\n", cgi_file_name);
-	// printf("  write buffer size %i\n", sizeof(ipc_ptr->s_dat[l_num]));
-
-	// if (fwrite(&ipc_ptr->s_dat[l_num], sizeof(ipc_ptr->s_dat[l_num]), 1, cgi_data) != 1) {
-	// 	printf("  Error: %d (%s)\n", errno, strerror(errno));
-	// 	printf("    attempting to append data to %s\n\n application terminated\n\n", cgi_file_name);
-	// 	return 1;
-	// }
-	// printf("  data for sensor %i appended to %s\n", (int)l_num, cgi_file_name);
-	// printf("  dow = %i\n", ipc_ptr->s_dat[l_num].ts.tm_wday);
-
-	// fclose(cgi_data);
+	get_tm(rtc, &buffer.ts)
+	buffer.sensor_id = ipc_ptr->s_dat[(int)l_num].sensor_id;
+	buffer.temp = ipc_ptr->s_dat[(int)l_num].temp;
+	buffer.humidity = ipc_ptr->s_dat[(int)l_num].humidity;
+	if(fwrite(&buffer, sizeof(buffer), 1, sensor_data) != 1){
+		fprinf(sensor_data,"error writing to %s\n" _SENSOR_LOG_FILE_NAME); 
+	}
+	fclose(sensor_data);
+	fclose(cgi_log);
 	printf(" CGI: normal termination\n\n");
 	return 0;
 }
