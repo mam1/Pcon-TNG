@@ -28,7 +28,7 @@
 
 #include "ipc.h"
 
-extern int              trace_flag;                     //trace file is active
+// extern int              trace_flag;                     //trace file is active
 
 union semun {
     int 				val;      	// used for SETVAL only 
@@ -177,9 +177,9 @@ int ipc_sem_lock(int semid, struct sembuf *sb){
 		exit(1);
 	}
 
-#if defined (_ATRACE) || defined (_FTRACE)
-    trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory locked\n", trace_flag);
-#endif	
+// #if defined (_ATRACE) || defined (_FTRACE)
+//     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory locked\n", trace_flag);
+// #endif	
 
 	return 0;
 }
@@ -193,9 +193,9 @@ int ipc_sem_free(int semid, struct sembuf *sb){
 		exit(1);
 	}
 
-#if defined (_ATRACE) || defined (_FTRACE)
-    trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory unlocked\n", trace_flag);
-#endif  	
+// #if defined (_ATRACE) || defined (_FTRACE)
+//     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory unlocked\n", trace_flag);
+// #endif  	
 
 	return 0;
 }

@@ -804,7 +804,9 @@
 </package>
 <package name="TS-2">
 <pad name="P$1" x="-5.08" y="6.35" drill="0.8"/>
-<pad name="P$2" x="-5.08" y="5.08" drill="0.8" shape="square"/>
+<pad name="P$2" x="-5.08" y="3.81" drill="0.8" shape="square"/>
+<hole x="-5.08" y="6.35" drill="0.6"/>
+<hole x="-5.08" y="3.81" drill="0.6"/>
 </package>
 </packages>
 <symbols>

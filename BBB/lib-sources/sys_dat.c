@@ -65,18 +65,18 @@ void sys_load(FILE *sd, _SYS_DAT *sdat){
     int     rtn;
     char 	b[20];
 
-#if defined (_ATRACE) || defined (_FTRACE)
-    trace(_TRACE_FILE_NAME, "sys_load", 0, NULL, "loading system data", 1);
-    sprintf(b, "file handle %i", (int)sd);
-    trace1("sys_dat", "Pcon", b);
-    sprintf(b, "size of sys_dat %i", (int)sizeof(*sdat));
-    trace1("sys_dat", "Pcon", b);
-    trace1("sys_dat", "Pcon", "loading system data from system file");
-#endif 
+// #if defined (_ATRACE) || defined (_FTRACE)
+//     trace(_TRACE_FILE_NAME, "sys_load", 0, NULL, "loading system data", 1);
+//     sprintf(b, "file handle %i", (int)sd);
+//     trace1("sys_dat", "Pcon", b);
+//     sprintf(b, "size of sys_dat %i", (int)sizeof(*sdat));
+//     trace1("sys_dat", "Pcon", b);
+//     trace1("sys_dat", "Pcon", "loading system data from system file");
+// #endif 
     rtn = fread(sdat, sizeof(*sdat), 1, sd);
-#if defined (_ATRACE) || defined (_FTRACE)
-    // printf("  fread returns %i\r\n",rtn);
-#endif 
+// #if defined (_ATRACE) || defined (_FTRACE)
+//     // printf("  fread returns %i\r\n",rtn);
+// #endif 
     if(rtn != 1){
         printf("\n*** error reading system data\n  fread returned %i\r\n",rtn);
         perror(_TRACE_FILE_NAME);
@@ -87,10 +87,10 @@ void sys_load(FILE *sd, _SYS_DAT *sdat){
 
 int sys_save(FILE *sd ,_SYS_DAT *sdat){
 	char 	b[128];
-#if defined (_ATRACE) || defined (_FTRACE)
-	sprintf(b, "saving system file with major_version = %i", sdat->config.major_version);
-	trace1("sys_dat", "Pcon", b); 
-#endif
+// #if defined (_ATRACE) || defined (_FTRACE)
+// 	sprintf(b, "saving system file with major_version = %i", sdat->config.major_version);
+// 	trace1("sys_dat", "Pcon", b); 
+// #endif
     if(fwrite(sdat, sizeof(*sdat), 1, sd) != 1){
         perror(_TRACE_FILE_NAME);
         return 1;
@@ -104,59 +104,59 @@ int sys_comp(_CONFIG_DAT *config){
 
     if(_MAJOR_VERSION != config->major_version){
         printf("\n*** major verions do not match\n");
-        if(trace_flag == true){
-            trace1(_TRACE_FILE_NAME, "sys_comp", "major verions do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "major version = ",_MAJOR_VERSION);
-        }
+        // if(trace_flag == true){
+        //     trace1(_TRACE_FILE_NAME, "sys_comp", "major verions do not match");
+        //     trace3(_TRACE_FILE_NAME, "sys_comp", "major version = ",_MAJOR_VERSION);
+        // }
         return 1;
     }
     if(_MINOR_VERSION != config->minor_version){
         printf("\n*** minor versions do not match\n");
-        if(trace_flag == true){
-            trace1(_TRACE_FILE_NAME, "sys_comp", "minor verions do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "minor version = ",_MINOR_VERSION);
-        }
+        // if(trace_flag == true){
+        //     trace1(_TRACE_FILE_NAME, "sys_comp", "minor verions do not match");
+        //     trace3(_TRACE_FILE_NAME, "sys_comp", "minor version = ",_MINOR_VERSION);
+        // }
         return 1;
     }
     if( _MINOR_REVISION != config->minor_revision){
         printf("\n*** minor revisions do not match\n");
-        if(trace_flag == true){
-            trace1(_TRACE_FILE_NAME, "sys_comp", "minor revisions do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "minor revision = ",_MINOR_REVISION);
-        }
+        // if(trace_flag == true){
+        //     trace1(_TRACE_FILE_NAME, "sys_comp", "minor revisions do not match");
+        //     trace3(_TRACE_FILE_NAME, "sys_comp", "minor revision = ",_MINOR_REVISION);
+        // }
         return 1;
     }
     if(_NUMBER_OF_CHANNELS != config->channels){
         printf("\n*** number of channels do not match\n");
-        if(trace_flag == true){
-            trace1(_TRACE_FILE_NAME, "sys_comp", "number of channels do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "channels = ",_NUMBER_OF_CHANNELS);
-        }
+        // if(trace_flag == true){
+        //     trace1(_TRACE_FILE_NAME, "sys_comp", "number of channels do not match");
+        //     trace3(_TRACE_FILE_NAME, "sys_comp", "channels = ",_NUMBER_OF_CHANNELS);
+        // }
         return 1;
     }
     if(_NUMBER_OF_SENSORS != config->sensors){
         printf("\n*** number of sensors do not match\n");
-        if(trace_flag == true){
-            trace1(_TRACE_FILE_NAME, "sys_comp", "number of sensors do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "sensors = ",_NUMBER_OF_SENSORS); 
-        }
+        // if(trace_flag == true){
+        //     trace1(_TRACE_FILE_NAME, "sys_comp", "number of sensors do not match");
+        //     trace3(_TRACE_FILE_NAME, "sys_comp", "sensors = ",_NUMBER_OF_SENSORS); 
+        // }
         return 1;
     }
     if(_CMD_TOKENS != config->commands){
         printf("\n*** number of commands do not match\n");
-        if(trace_flag == true){
-            trace1(_TRACE_FILE_NAME, "sys_comp", "number of commands do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "tokens = ",_CMD_TOKENS);
-        }
+        // if(trace_flag == true){
+        //     trace1(_TRACE_FILE_NAME, "sys_comp", "number of commands do not match");
+        //     trace3(_TRACE_FILE_NAME, "sys_comp", "tokens = ",_CMD_TOKENS);
+        // }
         return 1;
     }
     if(_CMD_STATES != config->states){
         printf("\n*** number of states do not match\n");
-        if(trace_flag == true){
-            trace1(_TRACE_FILE_NAME, "sys_comp", "number of states do not match");
-            trace3(_TRACE_FILE_NAME, "sys_comp", "states = ",_CMD_STATES);
-        }
-    return 1;
+        // if(trace_flag == true){
+        //     trace1(_TRACE_FILE_NAME, "sys_comp", "number of states do not match");
+        //     trace3(_TRACE_FILE_NAME, "sys_comp", "states = ",_CMD_STATES);
+        // }
+    	return 1;
     }
 
     return 0;

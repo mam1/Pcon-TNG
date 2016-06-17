@@ -687,13 +687,13 @@ int c_9(_CMD_FSM_CB *cb)
 	char        numstr[2];
 	FILE 		*f;
 
-	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-
+	// printf("waiting for lock\n\r");
+	ipc_sem_lock(semid, &sb);						// wait for a lock on shared memory
+	// printf("got lock\n\r");
 	cb->sys_ptr->c_data[cb->w_channel].mode = 0;	// update ipc data
 	cb->sys_ptr->c_data[cb->w_channel].state = 1;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
-
-	ipc_sem_free(semid, &sb);					// free lock on shared memory
+	ipc_sem_free(semid, &sb);						// free lock on shared memory
 
 	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);	// write data to disk
