@@ -328,7 +328,7 @@ int main(void) {
 			pin_high(8,  _LED_3);
 			pin_low(8,  _LED_4);
 		}
-		usleep(1000);
+		usleep(300000);
 	}
 
 	exit(EXIT_SUCCESS);
