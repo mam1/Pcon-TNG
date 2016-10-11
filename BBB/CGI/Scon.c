@@ -2,6 +2,10 @@
 /*	Scon.c - cgi that updates sensor values in shared memory        */
 /********************************************************************/
 
+/* Scon version info */
+#define _MAJOR_VERSION		0
+#define _MINOR_VERSION 		0
+#define _MINOR_REVISION		0
 
 #include <sys/sem.h>
 #include <sys/ipc.h>

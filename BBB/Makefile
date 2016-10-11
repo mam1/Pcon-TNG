@@ -41,7 +41,7 @@ ifeq ($(UNAME_S),Darwin)
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
 else
-	PREFIX := /home/mam1/X-comp/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
+	PREFIX := /home/mam1/X-comp/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld

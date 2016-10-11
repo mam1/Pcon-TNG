@@ -1,7 +1,14 @@
 /**
  * This is the main Pcon.c program file
  * BeagleBone Black implementation
+ *
+ *  
  */
+
+/* Pcon version info */
+#define _MAJOR_VERSION		10
+#define _MINOR_VERSION 		4
+#define _MINOR_REVISION		0
 
 #include <sys/sem.h>
 #include <sys/ipc.h>

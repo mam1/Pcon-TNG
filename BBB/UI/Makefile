@@ -38,7 +38,7 @@ LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti
 ifeq ($(UNAME_S),Darwin)
 	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
 else
-	PREFIX := /home/mam1/X-comp/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
+	PREFIX := /home/mam1/X-comp/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 endif
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
