@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736290</millis>
+  <sequence>4</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Load saved settings: Firmware:NodeMCU</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736297</millis>
+  <sequence>5</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Snippets: loading...</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736298</millis>
+  <sequence>6</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Snippets load: Success.</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736377</millis>
+  <sequence>7</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>java.io.IOException: org.xml.sax.SAXParseException; lineNumber: 2; Relative URI "theme.dtd"; can not be resolved without a base URI.</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736379</millis>
+  <sequence>8</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Set new color theme: FAIL.</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736382</millis>
+  <sequence>9</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Load saved settings: DONE.</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736383</millis>
+  <sequence>10</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Snippets: loading...</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736384</millis>
+  <sequence>11</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Snippets load: Success.</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736446</millis>
+  <sequence>12</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>java.io.IOException: org.xml.sax.SAXParseException; lineNumber: 2; Relative URI "theme.dtd"; can not be resolved without a base URI.</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736447</millis>
+  <sequence>13</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Set new color theme: FAIL.</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736684</millis>
+  <sequence>14</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Scan system...</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736710</millis>
+  <sequence>15</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>found last saved serial port /dev/tty.usbserial</message>
+</record>
+<record>
+  <date>2016-10-01T11:45:36</date>
+  <millis>1475336736711</millis>
+  <sequence>16</sequence>
+  <logger>ESPlorer.ESPlorer</logger>
+  <level>INFO</level>
+  <class>ESPlorer.ESPlorer</class>
+  <method>log</method>
+  <thread>17</thread>
+  <message>Scan done.</message>
+</record>
+</log>
