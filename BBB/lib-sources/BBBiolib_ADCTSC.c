@@ -4,6 +4,12 @@
  * support "Single Channel Single Step" ADC sample control  ,  not support Interrupt yet ,
  *
  */
+
+/* BBBiolib_ADCTSC.c version info */
+#define _MAJOR_VERSION		10
+#define _MINOR_VERSION 		4
+#define _MINOR_REVISION		0
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/mman.h>

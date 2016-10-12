@@ -1,3 +1,9 @@
+
+/* slab_control version info */
+#define _MAJOR_VERSION    10
+#define _MINOR_VERSION    4
+#define _MINOR_REVISION   0
+
 #include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>

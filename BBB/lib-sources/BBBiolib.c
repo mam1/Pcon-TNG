@@ -14,6 +14,11 @@
  * v2.4 November.23 2013 - VagetableAvenger (BBBlib) : add whole GPIO control function (I/O and direction set)
 */
 
+/* BBBiolib.c version info */
+#define _MAJOR_VERSION		10
+#define _MINOR_VERSION 		4
+#define _MINOR_REVISION		0
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

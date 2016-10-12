@@ -1,3 +1,10 @@
+
+/* list_maint version info */
+#define _MAJOR_VERSION    10
+#define _MINOR_VERSION    4
+#define _MINOR_REVISION   0
+
+
 void del_elm(int *array_start, int *index, int value, int array_size){
 	int 			i;
 	int 			*elm, *array_end;

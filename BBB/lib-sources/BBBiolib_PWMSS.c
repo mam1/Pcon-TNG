@@ -15,6 +15,12 @@
  *
 */
 
+/* BBBiolib_PWMSS.c version info */
+#define _MAJOR_VERSION		10
+#define _MINOR_VERSION 		4
+#define _MINOR_REVISION		0
+
+
 #define PWMSS0_MMAP_ADDR	0x48300000
 #define PWMSS1_MMAP_ADDR	0x48302000
 #define PWMSS2_MMAP_ADDR	0x48304000

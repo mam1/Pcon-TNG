@@ -4,6 +4,11 @@
  * rtc_time -- month 0-11, hour 0-23, yr = calendar year-epoch.
  */
 
+/* PCF8563 version info */
+#define _MAJOR_VERSION    10
+#define _MINOR_VERSION    4
+#define _MINOR_REVISION   0
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
