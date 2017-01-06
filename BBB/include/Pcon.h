@@ -1,4 +1,8 @@
-#ifndef PCON_H_
+/**************************************************/
+/*  Pcon.h version 0.0                            */
+/*  header file for Pcon.c                        */
+/*                                                */
+/**************************************************/#ifndef PCON_H_
 #define PCON_H_
 
 // #define _TRACE 				// turn on trace
