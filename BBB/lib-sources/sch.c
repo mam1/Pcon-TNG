@@ -1,4 +1,10 @@
 
+/* sch version info */
+#define _MAJOR_VERSION    10
+#define _MINOR_VERSION    4
+#define _MINOR_REVISION   0
+
+
 #include <stdio.h>
 #include <unistd.h>   //sleep
 #include <stdint.h>   //uint_8, uint_16, uint_32, etc.

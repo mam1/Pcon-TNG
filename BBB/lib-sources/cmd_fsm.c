@@ -5,6 +5,12 @@
 *      Author: mam1
 */
 
+/* cmd_fsm version info */
+#define _MAJOR_VERSION    10
+#define _MINOR_VERSION    4
+#define _MINOR_REVISION   0
+
+
 #include <unistd.h>		//sleep
 #include <stdlib.h>
 #include <stdio.h>

@@ -3,6 +3,11 @@
 /*	the user requests an immediate update							*/
 /********************************************************************/
 
+/* Dcon version info */
+#define _MAJOR_VERSION		2
+#define _MINOR_VERSION 		0
+#define _MINOR_REVISION		0
+
 #include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
