@@ -1,9 +1,9 @@
-/**
- * This is the main Pcon.c program file
- * BeagleBone Black implementation
- *
- *  
- */
+/*****************************************/
+/* This is the main Pcon.c program file  */
+/* BeagleBone Black implementation		 */
+/*										 */
+/*  									 */
+/*****************************************/
 
 /* Pcon version info */
 #define _MAJOR_VERSION		10
