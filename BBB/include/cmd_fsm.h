@@ -6,6 +6,11 @@
 #ifndef _CMD_FSM_H_
 #define _CMD_FSM_H_
 
+/* cmd_fsm.c version */
+#define _MAJOR_VERSION_cmd_fsm		10
+#define _MINOR_VERSION_cmd_fsm		4
+#define _MINOR_REVISION_cmd_fsm		0
+
 /* fuctions */
 void cmd_fsm(_CMD_FSM_CB *);
 void cmd_fsm_reset(_CMD_FSM_CB *);

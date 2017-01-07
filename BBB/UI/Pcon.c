@@ -195,9 +195,9 @@ int main(void) {
 	if (sys_comp(&hold_config)) {
 		printf("*** there are different configurations in the system file and in the application\n update system file? (y)|(n) > ");
 		if (getchar() == 'y') {
-			cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION;
-			cmd_fsm_cb.sys_ptr->config.minor_version = _MINOR_VERSION;
-			cmd_fsm_cb.sys_ptr->config.minor_revision = _MINOR_REVISION;
+			cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION_system;
+			cmd_fsm_cb.sys_ptr->config.minor_version = _MINOR_VERSION_system;
+			cmd_fsm_cb.sys_ptr->config.minor_revision = _MINOR_REVISION_system;
 			cmd_fsm_cb.sys_ptr->config.channels = _NUMBER_OF_CHANNELS;
 			cmd_fsm_cb.sys_ptr->config.sensors = _NUMBER_OF_SENSORS;
 			cmd_fsm_cb.sys_ptr->config.commands = _CMD_TOKENS;

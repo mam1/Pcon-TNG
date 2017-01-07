@@ -219,7 +219,9 @@ int c_61(_CMD_FSM_CB *); /* load template  */
 int c_62(_CMD_FSM_CB *); /* load schedule table*/
 int c_63(_CMD_FSM_CB *); /* set template number prompt  */
 int c_64(_CMD_FSM_CB *); /* set schedule number prompt */
-int c_65(_CMD_FSM_CB *); /* display current sensor values*/
+int c_65(_CMD_FSM_CB *); /* display current sensor values */
+int c_66(_CMD_FSM_CB *); /* display system configuration */
+
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -255,7 +257,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7},
 	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
-	/* 29  system      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 29  system      */  { c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66},
 	/* 30  debug       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 31  ssch        */  {c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57},
 	/* 32  wsch        */  {c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58},
@@ -521,6 +523,7 @@ int c_1(_CMD_FSM_CB *cb)
 	printf("  ssch ... display active schedule table\r\n");
 	printf("  tlib ... display template library\r\n");
 	printf("  slib ... display schedule library\r\n");
+	printf("  system ..display system configuration\r\n");
 
 
 	printf("\r\ncommands valid in any state other than state 0\r\n");
@@ -1662,6 +1665,25 @@ int c_65(_CMD_FSM_CB * cb)
 	return 0;
 }
 
+
+/* display system configuration */
+int c_66(_CMD_FSM_CB * cb)
+{
+
+	printf("\nSystem configuration\r\n");
+	printf(" System version %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
+	printf(" Inter Process Commucination support %d.%d.%d\n\r", _MAJOR_VERSION_ipc, _MINOR_VERSION_ipc, _MINOR_REVISION_ipc);
+	printf(" Pcon version %d.%d.%d\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
+	printf(" char_fsm version %d.%d.%d\n\r", _MAJOR_VERSION_char_fsm, _MINOR_VERSION_char_fsm, _MINOR_REVISION_char_fsm);
+	printf(" cmd_fsm version %d.%d.%d\n\n\r", _MAJOR_VERSION_cmd_fsm, _MINOR_VERSION_cmd_fsm, _MINOR_REVISION_cmd_fsm);
+	
+	strcpy(cb->prompt_buffer, "");
+
+	/* build prompt */
+	// c_34(cb);
+	// strcpy(cmd_fsm_cb.prompt_buffer, " enter enter table number");
+	return 0;
+}
 
 
 

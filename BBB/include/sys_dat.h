@@ -3,6 +3,10 @@
 
 #include "typedefs.h"
 
+/* system version */
+#define _MAJOR_VERSION_system	10
+#define _MINOR_VERSION_system	4
+#define _MINOR_REVISION_system	0
 
 FILE *sys_open(char *fname,_SYS_DAT *sdat);
 void sys_load(FILE *f,_SYS_DAT *sdat);
