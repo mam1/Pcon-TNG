@@ -5,11 +5,6 @@
 *      Author: mam1
 */
 
-/* cmd_fsm version info */
-#define _MAJOR_VERSION    10
-#define _MINOR_VERSION    4
-#define _MINOR_REVISION   0
-
 
 #include <unistd.h>		//sleep
 #include <stdlib.h>
@@ -23,6 +18,7 @@
 #include <errno.h>
 
 #include "Pcon.h"
+#include "Dcon.h"
 #include "typedefs.h"
 #include "char_fsm.h"
 #include "cmd_fsm.h"
@@ -261,7 +257,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 30  debug       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 31  ssch        */  {c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57},
 	/* 32  wsch        */  {c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58},
-	/* 33  slib        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 33  slib        */  { c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56},
 	/* 34  tlib        */  {c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55},
 	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7, c_14, c_27, c_28,  c_7},
 	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -543,7 +539,7 @@ int c_1(_CMD_FSM_CB *cb)
 		if ((cmd_action[i][cb->state] == c_8) || (cmd_action[i][cb->state] == c_7) || (cmd_action[i][cb->state] == c_0)
 		        || (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3) || (cmd_action[i][cb->state] == c_34)
 		        || (cmd_action[i][cb->state] == c_2) || (cmd_action[i][cb->state] == c_6) || (cmd_action[i][cb->state] == c_55)
-		        || (cmd_action[i][cb->state] == c_57) || (cmd_action[i][cb->state] == c_58))
+		        || (cmd_action[i][cb->state] == c_57) || (cmd_action[i][cb->state] == c_58) || (cmd_action[i][cb->state] == c_66))
 			continue;
 		else {
 			printf("  %s ", keyword[i]);
@@ -659,7 +655,7 @@ int c_6(_CMD_FSM_CB *cb)
 		printf("%s", cb->sys_ptr->c_data[i].name);
 	}
 	printf("\n\n\r");
-	strcpy(cb->prompt_buffer, "");
+	strcpy(cb->prompt_buffer, "enter a commamd");
 	// c_34(cb);  // state 0 prompt
 	return 0;
 }
@@ -1545,7 +1541,7 @@ int c_56(_CMD_FSM_CB * cb)
 {
 	int 			i;
 	if (cb->sys_ptr->tpl_index == 0)
-		printf(" no saved templates\r\n");
+		printf(" no saved schedules\r\n");
 	else
 		for (i = 0; i < cb->sys_ptr->tpl_index; i++) {
 			printf(" <%i> ", i);
@@ -1673,7 +1669,8 @@ int c_66(_CMD_FSM_CB * cb)
 	printf("\nSystem configuration\r\n");
 	printf(" System version %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
 	printf(" Inter Process Commucination support %d.%d.%d\n\r", _MAJOR_VERSION_ipc, _MINOR_VERSION_ipc, _MINOR_REVISION_ipc);
-	printf(" Pcon version %d.%d.%d\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
+	printf(" Pcon version %d.%d.%d\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
+	printf(" Dcon version %d.%d.%d\n\r", _MAJOR_VERSION_Dcon, _MINOR_VERSION_Dcon, _MINOR_REVISION_Dcon);
 	printf(" char_fsm version %d.%d.%d\n\r", _MAJOR_VERSION_char_fsm, _MINOR_VERSION_char_fsm, _MINOR_REVISION_char_fsm);
 	printf(" cmd_fsm version %d.%d.%d\n\n\r", _MAJOR_VERSION_cmd_fsm, _MINOR_VERSION_cmd_fsm, _MINOR_REVISION_cmd_fsm);
 	

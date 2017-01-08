@@ -5,11 +5,6 @@
  *  
  */
 
-/* Pcon version info */
-#define _MAJOR_VERSION		10
-#define _MINOR_VERSION 		4
-#define _MINOR_REVISION		1
-
 #include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
@@ -138,7 +133,7 @@ int main(void) {
 
 	/*********************** setup console *******************************/
 
-	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
+	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
 
 	/************************* setup trace *******************************/
 #if defined (_ATRACE) || defined (_PTRACE)

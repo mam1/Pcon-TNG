@@ -3,11 +3,6 @@
 /*	the user requests an immediate update							*/
 /********************************************************************/
 
-/* Dcon version info */
-#define _MAJOR_VERSION		2
-#define _MINOR_VERSION 		0
-#define _MINOR_REVISION		0
-
 #include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
@@ -24,6 +19,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include "Pcon.h"
+#include "Dcon.h"
 #include "ipc.h"
 #include "bitlit.h"
 #include "PCF8563.h"
@@ -191,7 +187,6 @@ int main(void) {
 	_SYS_DAT 	sdat;
 	int 		h_min;
 	_tm 		t;
-
 
 	/* Fork off the parent process */
 	pid = fork();
