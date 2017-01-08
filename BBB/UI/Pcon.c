@@ -188,7 +188,7 @@ int main(void) {
 	hold_config = cmd_fsm_cb.sys_ptr->config;
 	// printf("loaded minor_revision from system file %i\n",hold_config.minor_revision);
 	if (sys_comp(&hold_config)) {
-		printf("*** there are different configurations in the system file and in the application\n update system file? (y)|(n) > ");
+		printf("*** the system configuration in the system file and in the application are different\n update system file? (y)|(n) > ");
 		if (getchar() == 'y') {
 			cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION_system;
 			cmd_fsm_cb.sys_ptr->config.minor_version = _MINOR_VERSION_system;
@@ -256,8 +256,9 @@ int main(void) {
 #if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "initializations complete\n", trace_flag);
 	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "starting main event loop\n", trace_flag);
-#endif
-	printf(" initializations complete\r\n\n");
+#endif 
+
+	printf("initializations complete\r\nenter ? for a list of valid commands\r\n\n");
 
 	/* set initial prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, " enter a command");

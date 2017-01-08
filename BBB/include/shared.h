@@ -2,7 +2,7 @@
 #define _SHARE_H_
 
 /* trace options */
-// #define _ATRACE			// trace all functions 
+#define _ATRACE			// trace all functions 
 #define _PTRACE			// trace Pcon 
 // #define _DTRACE			// trace Dcon
 // #define _STRACE			// trace Scon

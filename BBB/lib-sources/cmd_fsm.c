@@ -1290,7 +1290,7 @@ int c_38(_CMD_FSM_CB * cb)
 {
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "\r\n enter trigger temperature");
-
+	c_35(cb);
 	return 0;
 }
 
@@ -1304,15 +1304,12 @@ int c_39(_CMD_FSM_CB * cb)
 	ipc_ptr->force_update = 1;							// force relays to be updated
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
 
-
-
 	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
 	sys_save(f, cb->sys_ptr);							// write data to disk
 	fclose(f);
 
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, " system schedule replaced\n\r\n");
-	c_36(cb);
+	printf("\r\n system schedule replaced\n\r");
 
 	return 0;
 }
