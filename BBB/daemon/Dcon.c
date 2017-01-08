@@ -240,13 +240,13 @@ int main(void) {
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
 	logit(NULL, "shared memory initialized");
 
-	/* load data from system data file */
-	sys_file = sys_open(_SYSTEM_FILE_NAME, &sdat); // create system file if it does not exist
-	sys_load(sys_file, &sdat);
-	ipc_ptr->force_update = 1;
-	ipc_sem_free(semid, &sb);					// free lock on shared memory
-	fclose(sys_file);
-	logit(NULL, "system data loaded into shared memory");
+	// /* load data from system data file */
+	// sys_file = sys_open(_SYSTEM_FILE_NAME, &sdat); // create system file if it does not exist
+	// sys_load(sys_file, &sdat);
+	// ipc_ptr->force_update = 1;
+	// ipc_sem_free(semid, &sb);					// free lock on shared memory
+	// fclose(sys_file);
+	// logit(NULL, "system data loaded into shared memory");
 
 	/* initialise gpio access */
 	init_gpio();

@@ -107,10 +107,10 @@ int sys_save(FILE *sd ,_SYS_DAT *sdat){
 int sys_comp(_CONFIG_DAT *config){
     // printf("sys_comp called with minor revision = %i, system = %i\n",config->minor_revision, _MINOR_REVISION);
 #if defined (_ATRACE) || defined (_PTRACE)
-	trace(_TRACE_FILE_NAME, "sys_com", 0, NULL, "compare app sys config data with stored data\n", trace_flag);
+	trace(_TRACE_FILE_NAME, "\nsys_com", 0, NULL, "compare app sys config data with stored data\n", trace_flag);
 #endif 
 
-    if(_MAJOR_VERSION != config->major_version){
+    if(_MAJOR_VERSION_system != config->major_version){
         printf("\n*** major verions do not match\n");
         // if(trace_flag == true){
         //     trace1(_TRACE_FILE_NAME, "sys_comp", "major verions do not match");
@@ -118,7 +118,7 @@ int sys_comp(_CONFIG_DAT *config){
         // }
         return 1;
     }
-    if(_MINOR_VERSION != config->minor_version){
+    if(_MINOR_VERSION_system != config->minor_version){
         printf("\n*** minor versions do not match\n");
         // if(trace_flag == true){
         //     trace1(_TRACE_FILE_NAME, "sys_comp", "minor verions do not match");
@@ -126,7 +126,7 @@ int sys_comp(_CONFIG_DAT *config){
         // }
         return 1;
     }
-    if( _MINOR_REVISION != config->minor_revision){
+    if( _MINOR_REVISION_system != config->minor_revision){
         printf("\n*** minor revisions do not match\n");
         // if(trace_flag == true){
         //     trace1(_TRACE_FILE_NAME, "sys_comp", "minor revisions do not match");

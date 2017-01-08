@@ -171,7 +171,7 @@ int main(void) {
 
 	/* setup control block pointers */
 	cmd_fsm_cb.ipc_ptr = ipc_ptr;					 	//set pointer to shared memory
-	cmd_fsm_cb.sys_ptr = &ipc_ptr->sys_data;		 	//set pointer to system data in shared memory
+	cmd_fsm_cb.sys_ptr = &(ipc_ptr->sys_data);		 	//set pointer to system data in shared memory
 	cmd_fsm_cb.ssch_ptr = &ipc_ptr->sys_data.sys_sch; 	//set pointer to active shecule in shared memory
 	cmd_fsm_cb.wsch_ptr = &cmd_fsm_cb.w_sch;		 	//set pointer to working schedule
 
@@ -180,14 +180,17 @@ int main(void) {
 	// cmd_fsm_cb.cdat_ptr = &ipc_ptr->sys_data.c_data; //set pointer to channel data array in shared memory
 
 	/* load data from system data file and compare config data */
-	sys_file = sys_open(_SYSTEM_FILE_NAME, &ipc_ptr->sys_data); // create system file if it does not exist
-	// sys_load(sys_file,&ipc_ptr->sys_data);
-	sys_load(sys_file, cmd_fsm_cb.sys_ptr);
-	fclose(sys_file);
+	// sys_file = sys_open(_SYSTEM_FILE_NAME, &ipc_ptr->sys_data); // create system file if it does not exist
+	// // sys_load(sys_file,&ipc_ptr->sys_data);
+	// sys_load(sys_file, cmd_fsm_cb.sys_ptr);
+	// fclose(sys_file);
 
-	hold_config = cmd_fsm_cb.sys_ptr->config;
+	// hold_config = cmd_fsm_cb.sys_ptr->config;
 	// printf("loaded minor_revision from system file %i\n",hold_config.minor_revision);
-	if (sys_comp(&hold_config)) {
+
+
+
+	if (sys_comp(cmd_fsm_cb.sys_ptr)){
 		printf("*** the system configuration in the system file and in the application are different\n update system file? (y)|(n) > ");
 		if (getchar() == 'y') {
 			cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION_system;
