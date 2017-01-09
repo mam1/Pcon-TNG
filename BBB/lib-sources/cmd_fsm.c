@@ -617,9 +617,9 @@ int c_5(_CMD_FSM_CB *cb)
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	sys_save(f, cb->sys_ptr);	// write data to disk
-	fclose(f);
+	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
+	// sys_save(f, cb->sys_ptr);	// write data to disk
+	// fclose(f);
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "name set for channel ");
@@ -700,9 +700,9 @@ int c_9(_CMD_FSM_CB *cb)
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 	ipc_sem_free(semid, &sb);						// free lock on shared memory
 
-	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	sys_save(f, cb->sys_ptr);	// write data to disk
-	fclose(f);
+	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
+	// sys_save(f, cb->sys_ptr);	// write data to disk
+	// fclose(f);
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "channel ");
@@ -727,9 +727,9 @@ int c_10(_CMD_FSM_CB *cb)
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	sys_save(f, cb->sys_ptr);	// write data to disk
-	fclose(f);
+	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
+	// sys_save(f, cb->sys_ptr);	// write data to disk
+	// fclose(f);
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "channel ");
@@ -756,9 +756,9 @@ int c_11(_CMD_FSM_CB *cb)
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	sys_save(f, cb->sys_ptr);	// write data to disk
-	fclose(f);
+	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
+	// sys_save(f, cb->sys_ptr);	// write data to disk
+	// fclose(f);
 
 	strcpy(cb->prompt_buffer, "channel ");
 	sprintf(numstr, "%d", cb->w_channel);
@@ -780,9 +780,9 @@ int c_12(_CMD_FSM_CB *cb)
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 	ipc_sem_free(semid, &sb);						// free lock on shared memory
 
-	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	sys_save(f, cb->sys_ptr);	// write data to disk
-	fclose(f);
+	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
+	// sys_save(f, cb->sys_ptr);	// write data to disk
+	// fclose(f);
 
 	strcpy(cb->prompt_buffer, "channel ");
 	sprintf(numstr, "%d", cb->w_channel);
@@ -826,9 +826,9 @@ int c_14(_CMD_FSM_CB *cb)
 		cb->sys_ptr->tpl_lib[i] = cb->sys_ptr->tpl_lib[i+1];
 	cb->sys_ptr->tpl_index -= 1;
 
-	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	sys_save(f, cb->sys_ptr);							// write data to disk
-	fclose(f);
+	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
+	// sys_save(f, cb->sys_ptr);							// write data to disk
+	// fclose(f);
 	printf("template deleted \n\r");
 	c_35(cb);
 
@@ -1304,9 +1304,9 @@ int c_39(_CMD_FSM_CB * cb)
 	ipc_ptr->force_update = 1;							// force relays to be updated
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
 
-	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	sys_save(f, cb->sys_ptr);							// write data to disk
-	fclose(f);
+	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
+	// sys_save(f, cb->sys_ptr);							// write data to disk
+	// fclose(f);
 
 	/* build prompt */
 	printf("\r\n system schedule replaced\n\r");
@@ -1437,9 +1437,9 @@ int c_49(_CMD_FSM_CB * cb)
 	cb->ipc_ptr->force_update  = 1;								// force relays to be updated
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
 
-	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	sys_save(f, cb->sys_ptr);	// write data to disk
-	fclose(f);
+	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
+	// sys_save(f, cb->sys_ptr);	// write data to disk
+	// fclose(f);
  printf("starting to build prompt\r\n");
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "sensor id for channel ");
@@ -1478,9 +1478,9 @@ int c_51(_CMD_FSM_CB * cb)
 	cb->sys_ptr->tpl_lib[cb->sys_ptr->tpl_index] = cb->w_template_buffer;
 	strcpy(cb->sys_ptr->tpl_lib[cb->sys_ptr->tpl_index].name, dequote(cb->token));
 	cb->sys_ptr->tpl_index += 1;
-	f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	sys_save(f, cb->sys_ptr);	// write data to disk
-	fclose(f);
+	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
+	// sys_save(f, cb->sys_ptr);	// write data to disk
+	// fclose(f);
 
 	/* build prompt */
 	printf("\n\r template saved\n\r");
@@ -1664,7 +1664,8 @@ int c_66(_CMD_FSM_CB * cb)
 {
 
 	printf("\nSystem configuration\r\n");
-	printf(" System version %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
+	printf(" System version (app) %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
+	printf(" System version (shr mem) %d.%d.%d\n\r", (cb->ipc_ptr)->sys_data.config.major_version, (cb->ipc_ptr)->sys_data.config.minor_version,(cb->ipc_ptr)->sys_data.config.minor_revision);
 	printf(" Inter Process Commucination support %d.%d.%d\n\r", _MAJOR_VERSION_ipc, _MINOR_VERSION_ipc, _MINOR_REVISION_ipc);
 	printf(" Pcon version %d.%d.%d\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
 	printf(" Dcon version %d.%d.%d\n\r", _MAJOR_VERSION_Dcon, _MINOR_VERSION_Dcon, _MINOR_REVISION_Dcon);

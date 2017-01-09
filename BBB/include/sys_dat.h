@@ -6,11 +6,11 @@
 /* system version */
 #define _MAJOR_VERSION_system	1
 #define _MINOR_VERSION_system	1
-#define _MINOR_REVISION_system	2
+#define _MINOR_REVISION_system	3
 
-FILE *sys_open(char *fname,_SYS_DAT *sdat);
+// FILE *sys_open(char *fname,_SYS_DAT *sdat);
 void sys_load(FILE *f,_SYS_DAT *sdat);
-int sys_save(FILE *f,_SYS_DAT *sdat);
+// int sys_save(FILE *f,_SYS_DAT *sdat);
 int sys_comp( _CONFIG_DAT *config);
 void sys_disp(_SYS_DAT *s);
 

@@ -187,6 +187,7 @@ int main(void) {
 	_SYS_DAT 	sdat;
 	int 		h_min;
 	_tm 		t;
+	int 		ipc,bkup;
 
 	/* Fork off the parent process */
 	pid = fork();
@@ -231,14 +232,47 @@ int main(void) {
 	get_tm(rtc, &t); 					// get the current time and date
 	logit(NULL, "starting initializations");
 
+
+	/* check for ipc file and ipc backup file */	
+    if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
+        bkup = 1;
+        fprintf(stderr, "%s\n"," ipc backup found" );
+    }
+    else{ 
+        bkup = 0;
+        fprintf(stderr, "%s\n"," ipc backup not found" );
+    }
+    if( access(_IPC_FILE_NAME, F_OK ) != -1 ){
+        ipc = 1;
+        fprintf(stderr, "%s\n"," ipc file found" );
+
+    }
+    else
+        ipc = 0;
+    
+
 	/* setup shared memory */
-	ipc_sem_init();								// setup semaphores
+	ipc_sem_init();
 	semid = ipc_sem_id(skey);					// get semaphore id
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
-	logit(NULL, "shared memory initialized");
+
+	if(ipc==0){
+		fprintf(stderr, "%s\n"," ipc file not found" );
+		fprintf(stderr, "%s\n"," new ipc file created and initialized" );
+		ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
+        ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
+        ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
+        ipc_ptr->sys_data.config.minor_revision = _MINOR_REVISION_system;
+        ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
+        ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
+        ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
+        ipc_ptr->sys_data.config.states = _CMD_STATES;
+        ipc_sem_free(semid, &sb);                   // free lock on shared memory
+	}
+
 
 	// /* load data from system data file */
 	// sys_file = sys_open(_SYSTEM_FILE_NAME, &sdat); // create system file if it does not exist

@@ -18,5 +18,7 @@
  int ipc_sem_lock(int semid, SEMBUF *sb);
  int ipc_sem_free(int semid, SEMBUF *sb);
  int ipc_sem_id(int skey);
+ int ipc_save(_IPC_DAT *ipc_ptr);
+ int ipc_load(_IPC_DAT *ipc_ptr);
 
 #endif
