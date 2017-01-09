@@ -486,7 +486,7 @@ void build_prompt(_CMD_FSM_CB * cb){
 		case 4:
 			strcpy(cb->prompt_buffer, "\r\n editing schedule buffer\n\r");
 			load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-			strcat(cb->prompt_buffer, "\r\n enter a command or time");
+			strcat(cb->prompt_buffer, "\r\nenter a command or time");
 			break;
 
 	}
@@ -567,7 +567,8 @@ int c_2(_CMD_FSM_CB *cb)
 	printf(" %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
 	close(rtc);
-	strcpy(cb->prompt_buffer, "");
+	printf("\n\r");
+	strcpy(cb->prompt_buffer, "enter a command");
 	return 0;
 }
 /* terminate program */
@@ -1255,7 +1256,7 @@ int c_33(_CMD_FSM_CB * cb)
 int c_34(_CMD_FSM_CB * cb)
 {
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\n enter a command");
+	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter a command");
 	return 0;
 }
 
@@ -1273,7 +1274,7 @@ int  c_35(_CMD_FSM_CB * cb)
 int c_36(_CMD_FSM_CB * cb)
 {
 	/* build prompt */
-	strcat(cmd_fsm_cb.prompt_buffer, "\r\n enter a command");
+	strcat(cmd_fsm_cb.prompt_buffer, "\r\nenter a command");
 	return 0;
 }
 
@@ -1650,7 +1651,7 @@ int c_65(_CMD_FSM_CB * cb)
 		printf("\n\r");
 	}
 	printf("\n\r");
-	strcpy(cb->prompt_buffer, "");
+	strcpy(cb->prompt_buffer, "enter a command");
 
 	/* build prompt */
 	// c_34(cb);
@@ -1672,7 +1673,8 @@ int c_66(_CMD_FSM_CB * cb)
 	printf(" char_fsm version %d.%d.%d\n\r", _MAJOR_VERSION_char_fsm, _MINOR_VERSION_char_fsm, _MINOR_REVISION_char_fsm);
 	printf(" cmd_fsm version %d.%d.%d\n\n\r", _MAJOR_VERSION_cmd_fsm, _MINOR_VERSION_cmd_fsm, _MINOR_REVISION_cmd_fsm);
 	
-	strcpy(cb->prompt_buffer, "");
+	printf("\n\r");
+	strcpy(cb->prompt_buffer, "enter a command");
 
 	/* build prompt */
 	// c_34(cb);
