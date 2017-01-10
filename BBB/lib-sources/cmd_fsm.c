@@ -218,8 +218,6 @@ int c_64(_CMD_FSM_CB *); /* set schedule number prompt */
 int c_65(_CMD_FSM_CB *); /* display current sensor values */
 int c_66(_CMD_FSM_CB *); /* display system configuration */
 
-
-
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
@@ -280,39 +278,6 @@ int is_valid_int(const char *str)
 	}
 	return -1;
 }
-
-// /* return cmd type; 0-INT, 1-QUOTE, 2-unrecognized, 3-NULL, command number (0 - xx) */
-// int cmd_type(char *c)
-// {
-// 	int     i;
-// 	char    *p;
-
-// 	/*test for an empty command */
-// 	if ((*c == '\0') || (*c == ' '))
-// 		return 3;
-// 	/* test for a quoted string*/
-// 	if (*c == _QUOTE)
-// 		return 36;
-// 	/* test for a integer */
-// 	if (is_valid_int(c))
-// 		return 35;
-// 	/* test for a keyword */
-// 	for (i = 0; i < _CMD_TOKENS - 3; i++)
-// 	{
-// 		if (strlen(c) == strlen(keyword[i])) {
-// 			p = c;
-// 			while (*p != '\0') {
-// 				*p = tolower(*p);
-// 				p++;
-// 			};
-// 			if (strncmp(c, keyword[i], strlen(c)) == 0)
-// 				return i;
-// 		}
-// 	}
-// 	/* unrecognized token */
-
-// 	return 2;
-// }
 
 /* return token type or command number */
 int token_type(char *c) {
@@ -409,7 +374,7 @@ void cmd_fsm_reset(_CMD_FSM_CB *cb) {
 // }
 
 /* append schedule template list to buffer  */
-char *make_lib_list(char *buf, _CMD_FSM_CB *cb) {
+// char *make_lib_list(char *buf, _CMD_FSM_CB *cb) {
 
 	// int             i, ii;
 	// int             max_name_size;
@@ -450,10 +415,10 @@ char *make_lib_list(char *buf, _CMD_FSM_CB *cb) {
 	// // else
 	// strcat(cb->prompt_buffer,
 	//        "  enter template number to edit or name to create a new template\r\n  > ");
-	return buf;
-}
+// 	return buf;
+// }
 /* print schedule template list */
-void print_tlist(_CMD_FSM_CB *cb) {
+// void print_tlist(_CMD_FSM_CB *cb) {
 	// int             i, ii;
 	// int             max_name_size;
 	// char            pad[_SCHEDULE_NAME_SIZE];
@@ -475,8 +440,8 @@ void print_tlist(_CMD_FSM_CB *cb) {
 	// 		i, cb->sdat_ptr->t_data[i].name, pad, sch2text2(&cb->sdat_ptr->t_data[i].temp_chan_sch, buf));
 	// }
 
-	return;
-}
+// 	return;
+// }
 
 void build_prompt(_CMD_FSM_CB * cb){
 	// printf("*********** build_prompt called\r\n");
