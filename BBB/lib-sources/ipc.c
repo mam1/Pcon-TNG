@@ -22,6 +22,8 @@
 #include <unistd.h>     //sleep,access
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
 #include <sys/ipc.h>
+#include <errno.h>
+
 #include "trace.h"
 // #include <sys/sem.h>
 // #include <semaphore.h>
@@ -147,52 +149,55 @@ int ipc_size(void) {
 int ipc_save(_IPC_DAT *ipc_ptr) {
 
     FILE        *ipc_bkup;
-    ipc_bkup = fopen(_IPC_FILE_BACKUP_NAME,"r+");
+    int 		write_rtn;
+
+    ipc_bkup = fopen(_IPC_FILE_BACKUP_NAME,"w");
+
+    if(ipc_bkup == NULL){                     // file not found
+    	perror(_IPC_FILE_BACKUP_NAME);
+        return 1;
+    }
 
     ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
 
     if(fwrite(ipc_ptr, 1, sizeof(*ipc_ptr), ipc_bkup) != sizeof(*ipc_ptr)){
         printf("\n*** error saving ipc backup data file\r\n");
         perror(_IPC_FILE_BACKUP_NAME);
-        exit(1);
-    }
+        ipc_sem_free(semid, &sb);                   // free lock on shared memory
+        fclose(ipc_bkup);
 
-    ipc_sem_free(semid, &sb);                   // free lock on shared memory
+        return 1;
+    }
+    else
+    	ipc_sem_free(semid, &sb);                   // free lock on shared memory
 
     #if defined (_ATRACE) || defined (_PTRACE)
     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "ipc data written to backup file\n", 0);
     #endif
-
+    fclose(ipc_bkup);
     return 0;
 }
 
+/* load shared memory from backup */
 int ipc_load(_IPC_DAT *ipc_ptr) {
 
     int         rtn;
     FILE        *ipc_bkup;
  
     ipc_bkup = fopen(_IPC_FILE_BACKUP_NAME,"r+");
-    if(ipc_bkup == NULL){                       // file not found
-        /* initialize config data */
-        ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
-        ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
-        ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
-        ipc_ptr->sys_data.config.minor_revision = _MINOR_REVISION_system;
-        ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
-        ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
-        ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
-        ipc_ptr->sys_data.config.states = _CMD_STATES;
-        ipc_sem_free(semid, &sb);                   // free lock on shared memory
-        return 0;
+    if(ipc_bkup == NULL){                      // file not found
+        return 1;
     }
     ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
     rtn = fread(ipc_ptr, sizeof(*ipc_ptr), 1, ipc_bkup);
     if(rtn != 1){
         printf("\n*** error reading ipc backup data\n  fread returned %i\r\n",rtn);
         perror(_TRACE_FILE_NAME);
-        exit(1);
+        ipc_sem_free(semid, &sb);                   // free lock on shared memory
+        return 1;
     }
-    ipc_sem_free(semid, &sb);                   // free lock on shared memory
+    else
+    	ipc_sem_free(semid, &sb);                   // free lock on shared memory
 
     #if defined (_ATRACE) || defined (_PTRACE)
     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "backup ipc file written to shared memory\n", 0);
