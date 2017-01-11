@@ -273,15 +273,6 @@ int main(void) {
         ipc_sem_free(semid, &sb);                   // free lock on shared memory
 	}
 
-
-	// /* load data from system data file */
-	// sys_file = sys_open(_SYSTEM_FILE_NAME, &sdat); // create system file if it does not exist
-	// sys_load(sys_file, &sdat);
-	// ipc_ptr->force_update = 1;
-	// ipc_sem_free(semid, &sb);					// free lock on shared memory
-	// fclose(sys_file);
-	// logit(NULL, "system data loaded into shared memory");
-
 	/* initialise gpio access */
 	init_gpio();
 	iolib_init();
@@ -334,8 +325,11 @@ int main(void) {
 	logit(NULL, "starting main loop");
 	while (1) {
 		get_tm(rtc, &tm);				// read the time from the real time clock
+		
 		if (ipc_ptr->force_update == 1) {
+			ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
 			ipc_ptr->force_update = 0;
+			ipc_sem_free(semid, &sb);                   // free lock on shared memory
 			logit(&tm, "update forced");
 			update_relays(&tm, ipc_ptr);
 			continue;
@@ -348,7 +342,7 @@ int main(void) {
 				continue;
 			}
 		}
-		if (toggle) {					// cycle leds
+		if (toggle) {					// cycle cape leds
 			toggle = 0;
 			pin_low(8,  _LED_1);
 			pin_high(8,  _LED_2);
