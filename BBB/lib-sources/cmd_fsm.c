@@ -201,7 +201,7 @@ int c_47(_CMD_FSM_CB *); /* set real time clock day of the week */
 int c_48(_CMD_FSM_CB *); /* set PCF8563 */
 int c_49(_CMD_FSM_CB *); /* set channel sensor_id */
 int c_50(_CMD_FSM_CB *); /* set template/schedule prompt */
-int c_51(_CMD_FSM_CB *); /* save schedule  */
+int c_51(_CMD_FSM_CB *); /* save template  */
 int c_52(_CMD_FSM_CB *); /* save schedule table*/
 int c_53(_CMD_FSM_CB *); /* set template description prompt  */
 int c_54(_CMD_FSM_CB *); /* set schedule description prompt */
@@ -1054,10 +1054,10 @@ int c_30(_CMD_FSM_CB * cb)
 	if ((cb->token_value > 0) && (cb->token_value < _DAYS_PER_WEEK + 1)) {
 		cb->w_day = cb->token_value - 1;
 		/* build prompt */
-		strcpy(cb->prompt_buffer, "day set to ");
-		sprintf(numstr, "%d", cb->w_day);
+		strcpy(cb->prompt_buffer, " day set to ");
+		sprintf(numstr, "%d", cb->w_day+1);
 		strcat(cb->prompt_buffer, numstr);
-		strcat(cb->prompt_buffer, " enter channel number or * > ");
+		strcat(cb->prompt_buffer, "\n\r enter channel number or *");
 
 		return 0;
 	}
@@ -1070,7 +1070,7 @@ int c_30(_CMD_FSM_CB * cb)
 int c_31(_CMD_FSM_CB * cb)
 {
 	int 		c,d;
-	// printf("editing system schedule\r\n");
+	printf("%s\n\r", " channel set all");
 	cb->w_channel = _ALL_CHANNELS;
 	if(cb->w_day == _ALL_DAYS)
 		for(d=0;d<_DAYS_PER_WEEK;d++)
@@ -1081,7 +1081,7 @@ int c_31(_CMD_FSM_CB * cb)
 			cb->w_sch.sch[cb->w_day][c] = cb->w_template_buffer;
 
 	/* build prompt */
-	strcpy(cb->prompt_buffer, " working schedule updated");
+	printf("%s\n\r", " working schedule updated");
 	return 0;
 }
 
@@ -1316,7 +1316,7 @@ int c_50(_CMD_FSM_CB * cb)
 	return 0;
 }
 
-/* save schedule */
+/* save template */
 int c_51(_CMD_FSM_CB * cb)
 {
 	FILE 			*f;
@@ -1332,9 +1332,6 @@ int c_51(_CMD_FSM_CB * cb)
 	cb->sys_ptr->tpl_lib[cb->sys_ptr->tpl_index] = cb->w_template_buffer;
 	strcpy(cb->sys_ptr->tpl_lib[cb->sys_ptr->tpl_index].name, dequote(cb->token));
 	cb->sys_ptr->tpl_index += 1;
-	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	// sys_save(f, cb->sys_ptr);	// write data to disk
-	// fclose(f);
 
 	/* build prompt */
 	printf("\n\r template saved\n\r");
