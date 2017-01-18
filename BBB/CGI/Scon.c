@@ -2,11 +2,6 @@
 /*	Scon.c - cgi that updates sensor values in shared memory        */
 /********************************************************************/
 
-/* Scon version info */
-#define _MAJOR_VERSION		0
-#define _MINOR_VERSION 		0
-#define _MINOR_REVISION		0
-
 #include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
@@ -28,6 +23,7 @@
 #include "trace.h"
 #include "typedefs.h"
 #include "sys_dat.h"
+#include "Scon.h"
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -175,7 +171,9 @@ int main(void) {
 	// int 			bkup;
 
 	printf("Content-type: text/html\n\n");
-	printf("\n  **** cgi active 1.0 ****\n\r");
+	printf("\n  **** cgi %i.%i.%i active ****\n\r",1,0,0);
+		// printf("\n  **** cgi active %s.%s.%s ****\n\r",_MAJOR_VERSION_Scon,_MINOR_VERSION_Scon,_MINOR_REVISION_Scon);
+
 
 	/********** initializations *******************************************************************/
 
