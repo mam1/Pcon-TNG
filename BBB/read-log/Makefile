@@ -39,7 +39,7 @@ ifeq ($(UNAME_S),Darwin)
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
 else
-	PREFIX := /home/mam1/X-comp/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
+	PREFIX := /home/mam1/X-comp/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
@@ -69,7 +69,7 @@ $(program_NAME): $(program_OBJS)
 # 	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/read-log/ root@192.168.254.34:/home/rsync-Mint	
 # endif
 # move the executable to /usr/local/sbin directory on the bone
-	rsync -avz /Users/mam1/Git/Pcon-TNG/BBB/read-log/$(program_NAME) root@192.168.254.34:/usr/local/sbin
+	rsync -avz /home/mam1/Git/Pcon-TNG/BBB/read-log/$(program_NAME) root@192.168.254.34:/usr/local/sbin
 	ssh root@192.168.254.34 'chown root /usr/local/sbin/$(program_NAME)'		# change owner
 	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(program_NAME)'		# open access
 

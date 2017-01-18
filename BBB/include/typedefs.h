@@ -20,7 +20,7 @@ typedef struct {
 	int tm_isdst;       // daylight saving time
 } _tm;
 
-/* application configuration data */
+/* system configuration data */
 typedef struct {
 	int         major_version;
 	int         minor_version;

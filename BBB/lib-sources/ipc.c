@@ -4,12 +4,6 @@
 /*                                                                      */
 /************************************************************************/
 
-/* ipc version info */
-#define _MAJOR_VERSION    10
-#define _MINOR_VERSION    4
-#define _MINOR_REVISION   0
-
-
 // #include <stdio.h>
 // #include <stdlib.h>
 #include <errno.h>
@@ -25,16 +19,23 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <string.h>
-#include <unistd.h>     //sleep
+#include <unistd.h>     //sleep,access
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
 #include <sys/ipc.h>
+#include <errno.h>
+
 #include "trace.h"
 // #include <sys/sem.h>
 // #include <semaphore.h>
 
 #include "ipc.h"
+#include "sys_dat.h"
+#include "shared.h"
 
-// extern int              trace_flag;                     //trace file is active
+
+extern int              semid;
+extern unsigned short   semval;
+extern struct sembuf    sb;
 
 union semun {
     int 				val;      	// used for SETVAL only 
@@ -42,11 +43,13 @@ union semun {
     uint8_t 			*array;  	// used for GETALL and SETALL
 };
 
+
+
 int ipc_open(char *fname, int size) {
     int                 fd;
     struct stat         sb;
     mode_t              mode = S_IRWXO | S_IRWXG | S_IRWXU;
-    int                 result;
+    int                 result,ipc,bkup;
 
     fd = open(fname, O_RDWR | O_CREAT, mode);
     if (fd == -1)
@@ -103,6 +106,7 @@ int ipc_open(char *fname, int size) {
     return fd;
 }
 
+
 void *ipc_map(int fd, int size) {
     void        *data;
     struct stat         sb;
@@ -142,12 +146,62 @@ int ipc_size(void) {
     return (pages * (int)page_size);
 }
 
-int ipc_save(void) {
+int ipc_save(_IPC_DAT *ipc_ptr) {
 
+    FILE        *ipc_bkup;
+    int 		write_rtn;
+
+    ipc_bkup = fopen(_IPC_FILE_BACKUP_NAME,"w");
+
+    if(ipc_bkup == NULL){                     // file not found
+    	perror(_IPC_FILE_BACKUP_NAME);
+        return 1;
+    }
+
+    ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
+
+    if(fwrite(ipc_ptr, 1, sizeof(*ipc_ptr), ipc_bkup) != sizeof(*ipc_ptr)){
+        printf("\n*** error saving ipc backup data file\r\n");
+        perror(_IPC_FILE_BACKUP_NAME);
+        ipc_sem_free(semid, &sb);                   // free lock on shared memory
+        fclose(ipc_bkup);
+
+        return 1;
+    }
+    else
+    	ipc_sem_free(semid, &sb);                   // free lock on shared memory
+
+    #if defined (_ATRACE) || defined (_PTRACE)
+    trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "ipc data written to backup file\n", 0);
+    #endif
+    fclose(ipc_bkup);
     return 0;
 }
 
-int ipc_load(void) {
+/* load shared memory from backup */
+int ipc_load(_IPC_DAT *ipc_ptr) {
+
+    int         rtn;
+    FILE        *ipc_bkup;
+ 
+    ipc_bkup = fopen(_IPC_FILE_BACKUP_NAME,"r+");
+    if(ipc_bkup == NULL){                      // file not found
+        return 1;
+    }
+    ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
+    rtn = fread(ipc_ptr, sizeof(*ipc_ptr), 1, ipc_bkup);
+    if(rtn != 1){
+        printf("\n*** error reading ipc backup data\n  fread returned %i\r\n",rtn);
+        perror(_TRACE_FILE_NAME);
+        ipc_sem_free(semid, &sb);                   // free lock on shared memory
+        return 1;
+    }
+    else
+    	ipc_sem_free(semid, &sb);                   // free lock on shared memory
+
+    #if defined (_ATRACE) || defined (_PTRACE)
+    trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "backup ipc file written to shared memory\n", 0);
+    #endif
 
     return 0;
 }
@@ -184,7 +238,7 @@ int ipc_sem_lock(int semid, struct sembuf *sb){
 	}
 
 // #if defined (_ATRACE) || defined (_FTRACE)
-//     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory locked\n", trace_flag);
+//     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory locked\n", 0);
 // #endif	
 
 	return 0;
@@ -200,7 +254,7 @@ int ipc_sem_free(int semid, struct sembuf *sb){
 	}
 
 // #if defined (_ATRACE) || defined (_FTRACE)
-//     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory unlocked\n", trace_flag);
+//     trace(_TRACE_FILE_NAME, "\nipc", 0, NULL, "shared memory unlocked\n", 0);
 // #endif  	
 
 	return 0;

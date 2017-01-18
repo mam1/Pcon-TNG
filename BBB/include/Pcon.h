@@ -6,6 +6,13 @@
 #ifndef PCON_H_
 #define PCON_H_
 
+
+/* Pcon version info */
+#define _MAJOR_VERSION_Pcon    10
+#define _MINOR_VERSION_Pcon    4
+#define _MINOR_REVISION_Pcon   4
+
+
 // #define _TRACE 				// turn on trace
 #include "shared.h"
 

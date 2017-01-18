@@ -29,7 +29,8 @@ char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 int main (void) {
 
-	FILE 			*sensor_data;
+	FILE 			*cgi_data;
+	char 			cgi_file_name[_FILE_NAME_SIZE];
 	struct{
 		int 		sensor_id;
 		int			temp;
@@ -39,20 +40,21 @@ int main (void) {
 
 	int 		parm =2;
 
-	sensor_data = fopen(_SENSOR_LOG_FILE_NAME,"r");
-	if(sensor_data == NULL){
+	snprintf(cgi_file_name, _FILE_NAME_SIZE, "%s%i%s", _CGI_DATA_FILE_PREFIX, parm, _CGI_DATA_FILE_SUFIX);
+	cgi_data = fopen(cgi_file_name,"r");
+	if(cgi_data == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to open %s\n\n application terminated\n\n", _SENSOR_LOG_FILE_NAME);
+		printf("    attempting to open %s\n\n application terminated\n\n", cgi_file_name);
 		return 1;
 	}
-	printf("  %s opened\n",_SENSOR_LOG_FILE_NAME);
-	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
+	printf("  %s opened\n",cgi_file_name);
+	while(fread(&buffer, sizeof(buffer), 1, cgi_data) == 1){
 		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %i humidity %i\n",
 	       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
 	       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
 	}
 
-	fclose(sensor_data);
+	fclose(cgi_data);
 
   return (0);
 }

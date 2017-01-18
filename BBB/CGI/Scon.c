@@ -27,6 +27,7 @@
 #include "BBBiolib.h"
 #include "trace.h"
 #include "typedefs.h"
+#include "sys_dat.h"
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -86,6 +87,7 @@ char *cgigetval(char *fieldname)
 		else	len2 = strlen(p);
 
 		if ((p2 == NULL || p3 != NULL) && p2 > p3)
+
 		{
 			/* no = present in this field */
 			p3 += len2;
@@ -169,6 +171,9 @@ int main(void) {
 		_tm 		ts;
 	} buffer;
 
+	int 			ipc;
+	// int 			bkup;
+
 	printf("Content-type: text/html\n\n");
 	printf("\n  **** cgi active 1.0 ****\n\r");
 
@@ -178,8 +183,8 @@ int main(void) {
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 
 	/* open files */
-	sensor_data = fopen(_SENSOR_LOG_FILE_NAME,"a");
-	if(sensor_data == NULL){
+	cgi_data = fopen(_SENSOR_LOG_FILE_NAME,"a");
+	if(cgi_data == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
 		printf("    attempting to open %s\n\n application terminated\n\n", _SENSOR_LOG_FILE_NAME);
 		return 1;
@@ -191,6 +196,24 @@ int main(void) {
 		return 1;
 	}
 
+	// /* check for ipc file and ipc backup file */	
+ //    if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
+ //        bkup = 1;
+ //        fprintf(stderr, "%s\n"," ipc backup found" );
+ //    }
+ //    else{ 
+ //        bkup = 0;
+ //        fprintf(stderr, "%s\n"," ipc backup not found" );
+ //    }
+ //    if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
+ //        ipc = 1;
+ //        fprintf(stderr, "%s\n"," ipc file found" );
+
+ //    }
+ //    else
+ //        ipc = 0;
+ //    }
+
 	/* setup shared memory */
 	ipc_sem_init();
 	semid = ipc_sem_id(skey);					// get semaphore id
@@ -198,6 +221,21 @@ int main(void) {
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
+
+	if(ipc==0){
+		fprintf(stderr, "%s\n"," ipc file not found" );
+		fprintf(stderr, "%s\n"," new ipc file created and initialized" );
+		ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
+        ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
+        ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
+        ipc_ptr->sys_data.config.minor_revision = _MINOR_REVISION_system;
+        ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
+        ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
+        ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
+        ipc_ptr->sys_data.config.states = _CMD_STATES;
+        ipc_sem_free(semid, &sb);                   // free lock on shared memory
+	}
+
 
 	/*********** start main process *******************************************************************/
 
@@ -208,19 +246,19 @@ int main(void) {
 	l_num = strtol(s_num, &eptr, 10);
 	if (l_num == 0)
 	{
-		printf("Conversion error occurred: %d", errno);
+		printf("*** Conversion error occurred: %d", errno);
 		exit(0);
 	}
 	l_temp = strtol(s_temp, &eptr, 10);
 	if (l_temp == 0)
 	{
-		printf("Conversion error occurred: %d", errno);
+		printf("*** Conversion error occurred: %d", errno);
 		exit(0);
 	}
 	l_humid = strtol(s_humid, &eptr, 10);
 	if (l_humid == 0)
 	{
-		printf("Conversion error occurred: %d", errno);
+		printf("*** Conversion error occurred: %d", errno);
 		exit(0);
 	}
 
@@ -233,14 +271,16 @@ int main(void) {
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
 
 	/* log sensor data */
-	get_tm(rtc, &buffer.ts)
+	get_tm(rtc, &buffer.ts);
 	buffer.sensor_id = ipc_ptr->s_dat[(int)l_num].sensor_id;
 	buffer.temp = ipc_ptr->s_dat[(int)l_num].temp;
 	buffer.humidity = ipc_ptr->s_dat[(int)l_num].humidity;
-	if(fwrite(&buffer, sizeof(buffer), 1, sensor_data) != 1){
-		fprinf(sensor_data,"error writing to %s\n" _SENSOR_LOG_FILE_NAME); 
-	}
-	fclose(sensor_data);
+
+	if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
+		printf(cgi_data,"*** error writing to %s\n" _SENSOR_LOG_FILE_NAME); 
+	else 
+		printf("%s %s\n"," CGI: data logged to",_SENSOR_LOG_FILE_NAME);
+	fclose(cgi_data);
 	fclose(cgi_log);
 	printf(" CGI: normal termination\n\n");
 	return 0;

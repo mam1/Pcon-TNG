@@ -1,14 +1,10 @@
+
 /*****************************************/
 /* This is the main Pcon.c program file  */
 /* BeagleBone Black implementation		 */
 /*										 */
 /*  									 */
 /*****************************************/
-
-/* Pcon version info */
-#define _MAJOR_VERSION		10
-#define _MINOR_VERSION 		4
-#define _MINOR_REVISION		0
 
 #include <sys/sem.h>
 #include <sys/ipc.h>
@@ -33,6 +29,7 @@
 
 /******************************** globals **************************************/
 int				trace_flag;							//control program trace
+int 			ipc, bkup; 							//ipc file flags
 int 			bbb;								//UART1 file descriptor
 _CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 _IPC_DAT 		*ipc_ptr; 							//ipc data
@@ -92,7 +89,7 @@ void push_cmd_buffer(char *cbuff) {
 
 /* pop a copy of the current cmd line into the cmd buffer  */
 char *pop_cmd_buffer(void) {
-	if (cmd_buffer_pop_index -1 < 0)
+	if (cmd_buffer_pop_index - 1 < 0)
 		cmd_buffer_pop_index = cmd_buffer_push_index;
 
 	return &(cmd_buffer[cmd_buffer_pop_index--][0]);
@@ -101,10 +98,10 @@ char *pop_cmd_buffer(void) {
 /* load buffer with previous command */
 void up_arrow(void) {
 	char    *ptr;
-	int 	l,i;
+	int 	l, i;
 
 	/* fix screen */
-	while(*(work_buffer_ptr - 1) != '\0'){
+	while (*(work_buffer_ptr - 1) != '\0') {
 		fputc(_BS, stdout);
 		fputc(' ', stdout);
 		fputc(_BS, stdout);
@@ -115,9 +112,9 @@ void up_arrow(void) {
 	ptr = pop_cmd_buffer();
 	work_buffer_ptr = work_buffer;
 	l = strlen(ptr);
-	for(i=0;i<l;i++){
-			fputc(*ptr, stdout);       				// echo char
-			*work_buffer_ptr++ = *ptr++;
+	for (i = 0; i < l; i++) {
+		fputc(*ptr, stdout);       				// echo char
+		*work_buffer_ptr++ = *ptr++;
 	}
 
 	return;
@@ -132,13 +129,14 @@ int main(void) {
 	int 			prompted = false;	//has a prompt been sent
 	int 			i;
 	int 			fd;					//file descriptor for ipc data file
+	int 			ipc, bkup;
 	FILE 			*sys_file;
 	_CONFIG_DAT 	hold_config;
 	// char 			*command_buffer[];	//
 
 	/*********************** setup console *******************************/
 
-	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION, _MINOR_VERSION, _MINOR_REVISION);
+	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
 
 	/************************* setup trace *******************************/
 #if defined (_ATRACE) || defined (_PTRACE)
@@ -167,6 +165,23 @@ int main(void) {
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores id set", trace_flag);
 #endif
 
+	/* check for ipc file and ipc backup file */
+	if ( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ) {
+		bkup = 1;
+		fprintf(stderr, "%s\n", " ipc backup found" );
+	}
+	else {
+		bkup = 0;
+		fprintf(stderr, "%s\n", " ipc backup not found" );
+	}
+	if ( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ) {
+		ipc = 1;
+		fprintf(stderr, "%s\n", " ipc file found" );
+
+	}
+	else
+		ipc = 0;
+
 	/* set up shared memory */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
@@ -174,9 +189,23 @@ int main(void) {
 	ipc_ptr = data; 							// overlay data with _IPC_DAT data structure
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
+	// if (ipc == 0) {
+	// 	fprintf(stderr, "%s\n", " ipc file not found" );
+	// 	fprintf(stderr, "%s\n", " new ipc file created and initialized" );
+	// 	ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
+	// 	ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
+	// 	ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
+	// 	ipc_ptr->sys_data.config.minor_revision = _MINOR_REVISION_system;
+	// 	ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
+	// 	ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
+	// 	ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
+	// 	ipc_ptr->sys_data.config.states = _CMD_STATES;
+	// 	ipc_sem_free(semid, &sb);                   // free lock on shared memory
+	// }
+
 	/* setup control block pointers */
 	cmd_fsm_cb.ipc_ptr = ipc_ptr;					 	//set pointer to shared memory
-	cmd_fsm_cb.sys_ptr = &ipc_ptr->sys_data;		 	//set pointer to system data in shared memory
+	cmd_fsm_cb.sys_ptr = &(ipc_ptr->sys_data);		 	//set pointer to system data in shared memory
 	cmd_fsm_cb.ssch_ptr = &ipc_ptr->sys_data.sys_sch; 	//set pointer to active shecule in shared memory
 	cmd_fsm_cb.wsch_ptr = &cmd_fsm_cb.w_sch;		 	//set pointer to working schedule
 
@@ -185,34 +214,29 @@ int main(void) {
 	// cmd_fsm_cb.cdat_ptr = &ipc_ptr->sys_data.c_data; //set pointer to channel data array in shared memory
 
 	/* load data from system data file and compare config data */
-	sys_file = sys_open(_SYSTEM_FILE_NAME, &ipc_ptr->sys_data); // create system file if it does not exist
-	// sys_load(sys_file,&ipc_ptr->sys_data);
-	sys_load(sys_file, cmd_fsm_cb.sys_ptr);
-	fclose(sys_file);
+	// sys_file = sys_open(_SYSTEM_FILE_NAME, &ipc_ptr->sys_data); // create system file if it does not exist
+	// // sys_load(sys_file,&ipc_ptr->sys_data);
+	// sys_load(sys_file, cmd_fsm_cb.sys_ptr);
+	// fclose(sys_file);
 
-	hold_config = cmd_fsm_cb.sys_ptr->config;
+	// hold_config = cmd_fsm_cb.sys_ptr->config;
 	// printf("loaded minor_revision from system file %i\n",hold_config.minor_revision);
-	if (sys_comp(&hold_config)) {
-		printf("*** there are different configurations in the system file and in the application\n update system file? (y)|(n) > ");
+
+	printf(" System version (app) %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
+	printf(" System version (shr mem) %d.%d.%d\n\r", ipc_ptr->sys_data.config.major_version, ipc_ptr->sys_data.config.minor_version, ipc_ptr->sys_data.config.minor_revision);
+
+
+	if (sys_comp(&(ipc_ptr->sys_data.config))) {
+		printf("*** the system configuration in shared memory and in the application are different\n update shared memory? (y)|(n) > ");
 		if (getchar() == 'y') {
-			cmd_fsm_cb.sys_ptr->config.major_version = _MAJOR_VERSION;
-			cmd_fsm_cb.sys_ptr->config.minor_version = _MINOR_VERSION;
-			cmd_fsm_cb.sys_ptr->config.minor_revision = _MINOR_REVISION;
-			cmd_fsm_cb.sys_ptr->config.channels = _NUMBER_OF_CHANNELS;
-			cmd_fsm_cb.sys_ptr->config.sensors = _NUMBER_OF_SENSORS;
-			cmd_fsm_cb.sys_ptr->config.commands = _CMD_TOKENS;
-			cmd_fsm_cb.sys_ptr->config.states = _CMD_STATES;
-
-			sys_file = sys_open(_SYSTEM_FILE_NAME, cmd_fsm_cb.sys_ptr);
-			if (sys_save(sys_file, cmd_fsm_cb.sys_ptr)) {
-				printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_FILE_NAME);
-				exit(1);
-			}
-			else
-				printf("  system data file updated\r\n");
-
+			ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
+			ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
+			ipc_ptr->sys_data.config.minor_revision = _MINOR_REVISION_system;
+			ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
+			ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
+			ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
+			ipc_ptr->sys_data.config.states = _CMD_STATES;
 			c = fgetc(stdin);			// get rid of trailing CR
-			fclose(sys_file);
 		}
 		else {
 			c = fgetc(stdin);			// get rid of trailing CR
@@ -220,15 +244,6 @@ int main(void) {
 			exit(1);
 		}
 	}
-	// fclose(sys_file);
-
-	/* test to make sure save is working */
-	sys_file = sys_open(_SYSTEM_FILE_NAME, cmd_fsm_cb.sys_ptr);
-	if (sys_save(sys_file, &ipc_ptr->sys_data)) {
-		printf("\n *\n*** unable to save system data to file <%s>\n", _SYSTEM_FILE_NAME);
-		exit(1);
-	}
-	fclose(sys_file);
 
 #if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system data loaded into shared memory", trace_flag);
@@ -262,10 +277,11 @@ int main(void) {
 	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "initializations complete\n", trace_flag);
 	trace(_TRACE_FILE_NAME, "\nPcon", 0, NULL, "starting main event loop\n", trace_flag);
 #endif
-	printf(" initializations complete\r\n\n");
+
+	printf("initializations complete\r\nenter ? for a list of commands\r\n\n");
 
 	/* set initial prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, " enter a command");
+	strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
 
 	/************************************************************/
 	/**************** start main processing loop ****************/

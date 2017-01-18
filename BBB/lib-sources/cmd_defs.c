@@ -191,7 +191,7 @@ char    *keyword_defs[_CMD_STATES][_CMD_TOKENS] = {{
 	/*  7 cancel      */    "build time date structure to set PCF8563 real tim clock",
 	/*  8 replace     */    "replace system schedule table with working schedule table",
 	/*  9 edit        */    "",
-	/* 10 */    "the system schedule with the contents of the edit buffer",
+	/* 10 */    "delete a saved template or schedule table",
 	/* 11 */    "edit system schedule",
 	/* 12 */    "turn channel on, set channel control mode to manual",
 	/* 13 */    "turn channel off, set channel control mode to manual",
