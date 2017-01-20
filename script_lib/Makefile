@@ -10,24 +10,20 @@ ifeq ($(UNAME_S),Darwin)
 	program_DIR := /Users/mam1/Git/Pcon-TNG/script_lib
 else
 	program_DIR := /home/mam1/Git/Pcon-TNG/script_lib
-
 endif
-
-lib_SRCS := $(wildcard *.sh)
+lib_SRCS := $(wildcard *)
 
 
 .PHONY: all clean distclean
 
 all: 
-# scan directory 
-	for lib_SRCS %%f in (*.sh); \
-	do \
-	scripts := $(scripts) %%~nf; \
-	done
+	@echo $(lib_SRCS)
 # move the scripts to cgi directory on the bone
-	rsync -avz $(program_DIR)/$(scripts) root@192.168.254.34:/usr/local/sbin/$(scripts)
-	ssh root@192.168.254.34 'chown root /usr/local/sbin/$(scripts)'		# change owner
-	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(scripts)'		# open access
+	rsync -avz $(program_DIR)/ root@192.168.254.34:/usr/local/sbin/
+
+	ssh root@192.168.254.34 'chown root /usr/local/sbin/*'		# change owner
+	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/*'		# open access
+
 os:
 	@echo "****************"
 	@echo $(UNAME_S)
