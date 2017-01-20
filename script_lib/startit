@@ -14,29 +14,47 @@ echo "checking for active processes"
 # echo $(pidof /usr/local/sbin/Dcon)
 	plist=$(pidof /usr/local/sbin/Dcon)
 # echo $plist
-if [ "$plist" != "" ]; then
+if [ "$plist" != "" ] 
+	then
 		hlist="there is an instance of Dcon active pid " 
 		hlist=$hlist$plist
 		echo $hlist
-		echo "killing it"
-		kill $plist
+		echo -n "should it be killed ? {y}{n} > "
+		read answr
+
+		echo $answr
+
+		if [ "$answr" == "y" ] 
+			then
+				echo -n "killing process "
+				echo $plist
+				kill $plist
+		fi
+
 	else
 		echo "there are no instances of Dcon active"
+		answr="y"
 fi
 
 plist=$(pidof /usr/local/sbin/Pcon)
-if [ "$plist" != "" ]; then
+if [ "$plist" != "" ] 
+	then
 		hlist="there is an instance of Pcon active pid " 
 		hlist=$hlist$plist
 		echo $hlist
 		echo "killing it"
 		kill $plist
-else
-	echo "there are no instances of Pcon active"
+	else
+		echo "there are no instances of Pcon active"
 fi
-echo "starting daemon"
-Dcon > /home/Pcon-data/Dcon.log &
-echo "Dcon started"
+
+if [ "$answr" == "y" ]
+	then
+		echo "starting daemon"
+		Dcon > /home/Pcon-data/Dcon.log &
+		echo "Dcon started"
+fi
+
 sleep 10
 Pcon 
 
