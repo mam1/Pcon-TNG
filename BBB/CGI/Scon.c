@@ -35,7 +35,7 @@ char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
 _IPC_DAT        ipc_dat, *ipc_ptr;                    		// ipc data
-char           	ipc_file[] = {_IPC_FILE_NAME};   				// name of ipc file
+char           	ipc_file[] = {_IPC_FILE_NAME};   			// name of ipc file
 void           	*data;                      				// pointer to ipc data
 int            	fd;                        				 	// file descriptor for ipc data file
 int         	rtc;										// file descriptor for PCF8563 RTC
@@ -158,7 +158,9 @@ int main(void) {
 	FILE 			*cgi_log;					// cgi log
 	char 			*s_num, *s_temp, *s_humid;
 	long 			l_num, l_temp, l_humid;
-	char 			cgi_file_name[_FILE_NAME_SIZE];
+	// char 			file_name[_FILE_NAME_SIZE];
+	char           	sensor_log_file[] = {_SENSOR_LOG_FILE_NAME};   			// name of sensor log file
+
 	char 			*eptr;
 	struct{
 		int 		sensor_id;
@@ -167,7 +169,7 @@ int main(void) {
 		_tm 		ts;
 	} buffer;
 
-	int 			ipc;
+	// int 			ipc;
 	// int 			bkup;
 
 	printf("Content-type: text/html\n\n");
@@ -181,10 +183,10 @@ int main(void) {
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 
 	/* open files */
-	cgi_data = fopen(_SENSOR_LOG_FILE_NAME,"a");
+	cgi_data = fopen(sensor_log_file,"a");
 	if(cgi_data == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to open %s\n\n application terminated\n\n", _SENSOR_LOG_FILE_NAME);
+		printf("    attempting to open %s\n\n application terminated\n\n", sensor_log_file);
 		return 1;
 	}
 	cgi_log = fopen(_CGI_LOG_FILE_NAME,"a");
@@ -220,19 +222,19 @@ int main(void) {
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
 
-	if(ipc==0){
-		fprintf(stderr, "%s\n"," ipc file not found" );
-		fprintf(stderr, "%s\n"," new ipc file created and initialized" );
-		ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
-        ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
-        ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
-        ipc_ptr->sys_data.config.minor_revision = _MINOR_REVISION_system;
-        ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
-        ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
-        ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
-        ipc_ptr->sys_data.config.states = _CMD_STATES;
-        ipc_sem_free(semid, &sb);                   // free lock on shared memory
-	}
+	// if(ipc==0){
+	// 	fprintf(stderr, "%s\n"," ipc file not found" );
+	// 	fprintf(stderr, "%s\n"," new ipc file created and initialized" );
+	// 	ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
+ //        ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
+ //        ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
+ //        ipc_ptr->sys_data.config.minor_revision = _MINOR_REVISION_system;
+ //        ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
+ //        ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
+ //        ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
+ //        ipc_ptr->sys_data.config.states = _CMD_STATES;
+ //        ipc_sem_free(semid, &sb);                   // free lock on shared memory
+	// }
 
 
 	/*********** start main process *******************************************************************/
@@ -268,16 +270,18 @@ int main(void) {
 	ipc_ptr->s_dat[(int)l_num].humidity = (int)l_humid;
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
 
+
 	/* log sensor data */
-	get_tm(rtc, &buffer.ts);
+	// get_tm(rtc, &buffer.ts);
+	buffer.ts = ipc_ptr->s_dat[(int)l_num].ts;
 	buffer.sensor_id = ipc_ptr->s_dat[(int)l_num].sensor_id;
 	buffer.temp = ipc_ptr->s_dat[(int)l_num].temp;
 	buffer.humidity = ipc_ptr->s_dat[(int)l_num].humidity;
 
 	if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
-		printf(cgi_data,"*** error writing to %s\n" _SENSOR_LOG_FILE_NAME); 
+		printf("*** error writing to %s\n", sensor_log_file); 
 	else 
-		printf("%s %s\n"," CGI: data logged to",_SENSOR_LOG_FILE_NAME);
+		printf(" CGI: data logged to %s\n",sensor_log_file);
 	fclose(cgi_data);
 	fclose(cgi_log);
 	printf(" CGI: normal termination\n\n");
