@@ -11,8 +11,6 @@ ifeq ($(UNAME_S),Darwin)
 else
 	program_DIR := /home/mam1/Git/Pcon-TNG/script_lib
 endif
-lib_SRCS := $(wildcard *)
-
 
 .PHONY: all clean distclean
 
