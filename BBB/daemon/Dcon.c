@@ -182,12 +182,12 @@ int main(void) {
 
 	/* Our process ID and Session ID */
 	pid_t 		pid, sid;
-	FILE 		*sys_file;
+	// FILE 		*sys_file;
 	int 		toggle;
-	_SYS_DAT 	sdat;
+	// _SYS_DAT 	sdat;
 	int 		h_min;
 	_tm 		t;
-	int 		ipc,bkup;
+	int 		ipc;
 
 	/* Fork off the parent process */
 	pid = fork();
@@ -234,14 +234,14 @@ int main(void) {
 
 
 	/* check for ipc file and ipc backup file */	
-    if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
-        bkup = 1;
-        fprintf(stderr, "%s\n"," ipc backup found" );
-    }
-    else{ 
-        bkup = 0;
-        fprintf(stderr, "%s\n"," ipc backup not found" );
-    }
+    // if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
+    //     bkup = 1;
+    //     fprintf(stderr, "%s\n"," ipc backup found" );
+    // }
+    // else{ 
+    //     bkup = 0;
+    //     fprintf(stderr, "%s\n"," ipc backup not found" );
+    // }
     if( access(_IPC_FILE_NAME, F_OK ) != -1 ){
         ipc = 1;
         fprintf(stderr, "%s\n"," ipc file found" );
