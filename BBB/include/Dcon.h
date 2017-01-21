@@ -3,7 +3,7 @@
 
 /* Dcon version info */
 #define _MAJOR_VERSION_Dcon		2
-#define _MINOR_VERSION_Dcon 	2
+#define _MINOR_VERSION_Dcon 	3
 #define _MINOR_REVISION_Dcon	0
 
 int count(void);
