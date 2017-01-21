@@ -221,6 +221,7 @@ int main(void) {
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
+     ipc_sem_free(semid, &sb);                   // free lock on shared memory
 
 	// if(ipc==0){
 	// 	fprintf(stderr, "%s\n"," ipc file not found" );
@@ -268,15 +269,13 @@ int main(void) {
 	ipc_ptr->s_dat[(int)l_num].sensor_id = (int)l_num;
 	ipc_ptr->s_dat[(int)l_num].temp = (int)l_temp;
 	ipc_ptr->s_dat[(int)l_num].humidity = (int)l_humid;
-	ipc_sem_free(semid, &sb);							// free lock on shared memory
-
 
 	/* log sensor data */
-	// get_tm(rtc, &buffer.ts);
 	buffer.ts = ipc_ptr->s_dat[(int)l_num].ts;
 	buffer.sensor_id = ipc_ptr->s_dat[(int)l_num].sensor_id;
 	buffer.temp = ipc_ptr->s_dat[(int)l_num].temp;
 	buffer.humidity = ipc_ptr->s_dat[(int)l_num].humidity;
+	ipc_sem_free(semid, &sb);							// free lock on shared memory
 
 	if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
 		printf("*** error writing to %s\n", sensor_log_file); 
