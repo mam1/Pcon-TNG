@@ -173,7 +173,7 @@ int main(void) {
 	// int 			bkup;
 
 	printf("Content-type: text/html\n\n");
-	printf("\n  **** cgi %i.%i.%i active ****\n\r",1,0,0);
+	printf("\n  **** cgi %i.%i.%i active ****\n\r",1,1,0);
 		// printf("\n  **** cgi active %s.%s.%s ****\n\r",_MAJOR_VERSION_Scon,_MINOR_VERSION_Scon,_MINOR_REVISION_Scon);
 
 
@@ -185,9 +185,13 @@ int main(void) {
 	/* open files */
 	cgi_data = fopen(sensor_log_file,"a");
 	if(cgi_data == NULL){
-		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to open %s\n\n application terminated\n\n", sensor_log_file);
-		return 1;
+		sleep (1000);
+		cgi_data = fopen(sensor_log_file,"a");
+		if(cgi_data == NULL){
+			printf("  Error: %d (%s)\n", errno, strerror(errno));
+			printf("    attempting to open %s\n\n application terminated\n\n", sensor_log_file);
+			return 1;
+		}
 	}
 	cgi_log = fopen(_CGI_LOG_FILE_NAME,"a");
 	if(cgi_log == NULL){
