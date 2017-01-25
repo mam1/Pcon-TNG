@@ -252,7 +252,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 29  system      */  {c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66},
-	/* 30  grab       */   { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 30  grab        */  {c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26},
 	/* 31  ssch        */  {c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57},
 	/* 32  wsch        */  {c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58},
 	/* 33  slib        */  {c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56},
@@ -455,7 +455,7 @@ int c_4(_CMD_FSM_CB *cb)
 int c_5(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
-	FILE 		*f;
+	// FILE 		*f;
 
 #if defined (_ATRACE) || defined (_FTRACE)
 	sprintf(trace_buf, "c_5 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
@@ -542,7 +542,7 @@ int c_8(_CMD_FSM_CB *cb)
 int c_9(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
-	FILE 		*f;
+	// FILE 		*f;
 
 	// printf("waiting for lock\n\r");
 	ipc_sem_lock(semid, &sb);						// wait for a lock on shared memory
@@ -569,7 +569,7 @@ int c_9(_CMD_FSM_CB *cb)
 int c_10(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
-	FILE 		*f;
+	// FILE 		*f;
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 
@@ -596,7 +596,7 @@ int c_10(_CMD_FSM_CB *cb)
 int c_11(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
-	FILE 		*f;
+	// FILE 		*f;
 
 	printf("cb->w_channel <%i>\n\r", cb->w_channel);
 
@@ -624,7 +624,7 @@ int c_11(_CMD_FSM_CB *cb)
 int c_12(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
-	FILE 		*f;
+	// FILE 		*f;
 
 	ipc_sem_lock(semid, &sb);						// wait for a lock on shared memory
 	cb->sys_ptr->c_data[cb->w_channel].mode = 2;
@@ -667,7 +667,7 @@ int c_13(_CMD_FSM_CB *cb)
 int c_14(_CMD_FSM_CB *cb)
 {
 	int 				i;
-	FILE 				*f;
+	// FILE 				*f;
 
 	if((cb->token_value < 0) || (cb->token_value > cb->sys_ptr->tpl_index - 1)){
 		printf(" schedule number must be 0 - %i\n", cb->sys_ptr->tpl_index - 1);
@@ -922,10 +922,10 @@ int c_25(_CMD_FSM_CB *cb)
 /*  move sensor log to RAID */
 int c_26(_CMD_FSM_CB *cb)
 {
-	char 		buf[100];
+	char 		buf[200];
 
-	strcpy(buf,"rsync -avz root@192.168.254.34:/media/'CGI sensor log'/sensor.dat ");
-	strcat(buf,_SENSOR_MASTER_FILE_NAME)
+	strcpy(buf,"rsync -avzh root@192.168.254.34:/media/CGI-sensor-log/sensor.dat /media/Raid/SensorMaster/master.log");
+	// strcat(buf,_SENSOR_MASTER_FILE_NAME);
 	system(buf);
 
 	/* build prompt */
@@ -1121,7 +1121,7 @@ int c_38(_CMD_FSM_CB * cb)
 /* replace system schedule */
 int c_39(_CMD_FSM_CB * cb)
 {
-	FILE 				*f;
+	// FILE 				*f;
 
 	ipc_sem_lock(semid, &sb);							// wait for a lock on shared memory
 	*cb->ssch_ptr = *cb->wsch_ptr;						// move working schedule from fsm controol block to shared memory
@@ -1241,7 +1241,7 @@ int c_48(_CMD_FSM_CB * cb)
 int c_49(_CMD_FSM_CB * cb)
 {
 	char        numstr[15];
-	FILE 		*f;
+	// FILE 		*f;
 	int  		i;
 
 	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
@@ -1289,7 +1289,7 @@ int c_50(_CMD_FSM_CB * cb)
 /* save template */
 int c_51(_CMD_FSM_CB * cb)
 {
-	FILE 			*f;
+	// FILE 			*f;
 
 	/* see if there is room to save template */
 	// printf("index %i\n\r", cb->sys_ptr->tpl_index);

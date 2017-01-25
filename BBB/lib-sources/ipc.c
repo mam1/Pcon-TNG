@@ -49,7 +49,7 @@ int ipc_open(char *fname, int size) {
     int                 fd;
     struct stat         sb;
     mode_t              mode = S_IRWXO | S_IRWXG | S_IRWXU;
-    int                 result,ipc,bkup;
+    int                 result;
 
     fd = open(fname, O_RDWR | O_CREAT, mode);
     if (fd == -1)
@@ -149,7 +149,7 @@ int ipc_size(void) {
 int ipc_save(_IPC_DAT *ipc_ptr) {
 
     FILE        *ipc_bkup;
-    int 		write_rtn;
+    // int 		write_rtn;
 
     ipc_bkup = fopen(_IPC_FILE_BACKUP_NAME,"w");
 

@@ -173,7 +173,7 @@ int main(void) {
 	// int 			bkup;
 
 	printf("Content-type: text/html\n\n");
-	printf("\n  **** cgi %i.%i.%i active ****\n\r",1,1,0);
+	printf("\n  **** cgi %i.%i.%i active ****\n\r",1,1,2);
 		// printf("\n  **** cgi active %s.%s.%s ****\n\r",_MAJOR_VERSION_Scon,_MINOR_VERSION_Scon,_MINOR_REVISION_Scon);
 
 
@@ -284,7 +284,15 @@ int main(void) {
 	if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
 		printf("*** error writing to %s\n", sensor_log_file); 
 	else 
-		printf(" CGI: data logged to %s\n",sensor_log_file);
+		printf(" CGI: %i:%i:%i  %i/%i/%i\n\r", 
+			ipc_ptr->s_dat[(int)l_num].ts.tm_hour, 
+			ipc_ptr->s_dat[(int)l_num].ts.tm_min, 
+			ipc_ptr->s_dat[(int)l_num].ts.tm_sec, 
+			ipc_ptr->s_dat[(int)l_num].ts.tm_mon, 
+			ipc_ptr->s_dat[(int)l_num].ts.tm_mday, 
+			ipc_ptr->s_dat[(int)l_num].ts.tm_year);
+		printf(" CGI: data logged to %s\n\r", sensor_log_file);
+
 	fclose(cgi_data);
 	fclose(cgi_log);
 	printf(" CGI: normal termination\n\n");
