@@ -96,7 +96,7 @@ char    *keyword[_CMD_TOKENS] = {
 	/* 27 */    "done",
 	/* 28 */    "back",
 	/* 29 */    "system",
-	/* 30 */    "debug",
+	/* 30 */    "grab",
 	/* 31 */    "ssch",
 	/* 32 */    "wsch",
 	/* 33 */    "slib",
@@ -139,7 +139,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 27  done        */  { 0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  4,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  4, 28},
 	/* 28  back        */  { 0,  0,  1,  2,  0,  4,  4,  4,  4,  5,  6,  6,  4,  0, 13, 14, 15, 16, 17, 18, 19,  1,  7,  7,  8, 12, 24, 24, 12},
 	/* 29  system      */  { 0,  1,  2,  3,  4,  5,  4,  4,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
-	/* 30  debug       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
+	/* 30  grab        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/* 31  ssch        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/* 32  wsch        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
 	/* 33  slib        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28},
@@ -176,7 +176,7 @@ int c_22(_CMD_FSM_CB *); /* set schedule record to on */
 int c_23(_CMD_FSM_CB *); /* set set schedule record to off */
 int c_24(_CMD_FSM_CB *); /* delete schedule record */
 int c_25(_CMD_FSM_CB *); /*  back up shared memory to file */
-int c_26(_CMD_FSM_CB *); /*  */	//*******************************************************************************
+int c_26(_CMD_FSM_CB *); /*  move sensor log to RAID */	//*******************************************************************************
 int c_27(_CMD_FSM_CB *); /* update temperature in a schedule record */
 int c_28(_CMD_FSM_CB *); /* update humidity in a schedule record */
 int c_29(_CMD_FSM_CB *); /* set working channel */
@@ -251,11 +251,11 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_7},
 	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
-	/* 29  system      */  { c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66,  c_66},
-	/* 30  debug       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 29  system      */  {c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66},
+	/* 30  grab       */   { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 31  ssch        */  {c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57},
 	/* 32  wsch        */  {c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58},
-	/* 33  slib        */  { c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56,  c_56},
+	/* 33  slib        */  {c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56},
 	/* 34  tlib        */  {c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55},
 	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7, c_14, c_27, c_28,  c_7},
 	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -919,47 +919,17 @@ int c_25(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/*  */
+/*  move sensor log to RAID */
 int c_26(_CMD_FSM_CB *cb)
 {
+	char 		buf[100];
 
-	// // char            temp[200];
-	// int                i, ii;
+	strcpy(buf,"rsync -avz root@192.168.254.34:/media/'CGI sensor log'/sensor.dat ");
+	strcat(buf,_SENSOR_MASTER_FILE_NAME)
+	system(buf);
 
-	// // printf("wipe out w index %i\r\n",cb->w_template_index);
-	// // printf("wipe out d index %i\r\n",cb->sdat_ptr->schlib_index);
-
-	// if (cb->w_template_index == (cb->sdat_ptr->schlib_index - 1)) {                                  //delete high entry
-	// 	cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index - 1;                                //back down index
-	// 	memset(cb->sdat_ptr->s_data[cb->w_template_index].name, '\0',
-	// 	       sizeof(cb->sdat_ptr->s_data[cb->w_template_index].name));                               //wipe name
-	// 	memset(cb->sdat_ptr->s_data[cb->w_template_index].schedule, '\0',
-	// 	       sizeof(cb->sdat_ptr->s_data[cb->w_template_index].schedule));                           //wipe schedule
-	// 	// cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index -1;                                 //back down index
-
-	// }
-	// else {
-	// 	for (i = cb->w_template_index; i < (cb->sdat_ptr->schlib_index); i++) {
-	// 		strcpy(cb->sdat_ptr->schlib_index, cb->sdat_ptr->s_data[i + 1].name);                 //copy name
-	// 		for (ii = 0; ii < _SCHEDULE_SIZE; ii++) {
-	// 			cb->sdat_ptr->s_data[i].schedule[ii] = cb->sdat_ptr->s_data[ii + 1].schedule[ii];   //copy schedule
-	// 		}
-	// 	}
-	// 	cb->sdat_ptr->schlib_index = cb->sdat_ptr->schlib_index - 1;                                //back down index
-
-	// }
-	// cb->w_template_index = cb->w_template_index - 1;
-
-
-
-	// sys_save(_SYSTEM_FILE_NAME,cb->sdat_ptr);
-
-	// /* build prompt */
-	// strcpy(cb->prompt_buffer, "\r\nschedule template: ");
-	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	// strcat(cb->prompt_buffer, " deleted\r\n\n");
-	// strcat(cb->prompt_buffer, "schedule maintenance\r\n");
-	// make_lib_list(cb->prompt_buffer, cb);
+	/* build prompt */
+	strcpy(cb->prompt_buffer, "sensor log copied to RAID\n\renter command");
 
 	return 0;
 }
@@ -1131,7 +1101,7 @@ int c_36(_CMD_FSM_CB * cb)
 	return 0;
 }
 
-/* display debug data */
+/* display data */
 int c_37(_CMD_FSM_CB * cb)
 {
 	/* build prompt */

@@ -25,6 +25,7 @@
 #define _TRACE_FILE_NAME			"/home/Pcon-data/trace.dat" 	// trace file
 #define _LOG_FILE_NAME				"/media/CGI sensor log/log.dat"		// log file name
 #define _DAEMON_LOG 				"/home/Pcon-data/daemon.log" 	// daemon log file name
+#define _SENSOR_MASTER_FILE_NAME    "/media/Raid/Sensor Master/master.log"
 
 /* semaphore key */
 #define _SEM_KEY 				1234321
