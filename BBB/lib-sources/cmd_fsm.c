@@ -922,14 +922,10 @@ int c_25(_CMD_FSM_CB *cb)
 /*  move sensor log to RAID */
 int c_26(_CMD_FSM_CB *cb)
 {
-	char 		buf[200];
-
-	strcpy(buf,"rsync -avzh root@192.168.254.34:/media/CGI-sensor-log/sensor.dat /media/Raid/SensorMaster/master.log");
-	// strcat(buf,_SENSOR_MASTER_FILE_NAME);
-	system(buf);
+	system("grabit");	// execut grabit script
 
 	/* build prompt */
-	strcpy(cb->prompt_buffer, "sensor log copied to RAID\n\renter command");
+	strcpy(cb->prompt_buffer, "\rsensor log copied to RAID\n\renter command");
 
 	return 0;
 }

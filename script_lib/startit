@@ -22,7 +22,7 @@ if [ "$plist" != "" ]
 		echo -n "should it be killed ? {y}{n} > "
 		read answr
 
-		echo $answr
+		# echo $answr
 
 		if [ "$answr" == "y" ] 
 			then

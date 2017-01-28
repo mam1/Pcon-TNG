@@ -1,0 +1,12 @@
+#!/bin/bash
+	echo -e "\n\rgrabit 0.0.3\n\r"
+	echo -n "operating system is "
+	echo $(uname)
+	if(($(uname)=="Linux"))
+	then
+		echo -e "\rcopying active sensor log to master log\r"
+		rsync  -az --append media/CGI-sensor-log/sensor.dat mam1@192.168.254.70:/media/Raid/SensorMaster/master.log
+		rm media/CGI-sensor-log/sensor.dat
+	else
+		echo -e "can not grab sensor log from OS X\n\r"
+	fi
