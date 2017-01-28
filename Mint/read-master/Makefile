@@ -55,7 +55,7 @@ $(program_NAME): $(program_OBJS)
 
 	#-fno-exceptions -fno-rtti
 
-	g++ $(program_OBJS) -o $(program_NAME) -Wall -I../BBB/include -L../BBB/lib -lPcon  -Wall -fno-exceptions -fno-rtti
+	g++ $(program_OBJS) -o $(program_NAME) -Wall -I../BBB/include -L../BBB/lib -lPcon -Wall -fno-exceptions -fno-rtti
 	
 	# $(LINK.cc) $(program_OBJS) -o $(program_NAME)
 
@@ -79,7 +79,7 @@ $(program_NAME): $(program_OBJS)
 # 	@- $(RM) -v $(program_OBJS)
 clean:
 	@- $(RM) -v $(program_NAME)
-	@- $(RM) -v $(program_OBJS)
+	@- $(RM) -v $(program_OBJS) 
 
 dump:
 	@echo CC $(CC)
