@@ -55,7 +55,7 @@ $(program_NAME): $(program_OBJS)
 
 	#-fno-exceptions -fno-rtti
 
-	g++ $(program_OBJS) -o $(program_NAME) -Wall -I../BBB/include -L../BBB/lib -lPcon -Wall -fno-exceptions -fno-rtti
+	gcc $(program_OBJS) -o $(program_NAME) -Wall -I../BBB/include -fno-exceptions -fno-rtti
 	
 	# $(LINK.cc) $(program_OBJS) -o $(program_NAME)
 
@@ -66,9 +66,9 @@ $(program_NAME): $(program_OBJS)
 # 	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/read-log/ root@192.168.254.34:/home/rsync-Mint	
 # endif
 # move the executable to /usr/local/sbin directory on the bone
-# 	rsync -avz /home/mam1/Git/Pcon-TNG/BBB/read-log/$(program_NAME) root@192.168.254.34:/usr/local/sbin
-# 	ssh root@192.168.254.34 'chown root /usr/local/sbin/$(program_NAME)'		# change owner
-# 	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(program_NAME)'		# open access
+	# rsync -avz /home/mam1/Git/Pcon-TNG/Mint/read-master/$(program_NAME) root@192.168.254.34:/usr/local/sbin
+	# ssh root@192.168.254.34 'chown root /usr/local/sbin/$(program_NAME)'		# change owner
+	# ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(program_NAME)'		# open access
 
 # # clean up
 # 	@- $(RM) -v $(program_NAME)

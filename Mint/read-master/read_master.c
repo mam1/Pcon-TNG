@@ -7,14 +7,14 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
-#include "shared.h"
-// #include "ipc.h"
-#include "Pcon.h"
-// #include "bitlit.h"
-#include "PCF8563.h"
-// #include "gpio.h"
-// #include "led.h"
-// #include "schedule.h"
+// #include "shared.h"
+// // #include "ipc.h"
+// #include "Pcon.h"
+// // #include "bitlit.h"
+// #include "PCF8563.h"
+// // #include "gpio.h"
+// // #include "led.h"
+// // #include "schedule.h"
 
 #include "typedefs.h"
 
@@ -37,13 +37,13 @@ int main (void) {
 		_tm 		ts;
 	} buffer;
 
-	sensor_data = fopen(_SENSOR_LOG_FILE_NAME,"r");
+	sensor_data = fopen(_SENSOR_MASTER_FILE_NAME,"r");
 	if(sensor_data == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to open %s\n\n application terminated\n\n", _SENSOR_LOG_FILE_NAME);
+		printf("    attempting to open %s\n\n application terminated\n\n", _SENSOR_MASTER_FILE_NAME);
 		return 1;
 	}
-	printf("  %s opened\n",_SENSOR_LOG_FILE_NAME);
+	printf("  %s opened\n",_SENSOR_MASTER_FILE_NAME);
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
 		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %i humidity %i\n",
 	       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
