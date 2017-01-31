@@ -5,7 +5,7 @@ local BootTimeout = 200
 local AbortTimeout = 3000
 
 -- initialize abort boolean flag
-print('\ninit.lua 0.0.0 running')
+print('\ninit.lua 0.0.2 running')
 local abortFlag = false
 
 function firmwareInfo()
@@ -41,13 +41,20 @@ function fileExists(name)
   return false
 end
 
+
+function sleep(n)  -- seconds
+  local t0 = clock()
+  while clock() - t0 <= n do end
+end    
+
 function startup()
   -- turns off uart scanning
   uart.on('data')
 
   if abortFlag == true then
     print('#### startup aborted ####')
-    dofile('wait.lua')
+    local clock = os.clock
+    sleep(100)
   end
 
   -- otherwise, start up

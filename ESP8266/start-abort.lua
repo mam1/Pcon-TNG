@@ -1,4 +1,4 @@
---startup.lua
+--init.lua
 
 function runsensor_post()
     print("\n *** running sensor_post.lua")
@@ -23,7 +23,8 @@ tmr.alarm(1, 1000, 1, function()
         print("   The module MAC address is: " .. wifi.ap.getmac())
         print("   Config done, IP is "..wifi.sta.getip())
         print("\n   Starting sensor read loop")
-        dofile("read-post.lua")
+--        dofile("testconnect.lua")
     end
 end)
+
 

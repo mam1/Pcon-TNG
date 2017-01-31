@@ -1,4 +1,6 @@
- --get data from DHT22 sensor on <pin>
+--read-post.lua
+
+--get data from DHT22 sensor on <pin>
 function rdDHT22(pin)
    local tmp, hmd
     print("    ESP8266: reading pin ".. pin)
