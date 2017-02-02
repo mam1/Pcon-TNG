@@ -62,6 +62,23 @@ int main (void) {
 		if(buffer.sensor_id < 0 || buffer.sensor_id > (_NUMBER_OF_SENSORS - 1))
 			printf("  sensor id out of range  <%i>\n", buffer.sensor_id);
 		else
+			switch(buffer.sensor_id){
+			case 0:
+				fwrite()
+				if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
+					printf("*** error writing to %s\n", sensor_log_file); 
+				else 
+					printf(" CGI: %i:%i:%i  %i/%i/%i\n\r", 
+						ipc_ptr->s_dat[(int)l_num].ts.tm_hour, 
+						ipc_ptr->s_dat[(int)l_num].ts.tm_min, 
+						ipc_ptr->s_dat[(int)l_num].ts.tm_sec, 
+						ipc_ptr->s_dat[(int)l_num].ts.tm_mon, 
+						ipc_ptr->s_dat[(int)l_num].ts.tm_mday, 
+						ipc_ptr->s_dat[(int)l_num].ts.tm_year);
+					printf(" CGI: data logged to %s\n\r", sensor_log_file);
+
+				fclose(cgi_data);
+		}
 			sfound[buffer.sensor_id] = 1;
 
 		sum[buffer.sensor_id] += buffer.temp;

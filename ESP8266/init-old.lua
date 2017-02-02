@@ -1,8 +1,8 @@
 --init.lua
 
-function runthermo()
-    dofile("thermo.lua")
-end
+-- function runthermo()
+--     dofile("thermo.lua")
+-- end
 
 print('\n**** init.lua ver 1.4')
 print('  set mode=STATION (mode='..wifi.getmode()..')')
@@ -22,7 +22,7 @@ tmr.alarm(1, 1000, 1, function()
         print("   The module MAC address is: " .. wifi.ap.getmac())
         print("   Config done, IP is "..wifi.sta.getip())
         dofile("getNets.lua")
-        tmr.alarm(2,6000,0,runthermo)
+--        tmr.alarm(2,6000,0,runthermo)
     end
 end)
 

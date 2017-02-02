@@ -5,7 +5,7 @@ local BootTimeout = 200
 local AbortTimeout = 3000
 
 -- initialize abort boolean flag
-print('\ninit.lua 0.0.0 running')
+print('\ninit.lua 0.0.1 running')
 local abortFlag = false
 
 function firmwareInfo()
@@ -47,7 +47,7 @@ function startup()
 
   if abortFlag == true then
     print('#### startup aborted ####')
-    dofile('wait.lua')
+  --  dofile('wait.lua')
   end
 
   -- otherwise, start up

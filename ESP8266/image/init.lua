@@ -22,10 +22,10 @@ function startup()
     if abort == true then
         print("startup aborted")
         return
-end
+    end
 -- otherwise, start up
-print("in startup")
---dofile("startup.lua")
+    print("in startup")
+    dofile("startup.lua")
 end
 
 --uart.setup(0,9600,8,0,0,1)

@@ -1,5 +1,7 @@
 --read-post.lua
 
+print("    post.lua called\n")
+
 --get data from DHT22 sensor on <pin>
 function rdDHT22(pin)
    local tmp, hmd

@@ -39,13 +39,7 @@ function fileExists(name)
     end
   end
   return false
-end
-
-
-function sleep(n)  -- seconds
-  local t0 = clock()
-  while clock() - t0 <= n do end
-end    
+end   
 
 function startup()
   -- turns off uart scanning
@@ -53,8 +47,7 @@ function startup()
 
   if abortFlag == true then
     print('#### startup aborted ####')
-    local clock = os.clock
-    sleep(100)
+
   end
 
   -- otherwise, start up
