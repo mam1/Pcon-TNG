@@ -48,8 +48,8 @@ typedef struct {
 	int 		sensor_id;
 	int 		channel[_NUMBER_OF_CHANNELS];  	// channel assignments
 	int 		channel_index;					// points to the next open assingment
-	int			temp;							// current sensor reading
-	int			humidity;						// current sensor reading
+	float		temp;							// current sensor reading
+	float		humidity;						// current sensor reading
 	_tm 		ts; 							// time and date of the reading
 } _SEN_DAT;
 

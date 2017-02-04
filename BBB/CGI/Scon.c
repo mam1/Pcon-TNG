@@ -291,7 +291,7 @@ int main(void) {
 			ipc_ptr->s_dat[(int)l_num].ts.tm_mon, 
 			ipc_ptr->s_dat[(int)l_num].ts.tm_mday, 
 			ipc_ptr->s_dat[(int)l_num].ts.tm_year);
-		printf(" CGI: data logged to %s\n\r", sensor_log_file);
+		printf(" CGI: sensor %i data logged to %s\n\r", buffer.sensor_id, sensor_log_file);
 
 	fclose(cgi_data);
 	fclose(cgi_log);
