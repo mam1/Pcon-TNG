@@ -30,12 +30,7 @@ char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 int main (void) {
 
 	FILE 			*sensor_data;
-	struct{
-		int 		sensor_id;
-		float			temp;
-		float			humidity;
-		_tm 		ts;
-	} buffer;
+	_SEN_DAT_REC	 buffer;
 
 	// int 		parm =2;
 
