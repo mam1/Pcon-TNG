@@ -53,12 +53,20 @@ typedef struct {
 	_tm 		ts; 							// time and date of the reading
 } _SEN_DAT;
 
+/* sensor data log file */
+typedef	struct{
+		int 		sensor_id;
+		float		temp;
+		float		humidity;
+		_tm 		ts;
+} _SEN_DAT_REC;
+
 /* schedule record */
 typedef struct {
 	int			key;
 	int 		state;
-	int 		temp;
-	int 		humid;
+	float 		temp;
+	float 		humid;
 } _S_REC;				
 
 /* schedule  */
@@ -115,8 +123,8 @@ typedef struct {
 	int 			w_day;
 	int				w_srestate;
 	int 			w_state;
-	int 			w_temp;
-	int 			w_humid;
+	float 			w_temp;
+	float 			w_humid;
 	int 			w_sensor_id;
 	_TMPL_DAT 		w_template_buffer;
 	_S_TAB        	w_sch;   

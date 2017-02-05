@@ -30,12 +30,7 @@ char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 int main (void) {
 
 	FILE 			*sensor_data;
-	struct{
-		int 		sensor_id;
-		int			temp;
-		int			humidity;
-		_tm 		ts;
-	} buffer;
+	_SEN_DAT_REC 		buffer;
 
 	sensor_data = fopen(_SENSOR_MASTER_FILE_NAME,"r");
 	if(sensor_data == NULL){
@@ -45,7 +40,7 @@ int main (void) {
 	}
 	printf("  %s opened\n",_SENSOR_MASTER_FILE_NAME);
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
-		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %i humidity %i\n",
+		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %0.2f humidity %0.2f\n",
 	       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
 	       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
 	}

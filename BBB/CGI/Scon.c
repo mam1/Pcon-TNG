@@ -188,12 +188,8 @@ int main(void) {
 	char           	sensor_log_file[] = {_SENSOR_LOG_FILE_NAME};   			// name of sensor log file
 
 	char 			*eptr;
-	struct{
-		int 		sensor_id;
-		float		temp;
-		float		humidity;
-		_tm 		ts;
-	} buffer;
+
+	_SEN_DAT_REC 		buffer;
 
 	// int 			ipc;
 	// int 			bkup;
@@ -251,7 +247,7 @@ int main(void) {
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
-     ipc_sem_free(semid, &sb);                   // free lock on shared memory
+    ipc_sem_free(semid, &sb);                   // free lock on shared memory
 
 	// if(ipc==0){
 	// 	fprintf(stderr, "%s\n"," ipc file not found" );
