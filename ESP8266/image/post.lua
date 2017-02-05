@@ -1,5 +1,5 @@
 --read-post.lua
-version="0.1.1"
+version="1.0.0"
 sensor=2
 US_TO_MS = 1000
 flip = 0
@@ -35,8 +35,6 @@ function flipit()
      end
  end
 
-print("    post.lua "..version.." called\n")
-
 --get data from DHT22 sensor on <pin>
 function rdDHT22(pin,flip)
     print(" ESP8266: reading pin ".. pin)
@@ -58,10 +56,7 @@ function rdDHT22(pin,flip)
     return temp, humi 
 end
 
-function dPage(sensor,temp,humid,beat,callback)
-    return callback(sensor,temp,humid,beat)
-end
-
+ print("    post.lua "..version.." called\n")
  tmr.alarm(4, 600, tmr.ALARM_AUTO, dispPage)
  tmr.alarm(0,60000, 1, function()
  temp,humidity = rdDHT22(7,flip)

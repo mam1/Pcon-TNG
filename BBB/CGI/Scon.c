@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
+#include <math.h>
 #include "shared.h"
 #include "ipc.h"
 #include "Pcon.h"
@@ -152,20 +153,45 @@ static int xctod(int c)
 	else	return 0;
 }
 
+float new_strtof(char* const ostr, char** endptr, unsigned char base)
+{
+    char* str = (char*)malloc(strlen(ostr) + 1);
+    strcpy(str, ostr);
+    const char* dot = ".";
+
+    /* I do not validate any input here, nor do I do anything with endptr */      //Let's assume input of 101.1101, null, 2 (binary)
+    char *cbefore_the_dot = strtok(str, dot); //Will be 101
+    char *cafter_the_dot = strtok(NULL, dot); //Will be 0101
+
+    float f = (float)strtol (cbefore_the_dot, 0, base); //Base would be 2 = binary. This would be 101 in decimal which is 5
+    int i, sign = (str[0] == '-'? -1 : 1);
+    char n[2] = { 0 }; //will be just for a digit at a time
+
+    for(i = 0 ; cafter_the_dot[i] ; i++) //iterating the fraction string
+    {
+        n[0] = cafter_the_dot[i];
+        f += strtol(n, 0, base) * pow(base, -(i + 1)) * sign; //converting the fraction part
+    }
+
+    free(str);
+    return f;
+}
+
 /********** main routine ************************************************************************/
 int main(void) {
 	FILE 			*cgi_data;					// sensor data file
 	FILE 			*cgi_log;					// cgi log
 	char 			*s_num, *s_temp, *s_humid;
-	long 			l_num, l_temp, l_humid;
+	long 			l_num;
+	float 			l_temp, l_humid;
 	// char 			file_name[_FILE_NAME_SIZE];
 	char           	sensor_log_file[] = {_SENSOR_LOG_FILE_NAME};   			// name of sensor log file
 
 	char 			*eptr;
 	struct{
 		int 		sensor_id;
-		int			temp;
-		int			humidity;
+		float		temp;
+		float		humidity;
 		_tm 		ts;
 	} buffer;
 
@@ -173,7 +199,7 @@ int main(void) {
 	// int 			bkup;
 
 	printf("Content-type: text/html\n\n");
-	printf("\n  **** cgi %i.%i.%i active ****\n\r",1,1,2);
+	printf("\n  **** cgi %i.%i.%i active ****\n\r",_MAJOR_VERSION_Scon,_MINOR_VERSION_Scon,_MINOR_REVISION_Scon);
 		// printf("\n  **** cgi active %s.%s.%s ****\n\r",_MAJOR_VERSION_Scon,_MINOR_VERSION_Scon,_MINOR_REVISION_Scon);
 
 
@@ -248,31 +274,40 @@ int main(void) {
 	s_num = cgigetval("snesor");
 	s_temp = cgigetval("temp");
 	s_humid = cgigetval("humid");
+
+	// printf("<%s>\r\n",s_temp );
+	// printf("<%s>\r\n", s_humid);
+
 	l_num = strtol(s_num, &eptr, 10);
 	if (l_num == 0)
 	{
 		printf("*** Conversion error occurred: %d", errno);
 		exit(0);
 	}
-	l_temp = strtol(s_temp, &eptr, 10);
+
+	l_temp = new_strtof(s_temp, &eptr, 10);
 	if (l_temp == 0)
 	{
 		printf("*** Conversion error occurred: %d", errno);
 		exit(0);
 	}
-	l_humid = strtol(s_humid, &eptr, 10);
+
+
+	l_humid = new_strtof(s_humid, &eptr, 10);
 	if (l_humid == 0)
 	{
 		printf("*** Conversion error occurred: %d", errno);
 		exit(0);
 	}
 
+	// printf(" CGI: temp %0.2f  humidity %0.2f\n\r", l_temp, l_humid);
+
 	/* move sensor data to shared memory */
 	ipc_sem_lock(semid, &sb);							// wait for a lock on shared memory
 	get_tm(rtc, &(ipc_ptr->s_dat[(int)l_num].ts));		// read the clock
 	ipc_ptr->s_dat[(int)l_num].sensor_id = (int)l_num;
-	ipc_ptr->s_dat[(int)l_num].temp = (int)l_temp;
-	ipc_ptr->s_dat[(int)l_num].humidity = (int)l_humid;
+	ipc_ptr->s_dat[(int)l_num].temp = l_temp;
+	ipc_ptr->s_dat[(int)l_num].humidity = l_humid;
 
 	/* log sensor data */
 	buffer.ts = ipc_ptr->s_dat[(int)l_num].ts;
@@ -284,14 +319,18 @@ int main(void) {
 	if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
 		printf("*** error writing to %s\n", sensor_log_file); 
 	else 
-		printf(" CGI: %i:%i:%i  %i/%i/%i\n\r", 
+		printf(" CGI: sensor %i %i:%i:%i  %i/%i/%i  temp %0.2f  humidity %0.2f\n\r",
+			buffer.sensor_id, 
 			ipc_ptr->s_dat[(int)l_num].ts.tm_hour, 
 			ipc_ptr->s_dat[(int)l_num].ts.tm_min, 
 			ipc_ptr->s_dat[(int)l_num].ts.tm_sec, 
 			ipc_ptr->s_dat[(int)l_num].ts.tm_mon, 
 			ipc_ptr->s_dat[(int)l_num].ts.tm_mday, 
-			ipc_ptr->s_dat[(int)l_num].ts.tm_year);
-		printf(" CGI: sensor %i data logged to %s\n\r", buffer.sensor_id, sensor_log_file);
+			ipc_ptr->s_dat[(int)l_num].ts.tm_year,
+			buffer.temp,
+			buffer.humidity);
+
+		printf(" CGI: data logged to %s\n\r", sensor_log_file);
 
 	fclose(cgi_data);
 	fclose(cgi_log);

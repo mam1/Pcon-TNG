@@ -34,7 +34,7 @@ print(' ')
 
 tmr.alarm(1,1000,1,function()
   if wifi.sta.getip()==nil then
-     print("IP unavailable, waiting")
+     print("    IP unavailable, waiting")
   else
      tmr.stop(1)
      print("\n    Config done, IP is "..wifi.sta.getip())

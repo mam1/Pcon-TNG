@@ -55,7 +55,7 @@ all: $(program_NAME)
 $(program_NAME): $(program_OBJS)
 
 #	$(LINK.cc) $(program_OBJS)-o $(program_NAME)
-	$(CXX) $(program_OBJS) -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti 
+	$(CXX) $(program_OBJS) -lm -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti 
 
 # move the executable to cgi directory on the bone
 ifeq ($(UNAME_S),Darwin)
