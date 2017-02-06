@@ -34,7 +34,7 @@ int main (void) {
 
 	// int 		parm =2;
 
-	sensor_data = fopen(_SENSOR_LOG_FILE_NAME,"r");
+	sensor_data = fopen(_SENSOR_LOG_FILE_NAME,"rb");
 	if(sensor_data == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
 		printf("    attempting to open %s\n\n application terminated\n\n", _SENSOR_LOG_FILE_NAME);
@@ -42,7 +42,7 @@ int main (void) {
 	}
 	printf("  %s opened\n",_SENSOR_LOG_FILE_NAME);
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
-		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %d humidity %d\n",
+		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %0.2f humidity %0.2f\n",
 	       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
 	       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
 	}

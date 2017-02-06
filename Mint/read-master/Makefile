@@ -37,7 +37,7 @@ LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti
 # 	AR  := $(PREFIX)ar
 # 	OBJCOPY := $(PREFIX)objcopy
 # endif
-program_NAME := read-log
+program_NAME := read-master
 program_C_SRCS := $(wildcard *.c)
 program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}

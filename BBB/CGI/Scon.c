@@ -215,7 +215,7 @@ int main(void) {
 			return 1;
 		}
 	}
-	cgi_log = fopen(_CGI_LOG_FILE_NAME,"a");
+	cgi_log = fopen(_CGI_LOG_FILE_NAME,"ab");
 	if(cgi_log == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
 		printf("    attempting to open %s\n\n application terminated\n\n", _CGI_LOG_FILE_NAME);
@@ -315,14 +315,14 @@ int main(void) {
 	if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
 		printf("*** error writing to %s\n", sensor_log_file); 
 	else 
-		printf(" CGI: sensor %i %i:%i:%i  %i/%i/%i  temp %0.2f  humidity %0.2f\n\r",
+		printf(" CGI: sensor %i, %i:%i:%i,  %i/%i/%i,  temp %0.2f,  humidity %0.2f\n\r",
 			buffer.sensor_id, 
-			ipc_ptr->s_dat[(int)l_num].ts.tm_hour, 
-			ipc_ptr->s_dat[(int)l_num].ts.tm_min, 
-			ipc_ptr->s_dat[(int)l_num].ts.tm_sec, 
-			ipc_ptr->s_dat[(int)l_num].ts.tm_mon, 
-			ipc_ptr->s_dat[(int)l_num].ts.tm_mday, 
-			ipc_ptr->s_dat[(int)l_num].ts.tm_year,
+			buffer.ts.tm_hour, 
+			buffer.ts.tm_min, 
+			buffer.ts.tm_sec, 
+			buffer.ts.tm_mon, 
+			buffer.ts.tm_mday, 
+			buffer.ts.tm_year,
 			buffer.temp,
 			buffer.humidity);
 

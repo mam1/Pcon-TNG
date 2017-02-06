@@ -1458,7 +1458,7 @@ int c_65(_CMD_FSM_CB * cb)
 	printf("\n  sensor temp  humid channels\r\n");
 	printf("  ------------------------------------------------\r\n");
 	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++){
-		printf("%6i%7i%6i", sensor, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
+		printf("%6i%7.2f%6.2f", sensor, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 		for(i=0;i<cb->ipc_ptr->s_dat[sensor].channel_index;i++)
 			if(i==0)
 				printf("   %i",cb->ipc_ptr->s_dat[sensor].channel[i]);
