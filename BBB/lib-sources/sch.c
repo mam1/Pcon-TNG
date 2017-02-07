@@ -19,6 +19,7 @@
 #include "bitlit.h"
 #include "PCF8563.h"
 #include "sys_dat.h"
+#include "slab_control.h"
 
 /* code to text conversion */
 extern char *day_names_long[7];
@@ -172,7 +173,7 @@ int test_sch_time(int key, _TMPL_DAT *t) {
 
 /* given a key and schedule return state based on time of day and value of a sensor */
 int test_sch_sensor(int key, _TMPL_DAT *t, int sensor) {
-	int 			state;
+	// int 			state;
 	// int 			delta, h_limit, l_limit, i;
 
 	int 			i;
@@ -199,7 +200,7 @@ int test_sch_sensor(int key, _TMPL_DAT *t, int sensor) {
 
 /* given a key and schedule return the target temperature */
 int get_tar_temp(int key, _TMPL_DAT *t) {
-	int 			state;
+	// int 			state;
 	// int 			delta, h_limit, l_limit, i;
 
 	int 			i;
@@ -268,7 +269,7 @@ int dump_template(_TMPL_DAT *t_sch) {
 	printf("    rcnt = %i\n\r", t_sch->rcnt);
 	for (i = 0; i < t_sch->rcnt; i++) {
 		con_key(t_sch->rec[i].key, &h, &m);
-		printf("    %02i:%02i - state %i temp %i humid %i\n\r",
+		printf("    %02i:%02i - state %i temp %0.2f humid %0.2f\n\r",
 		       h, m, t_sch->rec[i].state, t_sch->rec[i].temp, t_sch->rec[i].humid);
 	}
 	return 0;
@@ -281,7 +282,7 @@ int list_template(_TMPL_DAT *t_sch) {
 	printf(" %s \n\r", t_sch->name);
 	for (i = 0; i < t_sch->rcnt; i++) {
 		con_key(t_sch->rec[i].key, &h, &m);
-		printf("            %02i:%02i-%i,%i,%i \n\r",
+		printf("            %02i:%02i-%i,%02.f,%02.f \n\r",
 		       h, m, t_sch->rec[i].state, t_sch->rec[i].temp, t_sch->rec[i].humid);
 	}
 	return 0;
@@ -312,7 +313,7 @@ int load_temps(_TMPL_DAT *t_sch, char *b) {
 		con_key(t_sch->rec[i].key, &h, &m);
 		// printf("           record count a %i\r\n", t_sch->rcnt);
 		// printf("           tbuff ((%s))\r\n",tbuff);
-		sprintf(tbuff, "\r    %02i:%02i - state %i temp %i humid %i\r\n",
+		sprintf(tbuff, "\r    %02i:%02i - state %i temp %0.2f humid %0.2f\r\n",
 		        h, m, t_sch->rec[i].state, t_sch->rec[i].temp, t_sch->rec[i].humid);
 		// printf("           record count %i\r\n", t_sch->rcnt);
 
@@ -373,7 +374,7 @@ void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 							break;
 							sprintf(time_state, "%02i:%02i %s", hour, minute, onoff[s->sch[day][channel].rec[i].state]);
 						case 2:
-							sprintf(time_state, "%02i:%02i %i", hour, minute, s->sch[day][channel].rec[i].temp);
+							sprintf(time_state, "%02i:%02i %0.2f", hour, minute, s->sch[day][channel].rec[i].temp);
 							break;
 						case 3:
 							printf("**** error  bad chnannel mode <%i>\r\n", cb->sys_ptr->c_data[channel].mode);

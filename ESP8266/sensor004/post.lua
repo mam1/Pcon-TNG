@@ -63,6 +63,6 @@ end
  conn=net.createConnection(net.TCP, 0)
  conn:on("receive", function(conn, payload) print(payload) end )
  conn:connect(8080,"192.168.254.34")
- mess = "GET /cgi-bin/Scon?snesor=" .. sensor .. "&temp=" .. temp .. "&humi =" .. humidity .. "\r\n"
+ mess = "GET /cgi-bin/Scon?snesor=" .. sensor .. "&temp=" .. temp .. "&humid=" .. humidity .. "\r\n"
  conn:send(mess)
  end)
