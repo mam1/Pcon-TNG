@@ -370,7 +370,8 @@ int c_1(_CMD_FSM_CB *cb)
 	printf("  ssch ... display active schedule table\r\n");
 	printf("  tlib ... display template library\r\n");
 	printf("  slib ... display schedule library\r\n");
-	printf("  system ..display system configuration\r\n");
+	printf("  system . display system configuration\r\n");
+	printf("  grab ... move current sensor data log to the master file and erase data log\r\n");
 
 
 	printf("\r\ncommands valid in any state other than state 0\r\n");
@@ -390,7 +391,7 @@ int c_1(_CMD_FSM_CB *cb)
 		if ((cmd_action[i][cb->state] == c_8) || (cmd_action[i][cb->state] == c_7) || (cmd_action[i][cb->state] == c_0)
 		        || (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3) || (cmd_action[i][cb->state] == c_34)
 		        || (cmd_action[i][cb->state] == c_2) || (cmd_action[i][cb->state] == c_6) || (cmd_action[i][cb->state] == c_55)
-		        || (cmd_action[i][cb->state] == c_57) || (cmd_action[i][cb->state] == c_58) || (cmd_action[i][cb->state] == c_66))
+		        || (cmd_action[i][cb->state] == c_57) || (cmd_action[i][cb->state] == c_58) || (cmd_action[i][cb->state] == c_26) || (cmd_action[i][cb->state] == c_56) || (cmd_action[i][cb->state] == c_66))
 			continue;
 		else {
 			printf("  %s ", keyword[i]);
