@@ -43,6 +43,13 @@ typedef struct {
 	char 		name[_CHANNEL_NAME_SIZE];
 } _CHN_DAT;
 
+typedef struct sl_node {
+	char 			name[10];
+	char 			definition[50];
+	int 			id;
+	struct sl_ node 	*next;
+} _SL_NODE;
+
 /* sensor data */
 typedef struct {
 	int 		sensor_id;
