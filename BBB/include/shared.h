@@ -68,6 +68,7 @@
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		8
+#define _MAX_SENSORS			25
 
 /* channel parameters */
 #define _NUMBER_OF_CHANNELS 	16

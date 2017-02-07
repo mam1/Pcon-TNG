@@ -391,7 +391,8 @@ int c_1(_CMD_FSM_CB *cb)
 		if ((cmd_action[i][cb->state] == c_8) || (cmd_action[i][cb->state] == c_7) || (cmd_action[i][cb->state] == c_0)
 		        || (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3) || (cmd_action[i][cb->state] == c_34)
 		        || (cmd_action[i][cb->state] == c_2) || (cmd_action[i][cb->state] == c_6) || (cmd_action[i][cb->state] == c_55)
-		        || (cmd_action[i][cb->state] == c_57) || (cmd_action[i][cb->state] == c_58) || (cmd_action[i][cb->state] == c_26) || (cmd_action[i][cb->state] == c_56) || (cmd_action[i][cb->state] == c_66))
+		        || (cmd_action[i][cb->state] == c_57) || (cmd_action[i][cb->state] == c_58) || (cmd_action[i][cb->state] == c_26) 
+		        || (cmd_action[i][cb->state] == c_56) || (cmd_action[i][cb->state] == c_66))
 			continue;
 		else {
 			printf("  %s ", keyword[i]);
