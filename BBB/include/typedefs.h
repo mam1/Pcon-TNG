@@ -45,7 +45,7 @@ typedef struct {
 
 // typedef struct sl_node {
 // 	char 				name[10];
-// 	char 				definition[50];
+// 	char 		 		definition[50];
 // 	int 				id;
 // 	struct sl_ node 	*next;
 // } _SL_NODE;
