@@ -67,8 +67,10 @@
 #define _CMD_BUFFER_DEPTH 		10 		
 
 /* sensor parameteres */
-#define _NUMBER_OF_SENSORS		8
+#define _NUMBER_OF_SENSORS		10
 #define _MAX_SENSORS			25
+#define _SNAME_SIZE 			10
+#define _SDESCRIPTION			50
 
 /* channel parameters */
 #define _NUMBER_OF_CHANNELS 	16
@@ -122,6 +124,8 @@
 #define _DAYS_PER_WEEK 	7
 #define _ON 			1
 #define _OFF 			0
+#define _TRUE 			1
+#define _FALSE			0
 
 /* macros */
 #define handle_error(msg) \

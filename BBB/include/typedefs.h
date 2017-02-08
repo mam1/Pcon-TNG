@@ -43,16 +43,19 @@ typedef struct {
 	char 		name[_CHANNEL_NAME_SIZE];
 } _CHN_DAT;
 
-typedef struct sl_node {
-	char 			name[10];
-	char 			definition[50];
-	int 			id;
-	struct sl_ node 	*next;
-} _SL_NODE;
+// typedef struct sl_node {
+// 	char 				name[10];
+// 	char 				definition[50];
+// 	int 				id;
+// 	struct sl_ node 	*next;
+// } _SL_NODE;
 
 /* sensor data */
 typedef struct {
 	int 		sensor_id;
+	int 		active;
+	char 		name[_SNAME_SIZE];
+	char 		description[_SDESCRIPTION];
 	int 		channel[_NUMBER_OF_CHANNELS];  	// channel assignments
 	int 		channel_index;					// points to the next open assingment
 	float		temp;							// current sensor reading

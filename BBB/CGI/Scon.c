@@ -222,7 +222,7 @@ int main(void) {
 		return 1;
 	}
 
-	printf("%s\n","files opened\n\r" );
+	printf("%s"," CGI: files opened\n\r" );
 
 	// /* check for ipc file and ipc backup file */	
  //    if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
@@ -251,7 +251,7 @@ int main(void) {
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
     ipc_sem_free(semid, &sb);                   // free lock on shared memory
 
-    printf("%s\n","shared memory setup\n\r" );
+    printf("%s"," CGI: shared memory setup\n\r" );
 
 	// if(ipc==0){
 	// 	fprintf(stderr, "%s\n"," ipc file not found" );
@@ -279,9 +279,6 @@ int main(void) {
 		printf("*** error Scon passed null valuse from ESP8266\n\r");
 		return 1;
 	}
-
-	printf("<%s>\r\n",s_temp );
-	printf("<%s>\r\n", s_humid);
 
 	l_num = strtol(s_num, &eptr, 10);
 	if (l_num == 0)
@@ -314,7 +311,7 @@ int main(void) {
 	ipc_ptr->s_dat[(int)l_num].temp = l_temp;
 	ipc_ptr->s_dat[(int)l_num].humidity = l_humid;
 
-	printf("%s\n","sensor data moved to  shared memory\n\r" );
+	printf("%s"," CGI: sensor data moved to  shared memory\n\r" );
 
 	/* log sensor data */
 	buffer.ts = ipc_ptr->s_dat[(int)l_num].ts;
