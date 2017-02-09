@@ -28,6 +28,7 @@
 #include "ipc.h"
 #include "sys_dat.h"
 #include "sch.h"
+#include "smaint.h"
 
 /*********************** externals **************************/
 extern int             	cmd_state, char_state;
@@ -220,7 +221,9 @@ int c_63(_CMD_FSM_CB *); /* set template number prompt  */
 int c_64(_CMD_FSM_CB *); /* set schedule number prompt */
 int c_65(_CMD_FSM_CB *); /* display current sensor values */
 int c_66(_CMD_FSM_CB *); /* display system configuration */
-int c_67(_CMD_FSM_CB *); /* set sensor id proppt */
+int c_67(_CMD_FSM_CB *); /* set sensor id prompt */
+int c_68(_CMD_FSM_CB *); /* set up working sensor buffer */
+
 
 /* cmd processor action table - initialized with fsm functions */
 
@@ -261,7 +264,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 32  wsch        */  {c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 33  slib        */  {c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 34  tlib        */  {c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7, c_14, c_27, c_28,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7, c_14, c_27, c_28,  c_7,  c_7, c_68,  c_7,  c_7,  c_7,  c_7},
 	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 38  slist       */  {c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65},
@@ -1541,10 +1544,19 @@ int c_67(_CMD_FSM_CB * cb)
 /* load sensor edit buffer */
 int c_68(_CMD_FSM_CB * cb)
 {
-	s_search(cb->token_value,&cb->w_sen_dat)
+	char 				buf[10];
+	int 				id;
+
+
+	id = s_load(cb->token_value,cb);
+
 
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
+	sprintf(buf, "%04d ", cb->w_sen_dat.sensor_id);
+	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
+	strcat(cmd_fsm_cb.prompt_buffer, buf);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r    name: %s\n\r    description: %s\n\r");
+	strcat(cmd_fsm_cb.prompt_buffer, "enter a command");
 
 	return 0;
 }
