@@ -40,7 +40,7 @@
 #define _TT_UNREC				-4
 
 /* command parser fsm */
-#define _CMD_TOKENS     		38
+#define _CMD_TOKENS     		39
 #define _CMD_STATES     		35 
 
 /* key codes */

@@ -135,7 +135,7 @@ typedef struct {
 	int 			w_state;
 	float 			w_temp;
 	float 			w_humid;
-	int 			w_sensor_id;
+	_SEN_DAT 		w_sen_dat;
 	_TMPL_DAT 		w_template_buffer;
 	_S_TAB        	w_sch;   
 	/* pointers */
