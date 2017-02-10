@@ -62,15 +62,16 @@
 
 /* buffers */
 #define _INPUT_BUFFER_SIZE		128
-#define _TOKEN_BUFFER_SIZE		60
+#define _TOKEN_BUFFER_SIZE		128
 #define _PROMPT_BUFFER_SIZE		500
-#define _CMD_BUFFER_DEPTH 		10 		
+#define _CMD_BUFFER_DEPTH 		10 
+#define _TRACE_BUFFER_SIZE 		300		
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		10
 #define _MAX_SENSORS			25
 #define _SNAME_SIZE 			10
-#define _SDESCRIPTION			50
+#define _SDESCRIPTION			_MAX_TOKEN_SIZE
 
 /* channel parameters */
 #define _NUMBER_OF_CHANNELS 	16

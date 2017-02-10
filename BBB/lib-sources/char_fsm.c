@@ -23,7 +23,7 @@ char input_buffer[_INPUT_BUFFER_SIZE], *input_buffer_ptr;
 /***************************** globals ******************************/
 TQ *head, *tail;
 #if defined (_ATRACE) || defined (_FTRACE)
-char			trace_buf[128];
+char			trace_buf[_TRACE_BUFFER_SIZE];
 #endif
 /***************************** externals ************************/
 extern int			trace_flag;
@@ -112,7 +112,7 @@ TQ *process_buffer(void) {
 			start_char = input_buffer_ptr;
 			start_char++;
 #if defined (_ATRACE) || defined (_FTRACE)
-			sprintf(trace_buf, "pusn token <%s>", tail->tptr);
+			sprintf(trace_buf, "push token <%s>", tail->tptr);
 			trace(_TRACE_FILE_NAME, "process_buffer", char_state, tb, trace_buf, trace_flag);
 #endif
 		}

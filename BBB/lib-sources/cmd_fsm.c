@@ -131,10 +131,10 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 17  sensor      */  { 0, 21,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 18  cycle       */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 19  ipc         */  { 0,  1,  2,  3,  4,  5,  4,  4,  8,  9, 10, 11,  4, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
-	/* 20  name        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 33, 32, 33, 34},
+	/* 20  name        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 31, 33, 32, 33, 34},
 	/* 21  save        */  { 0,  1,  2,  3,  6,  5,  4,  5,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 22  template    */  { 0,  1,  2,  3,  4,  5, 10, 22,  8,  9, 10, 11, 25, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
-	/* 23  description */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 34, 32, 33, 34},
+	/* 23  description */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 32, 34, 32, 33, 34},
 	/* 24  load        */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 25  set         */  { 0,  1,  2,  3,  5,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 26  q           */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
@@ -146,8 +146,8 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 32  wsch        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 33  slib        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 34  tlib        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
-	/* 35  INT         */  { 1,  1,  3,  0,  8,  9,  6, 21, 24,  4, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20,  0,  0,  4,  4, 24,  4,  4,  4, 28, 29, 31, 31, 32, 33, 34},
-	/* 36  STR         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9,  4,  4, 12, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
+	/* 35  INT         */  { 1,  1,  3,  0,  8,  9,  6, 21, 24,  4, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20,  0,  0,  4,  4, 24,  4,  4,  4, 28, 30, 31, 31, 32, 33, 34},
+	/* 36  STR         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9,  4,  4, 12, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 30, 30, 33, 34},
 	/* 37  OTHER       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 38  slist       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 32, 33, 34}
 
@@ -223,6 +223,10 @@ int c_65(_CMD_FSM_CB *); /* display current sensor values */
 int c_66(_CMD_FSM_CB *); /* display system configuration */
 int c_67(_CMD_FSM_CB *); /* set sensor id prompt */
 int c_68(_CMD_FSM_CB *); /* set up working sensor buffer */
+int c_69(_CMD_FSM_CB *); /* set working sensor name */
+int c_70(_CMD_FSM_CB *); /* set working sensor description */
+
+
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -249,10 +253,10 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 17  sensor      */  { c_7, c_12,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 18  cycle       */  { c_7, c_13,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 19  ipc         */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_25, c_19,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 20  name        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},  //
+	/* 20  name        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7},  //
 	/* 21  save        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_53, c_63,  c_7,  c_7,  c_7,  c_7, c_63,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 23  description */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},  //
+	/* 23  description */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7},  //
 	/* 24  load        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 25  set         */  { c_7,  c_7,  c_1,  c_1, c_59,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_7,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3},
@@ -264,8 +268,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 32  wsch        */  {c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58, c_58,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 33  slib        */  {c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 34  tlib        */  {c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7, c_14, c_27, c_28,  c_7,  c_7, c_68,  c_7,  c_7,  c_7,  c_7},
-	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7, c_14, c_27, c_28,  c_7, c_68,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_69, c_70,  c_7,  c_7},
 	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 38  slist       */  {c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65},
 
@@ -1555,13 +1559,56 @@ int c_68(_CMD_FSM_CB * cb)
 	sprintf(buf, "%04d ", cb->w_sen_dat.sensor_id);
 	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
 	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\r    name: %s\n\r    description: %s\n\r");
-	strcat(cmd_fsm_cb.prompt_buffer, "enter a command");
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r    name: ");
+	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
+	strcat(cmd_fsm_cb.prompt_buffer,"\n\r    description: ");
+	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
 
 	return 0;
 }
 
+/* set working sensor name */
+int c_69(_CMD_FSM_CB *cb){
 
+	char 				buf[10];
+
+	strcpy(cb->w_sen_dat.name, cb->token);
+
+		/* build prompt */
+	sprintf(buf, "%04d ", cb->w_sen_dat.sensor_id);
+	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
+	strcat(cmd_fsm_cb.prompt_buffer, buf);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r    name: ");
+	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
+	strcat(cmd_fsm_cb.prompt_buffer,"\n\r    description: ");
+	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
+
+	return 0;
+}
+
+/* set working sensor description */
+int c_70(_CMD_FSM_CB *cb){
+
+	char 				buf[10];
+
+	printf("token size %i\r\n", strlen(cb->token) );
+
+	strcpy(cb->w_sen_dat.description, cb->token);
+
+		/* build prompt */
+	sprintf(buf, "%04d ", cb->w_sen_dat.sensor_id);
+	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
+	strcat(cmd_fsm_cb.prompt_buffer, buf);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r    name: ");
+	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
+	strcat(cmd_fsm_cb.prompt_buffer,"\n\r    description: ");
+	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
+
+	return 0;
+}
 
 
 

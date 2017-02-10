@@ -52,7 +52,7 @@ int s_load(int id, _CMD_FSM_CB *cb)
 	return id;
 }
 
-int s_sort(_SEN_DAT *f)
+int s_sort(_SEN_DAT f[])
 {
 	_SEN_DAT 		source[_NUMBER_OF_SENSORS];
 	_SEN_DAT 		destination[_NUMBER_OF_SENSORS];
@@ -86,29 +86,30 @@ int s_sort(_SEN_DAT *f)
 	/* copy sorted sensor data to shared memory */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	for(i=0; i<_NUMBER_OF_SENSORS;i++)
-		*f[i] = destination[i];
+		f[i] = destination[i];
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	return 0;
 }
 
-int s_save(_SEN_DAT *f[_NUMBER_OF_SENSORS], _CMD_FSM_CB *cb){ 
+int s_save(_CMD_FSM_CB *cb){ 
 
 	_SEN_DAT 			buf[_NUMBER_OF_SENSORS];
+	int 				i;
 
 	/* copy sensor data to working buffer */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	for(i=0; i<_NUMBER_OF_SENSORS;i++)
-		buf[i] = f->sen_dat[i];
+		buf[i] = cb->ipc_ptr->s_dat[i];
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	/* check for empty space */
 	for(i=0; i<_NUMBER_OF_SENSORS;i++)
 		if(buf[i].active == _FALSE){
-			buf[i].active = _TRUE
-			buf[i].sensor_id = cb->w_sen_dat.sensor_d;
-			buf[i].name = cb->w_sen_dat.name;
-			buf[i].description =  cb->w_sen_dat.description;
+			buf[i].active = _TRUE;
+			buf[i].sensor_id = cb->w_sen_dat.sensor_id;
+			strcpy(buf[i].name, cb->w_sen_dat.name);
+			strcpy(buf[i].description, cb->w_sen_dat.description);
 		}
 		else{
 			return 1;
@@ -119,7 +120,7 @@ int s_save(_SEN_DAT *f[_NUMBER_OF_SENSORS], _CMD_FSM_CB *cb){
 	/* copy sensor data to shared memory */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	for(i=0; i<_NUMBER_OF_SENSORS;i++)
-		*f[i] = buf[i];
+		cb->ipc_ptr->s_dat[i] = buf[i];
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	return 0;
