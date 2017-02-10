@@ -17,15 +17,15 @@
 #define _FILE_NAME_SIZE 		50
 // #define _CGI_DATA_FILE_PREFIX	"/media/TOSHIBA/sensor"		// cgi generated log of sensor data
 // #define _CGI_DATA_FILE_SUFIX	".dat"							// cgi generated log of sensor data
-#define _SENSOR_LOG_FILE_NAME		"/media/CGI-sensor-log/sensor.dat"
+#define _SENSOR_LOG_FILE_NAME		"/media/CGI-sensor-log/sensor.dat" 		// USB drive collecting sensor readingss
 #define _CGI_LOG_FILE_NAME			"/home/Pcon-data/cgi.log"
-#define _SYSTEM_FILE_NAME			"/home/Pcon-data/sys.dat"		// system data file
-#define _IPC_FILE_NAME				"/home/Pcon-data/ipc.dat"   	// memory mapped ipc file
-#define _IPC_FILE_BACKUP_NAME		"/home/Pcon-data/ipc.bkup"   	// ipc backup file 
-#define _TRACE_FILE_NAME			"/home/Pcon-data/trace.dat" 	// trace file
-#define _LOG_FILE_NAME				"/media/CGI sensor log/log.dat"		// log file name
-#define _DAEMON_LOG 				"/home/Pcon-data/daemon.log" 	// daemon log file name
-#define _SENSOR_MASTER_FILE_NAME    "/media/Raid/SensorMaster/master.log"
+#define _SYSTEM_FILE_NAME			"/home/Pcon-data/sys.dat"				// system data file
+#define _IPC_FILE_NAME				"/home/Pcon-data/ipc.dat"   			// memory mapped ipc file
+#define _IPC_FILE_BACKUP_NAME		"/home/Pcon-data/ipc.bkup"   			// ipc backup file 
+#define _TRACE_FILE_NAME			"/home/Pcon-data/trace.dat" 			// trace file
+#define _LOG_FILE_NAME				"/media/CGI sensor log/log.dat"			// log file name
+#define _DAEMON_LOG 				"/home/Pcon-data/daemon.log" 			// daemon log file name
+#define _SENSOR_MASTER_FILE_NAME    "/media/Raid/SensorMaster/master.log"	// cumulative history of sensor readings
 
 /* semaphore key */
 #define _SEM_KEY 				1234321
@@ -65,7 +65,7 @@
 #define _TOKEN_BUFFER_SIZE		128
 #define _PROMPT_BUFFER_SIZE		500
 #define _CMD_BUFFER_DEPTH 		10 
-#define _TRACE_BUFFER_SIZE 		300		
+#define _TRACE_BUFFER_SIZE 		128		
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		10

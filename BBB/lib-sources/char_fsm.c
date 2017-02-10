@@ -52,13 +52,15 @@ TQ *process_buffer(void) {
 	tail = head;
 	while (*input_buffer_ptr != '\0') {
 		/* NULL */
-#if defined (_ATRACE) || defined (_FTRACE)
-			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "carrage return", trace_flag);
-#endif
+			#if defined (_ATRACE) || defined (_FTRACE)
+				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "carrage return", trace_flag);
+			#endif
+
 			if(input_buffer_ptr == input_buffer){
-#if defined (_ATRACE) || defined (_FTRACE)
-			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "null buffer", trace_flag);
-#endif
+
+			#if defined (_ATRACE) || defined (_FTRACE)
+				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "null buffer", trace_flag);
+			#endif
 
 			}
 
@@ -121,7 +123,9 @@ TQ *process_buffer(void) {
 
 		*t_ptr++ = *input_buffer_ptr++;
 #if defined (_ATRACE) || defined (_FTRACE)
-		trace(_TRACE_FILE_NAME, "process_buffer", char_state, tb, "character added to temp buffer", trace_flag);
+		trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "character added to temp buffer", trace_flag);
+		trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
+
 #endif
 	}
 	for (i = 0; i < _INPUT_BUFFER_SIZE; i++)					//clean out input buffer
@@ -361,9 +365,9 @@ int test_cmd_q(void) {
 
 /* pop token into buffer, return: 0 empty queue, -1 data placed in buffer  */
 int pop_cmd_q(char *buf) {
-//#if defined (_ATRACE) || defined (_FTRACE)
-//	trace(_TRACE_FILE_NAME,"pop_cmd_q: called");
-//#endif
+// #if defined (_ATRACE) || defined (_FTRACE)
+// 	// trace1(_TRACE_FILE_NAME,"pop_cmd_q: called",1);
+// #endif
 	TQ *hold;
 	char *ptr1, *ptr2;
 
