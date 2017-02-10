@@ -33,7 +33,7 @@ int trace_on(char *name, int *flag) {
 }
 
 void trace(char *name, char *rname, int state, char *buf, char *message,int flag){		//(trace filename, routine name, state, buffer, message, trace flag)
-	char			mess_buf[128];
+	char			mess_buf[_TRACE_BUFFER_SIZE];
 	FILE *tracef;
 
 	if(flag == false)

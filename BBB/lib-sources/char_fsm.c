@@ -40,16 +40,18 @@ extern struct {
 } edit;
 /********************** support functions ****************************/
 TQ *process_buffer(void) {
-#if defined (_ATRACE) || defined (_FTRACE)
-	trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "called", trace_flag);
-#endif
-	char tb[_INPUT_BUFFER_SIZE], *t_ptr, *start_char;        //
-	int i;
+	#if defined (_ATRACE) || defined (_FTRACE)
+		trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "called", trace_flag);
+	#endif
+	char 			tb[_INPUT_BUFFER_SIZE], *t_ptr, *start_char;        //
+	int 			i;
+
 	input_buffer_ptr = input_buffer;					//set pointer to start of input buffer
 	t_ptr = tb;											//set pointer to temporary buffer
 	start_char = input_buffer_ptr;
 	head = '\0';										//initialize head pointer
 	tail = head;
+
 	while (*input_buffer_ptr != '\0') {
 		/* NULL */
 			#if defined (_ATRACE) || defined (_FTRACE)
@@ -65,16 +67,16 @@ TQ *process_buffer(void) {
 			}
 
 		/* QUOTE */ if (*input_buffer_ptr == _QUOTE) {
-#if defined (_ATRACE) || defined (_FTRACE)
-			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a quote", trace_flag);
-#endif
+			#if defined (_ATRACE) || defined (_FTRACE)
+				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a quote", trace_flag);
+			#endif
 			*t_ptr++ = *input_buffer_ptr++;
 			while ((*input_buffer_ptr != _QUOTE) && (*input_buffer_ptr != '\0'))
 				*t_ptr++ = *input_buffer_ptr++;
 			*t_ptr++ = _QUOTE;
-#if defined (_ATRACE) || defined (_FTRACE)
-			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a second quote", trace_flag);
-#endif
+			#if defined (_ATRACE) || defined (_FTRACE)
+				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a second quote", trace_flag);
+			#endif
 			*(++input_buffer_ptr) = '\0';
 			if (tail == '\0') {
 				tail = malloc(sizeof(TQ));
@@ -89,16 +91,18 @@ TQ *process_buffer(void) {
 			tail->next = '\0';
 			start_char = input_buffer_ptr;
 			start_char++;
-#if defined (_ATRACE) || defined (_FTRACE)
-			sprintf(trace_buf, "pusn token <%s>", tail->tptr);
-			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, trace_buf, trace_flag);
-#endif
+			#if defined (_ATRACE) || defined (_FTRACE)
+				sprintf(trace_buf, "pusn token <%s>", tail->tptr);
+				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, trace_buf, trace_flag);
+			#endif
 		}
 
 		/* DELIM */ if (char_type(*input_buffer_ptr) == 0) {					//test for a delimiter
-#if defined (_ATRACE) || defined (_FTRACE)
-			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a delimiter", trace_flag);
-#endif
+			#if defined (_ATRACE) || defined (_FTRACE)
+				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a delimiter", trace_flag);
+				trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
+
+			#endif
 			*input_buffer_ptr = '\0';
 			if (tail == '\0') {
 				tail = malloc(sizeof(TQ));
@@ -113,30 +117,33 @@ TQ *process_buffer(void) {
 			tail->next = '\0';
 			start_char = input_buffer_ptr;
 			start_char++;
-#if defined (_ATRACE) || defined (_FTRACE)
-			sprintf(trace_buf, "push token <%s>", tail->tptr);
-			trace(_TRACE_FILE_NAME, "process_buffer", char_state, tb, trace_buf, trace_flag);
-#endif
+			#if defined (_ATRACE) || defined (_FTRACE)
+				sprintf(trace_buf, "push token <%s>", tail->tptr);
+				trace(_TRACE_FILE_NAME, "process_buffer", char_state, tb, trace_buf, trace_flag);
+				trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
+			#endif
 		}
 
-
-
 		*t_ptr++ = *input_buffer_ptr++;
-#if defined (_ATRACE) || defined (_FTRACE)
-		trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "character added to temp buffer", trace_flag);
-		trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
 
-#endif
+	printf("*** input buffer offset %i\n\r", (int)(input_buffer_ptr - input_buffer));
+	printf("***  temp buffer offset %i\n\r\n", (int)(t_ptr - tb));
+
+		#if defined (_ATRACE) || defined (_FTRACE)
+			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "character added to temp buffer", trace_flag);
+			trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
+		#endif
 	}
 	for (i = 0; i < _INPUT_BUFFER_SIZE; i++)					//clean out input buffer
 		input_buffer[i] = '\0';
 	input_buffer_ptr = input_buffer;					//reset pointer
-#if defined (_ATRACE) || defined (_FTRACE)
-	trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "done processing, clean up", trace_flag);
-#endif
+	#if defined (_ATRACE) || defined (_FTRACE)
+		trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "done processing, clean up", trace_flag);
+	#endif
 
 	return head;
 }
+
 /* return token code  */
 int char_type(char c) {
 	switch (c) {
@@ -215,6 +222,7 @@ int adq(char *c) {
 
 #if defined (_ATRACE) || defined (_FTRACE)
 	trace(_TRACE_FILE_NAME, "add", char_state, input_buffer, "adding character to buffer", trace_flag);
+
 #endif
 	return 0;
 }
