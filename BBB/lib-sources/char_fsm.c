@@ -63,10 +63,10 @@ TQ *process_buffer(void) {
 			#if defined (_ATRACE) || defined (_FTRACE)
 				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "null buffer", trace_flag);
 			#endif
-
 			}
 
-		/* QUOTE */ if (*input_buffer_ptr == _QUOTE) {
+		/* QUOTE */ 
+			if (*input_buffer_ptr == _QUOTE) {
 			#if defined (_ATRACE) || defined (_FTRACE)
 				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a quote", trace_flag);
 			#endif
@@ -97,7 +97,8 @@ TQ *process_buffer(void) {
 			#endif
 		}
 
-		/* DELIM */ if (char_type(*input_buffer_ptr) == 0) {					//test for a delimiter
+		/* DELIM */ 
+			if (char_type(*input_buffer_ptr) == 0) {					//test for a delimiter
 			#if defined (_ATRACE) || defined (_FTRACE)
 				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a delimiter", trace_flag);
 				trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
@@ -124,10 +125,13 @@ TQ *process_buffer(void) {
 			#endif
 		}
 
-		*t_ptr++ = *input_buffer_ptr++;
+		*t_ptr = *input_buffer_ptr;
+		t_ptr++;
+		input_buffer_ptr++;
 
-	printf("*** input buffer offset %i\n\r", (int)(input_buffer_ptr - input_buffer));
-	printf("***  temp buffer offset %i\n\r\n", (int)(t_ptr - tb));
+
+		printf("*** input buffer offset %i\n\r", (int)(input_buffer_ptr - input_buffer));
+		printf("***  temp buffer offset %i\n\r\n", (int)(t_ptr - tb));
 
 		#if defined (_ATRACE) || defined (_FTRACE)
 			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "character added to temp buffer", trace_flag);
