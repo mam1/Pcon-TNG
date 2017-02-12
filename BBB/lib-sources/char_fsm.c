@@ -125,13 +125,11 @@ TQ *process_buffer(void) {
 			#endif
 		}
 
-		*t_ptr = *input_buffer_ptr;
-		t_ptr++;
-		input_buffer_ptr++;
-
-
-		printf("*** input buffer offset %i\n\r", (int)(input_buffer_ptr - input_buffer));
-		printf("***  temp buffer offset %i\n\r\n", (int)(t_ptr - tb));
+		*t_ptr++ = *input_buffer_ptr++;
+		// t_ptr++;
+		// input_buffer_ptr++;
+		printf("*** input buffer offset %i <%s>\n\r", (int)(input_buffer_ptr - input_buffer), *input_buffer);
+		printf("***  temp buffer offset %i <%s>\n\r\n", (int)(t_ptr - tb),*tb);
 
 		#if defined (_ATRACE) || defined (_FTRACE)
 			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "character added to temp buffer", trace_flag);

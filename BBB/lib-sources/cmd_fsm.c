@@ -1540,7 +1540,7 @@ int c_66(_CMD_FSM_CB * cb)
 int c_67(_CMD_FSM_CB * cb)
 {
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "enter sensor id (0-9999)");
+	strcpy(cmd_fsm_cb.prompt_buffer, "enter sensor id (0-99)");
 
 	return 0;
 }
@@ -1553,6 +1553,7 @@ int c_68(_CMD_FSM_CB * cb)
 
 
 	id = s_load(cb->token_value,cb);
+	if(id > )
 
 
 	/* build prompt */

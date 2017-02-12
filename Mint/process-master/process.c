@@ -30,20 +30,17 @@ char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 int main (void) {
 
 	FILE 			*sensor_data;
-	struct{
-		int 		sensor_id;
-		int			temp;
-		int			humidity;
-		_tm 		ts;
-	} buffer;
+ 	_SEN_DAT_REC 	buffer;
 
 	int 			rcnt;
 	int 			snum;
-	int 			avg[_NUMBER_OF_SENSORS];
-	int 			sum[_NUMBER_OF_SENSORS];
+	float 			avg_t[_MAX_SENSOR_ID];
+	float 			sum_t[_MAX_SENSOR_ID];
+	float 			max_t[_MAX_SENSOR_ID];
+
 	int 			sfound[_NUMBER_OF_SENSORS];
 	int 			i;
-
+	int 			hit_cnt[_MAX_SENSOR_ID];
 
 
 	printf("\nprocess sensor data v 0.0.3\r\n");
@@ -56,48 +53,65 @@ int main (void) {
 		return 1;
 	}
 	rcnt = 0;
+	for(i=0; i<_MAX_SENSOR_ID; i++){
+		hit_cnt[i] = 0;
+		avg_t[i] = 0;
+		sum_t[i] = 0;
+		max_t[i] = 0;
+
+	}
 
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
 		rcnt++;
-		if(buffer.sensor_id < 0 || buffer.sensor_id > (_NUMBER_OF_SENSORS - 1))
+		if(buffer.sensor_id < 0 || buffer.sensor_id > _MAX_SENSOR_ID)
+		{
 			printf("  sensor id out of range  <%i>\n", buffer.sensor_id);
-		else
-			switch(buffer.sensor_id){
-			case 0:
-				fwrite()
-				if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
-					printf("*** error writing to %s\n", sensor_log_file); 
-				else 
-					printf(" CGI: %i:%i:%i  %i/%i/%i\n\r", 
-						ipc_ptr->s_dat[(int)l_num].ts.tm_hour, 
-						ipc_ptr->s_dat[(int)l_num].ts.tm_min, 
-						ipc_ptr->s_dat[(int)l_num].ts.tm_sec, 
-						ipc_ptr->s_dat[(int)l_num].ts.tm_mon, 
-						ipc_ptr->s_dat[(int)l_num].ts.tm_mday, 
-						ipc_ptr->s_dat[(int)l_num].ts.tm_year);
-					printf(" CGI: data logged to %s\n\r", sensor_log_file);
-
-				fclose(cgi_data);
+			return 1;
 		}
-			sfound[buffer.sensor_id] = 1;
 
-		sum[buffer.sensor_id] += buffer.temp;
-		// printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %i humidity %i\n",
-	 //       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
-	 //       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
+		hit_cnt[buffer.sensor_id] += 1;
+		sum_t[buffer.sensor_id] += buffer.temp;
+		if(buffer.temp > max_t[buffer.sensor_id])
+			max_t[buffer.sensor_id] = buffer.temp;
 	}
-
 	fclose(sensor_data);
-
-	for(i=0; i<_NUMBER_OF_SENSORS; i++)
-		avg[i] = sum[i] / rcnt;
-
 	printf("closing %s\n",_SENSOR_MASTER_FILE_NAME);
-	printf("%i records processed\n\r", rcnt);
-	printf("    average sensor value\n");
-	for(i=0; i<_NUMBER_OF_SENSORS; i++)
-		printf("      sensor %i <%i>\n", i, avg[i]);
+	printf("%i records read\n\r", rcnt);
 
-  return (0);
+	for(i=0; i<_MAX_SENSOR_ID; i++)
+		if(hit_cnt[i] > 0)
+			avg_t[i] = sum_t[i] / hit_cnt[i];
+
+
+	printf("   sensor values\n");
+	for(i=0; i<_MAX_SENSOR_ID; i++)
+		if(hit_cnt[i] > 0)
+			printf("      sensor ID %i average <%0.2f>  max <%0.2f>\n", i, avg_t[i], max_t[i]);
+
+
+	printf("%s\n", "\nnormal termination\n");
+  	return (0);
 }
 
+
+		// else
+		// 	switch(buffer.sensor_id){
+		// 	case 0:
+		// 		fwrite()
+		// 		if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
+		// 			printf("*** error writing to %s\n", sensor_log_file); 
+		// 		else 
+		// 			printf(" CGI: %i:%i:%i  %i/%i/%i\n\r", 
+		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_hour, 
+		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_min, 
+		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_sec, 
+		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_mon, 
+		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_mday, 
+		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_year);
+		// 			printf(" CGI: data logged to %s\n\r", sensor_log_file);
+
+		// 		fclose(cgi_data);
+		// }
+		// 	sfound[buffer.sensor_id] = 1;
+
+		// sum[buffer.sensor_id] += buffer.temp;

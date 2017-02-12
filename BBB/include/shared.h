@@ -72,6 +72,7 @@
 #define _MAX_SENSORS			25
 #define _SNAME_SIZE 			10
 #define _SDESCRIPTION			_MAX_TOKEN_SIZE
+#define _MAX_SENSOR_ID			99
 
 /* channel parameters */
 #define _NUMBER_OF_CHANNELS 	16
