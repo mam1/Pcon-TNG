@@ -131,7 +131,7 @@ int main (void) {
 
 	}
 	fclose(sensor_data);
-	printf("closing %s\n",_SENSOR_MASTER_FILE_NAME);
+	printf("\n\rclosing %s\n",_SENSOR_MASTER_FILE_NAME);
 
 	printf("\n%i records read\n\r", rcnt);
 
