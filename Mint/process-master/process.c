@@ -60,7 +60,7 @@ int main (void) {
 		avg_t[i] = 0;
 		sum_t[i] = 0;
 		max_t[i] = 0;
-		min_t[i] = 0;
+		min_t[i] = 999;
 	}
 
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
