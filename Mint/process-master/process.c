@@ -112,7 +112,7 @@ int main (void) {
 	{
 		rcnt++;
 		printf("\n");
-		printf("    %06i records read\r", rcnt);
+		printf("    %06i records read\r\n", rcnt);
 		sleep(100);
 		if(buffer.sensor_id < 0 || buffer.sensor_id > _MAX_SENSOR_ID)
 		{
