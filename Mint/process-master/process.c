@@ -141,7 +141,7 @@ int main (void) {
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
 			printf("      sensor ID %i average <%0.2f>  max <%0.2f>  min <%0.2f> last %i/%i/%i  %i:%i:%i\n", 
-				i, avg_t[i], max_t[i], min_t[i], c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year, , c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec);
+				i, avg_t[i], max_t[i], min_t[i], c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year, c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec);
 
 
 	printf("%s\n", "\nnormal termination\n");
