@@ -75,7 +75,7 @@ int main (void) {
 		sum_t[buffer.sensor_id] += buffer.temp;
 		if(buffer.temp > max_t[buffer.sensor_id])
 			max_t[buffer.sensor_id] = buffer.temp;
-		if(buffer.temp < min_t[buffer.sensor_id])
+		if(min_t[buffer.sensor_id] < buffer.temp)
 			min_t[buffer.sensor_id] = buffer.temp;
 	}
 	fclose(sensor_data);
@@ -90,7 +90,7 @@ int main (void) {
 	printf("   sensor values\n");
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
-			printf("      sensor ID %i average <%0.2f>  max <%0.2f>   min <%0.2f> \n", i, avg_t[i], max_t[i], min_t[i]);
+			printf("      sensor ID %i average <%0.2f>  max <%0.2f>  min <%0.2f> \n", i, avg_t[i], max_t[i], min_t[i]);
 
 
 	printf("%s\n", "\nnormal termination\n");
