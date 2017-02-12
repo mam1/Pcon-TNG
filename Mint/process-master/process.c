@@ -75,7 +75,7 @@ int main (void) {
 		sum_t[buffer.sensor_id] += buffer.temp;
 		if(buffer.temp > max_t[buffer.sensor_id])
 			max_t[buffer.sensor_id] = buffer.temp;
-		if(min_t[buffer.sensor_id] > buffer.temp)
+		if(buffer.temp < min_t[buffer.sensor_id])
 			min_t[buffer.sensor_id] = buffer.temp;
 	}
 	fclose(sensor_data);
