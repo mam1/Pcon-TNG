@@ -105,7 +105,7 @@ int main (void) {
 		sum_t[i] = 0;
 		max_t[i] = 0;
 		min_t[i] = 999;
-		c_date.tm_year[i] = 2000;
+		c_date[i].tm_year = 2000;
 	}
 
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
@@ -125,7 +125,7 @@ int main (void) {
 		if(buffer.temp < min_t[buffer.sensor_id])
 			min_t[buffer.sensor_id] = buffer.temp;
 
-		c_date[buffer.sensor_id] = *cdate(&buffer.ts.tm, &c_date[buffer.sensor_id]);
+		c_date[buffer.sensor_id] = *cdate(&buffer.ts, &c_date[buffer.sensor_id]);
 
 	}
 	fclose(sensor_data);
