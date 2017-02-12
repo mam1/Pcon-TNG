@@ -111,6 +111,7 @@ int main (void) {
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
 		rcnt++;
 		printf("    %06i records read\r", rcnt);
+		sleep(10000);
 		if(buffer.sensor_id < 0 || buffer.sensor_id > _MAX_SENSOR_ID)
 		{
 			printf("  sensor id out of range  <%i>\n", buffer.sensor_id);
