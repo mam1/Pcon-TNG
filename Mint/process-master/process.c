@@ -52,9 +52,9 @@ _tm *cdate(_tm *d1, _tm *d2){
 	if(d1->tm_mday < d2->tm_mday)
 		return d2;
 
-	if(d1->tm_mhour > d2->tm_mhour)
+	if(d1->tm_hour > d2->tm_hour)
 		return d1;
-	if(d1->tm_mhour < d2->tm_mhour)
+	if(d1->tm_hour < d2->tm_hour)
 		return d2;
 
 	if(d1->tm_min > d2->tm_min)
@@ -67,7 +67,7 @@ _tm *cdate(_tm *d1, _tm *d2){
 	if(d1->tm_sec < d2->tm_sec)
 		return d2;
 
-	return NULL
+	return NULL;
 }
 
 int main (void) {
