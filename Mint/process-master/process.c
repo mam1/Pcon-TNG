@@ -111,7 +111,7 @@ int main (void) {
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1)
 	{
 		rcnt++;
-		printf("    %06i records read\r", rcnt);
+		printf("    % 10i records read\r", rcnt);
 		if(buffer.sensor_id < 0 || buffer.sensor_id > _MAX_SENSOR_ID)
 		{
 			printf("  sensor id out of range  <%i>\n", buffer.sensor_id);
@@ -133,7 +133,7 @@ int main (void) {
 	fclose(sensor_data);
 	printf("\n\rclosing %s\n",_SENSOR_MASTER_FILE_NAME);
 
-	printf("\n%i records read\n\r", rcnt);
+	printf("\n%i records processed\n\r", rcnt);
 
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
