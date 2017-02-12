@@ -37,6 +37,8 @@ int main (void) {
 	float 			avg_t[_MAX_SENSOR_ID];
 	float 			sum_t[_MAX_SENSOR_ID];
 	float 			max_t[_MAX_SENSOR_ID];
+	float 			min_t[_MAX_SENSOR_ID];
+
 
 	int 			sfound[_NUMBER_OF_SENSORS];
 	int 			i;
@@ -58,7 +60,7 @@ int main (void) {
 		avg_t[i] = 0;
 		sum_t[i] = 0;
 		max_t[i] = 0;
-
+		min_t[i] = 0;
 	}
 
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
@@ -73,6 +75,8 @@ int main (void) {
 		sum_t[buffer.sensor_id] += buffer.temp;
 		if(buffer.temp > max_t[buffer.sensor_id])
 			max_t[buffer.sensor_id] = buffer.temp;
+		if(buffer.temp < min_t[buffer.sensor_id])
+			min_t[buffer.sensor_id] = buffer.temp;
 	}
 	fclose(sensor_data);
 	printf("closing %s\n",_SENSOR_MASTER_FILE_NAME);
@@ -86,7 +90,7 @@ int main (void) {
 	printf("   sensor values\n");
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
-			printf("      sensor ID %i average <%0.2f>  max <%0.2f>\n", i, avg_t[i], max_t[i]);
+			printf("      sensor ID %i average <%0.2f>  max <%0.2f>   min <%0.2f> \n", i, avg_t[i], max_t[i], min_t[i]);
 
 
 	printf("%s\n", "\nnormal termination\n");
