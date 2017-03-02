@@ -6,7 +6,6 @@ process.c
 
 */
 
-
 #include <stdio.h>
 #include <unistd.h>   //sleep
 #include <stdint.h>   //uint_8, uint_16, uint_32, etc.
@@ -16,24 +15,8 @@ process.c
 #include <string.h>
 #include <errno.h>
 #include "shared.h"
-// #include "ipc.h"
 #include "Pcon.h"
-// #include "bitlit.h"
-// #include "PCF8563.h"
-// #include "gpio.h"
-// #include "led.h"
-// #include "schedule.h"
-
 #include "typedefs.h"
-
-
-// /***************** global code to text conversion ********************/
-// char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-// char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-// char *onoff[2] = {"off", " on"};
-// char *con_mode[3] = {"manual", "  time", "time & sensor"};
-// char *sch_mode[2] = {"day", "week"};
-// char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /* return a pointer to the most current of 2 time data structures */
 _tm *cdate(_tm *d1, _tm *d2){
@@ -41,32 +24,26 @@ _tm *cdate(_tm *d1, _tm *d2){
 		return d1;
 	if(d1->tm_year < d2->tm_year)
 		return d2;
-
 	if(d1->tm_mon > d2->tm_mon)
 		return d1;
 	if(d1->tm_mon < d2->tm_mon)
 		return d2;
-
 	if(d1->tm_mday > d2->tm_mday)
 		return d1;
 	if(d1->tm_mday < d2->tm_mday)
 		return d2;
-
 	if(d1->tm_hour > d2->tm_hour)
 		return d1;
 	if(d1->tm_hour < d2->tm_hour)
 		return d2;
-
 	if(d1->tm_min > d2->tm_min)
 		return d1;
 	if(d1->tm_min < d2->tm_min)
 		return d2;
-
 	if(d1->tm_sec > d2->tm_sec)
 		return d1;
 	if(d1->tm_sec < d2->tm_sec)
 		return d2;
-
 	return NULL;
 }
 
@@ -82,12 +59,9 @@ int main (void) {
 	float 			max_t[_MAX_SENSOR_ID];
 	float 			min_t[_MAX_SENSOR_ID];
 	_tm 			c_date[_MAX_SENSOR_ID];
-
-
 	int 			sfound[_NUMBER_OF_SENSORS];
 	int 			i;
 	int 			hit_cnt[_MAX_SENSOR_ID];
-
 
 	printf("\nprocess sensor data v 0.0.3\r\n");
 	printf("opening %s\n",_SENSOR_MASTER_FILE_NAME);
@@ -107,7 +81,6 @@ int main (void) {
 		min_t[i] = 999;
 		c_date[i].tm_year = 2000;
 	}
-
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1)
 	{
 		rcnt++;
@@ -117,7 +90,6 @@ int main (void) {
 			printf("  sensor id out of range  <%i>\n", buffer.sensor_id);
 			return 1;
 		}
-
 		hit_cnt[buffer.sensor_id] += 1;
 		sum_t[buffer.sensor_id] += buffer.temp;
 
@@ -128,17 +100,15 @@ int main (void) {
 			min_t[buffer.sensor_id] = buffer.temp;
 
 		c_date[buffer.sensor_id] = *cdate(&buffer.ts, &c_date[buffer.sensor_id]);
-
 	}
 	fclose(sensor_data);
-	printf("\n\rclosing %s\n",_SENSOR_MASTER_FILE_NAME);
-
+	printf("\n\rclosing %s\n",_SENSOR_MASTER_FILE_NAME);s
 	printf("\n%i records processed\n\r", rcnt);
+
 
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
 			avg_t[i] = sum_t[i] / hit_cnt[i];
-
 
 	printf("   sensor values\n");
 	for(i=0; i<_MAX_SENSOR_ID; i++)
@@ -146,8 +116,7 @@ int main (void) {
 			printf("      sensor ID %i average <%0.2f>  max <%0.2f>  min <%0.2f> last update <%02i:%02i:%02i-%02i/%02i/%02i>\n", 
 				i, avg_t[i], max_t[i], min_t[i], c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec, c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year);
 
-
-	printf("%s\n", "\nnormal termination\n");
+	printf("%s\n", "\n%irecords processed \nnormal termination\n",rcnt);
   	return (0);
 }
 
