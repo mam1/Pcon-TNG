@@ -47,6 +47,35 @@ _tm *cdate(_tm *d1, _tm *d2){
 	return NULL;
 }
 
+/* return a pointer to the least current of 2 time data structures */
+_tm *fdate(_tm *d1, _tm *d2){
+	if(d1->tm_year < d2->tm_year)
+		return d1;
+	if(d1->tm_year > d2->tm_year)
+		return d2;
+	if(d1->tm_mon < d2->tm_mon)
+		return d1;
+	if(d1->tm_mon > d2->tm_mon)
+		return d2;
+	if(d1->tm_mday < d2->tm_mday)
+		return d1;
+	if(d1->tm_mday > d2->tm_mday)
+		return d2;
+	if(d1->tm_hour < d2->tm_hour)
+		return d1;
+	if(d1->tm_hour > d2->tm_hour)
+		return d2;
+	if(d1->tm_min < d2->tm_min)
+		return d1;
+	if(d1->tm_min > d2->tm_min)
+		return d2;
+	if(d1->tm_sec < d2->tm_sec)
+		return d1;
+	if(d1->tm_sec > d2->tm_sec)
+		return d2;
+	return d1;
+}
+
 int main (void) {
 
 	FILE 			*sensor_data;
@@ -59,12 +88,13 @@ int main (void) {
 	float 			max_t[_MAX_SENSOR_ID];
 	float 			min_t[_MAX_SENSOR_ID];
 	_tm 			c_date[_MAX_SENSOR_ID];
+	_tm 			f_date[_MAX_SENSOR_ID];
 	int 			sfound[_NUMBER_OF_SENSORS];
 	int 			i;
 	int 			hit_cnt[_MAX_SENSOR_ID];
 
-	printf("\nprocess sensor data v 0.0.3\r\n");
-	printf("opening %s\n",_SENSOR_MASTER_FILE_NAME);
+	printf("\nprocess_master v 0.0.4\r\n\n");
+	printf("    opening %s\n",_SENSOR_MASTER_FILE_NAME);
 
 	sensor_data = fopen(_SENSOR_MASTER_FILE_NAME,"r");
 	if(sensor_data == NULL){
@@ -80,11 +110,12 @@ int main (void) {
 		max_t[i] = 0;
 		min_t[i] = 999;
 		c_date[i].tm_year = 2000;
+		f_date[i].tm_year = 4000;
 	}
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1)
 	{
 		rcnt++;
-		printf("    % 10i records read\r", rcnt);
+		printf("    %i records read\r", rcnt);
 		if(buffer.sensor_id < 0 || buffer.sensor_id > _MAX_SENSOR_ID)
 		{
 			printf("  sensor id out of range  <%i>\n", buffer.sensor_id);
@@ -100,45 +131,27 @@ int main (void) {
 			min_t[buffer.sensor_id] = buffer.temp;
 
 		c_date[buffer.sensor_id] = *cdate(&buffer.ts, &c_date[buffer.sensor_id]);
+		f_date[buffer.sensor_id] = *fdate(&buffer.ts, &f_date[buffer.sensor_id]);
 	}
 	fclose(sensor_data);
-	printf("\n\rclosing %s\n",_SENSOR_MASTER_FILE_NAME);s
-	printf("\n%i records processed\n\r", rcnt);
+	printf("\n\r    closing %s\n",_SENSOR_MASTER_FILE_NAME);
+	// printf("\n%i records processed\n\r", rcnt);
 
 
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
 			avg_t[i] = sum_t[i] / hit_cnt[i];
 
-	printf("   sensor values\n");
+	printf("\n   summery sensor values\n");
+	printf("\n%6s%6s%7s%7s%17s%22s\n","ID","ave","max","min","first read","last read");
+	printf("    --------------------------------------------------------------------------\n");
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
-			printf("      sensor ID %i average <%0.2f>  max <%0.2f>  min <%0.2f> last update <%02i:%02i:%02i-%02i/%02i/%02i>\n", 
-				i, avg_t[i], max_t[i], min_t[i], c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec, c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year);
+			printf("%6i %6.1f %6.1f  %5.1f %4i:%02i:%02i-%02i/%02i/%02i %4i:%02i:%02i-%02i/%02i/%02i\n", 
+				i, avg_t[i], max_t[i], min_t[i], f_date[i].tm_hour, f_date[i].tm_min, f_date[i].tm_sec, f_date[i].tm_mon, f_date[i].tm_mday, f_date[i].tm_year,
+				c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec, c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year);
 
-	printf("%s\n", "\n%irecords processed \nnormal termination\n",rcnt);
+	printf("\n %i records processed \n normal termination\n\n",rcnt);
   	return (0);
 }
 
-
-		// else
-		// 	switch(buffer.sensor_id){
-		// 	case 0:
-		// 		fwrite()
-		// 		if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
-		// 			printf("*** error writing to %s\n", sensor_log_file); 
-		// 		else 
-		// 			printf(" CGI: %i:%i:%i  %i/%i/%i\n\r", 
-		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_hour, 
-		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_min, 
-		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_sec, 
-		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_mon, 
-		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_mday, 
-		// 				ipc_ptr->s_dat[(int)l_num].ts.tm_year);
-		// 			printf(" CGI: data logged to %s\n\r", sensor_log_file);
-
-		// 		fclose(cgi_data);
-		// }
-		// 	sfound[buffer.sensor_id] = 1;
-
-		// sum[buffer.sensor_id] += buffer.temp;

@@ -11,25 +11,20 @@ ifeq ($(UNAME_S),Darwin)
 	target_dir := /usr/local/myscripts
 else
 	program_DIR := /home/mam1/Git/Pcon-TNG/script_lib
-	target_dir := 
+	target_dir := /usr/local/myscripts
 endif
 
 .PHONY: all clean distclean
 
 all: 
+all: 
 	@echo $(lib_SRCS)
-# move the scripts to cgi directory on the bone
-	rsync -avz $(program_DIR)/bone/ root@192.168.254.34:/usr/local/sbin/
 
-	ssh root@192.168.254.34 'chown root /usr/local/sbin/*'		# change owner
-	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/*'		# open access
+# move the scripts to script library on the mac
+	rsync -avz $(program_DIR)/Mint/ /usr/local/myscripts/
 
-# move the scripts to development machines
-ifeq ($(UNAME_S),Darwin)
-	rsync -avz $(program_DIR)/bone/ root@192.168.254.34:/usr/local/sbin/
-
-
-# fix permissions for scripts run on development machines
+	$(shell chown mam1 /usr/local/myscripts/*)		# change owner
+	$(shell chmod 4755 /usr/local/myscripts/*)		# open access
 
 os:
 	@echo "****************"
