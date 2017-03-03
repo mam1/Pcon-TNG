@@ -23,8 +23,11 @@ all:
 # move the scripts to script library on the mac
 	rsync -avz $(program_DIR)/Mint/ /usr/local/myscripts/
 
-	$(shell chown mam1 /usr/local/myscripts/*)		# change owner
-	$(shell chmod 4755 /usr/local/myscripts/*)		# open access
+	# $(shell chown mam1 /usr/local/myscripts/*)		# change owner
+	# $(shell chmod 777 /usr/local/myscripts/*)		# open access
+
+	chown mam1 /usr/local/myscripts/*		# change owner
+	chmod 777 /usr/local/myscripts/*		# open access
 
 os:
 	@echo "****************"
