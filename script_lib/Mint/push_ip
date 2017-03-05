@@ -8,6 +8,7 @@ TIME="$(date +'%r')"
 IP="$(curl -s ipinfo.io/ip)"
 
 echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/exip.log
+echo -e "VPN status" $(expressvpn status) >> /media/Raid/SensorMaster/exip.log
 echo -e "external IP address" $IP >> /media/Raid/SensorMaster/exip.log
 rm /media/Raid/SensorMaster/exip.dat
 echo "current IP:" $IP "at" $TIME "on" $DATE >> /media/Raid/SensorMaster/exip.dat
