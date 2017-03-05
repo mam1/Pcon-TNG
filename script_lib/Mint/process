@@ -1,3 +1,4 @@
 #!/bin/bash
 
-'/home/mam1/Git/Pcon-TNG/Mint/process-master/process'
+echo -e $(pullit) >> '/media/Raid/SensorMaster/sum.log'
+echo $(/home/mam1/Git/Pcon-TNG/Mint/process-master/process) >> '/media/Raid/SensorMaster/sum.dat'

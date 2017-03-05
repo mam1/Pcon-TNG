@@ -2,11 +2,13 @@
 # push the routers external IP address to dropbox
 
 APP="push_ip"
-VER="0.0.3"
-IP="0.0.0.0"
-
-echo -e "\n\r" $APP $VER "\n\r"
-
+VER="0.1.0"
+DATE="$(date +'%d/%m/%Y')"
+TIME="$(date +'%r')" 
 IP="$(curl -s ipinfo.io/ip)"
 
-echo "current IP: " $IP >> '/media/Raid/SensorMaster/sensum.dat'
+echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/exip.log
+echo -e "external IP address" $IP >> /media/Raid/SensorMaster/exip.log
+rm /media/Raid/SensorMaster/exip.dat
+echo "current IP:" $IP "at" $TIME "on" $DATE >> /media/Raid/SensorMaster/exip.dat
+echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload /media/Raid/SensorMaster/exip.dat current_ip) >> /media/Raid/SensorMaster/exip.log

@@ -93,8 +93,8 @@ int main (void) {
 	int 			i;
 	int 			hit_cnt[_MAX_SENSOR_ID];
 
-	printf("\nprocess_master v 0.0.4\r\n\n");
-	printf("    opening %s\n",_SENSOR_MASTER_FILE_NAME);
+	printf("\nprocess_master v 0.0.5\r\n\n");
+	printf("    opening %s\n\r",_SENSOR_MASTER_FILE_NAME);
 
 	sensor_data = fopen(_SENSOR_MASTER_FILE_NAME,"r");
 	if(sensor_data == NULL){
@@ -115,7 +115,6 @@ int main (void) {
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1)
 	{
 		rcnt++;
-		printf("    %i records read\r", rcnt);
 		if(buffer.sensor_id < 0 || buffer.sensor_id > _MAX_SENSOR_ID)
 		{
 			printf("  sensor id out of range  <%i>\n", buffer.sensor_id);
@@ -133,21 +132,20 @@ int main (void) {
 		c_date[buffer.sensor_id] = *cdate(&buffer.ts, &c_date[buffer.sensor_id]);
 		f_date[buffer.sensor_id] = *fdate(&buffer.ts, &f_date[buffer.sensor_id]);
 	}
+	printf("    %i records read\n\r", rcnt);
 	fclose(sensor_data);
-	printf("\n\r    closing %s\n",_SENSOR_MASTER_FILE_NAME);
-	// printf("\n%i records processed\n\r", rcnt);
-
+	printf("    closing %s\n\r",_SENSOR_MASTER_FILE_NAME);
 
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
 			avg_t[i] = sum_t[i] / hit_cnt[i];
 
-	printf("\n   summery sensor values\n");
-	printf("\n%6s%6s%7s%7s%17s%22s\n","ID","ave","max","min","first read","last read");
-	printf("    --------------------------------------------------------------------------\n");
+	printf("\n   summery sensor values\n\r");
+	printf("\n%6s%6s%7s%7s%17s%22s\n\r","ID","ave","max","min","first read","last read");
+	printf("    --------------------------------------------------------------------------\n\r");
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
-			printf("%6i %6.1f %6.1f  %5.1f %4i:%02i:%02i-%02i/%02i/%02i %4i:%02i:%02i-%02i/%02i/%02i\n", 
+			printf("%6i %6.1f %6.1f  %5.1f %4i:%02i:%02i-%02i/%02i/%02i %4i:%02i:%02i-%02i/%02i/%02i\n\r", 
 				i, avg_t[i], max_t[i], min_t[i], f_date[i].tm_hour, f_date[i].tm_min, f_date[i].tm_sec, f_date[i].tm_mon, f_date[i].tm_mday, f_date[i].tm_year,
 				c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec, c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year);
 
