@@ -1,4 +1,14 @@
 #!/bin/bash
 
-echo -e $(pullit) >> '/media/Raid/SensorMaster/sum.log'
-echo $(/home/mam1/Git/Pcon-TNG/Mint/process-master/process) >> '/media/Raid/SensorMaster/sum.dat'
+APP="process_master script"
+VER="0.0.1"
+DATE="$(date +'%d/%m/%Y')"
+TIME="$(date +'%r')"
+# echo -e "\n\r"
+echo -e $APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/pullit.log
+rm /media/Raid/SensorMaster/sensum.dat
+echo -e "\n\rrun at" $TIME "on" $DATE >> /media/Raid/SensorMaster/sensum.dat
+echo -e $(/home/mam1/Git/Pcon-TNG/Mint/process-master/process) >> /media/Raid/SensorMaster/sensum.dat
+
+echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload /media/Raid/SensorMaster/sensum.dat sensors) >> /media/Raid/SensorMaster/pullit.log
+cat /media/Raid/SensorMaster/sensum.dat >> /media/Raid/SensorMaster/pullit.log
