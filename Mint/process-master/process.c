@@ -82,14 +82,14 @@ int main (void) {
  	_SEN_DAT_REC 	buffer;
 
 	int 			rcnt;
-	int 			snum;
+	// int 			snum;
 	float 			avg_t[_MAX_SENSOR_ID];
 	float 			sum_t[_MAX_SENSOR_ID];
 	float 			max_t[_MAX_SENSOR_ID];
 	float 			min_t[_MAX_SENSOR_ID];
 	_tm 			c_date[_MAX_SENSOR_ID];
 	_tm 			f_date[_MAX_SENSOR_ID];
-	int 			sfound[_NUMBER_OF_SENSORS];
+	//  int 			sfound[_NUMBER_OF_SENSORS];
 	int 			i;
 	int 			hit_cnt[_MAX_SENSOR_ID];
 
@@ -150,7 +150,7 @@ int main (void) {
 				c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec, c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year);
 
 	printf("\r\n %i records processed \r\n normal termination",rcnt);
-	printf("\r\n\n**********************************************************************************************");
+	printf("\r\n\n************************************************************************");
 	printf("\r\n\n");
   	return (0);
 }
