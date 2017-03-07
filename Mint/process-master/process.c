@@ -117,8 +117,12 @@ int main (void) {
 		rcnt++;
 		if(buffer.sensor_id < 0 || buffer.sensor_id > _MAX_SENSOR_ID)
 		{
-			printf("  sensor id out of range  <%i>\n", buffer.sensor_id);
-			return 1;
+			printf("  record %i sensor id out of range  <%i>\n", rcnt, buffer.sensor_id);
+			if(fread(&buffer, sizeof(buffer), 1, sensor_data) != 1){
+				printf("*** input file screwed up\r\n");
+				return 1;
+			}
+				 
 		}
 		hit_cnt[buffer.sensor_id] += 1;
 		sum_t[buffer.sensor_id] += buffer.temp;

@@ -13,14 +13,18 @@ if [ $CURRENT_OS == "Linux" ]
 then
 	echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/pullit.log
 	echo -e "\rappending active sensor log to master log\r" >> /media/Raid/SensorMaster/pullit.log
+
 	echo -e $(rsync  -azv --append --progress root@192.168.254.34:/media/CGI-sensor-log/sensor.dat /media/Raid/SensorMaster/temp_sensor.dat) >> /media/Raid/SensorMaster/pullit.log 
 	echo -n $? >> /media/Raid/SensorMaster/pullit.log
 	echo -e " returned from rsync\n\r" >> /media/Raid/SensorMaster/pullit.log
+
 	cat /media/Raid/SensorMaster/temp_sensor.dat >> '/media/Raid/SensorMaster/master.dat'
 	echo -e $(ssh root@192.168.254.34 'rm /media/CGI-sensor-log/sensor.dat') >> /media/Raid/SensorMaster/pullit.log
 	rm /media/Raid/SensorMaster/temp_sensor.dat
+	echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/temp_sensor.dat
 	# echo -e "\r\n"
-	echo -e $(/home/mam1/Git/Pcon-TNG/Mint/process-master/process) >> /media/Raid/SensorMaster/pullit.log
+	echo -e $(/home/mam1/Git/Pcon-TNG/Mint/process-master/process) >> /media/Raid/SensorMaster/temp_sensor.dat
+	cat /media/Raid/SensorMaster/temp_sensor.dat >> /media/Raid/SensorMaster/pullit.log
 else
 	echo -e "can not grab sensor log from OS X\n\r"
 fi

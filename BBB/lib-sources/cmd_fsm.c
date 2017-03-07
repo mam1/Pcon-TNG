@@ -1493,7 +1493,7 @@ int c_65(_CMD_FSM_CB * cb)
 		if(cb->ipc_ptr->s_dat[sensor].active == _TRUE){
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 			printf("%6i", cb->ipc_ptr->s_dat[sensor].sensor_id);
-			printf("%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
+			printf("%7.2f%6.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 
 			// for(i=0;i<cb->ipc_ptr->s_dat[sensor].channel_index;i++)
@@ -1553,7 +1553,7 @@ int c_68(_CMD_FSM_CB * cb)
 
 
 	id = s_load(cb->token_value,cb);
-	if(id > )
+	// if(id > )
 
 
 	/* build prompt */
