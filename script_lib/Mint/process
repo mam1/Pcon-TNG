@@ -1,7 +1,7 @@
 #!/bin/bash
 
 APP="process_master script"
-VER="0.0.1"
+VER="0.0.2"
 DATE="$(date +'%d/%m/%Y')"
 TIME="$(date +'%r')"
 # echo -e "\n\r"

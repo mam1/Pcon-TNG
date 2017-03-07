@@ -2,7 +2,7 @@
 # push the routers external IP address to dropbox
 
 APP="push_ip"
-VER="0.1.0"
+VER="1.0.0"
 DATE="$(date +'%d/%m/%Y')"
 TIME="$(date +'%r')" 
 IP="$(curl -s ipinfo.io/ip)"

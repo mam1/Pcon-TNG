@@ -82,14 +82,14 @@ int main (void) {
  	_SEN_DAT_REC 	buffer;
 
 	int 			rcnt;
-	int 			snum;
+	// int 			snum;
 	float 			avg_t[_MAX_SENSOR_ID];
 	float 			sum_t[_MAX_SENSOR_ID];
 	float 			max_t[_MAX_SENSOR_ID];
 	float 			min_t[_MAX_SENSOR_ID];
 	_tm 			c_date[_MAX_SENSOR_ID];
 	_tm 			f_date[_MAX_SENSOR_ID];
-	int 			sfound[_NUMBER_OF_SENSORS];
+	//  int 			sfound[_NUMBER_OF_SENSORS];
 	int 			i;
 	int 			hit_cnt[_MAX_SENSOR_ID];
 
