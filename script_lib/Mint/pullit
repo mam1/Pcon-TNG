@@ -20,7 +20,7 @@ then
 	echo -e $(ssh root@192.168.254.34 'rm /media/CGI-sensor-log/sensor.dat') >> /media/Raid/SensorMaster/pullit.log
 	rm /media/Raid/SensorMaster/temp_sensor.dat
 	# echo -e "\r\n"
-	echo -e $(process) >> /media/Raid/SensorMaster/pullit.log
+	echo -e $(/home/mam1/Git/Pcon-TNG/Mint/process-master/process) >> /media/Raid/SensorMaster/pullit.log
 else
 	echo -e "can not grab sensor log from OS X\n\r"
 fi
