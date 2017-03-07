@@ -141,7 +141,7 @@ int main (void) {
 			avg_t[i] = sum_t[i] / hit_cnt[i];
 
 	printf("\r\n   summery sensor values\n\r");
-	printf("\n%6s%6s%7s%7s%17s%22s\n\r","ID","ave","max","min","first read","last read");
+	printf("\n%6s%6s%7s%7s         %17s        %22s\n\r","ID","ave","max","min","first read","last read");
 	printf("    --------------------------------------------------------------------------\n\r");
 	for(i=0; i<_MAX_SENSOR_ID; i++)
 		if(hit_cnt[i] > 0)
@@ -150,7 +150,7 @@ int main (void) {
 				c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec, c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year);
 
 	printf("\r\n %i records processed \r\n normal termination",rcnt);
-	printf("\r\n\n**********************************************************************************************");
+	printf("\r\n\n****************************************************************");
 	printf("\r\n\n");
   	return (0);
 }
