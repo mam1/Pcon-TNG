@@ -3,7 +3,7 @@
 
 APP="push_ip"
 VER="1.0.0"
-DATE="$(date +'%d/%m/%Y')"
+DATE="$(date +'%m/%d/%Y')"
 TIME="$(date +'%r')" 
 IP="$(curl -s ipinfo.io/ip)"
 

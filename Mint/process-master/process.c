@@ -154,8 +154,7 @@ int main (void) {
 				c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec, c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year);
 
 	printf("\r\n %i records processed \r\n normal termination",rcnt);
-	printf("\r\n\n****************************************************************");
-	printf("\r\n\n");
+
   	return (0);
 }
 
