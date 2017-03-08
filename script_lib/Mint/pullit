@@ -1,6 +1,7 @@
 #!/bin/bash
 # append the sensor log file to master file
-# and clear sensor log file
+# clear sensor log file
+# push summerized sensor data ot dropbox
 
 APP="pullit"
 VER="0.1.6"
