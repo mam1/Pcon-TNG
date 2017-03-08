@@ -54,7 +54,7 @@ typedef struct {
 typedef struct {
 	int 		sensor_id;
 	int 		active;
-	char 		name[_SNAME_SIZE];
+	char 	 	name[_SNAME_SIZE];
 	char 		description[_SDESCRIPTION];
 	int 		channel[_NUMBER_OF_CHANNELS];  	// channel assignments
 	int 		channel_index;					// points to the next open assingment

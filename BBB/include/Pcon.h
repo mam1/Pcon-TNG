@@ -9,7 +9,7 @@
 
 /* Pcon version info */
 #define _MAJOR_VERSION_Pcon    10
-#define _MINOR_VERSION_Pcon    5
+#define _MINOR_VERSION_Pcon    6
 #define _MINOR_REVISION_Pcon   0
 
 

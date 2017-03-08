@@ -49,16 +49,18 @@ TQ *process_buffer(void) {
 	input_buffer_ptr = input_buffer;	// set pointer to start of input buffer
 	start_char = input_buffer_ptr;		// set start_char to start of input buffer
 	t_ptr = tb;							// set pointer to start of temporary buffer
+	memset(&tb[0], 0, sizeof(tb));		// initialize temporary buffer
 
 	head = '\0';						// initialize head pointer
 	tail = head;						// initialize tail pointer
 
-	while (*input_buffer_ptr != '\0') { // loop until the input buffer is empty
-		/* NULL */
-			#if defined (_ATRACE) || defined (_FTRACE)
-				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "carrage return", trace_flag);
-			#endif
 
+	while (*input_buffer_ptr != '\0') { // loop until the input buffer is empty
+		// #if defined (_ATRACE) || defined (_FTRACE)
+		// trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "carrage return", trace_flag);
+		// #endif
+		
+		/* NULL */
 			if(input_buffer_ptr == input_buffer){
 
 			#if defined (_ATRACE) || defined (_FTRACE)
@@ -68,30 +70,30 @@ TQ *process_buffer(void) {
 
 		/* QUOTE */ 
 			if (*input_buffer_ptr == _QUOTE) {
-			#if defined (_ATRACE) || defined (_FTRACE)
-				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a quote", trace_flag);
-			#endif
-			*t_ptr++ = *input_buffer_ptr++;
-			while ((*input_buffer_ptr != _QUOTE) && (*input_buffer_ptr != '\0'))
+				#if defined (_ATRACE) || defined (_FTRACE)
+					trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a quote", trace_flag);
+				#endif
 				*t_ptr++ = *input_buffer_ptr++;
-			*t_ptr++ = _QUOTE;
-			#if defined (_ATRACE) || defined (_FTRACE)
-				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a second quote", trace_flag);
-			#endif
-			*(++input_buffer_ptr) = '\0';
-			if (tail == '\0') {
-				tail = malloc(sizeof(TQ));
-				head = tail;
-			}
-			else {
-				tail->next = malloc(sizeof(TQ));
-				tail = tail->next;
-			}
-			tail->tptr = malloc(input_buffer_ptr - start_char);
-			memcpy(tail->tptr, start_char, input_buffer_ptr - start_char + 1);
-			tail->next = '\0';
-			start_char = input_buffer_ptr;
-			start_char++;
+				while ((*input_buffer_ptr != _QUOTE) && (*input_buffer_ptr != '\0')) // look for ending quote or end of buffer
+					*t_ptr++ = *input_buffer_ptr++;									 // move char to temp buffer
+				*t_ptr++ = _QUOTE;													 // add ending quite to temp buffer
+				#if defined (_ATRACE) || defined (_FTRACE)
+					trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a second quote", trace_flag);
+				#endif
+				*(++input_buffer_ptr) = '\0';
+				if (tail == '\0') {
+					tail = malloc(sizeof(TQ));
+					head = tail;
+				}
+				else {
+					tail->next = malloc(sizeof(TQ));
+					tail = tail->next;
+				}
+				tail->tptr = malloc(input_buffer_ptr - start_char);
+				memcpy(tail->tptr, start_char, input_buffer_ptr - start_char + 1);
+				tail->next = '\0';
+				start_char = input_buffer_ptr;
+				start_char++;
 			#if defined (_ATRACE) || defined (_FTRACE)
 				sprintf(trace_buf, "pusn token <%s>", tail->tptr);
 				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, trace_buf, trace_flag);
@@ -103,7 +105,6 @@ TQ *process_buffer(void) {
 			#if defined (_ATRACE) || defined (_FTRACE)
 				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a delimiter", trace_flag);
 				trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
-
 			#endif
 			*input_buffer_ptr = '\0';
 			if (tail == '\0') {
@@ -114,6 +115,7 @@ TQ *process_buffer(void) {
 				tail->next = malloc(sizeof(TQ));
 				tail = tail->next;
 			}
+			
 			tail->tptr = malloc(input_buffer_ptr - start_char);
 			memcpy(tail->tptr, start_char, input_buffer_ptr - start_char + 1);
 			tail->next = '\0';
@@ -128,14 +130,17 @@ TQ *process_buffer(void) {
 
 		*t_ptr++ = *input_buffer_ptr++;
 
-		printf("*** input buffer offset %i <%s>\n\r", (int)(input_buffer_ptr - input_buffer), input_buffer);
-		printf("***  temp buffer offset %i <%s>\n\r\n", (int)(t_ptr - tb),tb);
+// printf("*** input buffer offset %i <%s>\n\r", (int)(input_buffer_ptr - input_buffer), input_buffer);
+// printf("***  temp buffer offset %i <%s>\n\r\n", (int)(t_ptr - tb),tb);
 
 		#if defined (_ATRACE) || defined (_FTRACE)
 			trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "character added to temp buffer", trace_flag); 
 			trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
 		#endif
 	}
+
+
+
 	for (i = 0; i < _INPUT_BUFFER_SIZE; i++)		//clean out input buffer
 		input_buffer[i] = '\0';
 	input_buffer_ptr = input_buffer;				//reset pointer

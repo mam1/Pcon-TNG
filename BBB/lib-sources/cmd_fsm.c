@@ -1553,11 +1553,17 @@ int c_68(_CMD_FSM_CB * cb)
 
 
 	id = s_load(cb->token_value,cb);
-	// if(id > )
+	if(id > _NUMBER_OF_SENSORS -1){
+		strcpy(cmd_fsm_cb.prompt_buffer, "sensor id must be 0-");
+		sprintf(buf, "%04d ", _NUMBER_OF_SENSORS);
+		strcat(cmd_fsm_cb.prompt_buffer, buf);
+		strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a sensor id");
+		return 0;
+	}
 
 
 	/* build prompt */
-	sprintf(buf, "%04d ", cb->w_sen_dat.sensor_id);
+	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
 	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
 	strcat(cmd_fsm_cb.prompt_buffer, buf);
 	strcat(cmd_fsm_cb.prompt_buffer, "\n\r    name: ");
@@ -1595,7 +1601,6 @@ int c_70(_CMD_FSM_CB *cb){
 	char 				buf[10];
 
 	printf("token size %i\r\n", strlen(cb->token) );
-
 	strcpy(cb->w_sen_dat.description, cb->token);
 
 		/* build prompt */

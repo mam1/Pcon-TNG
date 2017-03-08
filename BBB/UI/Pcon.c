@@ -36,7 +36,8 @@ _IPC_DAT 		*ipc_ptr; 							//ipc data
 void			*data = NULL;						//pointer to ipc data
 char           	ipc_file[] = {_IPC_FILE_NAME};  			//name of ipc file
 uint8_t 		cmd_state, char_state;				//fsm current state
-char 			work_buffer[_INPUT_BUFFER_SIZE], *work_buffer_ptr;
+char 			*work_buffer_ptr;
+static char 	work_buffer[_INPUT_BUFFER_SIZE] ;
 char 			tbuf[_TOKEN_BUFFER_SIZE];
 key_t 			skey = _SEM_KEY;
 int 			semid;
@@ -51,7 +52,7 @@ union 			semun dummy;
 struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
 
 int 		cmd_buffer_push_index, cmd_buffer_pop_index;
-char 		cmd_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE]; // array to hold multiple single arrays of characters
+char 		cmd_buffer[_INPUT_BUFFER_SIZE][_CMD_BUFFER_DEPTH]; // array to hold multiple single arrays of characters
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -254,6 +255,12 @@ int main(void) {
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	cmd_fsm_cb.w_sch = ipc_ptr->sys_data.sys_sch;
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
+
+	/* initialize working sensor name and description */
+ 	cmd_fsm_cb.w_sen_dat.name[0] = '\0';
+	cmd_fsm_cb.w_sen_dat.description[0] = '%';
+	cmd_fsm_cb.w_sen_dat.description[1] = '\0';
+
 
 #if defined (_ATRACE) || defined (_PTRACE)
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "system schedule copied to working schedule", trace_flag);
