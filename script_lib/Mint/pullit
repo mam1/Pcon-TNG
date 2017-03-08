@@ -11,14 +11,17 @@ TIME="$(date +'%r')"
 CURRENT_OS=$(uname)
 if [ $CURRENT_OS == "Linux" ]
 then
+	# append working sensor from the bone to the master log and erase working log
 	echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/pullit.log
 	echo -e "\rappending active sensor log to master log\r" >> /media/Raid/SensorMaster/pullit.log
-
 	echo -e $(rsync  -azv --append --progress root@192.168.254.34:/media/CGI-sensor-log/sensor.dat /media/Raid/SensorMaster/temp_sensor.dat) >> /media/Raid/SensorMaster/pullit.log 
 	echo -n $? >> /media/Raid/SensorMaster/pullit.log
 	echo -e " returned from rsync\n\r" >> /media/Raid/SensorMaster/pullit.log
 
-	cat /media/Raid/SensorMaster/temp_sensor.dat >> '/media/Raid/SensorMaster/master.dat'
+
+
+
+	cat /media/Raid/SensorMaster/temp_sensor.dat >> /media/Raid/SensorMaster/master.dat
 	echo -e $(ssh root@192.168.254.34 'rm /media/CGI-sensor-log/sensor.dat') >> /media/Raid/SensorMaster/pullit.log
 	rm /media/Raid/SensorMaster/temp_sensor.dat
 	echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/temp_sensor.dat
