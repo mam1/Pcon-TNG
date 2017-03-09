@@ -52,7 +52,8 @@ union 			semun dummy;
 struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
 
 int 		cmd_buffer_push_index, cmd_buffer_pop_index;
-char 		cmd_buffer[_INPUT_BUFFER_SIZE][_CMD_BUFFER_DEPTH]; // array to hold multiple single arrays of characters
+char 		cmd_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE+1]; // array to hold multiple single arrays of characters
+
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
