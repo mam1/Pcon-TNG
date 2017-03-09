@@ -1,5 +1,7 @@
 #!/bin/bash
 # push the routers external IP address to dropbox
+# restart Mint box if no internet connection 
+# reconnect to the vpn if not connected
 
 APP="push_ip"
 VER="2.0.0"
