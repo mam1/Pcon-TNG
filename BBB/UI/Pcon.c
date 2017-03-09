@@ -97,8 +97,42 @@ char *pop_cmd_buffer(void) {
 	return &(cmd_buffer[cmd_buffer_pop_index--][0]);
 }
 
+/* pop a copy of the previous cmd line into the cmd buffer  */
+char *rd_cmd_buffer(void) {
+	if (cmd_buffer_pop_index - 1 < 0)
+		cmd_buffer_pop_index = cmd_buffer_push_index;
+
+	return &(cmd_buffer[cmd_buffer_pop_index-1][0]);
+}
+
+
 /* load buffer with previous command */
 void up_arrow(void) {
+	char    *ptr;
+	int 	l, i;
+
+	/* fix screen */
+	if(work_buffer_ptr != work_buffer)
+	while (*(work_buffer_ptr - 1) != '\0') {
+		fputc(_BS, stdout);
+		fputc(' ', stdout);
+		fputc(_BS, stdout);
+		*work_buffer_ptr-- = '\0';
+		*work_buffer_ptr = '\0';
+	}
+
+	ptr = pop_cmd_buffer();
+	work_buffer_ptr = work_buffer;
+	l = strlen(ptr);
+	for (i = 0; i < l; i++) {
+		fputc(*ptr, stdout);       				// echo char
+		*work_buffer_ptr++ = *ptr++;
+	}
+	return;
+}
+
+/* load buffer with next command */
+void down_arrow(void) {
 	char    *ptr;
 	int 	l, i;
 
@@ -111,7 +145,8 @@ void up_arrow(void) {
 		*work_buffer_ptr = '\0';
 	}
 
-	ptr = pop_cmd_buffer();
+
+	ptr = rd_cmd_buffer();
 	work_buffer_ptr = work_buffer;
 	l = strlen(ptr);
 	for (i = 0; i < l; i++) {
@@ -259,7 +294,7 @@ int main(void) {
 
 	/* initialize working sensor name and description */
  	cmd_fsm_cb.w_sen_dat.name[0] = '\0';
-	cmd_fsm_cb.w_sen_dat.description[0] = '%';
+	cmd_fsm_cb.w_sen_dat.description[0] = '\0';
 	cmd_fsm_cb.w_sen_dat.description[1] = '\0';
 
 
@@ -325,11 +360,18 @@ int main(void) {
 			c = fgetc(stdin);		// skip next character
 			c = fgetc(stdin);
 			if (c == 'A') {
-				up_arrow();
-#if defined (_ATRACE) || defined (_PTRACE)
-				trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "up arrow entered", trace_flag);
-#endif
-
+				up_arrow();				
+				#if defined (_ATRACE) || defined (_PTRACE)
+					trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "up arrow entered", trace_flag);
+				#endif
+				break;
+			}
+			/* detect down arrow */
+			else if (c == 'B'){
+				down_arrow();
+				#if defined (_ATRACE) || defined (_PTRACE)
+					trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "up arrow entered", trace_flag);
+				#endif
 				break;
 			}
 
