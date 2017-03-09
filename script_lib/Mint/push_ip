@@ -4,7 +4,7 @@
 # reconnect to the vpn if not connected
 
 APP="push_ip"
-VER="2.0.0"
+VER="2.0.1"
 DATE="$(date +'%m/%d/%Y')"
 TIME="$(date +'%r')" 
 
@@ -24,8 +24,11 @@ if [[ $(expressvpn status) == "Not connected." ]]; then
 fi
 
 # push external IP address to dropbox
+if [[ $(expressvpn status) != "Not connected." ]]; then
+	echo -e "VPN is connected" >> /media/Raid/SensorMaster/exip.log
+fi
+
 IP="$(curl -s ipinfo.io/ip)"
-echo -e "VPN is connected" >> /media/Raid/SensorMaster/exip.log
 echo -e "external IP address" $IP >> /media/Raid/SensorMaster/exip.log
 rm /media/Raid/SensorMaster/exip.dat
 echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/exip.dat
