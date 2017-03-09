@@ -10,7 +10,7 @@
 /* Pcon version info */
 #define _MAJOR_VERSION_Pcon    10
 #define _MINOR_VERSION_Pcon    6
-#define _MINOR_REVISION_Pcon   0
+#define _MINOR_REVISION_Pcon   1
 
 
 // #define _TRACE 				// turn on trace
