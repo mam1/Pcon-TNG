@@ -68,8 +68,8 @@
 #define _TRACE_BUFFER_SIZE 		128		
 
 /* sensor parameteres */
-#define _NUMBER_OF_SENSORS		10
-#define _MAX_SENSORS			25
+#define _NUMBER_OF_SENSORS		20
+// #define _MAX_SENSORS			25
 #define _SNAME_SIZE 			10
 #define _SDESCRIPTION			_MAX_TOKEN_SIZE
 #define _MAX_SENSOR_ID			99
