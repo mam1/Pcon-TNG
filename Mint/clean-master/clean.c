@@ -48,7 +48,7 @@ int pushit(_SEN_DAT_REC *ss, int i){
 int main (void) {
 
 	FILE 			*sensor_data;
-	_SEN_DAT_REC 	buffer;
+	_SEN_DAT_REC 	buffer[_NUMBER_OF_SENSORSs];
 	int 			rcnt;
 	int 			i;
 
