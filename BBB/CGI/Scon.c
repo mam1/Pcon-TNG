@@ -302,8 +302,6 @@ int main(void) {
 		exit(0);
 	}
 
-	// printf(" CGI: temp %0.2f  humidity %0.2f\n\r", l_temp, l_humid);
-
 	/* move sensor data to shared memory */
 	ipc_sem_lock(semid, &sb);							// wait for a lock on shared memory
 	get_tm(rtc, &(ipc_ptr->s_dat[(int)l_num].ts));		// read the clock

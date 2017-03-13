@@ -76,26 +76,7 @@ lib:
 	cd .. && $(MAKE) clean
 	cd .. && $(MAKE)
 
-# build all project moduals
-project:
-	cd .. && $(MAKE) clean
-	cd .. && $(MAKE)
-	cd ../CGI && $(MAKE)
-	cd ../UI && $(MAKE)
-	cd ../daemon && $(MAKE)	
 
-dump:
-	@echo CC $(CC)
-	@echo cc $(cc)
-	@echo LINK $(LINK)
-	@echo LINK.cc $(LINK.cc)
-	@echo program_NAME $(program_NAME)
-	@echo program_C_OBJS $(program_C_OBJS)
-	@echo program_OBJS $(program_OBJS)
-	@echo LDFLAGS $(LDFLAGS)
-	@echo CPPFLAGS $(CPPFLAGS)
-	@echo CFLAGS $(CFLAGS)
-	@echo LINK.cc $(LINK.cc)
 
 
 distclean: clean
