@@ -17,21 +17,22 @@ if [ $? -ne 0 ]; then
 	init 6		# restart
 fi
 
-# check VPN status
-if [[ $(expressvpn status) == "Not connected." ]]; then
+# reconnect the VPN if necessay
+if [[ "$(expressvpn status)" = "Not connected." ]]; then
     echo  -e "vpn is not connected - reconnecting vpn" >> /media/Raid/SensorMaster/exip.log
 	echo -e $(expressvpn connect) >> /media/Raid/SensorMaster/exip.log
 fi
 
-# push external IP address to dropbox
-if [[ $(expressvpn status) != "Not connected." ]]; then
-	echo -e "VPN is connected" >> /media/Raid/SensorMaster/exip.log
-fi
-
+# get external IP addres
 IP="$(curl -s ipinfo.io/ip)"
+echo -e "VPN status" $(expressvpn status) >> /media/Raid/SensorMaster/exip.log
 echo -e "external IP address" $IP >> /media/Raid/SensorMaster/exip.log
+
+# write data to file
 rm /media/Raid/SensorMaster/exip.dat
 echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/exip.dat
 echo -e "VPN status" $(expressvpn status) >> /media/Raid/SensorMaster/exip.dat
 echo -e "external IP address" $IP >> /media/Raid/SensorMaster/exip.dat
+
+# push external IP address to dropbox
 echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload /media/Raid/SensorMaster/exip.dat current_ip) >> /media/Raid/SensorMaster/exip.log
