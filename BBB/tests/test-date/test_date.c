@@ -1,23 +1,31 @@
-#include <sys/sem.h>
-#include <sys/ipc.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <stdio.h>
-#include <unistd.h>		//sleep
-#include <stdint.h>		//uint_8, uint_16, uint_32, etc.
-#include <ctype.h> 		//isalnum, tolower
-#include <stdlib.h>
-#include <fcntl.h>
-#include <string.h>
 #include <time.h>
+#include <stdio.h>
+
+#include <"PCF8563.h">
+
+int main(void)
+{
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+
+	printf("now: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+	get
+	printf("RTC: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
 
+/* set PCF8563  */
+	int         rtc;
 
-int main(void){
+	/* Open the i2c-0 bus */
+	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);
 
-	time_t			t;
+	/* read the clock */
+	set_tm(rtc, &tm);
+	close(rtc);
 
-	printf("local: %s", asctime(localtime(&t)));
+	c_2(cb);
 
+	/* build prompt */
+	c_34(cb);
 	return 0;
 }
