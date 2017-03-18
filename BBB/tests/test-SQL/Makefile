@@ -23,31 +23,37 @@ ifeq ($(UNAME_S),Darwin)
 	program_LIBRARIES := Pcon
 else
 	program_DIR := /home/mam1/Git/Pcon-TNG/BBB/daemon
-	program_INCLUDE_DIRS := /usr/lib/mysql/mysql-connector-c-6.1.9-linux-glibc2.5-x86_64/include 	#/home/mam1/Git/Pcon-TNG/BBB/include 
-	program_LIBRARY_DIRS := /usr/lib/mysql/mysql-connector-c-6.1.9-linux-glibc2.5-x86_64/lib 		#/home/mam1/Git/Pcon-TNG/BBB/lib 
-	program_LIBRARIES :=  :libmysqlclient.so.18														#Pcon
+	program_INCLUDE_DIRS := /usr/lib/mysql/connector-c/include 	/home/mam1/Git/Pcon-TNG/BBB/include 
+	program_LIBRARY_DIRS := //usr/lib/x86_64-linux-gnu  	#/home/mam1/Git/Pcon-TNG/BBB/lib 
+	program_LIBRARIES := mysqlclient			    #Pcon
 endif
 
 # set parameters
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
-CFLAGS  += -Wall
+CFLAGS  += -Wall -fno-exceptions -fno-rtti 
 CXXFLAGS += $(CFLAGS)
-LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti 
+LDFLAGS += $(CFLAGS)
 
 # set locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
 	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
-else
-	PREFIX := /home/mam1/X-comp/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
-endif
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
 	AS  := $(PREFIX)as
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
+else
+	PREFIX := /home/mam1/X-comp/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+	CC  := $(PREFIX)gcc
+	CXX := $(PREFIX)g++
+	LD  := $(PREFIX)ld
+	AS  := $(PREFIX)as
+	AR  := $(PREFIX)ar
+	OBJCOPY := $(PREFIX)objcopy
+endif
 
 .PHONY: all clean distclean
 
@@ -56,7 +62,7 @@ all: $(program_NAME)
 
 
 $(program_NAME): $(program_OBJS)
-	$(CXX) $(program_OBJS) -o $(program_NAME) -Wall -I$(program_INCLUDE_DIRS) -L$(program_LIBRARY_DIRS) -l$(program_LIBRARIES) -Wall -fno-exceptions -fno-rtti
+	$(CC) $(program_OBJS) -o $(program_NAME) $(CCPFLAGS) $(LDFLAGS) #/usr/lib/mysql/connector-c/bin/mysql_config
 
 # move the executable to the bone
 	rsync -avz  $(program_DIR)/$(program_NAME) root@192.168.254.34:/usr/local/sbin 
@@ -88,22 +94,25 @@ project:
 	cd ../daemon && $(MAKE)	
 
 dump:
+	@echo 
+	@echo program_NAME $(program_NAME)
+	@echo program_INCLUDE_DIRS $(program_INCLUDE_DIRS)
+	@echo program_LIBRARY_DIRS $(program_LIBRARY_DIRS)
+	@echo program_LIBRARIES $(program_LIBRARIES)
+	@echo 
+	@echo program_C_OBJS $(program_C_OBJS)
+	@echo program_OBJS $(program_OBJS)
+
+	@echo 
+	@echo LDFLAGS $(LDFLAGS)
+	@echo CPPFLAGS $(CPPFLAGS)
+	@echo CFLAGS $(CFLAGS)
+
+	@echo 
+	@echo CXX $(CXX)
 	@echo CC $(CC)
 	@echo cc $(cc)
 	@echo LINK $(LINK)
 	@echo LINK.cc $(LINK.cc)
-	@echo program_NAME $(program_NAME)
-	@echo program_C_OBJS $(program_C_OBJS)
-	@echo program_OBJS $(program_OBJS)
-	@echo LDFLAGS $(LDFLAGS)
-	@echo CPPFLAGS $(CPPFLAGS)
-	@echo CFLAGS $(CFLAGS)
-	@echo LINK.cc $(LINK.cc)
-
-	@echo  program_NAME $(program_NAME)
-	@echo  program_INCLUDE_DIRS $(program_INCLUDE_DIRS)
-	@echo  program_LIBRARY_DIRS $(program_LIBRARY_DIRS)
-	@echo  program_LIBRARIES $(program_LIBRARIES)
-
 
 distclean: clean
