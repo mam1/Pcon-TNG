@@ -45,9 +45,10 @@
 #define YEAR_MASK           B8(11111111)
 #define CENTRY_MASK			B8(10000000)
 
-
-
-
+/* real time api */
 int open_tm(char *filename, uint8_t addr);
-int get_tm(int, _tm *);
-int set_tm(int, _tm *);
+void close_tm(int);
+void get_tm(int, _tm *);
+void set_tm(int, _tm *);
+
+

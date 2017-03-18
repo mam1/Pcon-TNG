@@ -18,6 +18,7 @@
 #include <ctype.h> 		//isalnum, tolower
 #include <stdlib.h>
 #include <fcntl.h>
+#include <time.h>
 #include "Pcon.h"
 #include "Dcon.h"
 #include "ipc.h"

@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 #include "shared.h"
 #include "ipc.h"
 #include "Pcon.h"

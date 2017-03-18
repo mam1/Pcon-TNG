@@ -1,7 +1,7 @@
 
 
 
-program_NAME := test-date
+program_NAME := set_rtc
 
 # scan directory 
 program_C_SRCS := $(wildcard *.c)
@@ -15,8 +15,8 @@ UNAME_S := $(shell uname -s)
 
 # set directories
 ifeq ($(UNAME_S),Darwin)
-	program_INCLUDE_DIRS := ../../include
-	program_LIBRARY_DIRS := ../../lib
+	program_INCLUDE_DIRS := ../include
+	program_LIBRARY_DIRS := ../lib
 	program_LIBRARIES := :libPcon.a
 else
 	program_INCLUDE_DIRS := ../include
@@ -66,13 +66,13 @@ $(program_NAME): $(program_OBJS)
 
 # move the directory to the bone
 ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/tests/test-date/test-date root@192.168.254.34:/usr/local/sbin/test-date
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/set_rtc/set_rtc root@192.168.254.34:/usr/local/sbin/set_rtc
 else
-	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/tests/test-date/test-date root@192.168.254.34:/usr/local/sbin/test-date
+	rsync -avz  /home/mam1/Git/Pcon-TNG/BBB/set_rtc/set_rtc root@192.168.254.34:/usr/local/sbin/set_rtc
 endif
 
-	ssh root@192.168.254.34 /usr/local/sbin/test-date		# change owner
-	ssh root@192.168.254.34 /usr/local/sbin/test-date		# open access
+	ssh root@192.168.254.34 /usr/local/sbin/set_rtc		# change owner
+	ssh root@192.168.254.34 /usr/local/sbin/set_rtc		# open access
 	
 # clean up
 	@- $(RM) -v $(program_NAME)

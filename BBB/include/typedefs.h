@@ -7,17 +7,16 @@
 #include <sys/types.h>
 #include "Pcon.h"
 
-/* time data structure */
 typedef struct {
-	int tm_sec;         // seconds
-	int tm_min;         // minutes
-	int tm_hour;        // hours
-	int tm_mday;        // day of the month
-	int tm_mon;         // month
-	int tm_year;        // year
-	int tm_wday;        // day of the week
-	int tm_yday;        // day in the year
-	int tm_isdst;       // daylight saving time
+	int    tm_sec;   // seconds [0,61]
+	int    tm_min;   // minutes [0,59]
+	int    tm_hour;  // hour [0,23]
+	int    tm_mday;  // day of month [1,31]
+	int    tm_mon;   // month of year [0,11]
+	int    tm_year;  // years since 1900
+	int    tm_wday;  // day of week [0,6] (Sunday = 0)
+	int    tm_yday;  // day of year [0,365]
+	int    tm_isdst; // daylight savings flag
 } _tm;
 
 /* system configuration data */

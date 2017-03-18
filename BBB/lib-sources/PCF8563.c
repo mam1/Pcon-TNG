@@ -20,6 +20,7 @@
 #include <string.h>
 #include <unistd.h>    //sleep
 #include <stdint.h>   //uint_8, uint_16, uint_32, etc.
+#include <time.h>
 
 #include "PCF8563.h"
 
@@ -51,9 +52,14 @@ int open_tm(char *filename, uint8_t addr){
   return fn;
 }
 
+void close_tm(int f){
+	close(f);
+	return;
+}
+
 // This function loads the time date structure
 // from the PCF8563 register buffer
-int get_tm(int rtc, _tm *tm){
+void get_tm(int rtc, _tm *tm){
   uint8_t   reg_buf[PCF8563_REGS];
 
   // select register to start read
@@ -82,15 +88,14 @@ int get_tm(int rtc, _tm *tm){
     // 	if(tm->tm_stamp[i] ==' ')
     // 		tm->tm_stamp[i] = '0';
   }
-  return 0;
 
-  return 0;
+  return;
 }
 
 // This function loads the values in the date structure
 // into the PCF8563.  
 
-int set_tm(int rtc,_tm *tm){
+void set_tm(int rtc,_tm *tm){
   uint8_t   reg_buf[PCF8563_REGS];
 
   printf("  set_time: tm->tm_mday = %i\n\r",tm->tm_mday);
