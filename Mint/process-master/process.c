@@ -18,63 +18,6 @@ process.c
 #include "Pcon.h"
 #include "typedefs.h"
 
-/* return a pointer to the most current of 2 time data structures */
-_tm *cdate(_tm *d1, _tm *d2){
-	if(d1->tm_year > d2->tm_year)
-		return d1;
-	if(d1->tm_year < d2->tm_year)
-		return d2;
-	if(d1->tm_mon > d2->tm_mon)
-		return d1;
-	if(d1->tm_mon < d2->tm_mon)
-		return d2;
-	if(d1->tm_mday > d2->tm_mday)
-		return d1;
-	if(d1->tm_mday < d2->tm_mday)
-		return d2;
-	if(d1->tm_hour > d2->tm_hour)
-		return d1;
-	if(d1->tm_hour < d2->tm_hour)
-		return d2;
-	if(d1->tm_min > d2->tm_min)
-		return d1;
-	if(d1->tm_min < d2->tm_min)
-		return d2;
-	if(d1->tm_sec > d2->tm_sec)
-		return d1;
-	if(d1->tm_sec < d2->tm_sec)
-		return d2;
-	return NULL;
-}
-
-/* return a pointer to the least current of 2 time data structures */
-_tm *fdate(_tm *d1, _tm *d2){
-	if(d1->tm_year < d2->tm_year)
-		return d1;
-	if(d1->tm_year > d2->tm_year)
-		return d2;
-	if(d1->tm_mon < d2->tm_mon)
-		return d1;
-	if(d1->tm_mon > d2->tm_mon)
-		return d2;
-	if(d1->tm_mday < d2->tm_mday)
-		return d1;
-	if(d1->tm_mday > d2->tm_mday)
-		return d2;
-	if(d1->tm_hour < d2->tm_hour)
-		return d1;
-	if(d1->tm_hour > d2->tm_hour)
-		return d2;
-	if(d1->tm_min < d2->tm_min)
-		return d1;
-	if(d1->tm_min > d2->tm_min)
-		return d2;
-	if(d1->tm_sec < d2->tm_sec)
-		return d1;
-	if(d1->tm_sec > d2->tm_sec)
-		return d2;
-	return d1;
-}
 
 int main (void) {
 
@@ -87,11 +30,12 @@ int main (void) {
 	float 			sum_t[_MAX_SENSOR_ID];
 	float 			max_t[_MAX_SENSOR_ID];
 	float 			min_t[_MAX_SENSOR_ID];
-	_tm 			c_date[_MAX_SENSOR_ID];
-	_tm 			f_date[_MAX_SENSOR_ID];
+	time_t 			c_date[_MAX_SENSOR_ID];
+	time_t 			f_date[_MAX_SENSOR_ID];
 	//  int 			sfound[_NUMBER_OF_SENSORS];
 	int 			i;
 	int 			hit_cnt[_MAX_SENSOR_ID];
+	struct tm		tmf, tmc;
 
 	printf("\r\n\nprocess_master v 0.0.5\r\n\n");
 	printf("    opening %s\n\r",_SENSOR_MASTER_FILE_NAME);
@@ -109,8 +53,6 @@ int main (void) {
 		sum_t[i] = 0;
 		max_t[i] = 0;
 		min_t[i] = 999;
-		c_date[i].tm_year = 2000;
-		f_date[i].tm_year = 4000;
 	}
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1)
 	{
@@ -133,8 +75,14 @@ int main (void) {
 		if(buffer.temp < min_t[buffer.sensor_id])
 			min_t[buffer.sensor_id] = buffer.temp;
 
-		c_date[buffer.sensor_id] = *cdate(&buffer.ts, &c_date[buffer.sensor_id]);
-		f_date[buffer.sensor_id] = *fdate(&buffer.ts, &f_date[buffer.sensor_id]);
+
+		if(buffer.ts > f_date[buffer.sensor_id]){
+			f_date[buffer.sensor_id] = buffer.ts;
+		}
+
+		if(buffer.ts > c_date[buffer.sensor_id]){
+			c_date[buffer.sensor_id] = buffer.ts;
+		}
 	}
 	printf("    %i records read\n\r", rcnt);
 	fclose(sensor_data);
@@ -148,10 +96,13 @@ int main (void) {
 	printf("\n%6s%6s%7s%7s         %17s        %22s\n\r","ID","ave","max","min","first read","last read");
 	printf("    --------------------------------------------------------------------------\n\r");
 	for(i=0; i<_MAX_SENSOR_ID; i++)
-		if(hit_cnt[i] > 0)
-			printf("%6i %6.1f %6.1f  %5.1f %4i:%02i:%02i-%02i/%02i/%02i %4i:%02i:%02i-%02i/%02i/%02i\n\r", 
-				i, avg_t[i], max_t[i], min_t[i], f_date[i].tm_hour, f_date[i].tm_min, f_date[i].tm_sec, f_date[i].tm_mon, f_date[i].tm_mday, f_date[i].tm_year,
-				c_date[i].tm_hour, c_date[i].tm_min, c_date[i].tm_sec, c_date[i].tm_mon, c_date[i].tm_mday, c_date[i].tm_year);
+		if(hit_cnt[i] > 0){
+			tmf = *localtime(&f_date[i]);
+			tmc = *localtime(&c_date[i]);
+			printf("%6i %6.1f %6.1f  %5.1f %4d:%02d:%02d-%02d/%02d/%02d %4d:%02d:%02d-%02d/%02d/%02d\n\r", 
+				i, avg_t[i], max_t[i], min_t[i], tmf.tm_hour, tmf.tm_min, tmf.tm_sec, tmf.tm_mon, tmf.tm_mday, tmf.tm_year,
+				tmc.tm_hour, tmc.tm_min, tmc.tm_sec, tmc.tm_mon, tmc.tm_mday, tmc.tm_year);
+		}
 
 	printf("\r\n %i records processed \r\n normal termination",rcnt);
 
