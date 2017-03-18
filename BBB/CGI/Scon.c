@@ -36,12 +36,14 @@ char *sch_mode[2] = {"day", "week"};
 char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
 /********** globals *******************************************************************/
-_IPC_DAT        ipc_dat, *ipc_ptr;                    		// ipc data
-char           	ipc_file[] = {_IPC_FILE_NAME};   			// name of ipc file
-void           	*data;                      				// pointer to ipc data
-int            	fd;                        				 	// file descriptor for ipc data file
-int         	rtc;										// file descriptor for PCF8563 RTC
-_tm         	tm;											// time date structure
+_IPC_DAT        ipc_dat, *ipc_ptr;              // ipc data
+char           	ipc_file[] = {_IPC_FILE_NAME};  // name of ipc file
+void           	*data;                      	// pointer to ipc data
+int            	fd;                        		// file descriptor for ipc data file
+int         	rtc;							// file descriptor for PCF8563 RTC
+_tm         	tm;								// time date structure						
+time_t 			t;								// unix standate time structure
+struct tm 		tm; 
 key_t 			skey = _SEM_KEY;
 int 			semid;
 unsigned short 	semval;
@@ -225,24 +227,6 @@ int main(void) {
 
 	printf("%s"," CGI: files opened\n\r" );
 
-	// /* check for ipc file and ipc backup file */	
- //    if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
- //        bkup = 1;
- //        fprintf(stderr, "%s\n"," ipc backup found" );
- //    }
- //    else{ 
- //        bkup = 0;
- //        fprintf(stderr, "%s\n"," ipc backup not found" );
- //    }
- //    if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
- //        ipc = 1;
- //        fprintf(stderr, "%s\n"," ipc file found" );
-
- //    }
- //    else
- //        ipc = 0;
- //    }
-
 	/* setup shared memory */
 	ipc_sem_init();
 	semid = ipc_sem_id(skey);					// get semaphore id
@@ -253,21 +237,6 @@ int main(void) {
     ipc_sem_free(semid, &sb);                   // free lock on shared memory
 
     printf("%s"," CGI: shared memory setup\n\r" );
-
-	// if(ipc==0){
-	// 	fprintf(stderr, "%s\n"," ipc file not found" );
-	// 	fprintf(stderr, "%s\n"," new ipc file created and initialized" );
-	// 	ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
- //        ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
- //        ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
- //        ipc_ptr->sys_data.config.minor_revision = _MINOR_REVISION_system;
- //        ipc_ptr->sys_data.config.channels = _NUMBER_OF_CHANNELS;
- //        ipc_ptr->sys_data.config.sensors = _NUMBER_OF_SENSORS;
- //        ipc_ptr->sys_data.config.commands = _CMD_TOKENS;
- //        ipc_ptr->sys_data.config.states = _CMD_STATES;
- //        ipc_sem_free(semid, &sb);                   // free lock on shared memory
-	// }
-
 
 	/*********** start main process *******************************************************************/
 
@@ -305,11 +274,17 @@ int main(void) {
 
 	/* move sensor data to shared memory */
 	ipc_sem_lock(semid, &sb);							// wait for a lock on shared memory
-	get_tm(rtc, &(ipc_ptr->s_dat[(int)l_num].ts));		// read the clock
+
+	/* get the system time */
+	s_dat[(int)l_num].ts = time(NULL);
+    if (s_dat[(int)l_num].ts == ((time_t)-1))
+    {
+        (void) fprintf(stderr, "Failure to obtain the current time.\n");
+        return 1;
+	}
 	ipc_ptr->s_dat[(int)l_num].sensor_id = (int)l_num;
 	ipc_ptr->s_dat[(int)l_num].temp = l_temp;
 	ipc_ptr->s_dat[(int)l_num].humidity = l_humid;
-
 	printf("%s"," CGI: sensor data moved to  shared memory\n\r" );
 
 	/* log sensor data */
@@ -322,17 +297,18 @@ int main(void) {
 	if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
 		printf("*** error writing to %s\n", sensor_log_file); 
 	else 
+		/* get the system time */
+		tm = *localtime(&buffer.ts);
 		printf(" CGI: sensor %i, %i:%i:%i,  %i/%i/%i,  temp %0.2f,  humidity %0.2f\n\r",
 			buffer.sensor_id, 
-			buffer.ts.tm_hour, 
-			buffer.ts.tm_min, 
-			buffer.ts.tm_sec, 
-			buffer.ts.tm_mon, 
-			buffer.ts.tm_mday, 
-			buffer.ts.tm_year,
+			tm.tm_hour, 
+			tm.tm_min, 
+			tm.tm_sec, 
+			tm.tm_mon, 
+			tm.tm_mday, 
+			tm.tm_year,
 			buffer.temp,
 			buffer.humidity);
-
 		printf(" CGI: data logged to %s\n\r", sensor_log_file);
 
 	fclose(cgi_data);

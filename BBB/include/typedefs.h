@@ -59,7 +59,7 @@ typedef struct {
 	int 		channel_index;					// points to the next open assingment
 	float		temp;							// current sensor reading
 	float		humidity;						// current sensor reading
-	_tm 		ts; 							// time and date of the reading
+	time_t 		ts; 							// time and date of the reading
 } _SEN_DAT;
 
 /* sensor data log file */
@@ -67,7 +67,7 @@ typedef	struct{
 		int 		sensor_id;
 		float		temp;
 		float		humidity;
-		_tm 		ts;
+		time_t 		ts;
 } _SEN_DAT_REC;
 
 /* schedule record */
