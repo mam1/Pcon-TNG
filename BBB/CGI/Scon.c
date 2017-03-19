@@ -40,8 +40,8 @@ _IPC_DAT        ipc_dat, *ipc_ptr;              // ipc data
 char           	ipc_file[] = {_IPC_FILE_NAME};  // name of ipc file
 void           	*data;                      	// pointer to ipc data
 int            	fd;                        		// file descriptor for ipc data file
-int         	rtc;							// file descriptor for PCF8563 RTC
-_tm         	tm;								// time date structure						
+// int         	rtc;							// file descriptor for PCF8563 RTC
+// _tm         	tm;								// time date structure						
 time_t 			t;								// unix standate time structure
 struct tm 		tm; 
 key_t 			skey = _SEM_KEY;
@@ -204,8 +204,8 @@ int main(void) {
 
 	/********** initializations *******************************************************************/
 
-	/* setup PCF8563 RTC */
-	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
+	// /* setup PCF8563 RTC */
+	// rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 
 	/* open files */
 	cgi_data = fopen(sensor_log_file,"a");
@@ -276,8 +276,8 @@ int main(void) {
 	ipc_sem_lock(semid, &sb);							// wait for a lock on shared memory
 
 	/* get the system time */
-	s_dat[(int)l_num].ts = time(NULL);
-    if (s_dat[(int)l_num].ts == ((time_t)-1))
+	ipc_ptr->s_dat[(int)l_num].ts = time(NULL);
+    if (ipc_ptr->s_dat[(int)l_num].ts == ((time_t)-1))
     {
         (void) fprintf(stderr, "Failure to obtain the current time.\n");
         return 1;
