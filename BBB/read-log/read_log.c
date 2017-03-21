@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 #include "shared.h"
 #include "ipc.h"
 #include "Pcon.h"
@@ -31,6 +32,7 @@ int main (void) {
 
 	FILE 			*sensor_data;
 	_SEN_DAT_REC	 buffer;
+	struct tm 		tm;
 
 	// int 		parm =2;
 
@@ -42,9 +44,22 @@ int main (void) {
 	}
 	printf("  %s opened\n",_SENSOR_LOG_FILE_NAME);
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
-		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %0.2f humidity %0.2f\n",
-	       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
-	       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
+
+		tm = *localtime(&buffer.ts);
+		printf(" CGI: sensor %i, %i:%i:%i,  %i/%i/%i,  temp %0.2f,  humidity %0.2f\n\r",
+			buffer.sensor_id, 
+			tm.tm_hour, 
+			tm.tm_min, 
+			tm.tm_sec, 
+			tm.tm_mon + 1, 
+			tm.tm_mday, 
+			tm.tm_year + 1900,
+			buffer.temp,
+			buffer.humidity);
+		printf(" CGI: data logged to %s\n\r", _SENSOR_LOG_FILE_NAME);
+		// printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %0.2f humidity %0.2f\n",
+	 //       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
+	 //       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
 	}
 
 	fclose(sensor_data);

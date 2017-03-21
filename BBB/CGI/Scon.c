@@ -304,9 +304,9 @@ int main(void) {
 			tm.tm_hour, 
 			tm.tm_min, 
 			tm.tm_sec, 
-			tm.tm_mon, 
+			tm.tm_mon + 1, 
 			tm.tm_mday, 
-			tm.tm_year,
+			tm.tm_year  + 1900,
 			buffer.temp,
 			buffer.humidity);
 		printf(" CGI: data logged to %s\n\r", sensor_log_file);
