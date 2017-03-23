@@ -1,4 +1,4 @@
-
+ 
 /* sch version info */
 #define _MAJOR_VERSION    10
 #define _MINOR_VERSION    4
@@ -141,7 +141,7 @@ int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int hu
 	return 0;
 }
 
-/* convert a key to hous and minutes */
+/* convert a key to hours and minutes */
 int con_key(int key, int *hour, int *minute) {
 	// printf("***************** con_key called\r\n");
 	*hour = key / 60;
