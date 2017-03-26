@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 // #include "shared.h"
 // // #include "ipc.h"
 // #include "Pcon.h"
@@ -27,32 +28,18 @@ char *con_mode[3] = {"manual", "  time", "time & sensor"};
 char *sch_mode[2] = {"day", "week"};
 char *mode[4] = {"manual", "  time", "   t&s", " cycle"};
 
-#define 	d 		4
-
-_SEN_DAT_REC	s[d];
-int 			s_index = {0};
-
-int push(_SEN_DAT_REC *ss,i){
-
-	s[i] = *ss;
-	if(i+1 > d)
-		i = 0;
-	else
-		i += 1;;
-
-	return i;
-}
-
-
 
 int main (void) {
 
-	FILE 			*sensor_data;
-	_SEN_DAT_REC 		buffer;
+	FILE 				*sensor_data;
+	static _SEN_DAT_REC 		buffer;
+	struct tm			ltm, *rec_ptr;
+	int 				rcnt = 0;
+	time_t 				st;
 
-	printf("\r\n\nread_master v 0.0.6\r\n\n");
+
+	printf("\r\n\nread_master v 0.0.9\r\n\n");
 	printf("  opening %s\n\r",_SENSOR_MASTER_FILE_NAME);
-
 	sensor_data = fopen(_SENSOR_MASTER_FILE_NAME,"r");
 	if(sensor_data == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
@@ -63,19 +50,41 @@ int main (void) {
 	printf("  %s opened\n",_SENSOR_MASTER_FILE_NAME);
 
 
-	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
-		s_index = push(buffer,s_index);
-		if(rcnt > d){
-			
-		}
 
-		printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %0.2f humidity %0.2f\n",
-	       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
-	       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
+	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
+		rcnt++;
+
+		// ltm = *localtime(&buffer.ts);
+		// struct tm 	tm;
+		// st = time(NULL);
+		buffer.ts = time(NULL);
+		// rec_ptr = localtime(&buffer.ts);
+		ltm = *localtime(&buffer.ts);
+
+
+
+		printf("      rec %d, sensor_id %i  : %d-%d-%d %d:%d:%d\n", rcnt, buffer.sensor_id, ltm.tm_year + 1900, ltm.tm_mon + 1, ltm.tm_mday, ltm.tm_hour, ltm.tm_min, ltm.tm_sec);
+
+
+		// printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %0.2f humidity %0.2f\n",
+	 //       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
+	 //       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
 	}
 
+	printf("  %i records read\n\n", rcnt);
 	fclose(sensor_data);
 
   return (0);
 }
 
+
+		// printf(" CGI: sensor %i, %i:%i:%i,  %i/%i/%i,  temp %0.2f,  humidity %0.2f\n\r",
+		// 	buffer.sensor_id, 
+		// 	tm.tm_hour, 
+		// 	tm.tm_min, 
+		// 	tm.tm_sec, 
+		// 	tm.tm_mon + 1, 
+		// 	tm.tm_mday, 
+		// 	tm.tm_year  + 1900,
+		// 	buffer.temp,
+		// 	buffer.humidity);

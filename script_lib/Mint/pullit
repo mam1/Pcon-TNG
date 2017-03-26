@@ -13,26 +13,26 @@ CURRENT_OS=$(uname)
 if [ $CURRENT_OS == "Linux" ]
 then
 # append working sensor from the bone to the master log and erase working log
-	echo -e "\n*********************************************************************" >> /media/Raid/SensorMaster/pullit.log
-	echo -e $APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/pullit.log
-	echo -e "\rappending active sensor log to master log\r" >> /media/Raid/SensorMaster/pullit.log
-	echo -e $(rsync  -azv root@192.168.254.34:/media/CGI-sensor-log/sensor.dat /media/Raid/SensorMaster/temp_sensor.dat) >> /media/Raid/SensorMaster/pullit.log 
-	echo -n $? >> /media/Raid/SensorMaster/pullit.log
-	echo -e " returned from rsync" >> /media/Raid/SensorMaster/pullit.log
-	cat /media/Raid/SensorMaster/temp_sensor.dat >> /media/Raid/SensorMaster/master.dat
+	echo -e "\n*********************************************************************" >> '/media/Raid/sensor logs/pullit.log'
+	echo -e $APP $VER "run at" $TIME "on" $DATE >> '/media/Raid/sensor logs/pullit.log'
+	echo -e "\rappending active sensor log to master log\r" >> '/media/Raid/sensor logs/pullit.log'
+	echo -e $(rsync  -azv root@192.168.254.34:/media/CGI-sensor-log/sensor.dat '/media/Raid/sensor logs/temp_sensor.dat') >> '/media/Raid/sensor logs/pullit.log' 
+	echo -n $? >> '/media/Raid/sensor logs/pullit.log'
+	echo -e " returned from rsync" >> '/media/Raid/sensor logs/pullit.log'
+	cat '/media/Raid/sensor logs/temp_sensor.dat' >> '/media/Raid/sensor logs/master.dat'
 	echo -e "erase working sensor log file on bone"
-	echo -e $(ssh root@192.168.254.34 'rm /media/CGI-sensor-log/sensor.dat') >> /media/Raid/SensorMaster/pullit.log
+	echo -e $(ssh root@192.168.254.34 'rm /media/CGI-sensor-log/sensor.dat') >> '/media/Raid/sensor logs/pullit.log'
 
 # process the master log
 	DATE="$(date +'%m/%d/%Y')"
 	TIME="$(date +'%r')"
-	rm /media/Raid/SensorMaster/temp_sensor.dat
-	echo -e "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/temp_sensor.dat
-	echo -e $(/home/mam1/Git/Pcon-TNG/Mint/process-master/process) >> /media/Raid/SensorMaster/temp_sensor.dat
-	cat /media/Raid/SensorMaster/temp_sensor.dat >> /media/Raid/SensorMaster/pullit.log
+	rm '/media/Raid/sensor logs/temp_sensor.dat'
+	echo -e "run at" $TIME "on" $DATE >> '/media/Raid/sensor logs/temp_sensor.dat'
+	# echo -e $(/home/mam1/Git/Pcon-TNG/Mint/process-master/process) >> '/media/Raid/sensor logs/temp_sensor.dat
+	cat '/media/Raid/sensor logs/temp_sensor.dat' >> '/media/Raid/sensor logs/pullit.log'
 
 # push summery data to dropbox
-	echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload /media/Raid/SensorMaster/temp_sensor.dat sensors) >> /media/Raid/SensorMaster/pullit.log
+	echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload '/media/Raid/sensor logs/temp_sensor.dat' sensors) >> '/media/Raid/sensor logs/pullit.log'
 
 else
 # running on OS X don't do anthing

@@ -188,7 +188,7 @@ int main(void) {
 	long 			l_num;
 	float 			l_temp, l_humid;
 	// char 			file_name[_FILE_NAME_SIZE];
-	char           	sensor_log_file[] = {_SENSOR_LOG_FILE_NAME};   			// name of sensor log file
+	char           	sensor_log_file[] = {_SENSOR_DATA_FILE_NAME};   			// name of sensor log file
 
 	char 			*eptr;
 
@@ -208,13 +208,13 @@ int main(void) {
 	// rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 
 	/* open files */
-	cgi_data = fopen(sensor_log_file,"a");
+	cgi_data = fopen(_SENSOR_DATA_FILE_NAME,"a");
 	if(cgi_data == NULL){
 		sleep (1000);
-		cgi_data = fopen(sensor_log_file,"a");
+		cgi_data = fopen(_SENSOR_DATA_FILE_NAME,"a");
 		if(cgi_data == NULL){
 			printf("  Error: %d (%s)\n", errno, strerror(errno));
-			printf("    attempting to open %s\n\n application terminated\n\n", sensor_log_file);
+			printf("    attempting to open %s\n\n application terminated\n\n", _SENSOR_DATA_FILE_NAME);
 			return 1;
 		}
 	}
@@ -250,10 +250,16 @@ int main(void) {
 		return 1;
 	}
 
+
 	l_num = strtol(s_num, &eptr, 10);
 	if (l_num == 0)
 	{
 		printf("*** Conversion error occurred: %d", errno);
+		exit(0);
+	}
+	if ((l_num < 0) && (s_num > 99))
+	{
+		printf("*** sensor id out of range: %d", errno);
 		exit(0);
 	}
 
@@ -295,7 +301,7 @@ int main(void) {
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
 
 	if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
-		printf("*** error writing to %s\n", sensor_log_file); 
+		printf("*** error writing to %s\n", _SENSOR_DATA_FILE_NAME); 
 	else 
 		/* get the system time */
 		tm = *localtime(&buffer.ts);
@@ -309,7 +315,7 @@ int main(void) {
 			tm.tm_year  + 1900,
 			buffer.temp,
 			buffer.humidity);
-		printf(" CGI: data logged to %s\n\r", sensor_log_file);
+		printf(" CGI: data logged to %s\n\r", _CGI_LOG_FILE_NAME);
 
 	fclose(cgi_data);
 	fclose(cgi_log);
