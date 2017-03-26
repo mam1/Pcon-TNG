@@ -832,6 +832,7 @@ int c_21(_CMD_FSM_CB *cb)
 	}
 	/* update control block */
 	cb->w_minutes = cb->token_value;
+	
 	strcpy(cb->w_minutes_str, cb->token);
 
 	/* build prompt */

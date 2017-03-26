@@ -188,6 +188,8 @@ int main(void) {
 	// _SYS_DAT 	sdat;
 	int 		h_min;
 	_tm 		t;
+	struct tm 	tm;
+	time_t 		st;
 	int 		ipc;
 
 	/* Fork off the parent process */
@@ -229,10 +231,7 @@ int main(void) {
 	/* setup PCF8563 RTC */
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 	logit(NULL, "daemon started");
-
-	get_tm(rtc, &t); 					// get the current time and date
 	logit(NULL, "starting initializations");
-
 
 	/* check for ipc file and ipc backup file */	
     // if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
@@ -325,21 +324,35 @@ int main(void) {
 	logit(NULL, "initialization complete");
 	logit(NULL, "starting main loop");
 	while (1) {
-		get_tm(rtc, &tm);				// read the time from the real time clock
-		
+		// get_tm(rtc, &tm);				// read the time from the real time clock
+		st = time(NULL);
+	    if (st == ((time_t)-1))
+	    {
+	        (void) fprintf(stderr, "Failure to obtain the current time\r\n");
+	        return 1;
+	    }
+		tm = *localtime(&st);
+		t.tm_sec = tm.tm_sec; 
+	    t.tm_min = tm.tm_min; 
+	    t.tm_hour = tm.tm_hour; 
+	    t.tm_mday = tm.tm_mday; 
+	    t.tm_wday = tm.tm_wday;
+	    t.tm_mon = tm.tm_mon + 1; 
+	    t.tm_year = tm.tm_year + 1900; 
+
 		if (ipc_ptr->force_update == 1) {
 			ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
 			ipc_ptr->force_update = 0;
 			ipc_sem_free(semid, &sb);                   // free lock on shared memory
-			logit(&tm, "update forced");
-			update_relays(&tm, ipc_ptr);
+			logit(&t, "update forced");
+			update_relays(&t, ipc_ptr);
 			continue;
 		}
 		else {
-			if (h_min != tm.tm_min) {	// see if we are on a new minute
-				h_min = tm.tm_min;
-				logit(&tm, "update triggered by time");
-				update_relays(&tm, ipc_ptr);
+			if (h_min != t.tm_min) {	// see if we are on a new minute
+				h_min = t.tm_min;
+				logit(&t, "update triggered by time");
+				update_relays(&t, ipc_ptr);
 				continue;
 			}
 		}
