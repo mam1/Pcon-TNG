@@ -82,6 +82,8 @@ void prompt(int s) {
 
 /* push a copy of the current cmd line into the cmd buffer  */
 void push_cmd_buffer(char *cbuff) {
+	if(strcmp(&cmd_buffer[cmd_buffer_push_index][0], cbuff) == 0)
+		return;
 	cmd_buffer_push_index += 1;
 	if (cmd_buffer_push_index > _CMD_BUFFER_DEPTH)
 		cmd_buffer_push_index = 0;
@@ -102,7 +104,7 @@ char *rd_cmd_buffer(void) {
 	if (cmd_buffer_pop_index - 1 < 0)
 		cmd_buffer_pop_index = cmd_buffer_push_index;
 
-	return &(cmd_buffer[cmd_buffer_pop_index-1][0]);
+	return &(cmd_buffer[cmd_buffer_pop_index--][0]);
 }
 
 
@@ -113,7 +115,7 @@ void up_arrow(void) {
 
 	/* fix screen */
 	if(work_buffer_ptr != work_buffer)
-	while (*(work_buffer_ptr - 1) != '\0') {
+	while ((*(work_buffer_ptr - 1) != '\0') && (work_buffer_ptr != work_buffer)) {
 		fputc(_BS, stdout);
 		fputc(' ', stdout);
 		fputc(_BS, stdout);
@@ -137,7 +139,7 @@ void down_arrow(void) {
 	int 	l, i;
 
 	/* fix screen */
-	while (*(work_buffer_ptr - 1) != '\0') {
+	while ((*(work_buffer_ptr - 1) != '\0') && (work_buffer_ptr != work_buffer)) {
 		fputc(_BS, stdout);
 		fputc(' ', stdout);
 		fputc(_BS, stdout);
@@ -410,10 +412,11 @@ int main(void) {
 #if defined (_ATRACE) || defined (_PTRACE)
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _BS", trace_flag);
 #endif
-			if (*(work_buffer_ptr - 1) != '\0') {
+			if ((*(work_buffer_ptr - 1) != '\0') && (work_buffer_ptr != work_buffer)){
 #if defined (_ATRACE) || defined (_PTRACE)
 				trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "remove character from input buffer", trace_flag);
 #endif
+
 				fputc(_BS, stdout);
 				fputc(' ', stdout);
 				fputc(_BS, stdout);
