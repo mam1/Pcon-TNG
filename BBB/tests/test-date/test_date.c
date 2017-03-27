@@ -7,7 +7,8 @@
 
 int main(void)
 {
-	time_t t;
+	time_t 			t;
+	struct tm 		tm;
 
 	t = time(NULL);
     if (t == ((time_t)-1))
@@ -15,7 +16,7 @@ int main(void)
         (void) fprintf(stderr, "Failure to obtain the current time.\n");
         return 1;
     }
-	struct tm tm = *localtime(&t);
+	tm = *localtime(&t);
 
 	printf("now: %d-%d-%d %d:%d:%d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
@@ -27,7 +28,7 @@ int main(void)
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);
 
 	/* read the rtc */
-	get_tm(rtc, &rtc_time);
+	get_tm(&rtc_time);
 	printf("RTC: %d-%d-%d %d:%d:%d\n", rtc_time.tm_year, rtc_time.tm_mon, rtc_time.tm_mday, rtc_time.tm_hour, rtc_time.tm_min, rtc_time.tm_sec);
 
 	/* set the rtc to system clock */
@@ -45,7 +46,7 @@ int main(void)
     printf("clock reset\n");
     set_tm(rtc,&rtc_time);
 
-    get_tm(rtc, &rtc_time);
+    get_tm(&rtc_time);
 	printf("RTC: %d-%d-%d % 2d:% 2d:% 2d\n", rtc_time.tm_year, rtc_time.tm_mon, rtc_time.tm_mday, rtc_time.tm_hour, rtc_time.tm_min, rtc_time.tm_sec);
 
 

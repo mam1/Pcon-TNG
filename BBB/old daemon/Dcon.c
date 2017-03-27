@@ -340,7 +340,7 @@ int main(void) {
 			// dispdat();
 		}
 		else {
-			get_tm(rtc, &tm);
+			get_tm(&tm);
 			if (h_min != tm.tm_min) {					// see if we are on a new minute
 				h_min = tm.tm_min;
 				printf("\n*** update triggered by time:");

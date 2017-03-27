@@ -440,7 +440,7 @@ int c_2(_CMD_FSM_CB *cb)
 	int         rtc;
 
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
-	get_tm(rtc, &tm);							// read the clock
+	get_tm(&tm);							// read the clock
 	sleep(1);
 	printf(" %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);

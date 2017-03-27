@@ -57,37 +57,26 @@ void close_tm(int f){
 	return;
 }
 
-// This function loads the time date structure
-// from the PCF8563 register buffer
-void get_tm(int rtc, _tm *tm){
-  uint8_t   reg_buf[PCF8563_REGS];
+// This function loads the time date frome the system time
+void get_tm(_tm *myt){
+	time_t 			t;
+	struct tm 		st;
 
-  // select register to start read
-  reg_buf[0] = SEC_REG;
-  if (write(rtc,reg_buf,1) != 1) {
-    /* ERROR HANDLING: i2c transaction failed */
-    printf("Failed to write to the i2c bus.\n");
-    printf("\n\n");
-  }
-  // read registers
-  if (read(rtc,reg_buf,7) != 7) {
-    /* ERROR HANDLING: i2c transaction failed */
-    printf("Failed to read from the i2c bus: %s.\n", strerror(errno));
-    printf("\n\n");
-    } 
-  else {
-    tm->tm_sec = BCDToDecimal(reg_buf[0] & 0x7f);
-    tm->tm_min = BCDToDecimal(reg_buf[1] & 0x7f);
-    tm->tm_hour = BCDToDecimal(reg_buf[2] & 0x3f);
-    tm->tm_mday = BCDToDecimal(reg_buf[3] & 0x3f);
-    tm->tm_wday = reg_buf[4] & 0x7;
-    tm->tm_mon = BCDToDecimal(reg_buf[5] & 0x1f);    /* rtc mn 1-12 */
-    tm->tm_year = BCDToDecimal(reg_buf[6]) + 2000;
-    // snprintf(&tm->tm_stamp[0], sizeof(tm->tm_stamp), "%4d%2d%2d%2d%2d",tm->tm_year,tm->tm_mon,tm->tm_mday,tm->tm_hour,tm->tm_min);
-    // for(i=0;i<15;i++)
-    // 	if(tm->tm_stamp[i] ==' ')
-    // 		tm->tm_stamp[i] = '0';
-  }
+	t = time(NULL);
+    if (t == ((time_t)-1))
+    {
+        fprintf(stderr, "Failure to obtain the current time.\n");
+        return;
+    }
+	st = *localtime(&t);
+
+	myt->tm_sec = st.tm_sec; 
+    myt->tm_min = st.tm_min; 
+    myt->tm_hour = st.tm_hour; 
+    myt->tm_mday = st.tm_mday; 
+    myt->tm_wday = st.tm_wday;
+    myt->tm_mon = st.tm_mon + 1; 
+    myt->tm_year = st.tm_year + 1900; 
 
   return;
 }
