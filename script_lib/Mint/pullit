@@ -16,12 +16,12 @@ then
 	echo -e "\n*********************************************************************" >> '/media/Raid/sensor logs/pullit.log'
 	echo -e $APP $VER "run at" $TIME "on" $DATE >> '/media/Raid/sensor logs/pullit.log'
 	echo -e "\rappending active sensor log to master log\r" >> '/media/Raid/sensor logs/pullit.log'
-	echo -e $(rsync  -azv root@192.168.254.34:/media/CGI-sensor-log/sensor.dat '/media/Raid/sensor logs/temp_sensor.dat') >> '/media/Raid/sensor logs/pullit.log' 
+	echo -e $(rsync  -azv root@192.168.254.34:/media/sensor.dat '/media/Raid/sensor logs/temp_sensor.dat') >> '/media/Raid/sensor logs/pullit.log' 
 	echo -n $? >> '/media/Raid/sensor logs/pullit.log'
 	echo -e " returned from rsync" >> '/media/Raid/sensor logs/pullit.log'
 	cat '/media/Raid/sensor logs/temp_sensor.dat' >> '/media/Raid/sensor logs/master.dat'
 	echo -e "erase working sensor log file on bone"
-	echo -e $(ssh root@192.168.254.34 'rm /media/CGI-sensor-log/sensor.dat') >> '/media/Raid/sensor logs/pullit.log'
+	echo -e $(ssh root@192.168.254.34 'rm /media/sensor.dat') >> '/media/Raid/sensor logs/pullit.log'
 
 # process the master log
 	DATE="$(date +'%m/%d/%Y')"
