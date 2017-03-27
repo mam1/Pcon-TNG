@@ -44,7 +44,7 @@ int main(void)
 	       rtc_time.tm_hour, rtc_time.tm_min, rtc_time.tm_sec, rtc_time.tm_wday, rtc_time.tm_mon, rtc_time.tm_mday, rtc_time.tm_year);
 
     printf("clock reset\n");
-    set_tm(rtc,&rtc_time);
+    set_tm(rtc, &rtc_time);
 
     get_tm(&rtc_time);
 	printf("RTC: %d-%d-%d % 2d:% 2d:% 2d\n", rtc_time.tm_year, rtc_time.tm_mon, rtc_time.tm_mday, rtc_time.tm_hour, rtc_time.tm_min, rtc_time.tm_sec);

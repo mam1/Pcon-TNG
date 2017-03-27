@@ -13,6 +13,7 @@ process.c
 #include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
+#include <time.h>
 #include <errno.h>
 #include "shared.h"
 #include "Pcon.h"
@@ -37,12 +38,12 @@ int main (void) {
 	int 			hit_cnt[_MAX_SENSOR_ID];
 	struct tm		tmf, tmc;
 
-	printf("\r\n\nprocess_master v 0.0.5\r\n\n");
-	printf("    opening %s\n\r",_SENSOR_MASTER_FILE_NAME);
+	printf("\r\n\nprocess_master v 1.0.1\r\n\n");
+	printf("  opening %s\n\r",_SENSOR_MASTER_FILE_NAME);
 
 	sensor_data = fopen(_SENSOR_MASTER_FILE_NAME,"r");
 	if(sensor_data == NULL){
-		printf("  Error: %d (%s)\n", errno, strerror(errno));
+		printf("***  Error: %d (%s)\n", errno, strerror(errno));
 		printf("    attempting to open %s\n\n application terminated\n\n", _SENSOR_MASTER_FILE_NAME);
 		return 1;
 	}
@@ -59,7 +60,7 @@ int main (void) {
 		rcnt++;
 		if(buffer.sensor_id < 0 || buffer.sensor_id > _MAX_SENSOR_ID)
 		{
-			printf("  record %i sensor id out of range  <%i>\n", rcnt, buffer.sensor_id);
+			printf("    record %i sensor id out of range  <%i>\n", rcnt, buffer.sensor_id);
 			if(fread(&buffer, sizeof(buffer), 1, sensor_data) != 1){
 				printf("*** input file screwed up\r\n");
 				return 1;

@@ -1,7 +1,7 @@
 
-##PCON-TNG
+## PCON-TNG
 ------
-###*** under construction and not stable ***
+### *** under construction and not stable ***
 ------
 These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a Beagle Bone Black (BBB), A BBB Cape from Waveshare with a real time clock, a BBB custom Control Cape built for this project and a Digital IO Board from Parallax. The hardware supports 16 channels:
 
@@ -20,7 +20,7 @@ The BBB Control Cape (part of this project) uses PhotoMOS relays for controlling
 
 The BBB provides a state machine driven user interface to configure channels, build and maintain schedules, query sensor and channel data, manually control channel states, etc.
 - - - - - - - - -
-####Hardware
+#### Hardware
   * **BeagleBone Black Rev C - 4GB Flash, adafruit**
   * **BBB Control Cape**
     *  1 - Beaglebone Black expansion board, Waveshare
@@ -37,7 +37,7 @@ The BBB provides a state machine driven user interface to configure channels, bu
     * DHT22 temperature/humidity sensor, Electro Dragon
     * 0.96” 128*64 OLED Display (i2c), Electro Dragon
 
-#####BeagleBone GPIO assignments
+##### BeagleBone GPIO assignments
       header  pin #   gpio    use
     -------------------------------------------------------------------
     LEDs on WaveShare Misc Cape
@@ -67,10 +67,10 @@ The BBB provides a state machine driven user interface to configure channels, bu
 
 
 
-######I2c connection between the BBB and PCF8563 real time clock on the Misc Cape 
+###### I2c connection between the BBB and PCF8563 real time clock on the Misc Cape 
 The WaveShare cape is jumbered to use i2c2 on the bone.
 
-#####Serial connection between BBB and DIOB
+##### Serial connection between BBB and DIOB
 The serial interface (2x5 header) reduces the number of pins required to control the Digital I/O Board by serially shifting data to/from the board over a synchronous serial interface. Whereas full control requires 16 I/O pins using the parallel interface, the serial interface can provide full control with as few as 4 I/O pins.
 
 The pins labeled DATA_RLY, SCLK_RLY, LAT_RLY and /OE_RLY are connected to a 74HC595 serial to parallel shift register. These pins have the following functions: DATA_RLY is serial data going out to the shift register. This data is sent MSB first (8 bits) synchronously with the SCLK_RLY pin. Once the data has been shifted out the LAT_RLY pin must be pulsed to latch the data onto the outputs. /OE_RLY must be LOW in order for the 74HC595 to drive the relays. This can be tied to VSS or controlled via an I/O pin.
@@ -79,25 +79,25 @@ The pins labeled DIN, SCLK_IN and LOAD_IN are connected to a 74HC165 parallel to
 
 The DIN line has a 1K resistor in series to allow sharing of the 74HC165 data line with the 74HC595 DATA_RLY line. Connecting these lines together and also connecting SCLK_RLY to SCLK_IN reduces the number of I/O pins required by the microcontroller down to four (4). In this configuration LAT_RLY and LOAD_IN must have their own I/O pins and /OE_RLY can be connected to VSS. This circuit provides a half-duplex system where you can access one shift register at a time. For full duplex operation the DIN and DATA_RLY lines must be separate and for independent operation the SCLK_RLY and SCLK_IN must also be separate.
 
-####Development Environment:
+#### Development Environment:
 
 All code is stored on github.  The repository is cloned on two development machines.  At one site I have a MacMini running Linux Mint 17.x and at the other I have have an iMac running OS X 10.10.x . The Bone is connected to my network. I can access it from either site using ssh. I use rsync to move the binaries from the development machines to the Bone. 
 
 When cross compiling for the Bone on OS X I am using a tool chain I got from http://will-tm.com/cross-compiling-mac-os-x-mavericks. The only thing I needed to do was to create a case sensitive partition before copying the files from the .dmg file.  On the Linux box I tried installing installing a cross compile tool chain using the Mint software manager and experienced a lot of problems. After spending a lot of time dealing with missing files I gave up and installed the linaro-arm-linux-gnueabihf-4.9-2014.09_linux tool chain and it worked on the first try.
 
-####Language
+#### Language
 * C - BBB
 * Lua - ESP8266
 
-####Envirnoment
+#### Envirnoment
 * Development machines - MacMini Linux Mint 17.x - OS X 10.11.x
 * BeagleBone Black (rev C)- Debian
 * ESP8266 (nodeMCU dev board r2) - nodeMCU firmware 
 
-####Channels and Schedules 
+#### Channels and Schedules 
 A channel is controlled by a schedule. There is a different schedule for each day of the week. Each channel has it own set of schedules. Channels 0-7 can switch a 60 volt 1.1 amp loads.  Channels 8 -15 can switch 120 volt 8 amp loads.  Each channel can be set manually to on or off.  Channels and also be controlled by time of day, i.e. on at 8:00 off at 14:30 or sensor value and time.  When a channel is controlled by time and sensor once a minute the remote sensor value is compared to the value stored in the schedule for current time and day of the week. If the actual values exceeds the schedule value the channel is turned off when. If the schedule values is less than the actual value the channel is turned on.  
 
-#####Schedules:
+##### Schedules:
 A schedule  is a list of times and corresponding states.  A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
 
 * 1:00  on

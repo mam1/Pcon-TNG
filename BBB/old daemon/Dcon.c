@@ -119,21 +119,21 @@ void log_state(int state,int channel,int actual, int target){
 printf("%s\n",numbuf);
 
 	/* log sensor data */
-	log = fopen(_LOG_FILE_NAME, "a");
+	log = fopen(_CGI_LOG_FILE_NAME, "a");
 	if (log == NULL) {
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to open %s\n\n application terminated\n\n", _LOG_FILE_NAME);
+		printf("    attempting to open %s\n\n application terminated\n\n", _CGI_LOG_FILE_NAME);
 		return;
 	}
-	printf("  %s opened\n", _LOG_FILE_NAME);
+	printf("  %s opened\n", _CGI_LOG_FILE_NAME);
 	printf("  write buffer size %i\n", strlen(numbuf));
 	printf("%s\n",numbuf);
 	if (fwrite(numbuf, strlen(numbuf), 1, log) != 1) {
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
-		printf("    attempting to append data to %s\n\n application terminated\n\n", _LOG_FILE_NAME);
+		printf("    attempting to append data to %s\n\n application terminated\n\n", _CGI_LOG_FILE_NAME);
 		return;
 	}
-	printf("  data for sensor %i appended to %s\n", 2, _LOG_FILE_NAME);
+	printf("  data for sensor %i appended to %s\n", 2, _CGI_LOG_FILE_NAME);
 
 	fclose(log);
 
