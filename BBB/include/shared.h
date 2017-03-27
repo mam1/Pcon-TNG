@@ -75,7 +75,7 @@
 #define _MAX_SENSOR_ID			99
 
 /* channel parameters */
-#define _NUMBER_OF_CHANNELS 	16
+#define _NUMBER_OF_CHANNELS 	8
 #define _CHANNEL_NAME_SIZE		20
 
 /* schedule parameters */

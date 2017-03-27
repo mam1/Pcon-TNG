@@ -158,6 +158,7 @@ int test_sch_time(int key, _TMPL_DAT *t) {
 		return 0;
 	if(t->rcnt == 1)
 		return t->rec[0].state;
+	
 	for (i = 0; i < t->rcnt; i++){
 		if(t->rec[i].key == key)
 			return t->rec[i].state;

@@ -48,7 +48,7 @@
 /* real time api */
 int open_tm(char *filename, uint8_t addr);
 void close_tm(int);
-void get_tm(int, _tm *);
+void get_tm(_tm *);
 void set_tm(int, _tm *);
 
 

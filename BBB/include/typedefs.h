@@ -73,7 +73,6 @@ typedef	struct{
 /* schedule record */
 typedef struct {
 	int			key;
-	time_t 		ts;
 	int 		state;
 	float 		temp;
 	float 		humid;

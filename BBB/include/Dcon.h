@@ -2,9 +2,9 @@
 #define DCONH_
 
 /* Dcon version info */
-#define _MAJOR_VERSION_Dcon		2
-#define _MINOR_VERSION_Dcon 	3
-#define _MINOR_REVISION_Dcon	0
+#define _MAJOR_VERSION_Dcon		3
+#define _MINOR_VERSION_Dcon 	0
+#define _MINOR_REVISION_Dcon	1
 
 int count(void);
 int dispevars(void);

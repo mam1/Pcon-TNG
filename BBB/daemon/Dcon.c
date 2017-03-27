@@ -79,14 +79,11 @@ void send_ccb(uint8_t byte)
 }
 
 /* write an entry to the daemon log file */
-void logit(_tm *t, char *mess){
+void logit(char *mess){
 	FILE 		*dlog;
 	_tm 		tm;
 
-	if(t != NULL)
-		tm = *t;
-	else
-		get_tm(rtc, &tm); 		// read the real time clock
+	get_tm(&tm); 		// load my time date structure from system clock
 
 	/* Open log file */
 	dlog = fopen(_DAEMON_LOG, "a");
@@ -109,19 +106,34 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	int 				gpio_index;
 	static int 			pin[_NUMBER_OF_GPIOS] = {_PINS};
 	static int 			header[_NUMBER_OF_GPIOS] = {_HEADERS};
+	int 				i;
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	key =  tm->tm_hour * 60 + tm->tm_min;		// generate key
 
 	/* set channel state based on channel mode */
-	// logit(NULL, "updating relays");
+	// logit("updating relays");
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 		switch (ipc_ptr->sys_data.c_data[channel].mode) {
 		case 0:	// manual
 			state = ipc_ptr->sys_data.c_data[channel].state;
 			break;
 		case 1:	// time
+			logit("time control");
 			state =  test_sch_time(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
+	char 			buff[128];
+
+
+	sprintf(buff, "current time generated key %i,  %i returned from test_sch_sensor",
+			key,  state);
+    logit(buff);
+    for(i=0;i<ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rcnt;i++){
+
+    sprintf(buff, "schedule record %i, key= %i",
+			i, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].key);
+    logit(buff);
+}
+
 			// ipc_ptr->sys_data.c_data[channel].state = state;
 			break;
 		case 2:	// time & sensor
@@ -130,10 +142,10 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 			// ipc_ptr->sys_data.c_data[channel].state = state;
 			break;
 		case 3:	// cycle
-			logit(NULL, "*** error mode set to <3>");
+			logit("*** error mode set to <3>");
 			break;
 		default: // error
-			logit(NULL, "*** error mode set to a bad value");
+			logit("*** error mode set to a bad value");
 		}
 		ipc_ptr->sys_data.c_data[channel].state = state;
 	}
@@ -170,7 +182,7 @@ int init_gpio(void) {
 
 	for (i = 0; i < _NUMBER_OF_GPIOS; i++) {
 		sprintf(command, "if [ ! -d /sys/class/gpio/gpio%i ]; then echo %i > /sys/class/gpio/export; fi", gpios[i], gpios[i] );
-		logit(NULL, command);
+		logit(command);
 		printf("system command %s returned %i\n", command, system(command));
 	}
 
@@ -188,8 +200,8 @@ int main(void) {
 	// _SYS_DAT 	sdat;
 	int 		h_min;
 	_tm 		t;
-	struct tm 	tm;
-	time_t 		st;
+	// struct tm 	tm;
+	// time_t 		st;
 	int 		ipc;
 
 	/* Fork off the parent process */
@@ -230,8 +242,8 @@ int main(void) {
 
 	/* setup PCF8563 RTC */
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
-	logit(NULL, "daemon started");
-	logit(NULL, "starting initializations");
+	logit("daemon started");
+	logit("starting initializations");
 
 	/* check for ipc file and ipc backup file */	
     // if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
@@ -278,8 +290,8 @@ int main(void) {
 	iolib_init();
 
 	/* setup gpio access to LEDs on the WaveShare Cape*/
-	logit(NULL, "iolib initialized");
-	logit(NULL, "mapping WaveShare Misc Cape leds to gpio pins");
+	logit("iolib initialized");
+	logit("mapping WaveShare Misc Cape leds to gpio pins");
 	iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
 	iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);
 	iolib_setdir(8, _LED_3, BBBIO_DIR_OUT);
@@ -292,7 +304,7 @@ int main(void) {
 	pin_low(8, _LED_4);
 
 	/* setup gpio access to PhotoMos relays */
-	logit(NULL, "mapping PhotoMos relays to gpio pins");
+	logit("mapping PhotoMos relays to gpio pins");
 	iolib_setdir(8, _R1_CAPE, BBBIO_DIR_OUT);
 	iolib_setdir(8, _R2_CAPE, BBBIO_DIR_OUT);
 	iolib_setdir(8, _R3_CAPE, BBBIO_DIR_OUT);
@@ -313,7 +325,7 @@ int main(void) {
 	pin_low(9, _R8_CAPE);
 
 	/* setup gpio access to serial header on the DIOB */
-	logit(NULL, "mapping DIOB serial header to gpio pins");
+	logit("mapping DIOB serial header to gpio pins");
 	iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);
 	iolib_setdir(8, _DIOB_SCLK_IN, BBBIO_DIR_OUT);
 	iolib_setdir(8, _DIOB_LAT_RLY, BBBIO_DIR_OUT);
@@ -321,37 +333,24 @@ int main(void) {
 	pin_low(8, _DIOB_DIN);
 
 	/* The Big Loop */
-	logit(NULL, "initialization complete");
-	logit(NULL, "starting main loop");
+	logit("initialization complete");
+	logit("starting main loop");
 	while (1) {
-		// get_tm(rtc, &tm);				// read the time from the real time clock
-		st = time(NULL);
-	    if (st == ((time_t)-1))
-	    {
-	        (void) fprintf(stderr, "Failure to obtain the current time\r\n");
-	        return 1;
-	    }
-		tm = *localtime(&st);
-		t.tm_sec = tm.tm_sec; 
-	    t.tm_min = tm.tm_min; 
-	    t.tm_hour = tm.tm_hour; 
-	    t.tm_mday = tm.tm_mday; 
-	    t.tm_wday = tm.tm_wday;
-	    t.tm_mon = tm.tm_mon + 1; 
-	    t.tm_year = tm.tm_year + 1900; 
+
+		get_tm(&t);
 
 		if (ipc_ptr->force_update == 1) {
 			ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
 			ipc_ptr->force_update = 0;
 			ipc_sem_free(semid, &sb);                   // free lock on shared memory
-			logit(&t, "update forced");
+			logit("update forced");
 			update_relays(&t, ipc_ptr);
 			continue;
 		}
 		else {
 			if (h_min != t.tm_min) {	// see if we are on a new minute
 				h_min = t.tm_min;
-				logit(&t, "update triggered by time");
+				logit("update triggered by time");
 				update_relays(&t, ipc_ptr);
 				continue;
 			}
