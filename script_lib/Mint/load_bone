@@ -3,10 +3,15 @@
 # load Pcon system into bone at ginven IP address
 #
 
+echo " "
+echo "load_bone 0.0.0"
+echo " "
 target_IP="192.168.254.75"
 #	target_IP := 192.168.256.34
 
 bone_BIN_DIR="/usr/local/sbin" 
+
+echo loading $bone_BIN_DIR
 
 # get the development machine OS
 CURRENT_OS=$(uname)
@@ -14,16 +19,16 @@ CURRENT_OS=$(uname)
 # set directories
 if [ $CURRENT_OS == "Darwin" ]
 then 
-	program_DIR_PREFIX="/Users/mam1/Git/Pcon-TNG"
+	program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
 else 
-	program_DIR_PREFIX="/home/mam1/Git/Pcon-TNG"
+	program_DIR_PREFIX=/home/mam1/Git/Pcon-TNG
 fi
 
 # move the bins to the bone
-# echo $program_DIR_PREFIX/bin/
-# echo $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR/
+echo $program_DIR_PREFIX/bin/
+echo $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR/
 
-$(rsync -azv '$program_DIR_PREFIX/bin/' root@$target_IP:'$bone_BIN_DIR')
+$(rsync -azv $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR)
 
 
 # fix permissions

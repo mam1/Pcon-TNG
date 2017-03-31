@@ -1,4 +1,4 @@
-#ifndef _SHARE_H_
+     #ifndef _SHARE_H_
 #define _SHARE_H_
 
 /* trace options */

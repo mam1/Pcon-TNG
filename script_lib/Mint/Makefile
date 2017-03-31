@@ -17,14 +17,12 @@ endif
 .PHONY: all clean distclean
 
 all: 
-all: 
+all:
+	@echo moving  
 	@echo $(lib_SRCS)
 
-# move the scripts to script library on the mac
+# move the scripts to script library 
 	rsync -avz $(program_DIR)/Mint/ /usr/local/myscripts/
-
-	# $(shell chown mam1 /usr/local/myscripts/*)		# change owner
-	# $(shell chmod 777 /usr/local/myscripts/*)		# open access
 
 	chown mam1 /usr/local/myscripts/*		# change owner
 	chmod 777 /usr/local/myscripts/*		# open access
@@ -32,9 +30,4 @@ all:
 os:
 	@echo "****************"
 	@echo $(UNAME_S)
-
-
-
-
-
 
