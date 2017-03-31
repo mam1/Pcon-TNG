@@ -1,9 +1,11 @@
 #############################################################################
-#	basic build																#
+#	basic cross compile build
+#	target - BeagleBone (Debian)														#
 ############################################################################# 
 
-# scan directory 
-program_NAME := Dcon
+program_NAME := Scon
+
+# scan directory
 program_C_SRCS := $(wildcard *.c)
 program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
@@ -15,16 +17,15 @@ UNAME_S := $(shell uname -s)
 
 # set directories
 ifeq ($(UNAME_S),Darwin)
-	program_DIR := /Users/mam1/Git/Pcon-TNG/BBB/daemon
-	program_INCLUDE_DIRS := ../include
-	program_LIBRARY_DIRS := ../lib
-	program_LIBRARIES := Pcon
+	program_DIR_PREFIX := /Users/mam1/Git/Pcon-TNG
 else
-	program_DIR := /home/mam1/Git/Pcon-TNG/BBB/daemon
-	program_INCLUDE_DIRS := ../include
-	program_LIBRARY_DIRS := ../lib
-	program_LIBRARIES := Pcon
+	program_DIR_PREFIX := /home/mam1/Git/Pcon-TNG
 endif
+
+system_BINARIES := $(program_DIR_PREFIX)/bin
+program_INCLUDE_DIRS := $(program_DIR_PREFIX)/BBB/include
+program_LIBRARY_DIRS := $(program_DIR_PREFIX)/BBB/lib
+program_LIBRARIES := Pcon
 
 # set parameters
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
@@ -32,7 +33,7 @@ LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
 CFLAGS  += -Wall
 CXXFLAGS += $(CFLAGS)
-LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti 
+LDFLAGS += $(CFLAGS) -fno-exceptions      
 
 # set locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
@@ -53,14 +54,10 @@ endif
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	$(CXX) $(program_OBJS) -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti
+	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 # move the executable to the bone
-	rsync -avz  $(program_DIR)/$(program_NAME) root@192.168.254.34:/usr/local/sbin 
-
-# fix permissions
-	ssh root@192.168.254.34 'chown root:root /usr/local/sbin/$(program_NAME)'	# change owner
-	ssh root@192.168.254.34 'chmod 4755 /usr/local/sbin/$(program_NAME)'		# open access
+	$(shell load_bone)
 
 # clean up
 	@- $(RM) -v $(program_NAME)
@@ -72,7 +69,7 @@ clean:
 	cd .. && $(MAKE) clean
 
 # rebuild the project ibrary from lib-sources 
-lib:
+lib: 
 	cd .. && $(MAKE) clean
 	cd .. && $(MAKE)
 
@@ -85,17 +82,15 @@ project:
 	cd ../daemon && $(MAKE)	
 
 dump:
-	@echo CC $(CC)
-	@echo cc $(cc)
-	@echo LINK $(LINK)
-	@echo LINK.cc $(LINK.cc)
-	@echo program_NAME $(program_NAME)
-	@echo program_C_OBJS $(program_C_OBJS)
-	@echo program_OBJS $(program_OBJS)
-	@echo LDFLAGS $(LDFLAGS)
-	@echo CPPFLAGS $(CPPFLAGS)
-	@echo CFLAGS $(CFLAGS)
-	@echo LINK.cc $(LINK.cc)
+	@echo CC ............... $(CC)
+	@echo cc ............... $(cc)
+	@echo LINK ............. $(LINK)
+	@echo LINK.cc .......... $(LINK.cc)
+	@echo program_NAME ..... $(program_NAME)
+	@echo program_C_OBJS ... $(program_C_OBJS)
+	@echo program_OBJS ..... $(program_OBJS)
+	@echo LDFLAGS .......... $(LDFLAGS)
+	@echo CPPFLAGS ......... $(CPPFLAGS)
+	@echo CFLAGS ........... $(CFLAGS)
 
-
-distclean: clean
+distclean: cleans

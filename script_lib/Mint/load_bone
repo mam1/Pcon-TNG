@@ -3,15 +3,16 @@
 # load Pcon system into bone at ginven IP address
 #
 
-echo " "
-echo "load_bone 0.0.0"
-echo " "
-target_IP="192.168.254.75"
+echo -e " "
+echo -e load_bone 0.2.0
+echo -e " "
+target_IP=192.168.254.75
 #	target_IP := 192.168.256.34
 
-bone_BIN_DIR="/usr/local/sbin" 
+bone_BIN_DIR=/usr/local/sbin
 
-echo loading $bone_BIN_DIR
+echo -e loading $bone_BIN_DIR
+echo -e " "
 
 # get the development machine OS
 CURRENT_OS=$(uname)
@@ -25,10 +26,9 @@ else
 fi
 
 # move the bins to the bone
-echo $program_DIR_PREFIX/bin/
-echo $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR/
+echo 'rsync -> '$program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR
 
-$(rsync -azv $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR)
+# $(rsync -azv $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR)
 
 
 # fix permissions
