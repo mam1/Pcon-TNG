@@ -1,35 +1,27 @@
-# !/bin/bash
-#
-# load Pcon system into bone at ginven IP address
-#
+#!/bin/bash
 
-echo -e " "
-echo -e load_bone 0.2.0
-echo -e " "
+printf "\n load_bone 0.4.0\n"
 target_IP=192.168.254.75
-#	target_IP := 192.168.256.34
 
+#	target_IP := 192.168.256.34
 bone_BIN_DIR=/usr/local/sbin
 
-echo -e loading $bone_BIN_DIR
-echo -e " "
-
-# get the development machine OS
-CURRENT_OS=$(uname)
-
 # set directories
-if [ $CURRENT_OS == "Darwin" ]
+CURRENT_OS=$(uname)
+if [ $CURRENT_OS == "Linux" ]
 then 
-	program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
-else 
 	program_DIR_PREFIX=/home/mam1/Git/Pcon-TNG
+else 
+	program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
 fi
 
 # move the bins to the bone
-echo 'rsync -> '$program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR
+printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR\n"
+rsync -azv      $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR
 
-# $(rsync -azv $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR)
-
+# move shell scripts to the bone
+printf "\n *** rsync -> $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR" 
+rsync -azv      $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR
 
 # fix permissions
 $(ssh root@$target_IP chown root:root $bone_BIN_DIR)	# change owner

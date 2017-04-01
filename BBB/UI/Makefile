@@ -54,10 +54,12 @@ endif
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
+	@echo "\n building $(program_NAME)\n"
 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
+	@echo "\n build of  $(program_NAME) completed\n"
 
 # move the executable to the bone
-	$(shell load_bone)
+	load_bone
 
 # clean up
 	@- $(RM) -v $(program_NAME)

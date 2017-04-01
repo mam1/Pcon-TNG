@@ -3,7 +3,7 @@
 #	target - BeagleBone (Debian)														#
 ############################################################################# 
 
-program_NAME := Scon
+program_NAME := Dcon
 
 # scan directory
 program_C_SRCS := $(wildcard *.c)
@@ -57,7 +57,7 @@ $(program_NAME): $(program_OBJS)
 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 # move the executable to the bone
-	$(shell load_bone)
+	load_bone
 
 # clean up
 	@- $(RM) -v $(program_NAME)
