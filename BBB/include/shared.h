@@ -81,6 +81,8 @@
 #define _SCHEDULE_NAME_SIZE		40
 #define _MAX_SCHEDULE_RECS		50
 #define _MAX_SCHEDULES			24
+#define _ALL_CHANNELS			99
+#define _ALL_DAYS				99
 
 /* template library parameters */
 #define _MAX_TEMPLATES			10

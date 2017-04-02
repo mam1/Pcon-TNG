@@ -393,3 +393,33 @@ void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 	return;
 }
 
+/* load  wsch */
+void load_wsch(_CMD_FSM_CB * cb){
+
+	int 			d, c;
+
+	if(cb->w_channel == _ALL_CHANNELS)
+		if(cb->w_day  == _ALL_DAYS){
+			printf(" schedule loaded into working schedule table (all days, all channels)\n\r");
+			for(d=0;d<_DAYS_PER_WEEK;d++)
+				for(c=0;c<_NUMBER_OF_CHANNELS;c++)
+					cb->w_sch.sch[d][c] = cb->w_template_buffer;
+		}
+		else{
+			printf(" schedule loaded into working schedule table (day %i, all channels)\n\r",cb->w_day+1);
+			for(c=0;c<_NUMBER_OF_CHANNELS;c++)
+				cb->w_sch.sch[cb->w_day][c] = cb->w_template_buffer;
+		}
+	else
+		if(cb->w_day  == _ALL_DAYS){
+			printf(" schedule loaded into working schedule table (all days, channel %i)\n\r",cb->w_channel );
+			for(d=0;d<_DAYS_PER_WEEK;d++)
+				cb->w_sch.sch[d][cb->w_channel] = cb->w_template_buffer;
+		}
+		else{
+			printf(" schedule loaded into working schedule table (day %i, channel %i)\n\r",cb->w_day,cb->w_channel );
+			cb->w_sch.sch[cb->w_day][cb->w_channel] = cb->w_template_buffer;
+		}
+
+	return;
+}

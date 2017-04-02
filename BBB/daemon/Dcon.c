@@ -238,7 +238,7 @@ int main(void) {
 
 	/* setup PCF8563 RTC */
 	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
-	logit("daemon started");
+	logit("\n*****************\ndaemon started");
 	logit("starting initializations");
 
 	/* check for ipc file and ipc backup file */	
@@ -252,7 +252,7 @@ int main(void) {
     // }
     if( access(_IPC_FILE_NAME, F_OK ) != -1 ){
         ipc = 1;
-        fprintf(stderr, "%s\n"," ipc file found" );
+        logit(" ipc file found" );
 
     }
     else

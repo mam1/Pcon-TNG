@@ -66,4 +66,6 @@ int get_tar_temp(int key, _TMPL_DAT *t);
 /* print a formated dump of all days for a channel */
 // void disp_channel_sch(_S_CHAN *c_dat,int header);
 
+void load_wsch(_CMD_FSM_CB *cb);
+
 #endif /* _SCH_H_ */

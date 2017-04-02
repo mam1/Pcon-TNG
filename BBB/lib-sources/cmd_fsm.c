@@ -1022,20 +1022,22 @@ int c_29(_CMD_FSM_CB *cb) {
 	int 				i;
 
 	// cb->w_channel = cb->token_value;
-	if (cb->w_day == _ALL_DAYS){
-		for (i = 0; i < _DAYS_PER_WEEK; i++) 
-			cb->wsch_ptr->sch[i][cb->w_channel] = cb->w_template_buffer;
-		printf(" schedule loaded into working schedule table (all days, channel %i)\n\r",cb->w_channel );
-	}
-	else {
-		cb->wsch_ptr->sch[cb->w_day][cb->w_channel] = cb->w_template_buffer;
-		printf(" schedule loaded into working schedule table (day %i, channel %i)\n\r",cb->w_day,cb->w_channel );
-	}
+	// if (cb->w_day == _ALL_DAYS){
+	// 	for (i = 0; i < _DAYS_PER_WEEK; i++) 
+	// 		cb->wsch_ptr->sch[i][cb->w_channel] = cb->w_template_buffer;
+	// 	printf(" schedule loaded into working schedule table (all days, channel %i)\n\r",cb->w_channel );
+	// }
+	// else {
+	// 	cb->wsch_ptr->sch[cb->w_day][cb->w_channel] = cb->w_template_buffer;
+	// 	printf(" schedule loaded into working schedule table (day %i, channel %i)\n\r",cb->w_day,cb->w_channel );
+	// }
 
-	strcat(cb->prompt_buffer, " channel");
-	sprintf(numstr, "%2d)", cb->w_channel);
-	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, "\r\n\n enter command");
+	load_wsch(cb);
+
+	// strcat(cb->prompt_buffer, " channel");
+	// sprintf(numstr, "%2d)", cb->w_channel);
+	// strcat(cb->prompt_buffer, numstr);
+	strcpy(cb->prompt_buffer, "\r\n\n enter command");
 	return 0;
 
 }
@@ -1066,21 +1068,26 @@ int c_31(_CMD_FSM_CB * cb)
 	int 		c,d;
 	printf("%s\n\r", " channel set all");
 	cb->w_channel = _ALL_CHANNELS;
-	if(cb->w_day == _ALL_DAYS){
-		for(d=0;d<_DAYS_PER_WEEK;d++)
-			for(c=0;c<_NUMBER_OF_CHANNELS;c++)
-				cb->w_sch.sch[d][c] = cb->w_template_buffer;
-		printf(" schedule loaded into working schedule table (all days, all channels)\n\r");
-	}
-	else{
-		for(c=0;c<_NUMBER_OF_CHANNELS;c++)
-			cb->w_sch.sch[cb->w_day][c] = cb->w_template_buffer;
-		printf(" schedule loaded into working schedule table (day %i, all channels)\n\r",cb->w_day+1);
 
-	}
+	load_wsch(cb);
+
+
+
+	// if(cb->w_day == _ALL_DAYS){
+	// 	for(d=0;d<_DAYS_PER_WEEK;d++)
+	// 		for(c=0;c<_NUMBER_OF_CHANNELS;c++)
+	// 			cb->w_sch.sch[d][c] = cb->w_template_buffer;
+	// 	printf(" schedule loaded into working schedule table (all days, all channels)\n\r");
+	// }
+	// else{
+	// 	for(c=0;c<_NUMBER_OF_CHANNELS;c++)
+	// 		cb->w_sch.sch[cb->w_day][c] = cb->w_template_buffer;
+	// 	printf(" schedule loaded into working schedule table (day %i, all channels)\n\r",cb->w_day+1);
+
+	// }
 
 	/* build prompt */
-	strcat(cb->prompt_buffer, "\r\n\n enter command");
+	strcpy(cb->prompt_buffer, "\r\n\n enter command");
 	return 0;
 }
 
