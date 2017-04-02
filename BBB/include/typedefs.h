@@ -82,7 +82,7 @@ typedef struct {
 typedef struct {
 	char 			name[_TEMPLATE_NAME_SIZE];
 	int 			rcnt;
-	_S_REC			rec[_MAX_SCHEDULE_RECS];
+	_S_REC			rec[_MAX_SCHEDULE_RECS +1];
 
 } _TMPL_DAT;
 

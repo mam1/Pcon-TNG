@@ -19,7 +19,7 @@
 // #define _CGI_DATA_FILE_SUFIX	".dat"							// cgi generated log of sensor data
 #define _SENSOR_DATA_FILE_NAME		"/media/sensor.dat" 		// USB drive collecting sensor readingss
 #define _CGI_LOG_FILE_NAME			"/media/CGI.log"			// log file name
-#define _SYSTEM_FILE_NAME			"/home/Pcon-data/sys.dat"				// system data file
+// #define _SYSTEM_FILE_NAME			"/home/Pcon-data/sys.dat"				// system data file
 #define _IPC_FILE_NAME				"/home/Pcon-data/ipc.dat"   			// memory mapped ipc file
 #define _IPC_FILE_BACKUP_NAME		"/home/Pcon-data/ipc.bkup"   			// ipc backup file 
 #define _TRACE_FILE_NAME			"/home/Pcon-data/trace.dat" 			// trace file

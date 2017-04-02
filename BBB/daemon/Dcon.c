@@ -195,13 +195,9 @@ int main(void) {
 
 	/* Our process ID and Session ID */
 	pid_t 		pid, sid;
-	// FILE 		*sys_file;
 	int 		toggle;
-	// _SYS_DAT 	sdat;
 	int 		h_min;
 	_tm 		t;
-	// struct tm 	tm;
-	// time_t 		st;
 	int 		ipc;
 
 	/* Fork off the parent process */
@@ -272,8 +268,8 @@ int main(void) {
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
 
 	if(ipc==0){
-		fprintf(stderr, "%s\n"," ipc file not found" );
-		fprintf(stderr, "%s\n"," new ipc file created and initialized" );
+		logit(" ipc file not found" );
+		logit(" new ipc file created and initialized" );
 		ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
         ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
         ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
