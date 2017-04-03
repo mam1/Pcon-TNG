@@ -11,7 +11,7 @@ ifeq ($(UNAME_S),Darwin)
 	target_dir := /usr/local/myscripts
 else
 	program_DIR := /home/mam1/Git/Pcon-TNG/script_lib
-	target_dir := 
+	target_dir := /usr/local/myscripts
 endif
 
 .PHONY: all clean distclean
@@ -20,10 +20,16 @@ all:
 	@echo $(lib_SRCS)
 
 # move the scripts to script library on the mac
+ifeq ($(UNAME_S),Darwin)
 	rsync -avz $(program_DIR)/OSX/ /usr/local/myscripts/
+else
+	rsync -avz $(program_DIR)/Mint/ /usr/local/myscripts/
+endif
 
-	$(shell chown mam1 /usr/local/myscripts/*)		# change owner
-	$(shell chmod 4755 /usr/local/myscripts/*)		# open access
+	chown mam1 /usr/local/myscripts		# change owner
+	chmod 777 /usr/local/myscripts		# open access
+
+
 
 os:
 	@echo "****************"
