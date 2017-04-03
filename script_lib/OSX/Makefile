@@ -26,10 +26,8 @@ else
 	rsync -avz $(program_DIR)/Mint/ /usr/local/myscripts/
 endif
 
-	chown mam1 /usr/local/myscripts		# change owner
-	chmod 777 /usr/local/myscripts		# open access
-
-
+	chown mam1 /usr/local/myscripts/*
+	chmod 4755 /usr/local/myscripts/*
 
 os:
 	@echo "****************"
