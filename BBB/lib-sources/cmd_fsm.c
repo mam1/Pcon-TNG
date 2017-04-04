@@ -1021,7 +1021,7 @@ int c_29(_CMD_FSM_CB *cb) {
 	char 				numstr[2];
 	int 				i;
 
-	// cb->w_channel = cb->token_value;
+	cb->w_channel = cb->token_value;
 	// if (cb->w_day == _ALL_DAYS){
 	// 	for (i = 0; i < _DAYS_PER_WEEK; i++) 
 	// 		cb->wsch_ptr->sch[i][cb->w_channel] = cb->w_template_buffer;

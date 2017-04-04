@@ -85,7 +85,7 @@ void push_cmd_buffer(char *cbuff) {
 	if(strcmp(&cmd_buffer[cmd_buffer_push_index][0], cbuff) == 0)
 		return;
 	cmd_buffer_push_index += 1;
-	if (cmd_buffer_push_index > _CMD_BUFFER_DEPTH)
+	if (cmd_buffer_push_index > _CMD_BUFFER_DEPTH-1)
 		cmd_buffer_push_index = 0;
 	strcpy(&cmd_buffer[cmd_buffer_push_index][0], cbuff);
 	return;
@@ -392,6 +392,7 @@ int main(void) {
 			trace(_TRACE_FILE_NAME, "\nPcon", char_state, work_buffer, "character entered is a _CR", trace_flag);
 #endif
 			push_cmd_buffer(work_buffer);
+
 			cmd_buffer_pop_index = cmd_buffer_push_index;
 
 			fputc(_CR, stdout);						//make the screen look right
