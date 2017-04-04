@@ -1,0 +1,49 @@
+#!/bin/bash
+#
+#	
+#
+
+printf "\n load_bone 1.0.0\n\n"
+
+printf "    bone1=192.168.254.34\n"
+printf "    bone2=192.168.254.75\n"
+
+printf "  load bone1 or bone2? > "
+		read answr
+		if [ "$answr" == "bone1" ] 
+		then
+			target_IP=192.168.254.34
+		else
+				if [ "$answr" == "bone2" ]
+				then
+					target_IP=192.168.254.75
+				else
+					printf "select bone1 or bone2"
+					exit 1
+				fi
+		fi
+
+bone_BIN_DIR=/usr/local/sbin
+
+# set directories
+CURRENT_OS=$(uname)
+if [ $CURRENT_OS == "Linux" ]
+then 
+	program_DIR_PREFIX=/home/mam1/Git/Pcon-TNG
+else 
+	program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
+fi
+
+printf "  loading $target_IP\n"
+
+# move the bins to the bone
+printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR\n"
+rsync -azv      $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR
+
+# move shell scripts to the bone
+printf "\n *** rsync -> $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR" 
+rsync -azv      $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR
+
+# fix permissions
+ssh root@$target_IP chown root:root $bone_BIN_DIR/*	# change owner
+ssh root@$target_IP chmod 4755 $bone_BIN_DIR/*		# open access

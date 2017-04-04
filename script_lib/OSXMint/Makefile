@@ -1,5 +1,5 @@
 #############################################################################
-#																	#
+#	move scripts to /usr/local/myscripts and fix ownership and permissions																#
 ############################################################################# 
 
 # get the development machine OS
@@ -16,18 +16,26 @@ endif
 
 .PHONY: all clean distclean
 
-all: 
 all:
-	@echo moving  
+	@echo moving 
 	@echo $(lib_SRCS)
 
 # move the scripts to script library 
-	rsync -avz $(program_DIR)/Mint/ /usr/local/myscripts/
+# ifeq ($(UNAME_S),Darwin)
+	rsync -avz $(program_DIR)/OSXMint/ /usr/local/myscripts/
+# else
+# 	rsync -avz $(program_DIR)/Mint/ /usr/local/myscripts/
+# endif
 
-	chown mam1 /usr/local/myscripts/*		# change owner
-	chmod 777 /usr/local/myscripts/*		# open access
+	chown mam1 /usr/local/myscripts/*
+	chmod 4755 /usr/local/myscripts/*
 
 os:
 	@echo "****************"
 	@echo $(UNAME_S)
+
+
+
+
+
 
