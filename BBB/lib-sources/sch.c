@@ -372,8 +372,8 @@ void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 							sprintf(time_state, "%02i:%02i %s", hour, minute, onoff[s->sch[day][channel].rec[i].state]);
 							break;
 						case 1:
-							break;
 							sprintf(time_state, "%02i:%02i %s", hour, minute, onoff[s->sch[day][channel].rec[i].state]);
+							break;
 						case 2:
 							sprintf(time_state, "%02i:%02i %0.2f", hour, minute, s->sch[day][channel].rec[i].temp);
 							break;
