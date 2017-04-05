@@ -116,27 +116,27 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 		switch (ipc_ptr->sys_data.c_data[channel].mode) {
 		case 0:	// manual
+			logit("manual control");
 			state = ipc_ptr->sys_data.c_data[channel].state;
 			break;
 		case 1:	// time
 			logit("time control");
 			state =  test_sch_time(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
-	char 			buff[128];
-
-
-	sprintf(buff, "current time generated key %i,  %i returned from test_sch_sensor",
-			key,  state);
-    logit(buff);
-    for(i=0;i<ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rcnt;i++){
-
-    sprintf(buff, "schedule record %i, key= %i",
-			i, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].key);
-    logit(buff);
+// ----------------------------------------------------------------------------------------------------------
+char 			buff[128];
+sprintf(buff, "current time generated key %i,  %i returned from test_sch_time\ndump schedule\n",key, state);
+logit(buff);
+for(i=0;i<ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rcnt;i++){
+	sprintf(buff, "  schedule record %i, key= %i, state=%i, channel=%i",
+		    i, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].key, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].state, channel);
+	logit(buff);
 }
+// -------------------------------------------------------------------------------------------------------------
 
 			// ipc_ptr->sys_data.c_data[channel].state = state;
 			break;
 		case 2:	// time & sensor
+			logit("sensor & time control");
 			state =  test_sch_sensor(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 
 			// ipc_ptr->sys_data.c_data[channel].state = state;

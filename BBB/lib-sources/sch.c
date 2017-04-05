@@ -154,22 +154,38 @@ int test_sch_time(int key, _TMPL_DAT *t) {
 	// int 			state;
 	int 			i;
 
-	if(t->rcnt == 0)
-		return 0;
-	if(t->rcnt == 1)
-		return t->rec[0].state;
-	
-	for (i = 0; i < t->rcnt; i++){
-		if(t->rec[i].key == key)
-			return t->rec[i].state;
+	switch(t->rcnt){
+		case 0:
+			return 0;
+		case 1:
+			return t->rec[0].state;
+		case 2:
+			if(key == (t->rec[0].key))
+				return t->rec[0].state;
+			if(key == (t->rec[1].key))
+				return t->rec[1].state;
+			if(key > (t->rec[1].key))
+				return t->rec[1].state;
+			if(key < (t->rec[0].key))
+				return t->rec[1].state;
+		default:
+			for (i = 0; i < t->rcnt; i++)	// look for matching keys
+				if(t->rec[i].key == key)
+					return t->rec[i].state;
 
-		if((t->rec[i].key) > key){
-			if(i>0)
-				return t->rec[i-1].state;
-		}
-		return t->rec[t->rcnt].state;
+			// if(key < t->rec[0].key)
+			// 	return t->rec[t->rcnt-1].state;
+			// if(key > t->rec[t->rcnt-1].key)
+				// return t->rec[0].state;
+
+			for (i = 0; i < t->rcnt-1; i++){
+				if((key > t->rec[i].key) && (key < t->rec[i+1].key))
+					return t->rec[i].state;
+				if(key < t->rec[i].key)
+					if(i == t->rcnt-1)
+						return t->rec[i-1].state;
+			}
 	}
-	return t->rec[i-1].state;
 }
 
 /* given a key and schedule return state based on time of day and value of a sensor */

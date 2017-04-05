@@ -3,10 +3,10 @@
 #	
 #
 
-printf "\n load_bone 1.0.0\n\n"
+printf "\n load_bone 2.0.0\n\n"
 
 printf "    bone1=192.168.254.34\n"
-printf "    bone2=192.168.254.75\n"
+printf "    bone2=192.168.254.75\n\n"
 
 printf "  load bone1 or bone2? > "
 		read answr
@@ -18,7 +18,7 @@ printf "  load bone1 or bone2? > "
 				then
 					target_IP=192.168.254.75
 				else
-					printf "select bone1 or bone2"
+					printf "must select bone1 or bone2\nscript aborted\n"
 					exit 1
 				fi
 		fi
@@ -34,7 +34,7 @@ else
 	program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
 fi
 
-printf "  loading $target_IP\n"
+printf "  copying binaries ans scripts to device at $target_IP\n"
 
 # move the bins to the bone
 printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR\n"
