@@ -516,23 +516,24 @@ int c_6(_CMD_FSM_CB *cb)
 	printf("  ----------------------------------------------------------");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("\n\r%6i", i);
+		printf(" indexes cb->sys_ptr->c_data[i].state -> %i,\tcb->sys_ptr->c_data[i].mode -> %i", cb->sys_ptr->c_data[i].state, cb->sys_ptr->c_data[i].mode);
 		// printf("***** state = %i\n\r", cb->sys_ptr->c_data[i].state);
-		printf("%9s%9s", onoff[cb->sys_ptr->c_data[i].state], mode[cb->sys_ptr->c_data[i].mode]);
+		// printf("%9s%9s", onoff[cb->sys_ptr->c_data[i].state], mode[cb->sys_ptr->c_data[i].mode]);
 	// printf(" %i    %i   ", cb->sys_ptr->c_data[i].state, cb->sys_ptr->c_data[i].mode);
-		switch (cb->sys_ptr->c_data[i].mode) {
-		case 2:	// time & sensor
-			if(cb->sys_ptr->c_data[i].sensor_assigned == 1)
-				printf("%5i", cb->sys_ptr->c_data[i].sensor_id);
-			break;
+		// switch (cb->sys_ptr->c_data[i].mode) {
+	// 	case 2:	// time & sensor
+	// 		if(cb->sys_ptr->c_data[i].sensor_assigned == 1)
+	// 			printf("%5i", cb->sys_ptr->c_data[i].sensor_id);
+	// 		break;
 
-		case 3:	// cycle
-			printf(" (%i:%i)", cb->sys_ptr->c_data[i].on_sec, cb->sys_ptr->c_data[i].off_sec);
-			break;
+	// 	case 3:	// cycle
+	// 		printf(" (%i:%i)", cb->sys_ptr->c_data[i].on_sec, cb->sys_ptr->c_data[i].off_sec);
+	// 		break;
 
-		default :
-			printf("          ");
-		}
-		printf("%s", cb->sys_ptr->c_data[i].name);
+	// 	default :
+	// 		printf("          ");
+	// 	}
+	// 	printf("%s", cb->sys_ptr->c_data[i].name);
 	}
 	printf("\n\n\r");
 	strcpy(cb->prompt_buffer, "enter a commamd");
