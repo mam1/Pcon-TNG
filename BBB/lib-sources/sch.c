@@ -177,14 +177,13 @@ int test_sch_time(int key, _TMPL_DAT *t) {
 				return t->rec[t->rcnt-1].state;
 			if(key > t->rec[t->rcnt-1].key)
 				return t->rec[t->rcnt-1].state;
-
-			// for (i = 0; i < t->rcnt-1; i++){
-			// 	if((key > t->rec[i].key) && (key < t->rec[i+1].key))
-			// 		return t->rec[i].state;
-			// 	if(key < t->rec[i].key)
-			// 		if(i == t->rcnt-1)
-			// 			return t->rec[i-1].state;
-			// }
+			for (i = 0; i < t->rcnt-1; i++){
+				if((key > t->rec[i].key) && (key < t->rec[i+1].key))
+					return t->rec[i].state;
+				if(key < t->rec[i].key)
+					if(i == t->rcnt-1)
+						return t->rec[i-1].state;
+			}
 	}
 }
 
