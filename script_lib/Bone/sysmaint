@@ -1,0 +1,92 @@
+#!/bin/bash
+#####################################
+# system config
+#
+#####################################
+
+echo -e \\033c		# clear the terminal screen
+stty cooked			# switch to buffered iput
+stty echo			# turn on terminal echo
+
+printf "*************************************\n  Pcon system configuration utility\n*************************************\n\n"
+printf "terminal io reinitialized\n"
+printf "searching /usr/local/sbin for Scon\n"
+if [ ! -f /usr/local/sbin/Scon ]; 
+	then
+    	echo "CGI binary (Scon) not active"
+    	echo -n "  should it be enabled? {y}{n} > "
+		read answr
+		if [ "$answr" == "y" ] 
+			then
+				mv /usr/local/sbin/Scon.hold  /usr/local/sbin/Scon
+				echo "CGI enabled" 
+		fi
+    else
+    	echo "CGI binary (Scon) active"
+    	echo -n "  should it be disabled? {y}{n} > "
+		read answr
+		if [ "$answr" == "y" ] 
+			then
+				mv /usr/local/sbin/Scon  /usr/local/sbin/Scon.hold
+				echo "CGI disabled"
+		fi
+fi
+
+echo "checking for active processes"
+
+plist=$(pidof /usr/local/sbin/Dcon)
+# echo $plist
+if [ "$plist" != "" ] 
+	then
+		hlist="there is an instance of Dcon active pid " 
+		hlist=$hlist$plist
+		echo $hlist
+		echo -n "  should it be killed? {y}{n} > "
+		read answr
+		if [ "$answr" == "y" ] 
+			then
+				echo -n "killing process "
+				echo $plist
+				kill $plist
+		fi
+	fi
+echo -n "  there are no instances of Dcon active should one be started? {y}{n} > "
+read answr
+if [ "$answr" == "y" ]
+	then
+		echo "starting daemon"
+		Dcon > /home/Pcon-data/Dcon.log &
+fi
+
+# check for intances of Pcon
+
+plist=$(pidof /usr/local/sbin/Pcon)
+
+if [ "$plist" != "" ] 
+	then
+		hlist="there is an instance of Pcon active pid " 
+		hlist=$hlist$plist
+		echo $hlist
+		echo -n "should it be killed? {y}{n} > "
+		read answr
+
+		# echo $answr
+
+		if [ "$answr" == "y" ] 
+			then
+				echo -n "killing process "
+				echo $plist
+				kill $plist
+		fi
+	fi
+
+echo -n "  there are no instances of Pcon active should one be started? {y}{n} > "
+read answr
+if [ "$answr" == "y" ]
+	then
+		echo -e \\033c		# clear the terminal screen
+		echo "starting Pcon"
+		Pcon
+fi
+
+exit 0
