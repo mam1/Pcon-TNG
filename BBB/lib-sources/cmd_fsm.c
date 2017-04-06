@@ -516,6 +516,7 @@ int c_6(_CMD_FSM_CB *cb)
 	printf("  ----------------------------------------------------------");
 	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
 		printf("\n\r%6i", i);
+		// printf("***** state = %i\n\r", cb->sys_ptr->c_data[i].state);
 		printf("%9s%9s", onoff[cb->sys_ptr->c_data[i].state], mode[cb->sys_ptr->c_data[i].mode]);
 	// printf(" %i    %i   ", cb->sys_ptr->c_data[i].state, cb->sys_ptr->c_data[i].mode);
 		switch (cb->sys_ptr->c_data[i].mode) {
@@ -623,21 +624,15 @@ int c_10(_CMD_FSM_CB *cb)
 int c_11(_CMD_FSM_CB *cb)
 {
 	char        numstr[2];
-	// FILE 		*f;
 
 	printf("cb->w_channel <%i>\n\r", cb->w_channel);
-
-	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+	ipc_sem_lock(semid, &sb);					 // wait for a lock on shared memory
 
 	cb->sys_ptr->c_data[cb->w_channel].mode = 1;	// update ipc data
 	cb->sys_ptr->c_data[cb->w_channel].state = 0;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
-
-	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	// sys_save(f, cb->sys_ptr);	// write data to disk
-	// fclose(f);
 
 	strcpy(cb->prompt_buffer, "channel ");
 	sprintf(numstr, "%d", cb->w_channel);
