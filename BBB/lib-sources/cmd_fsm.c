@@ -1575,9 +1575,9 @@ int c_68(_CMD_FSM_CB * cb)
 	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
 	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
 	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\r    name: ");
+	strcat(cmd_fsm_cb.prompt_buffer, "  name: ");
 	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
-	strcat(cmd_fsm_cb.prompt_buffer,"\n\r    description: ");
+	strcat(cmd_fsm_cb.prompt_buffer, ",  description: ");
 	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
 	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
 
@@ -1592,12 +1592,12 @@ int c_69(_CMD_FSM_CB *cb){
 	strcpy(cb->w_sen_dat.name, cb->token);
 
 		/* build prompt */
-	sprintf(buf, "%04d ", cb->w_sen_dat.sensor_id);
+	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
 	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
 	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\r    name: ");
+	strcat(cmd_fsm_cb.prompt_buffer, "  name: ");
 	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
-	strcat(cmd_fsm_cb.prompt_buffer,"\n\r    description: ");
+	strcat(cmd_fsm_cb.prompt_buffer, ",  description: ");
 	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
 	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
 
@@ -1613,12 +1613,12 @@ int c_70(_CMD_FSM_CB *cb){
 	strcpy(cb->w_sen_dat.description, cb->token);
 
 		/* build prompt */
-	sprintf(buf, "%04d ", cb->w_sen_dat.sensor_id);
+	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
 	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
 	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\r    name: ");
+	strcat(cmd_fsm_cb.prompt_buffer, "  name: ");
 	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
-	strcat(cmd_fsm_cb.prompt_buffer,"\n\r    description: ");
+	strcat(cmd_fsm_cb.prompt_buffer, ",  description: ");
 	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
 	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
 
