@@ -1,0 +1,40 @@
+#!/bin/bash
+#####################################
+# 
+#		display system status
+#
+#####################################
+
+printf "\nBeagleBone @ $(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1) system status\n\n"
+
+# searching /usr/local/sbin for Scon\
+if [ ! -f /usr/local/sbin/Scon ]; 
+	then
+    	printf "	CGI binary (Scon) not active\n"
+    else
+    	printf "	CGI binary (Scon) active\n"
+fi
+
+#	checking for active processes
+plist=$(pidof /usr/local/sbin/Dcon)
+if [ "$plist" != "" ] 
+	then
+		hlist="	Dcon active - pid " 
+		hlist=$hlist$plist
+		printf "$hlist\n"
+	else
+		printf  "	no instances of Dcon active\n"
+	fi
+
+# check for intances of Pcon
+plist=$(pidof /usr/local/sbin/Pcon)
+if [ "$plist" != "" ] 
+	then
+		hlist="	Pcon active pid " 
+		hlist=$hlist$plist
+		printf "	$hlist\n\n"
+	else
+		printf "	no instances of Pcon active\n\n"
+	fi
+
+exit 0

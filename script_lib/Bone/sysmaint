@@ -9,8 +9,8 @@ stty cooked			# switch to buffered iput
 stty echo			# turn on terminal echo
 
 printf "*************************************\n  Pcon system configuration utility\n*************************************\n\n"
-printf "terminal io reinitialized\n"
-printf "searching /usr/local/sbin for Scon\n"
+# printf "terminal io reinitialized\n"
+# printf "searching /usr/local/sbin for Scon\n"
 if [ ! -f /usr/local/sbin/Scon ]; 
 	then
     	echo "CGI binary (Scon) not active"
@@ -32,7 +32,7 @@ if [ ! -f /usr/local/sbin/Scon ];
 		fi
 fi
 
-echo "checking for active processes"
+# echo "checking for active processes"
 
 plist=$(pidof /usr/local/sbin/Dcon)
 # echo $plist

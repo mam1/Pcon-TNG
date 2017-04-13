@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo -e \\033c		# clear the terminal screen
+stty cooked			# switch to buffered iput
+stty echo			# turn on terminal echo
