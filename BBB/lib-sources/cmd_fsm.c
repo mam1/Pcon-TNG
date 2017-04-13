@@ -1693,7 +1693,10 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 		#if defined (_ATRACE) || defined (_FTRACE)
 			printf("error returned from action routine\n\r");
 		#endif
-		while (pop_cmd_q(cmd_fsm_cb.token)); //empty command queue
+		printf("\n\r*** made it past here 0001\n\r\n");
+		if(test_cmd_q() != 0)
+			while (pop_cmd_q(cmd_fsm_cb.token)); //empty command queue
+		printf("\n\r*** made it past here 0002\n\r\n");
 	}
 	return;
 }

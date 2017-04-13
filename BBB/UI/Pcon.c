@@ -334,21 +334,23 @@ int main(void) {
 
 	while (1) {
 		/* check the token stack */
-		while (pop_cmd_q(cmd_fsm_cb.token))
-		{
-			// printf("************ before cycle\r\n");
-			// printf("********** record count before cycle %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
-			cmd_fsm(&cmd_fsm_cb);   	//cycle cmd fsm until queue is empty
-			// printf("************ after cycle\r\n");
-			// printf("********** record count after cycle %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
-			prompted = false;
-		}
-		if (prompted == false) {				//display prompt if necessary
-			// printf("************* before prompt\r\n");
-			// printf("********** record count before call prompt %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
-			prompted = true;
-			prompt(cmd_fsm_cb.state);
-		}
+		// printf("\n\r*** made it past here 0004\n\r\n");
+		if(test_cmd_q() != 0)
+			while (pop_cmd_q(cmd_fsm_cb.token))
+			{
+				// printf("************ before cycle\r\n");
+				// printf("********** record count before cycle %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
+				cmd_fsm(&cmd_fsm_cb);   	//cycle cmd fsm until queue is empty
+				// printf("************ after cycle\r\n");
+				// printf("********** record count after cycle %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
+				prompted = false;
+			}
+			if (prompted == false) {				//display prompt if necessary
+				// printf("************* before prompt\r\n");
+				// printf("********** record count before call prompt %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
+				prompted = true;
+				prompt(cmd_fsm_cb.state);
+			}
 
 		c = fgetc(stdin);
 		switch (c) {

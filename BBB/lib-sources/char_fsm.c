@@ -90,6 +90,7 @@ TQ *process_buffer(void) {
 					tail = tail->next;
 				}
 				tail->tptr = malloc(input_buffer_ptr - start_char);
+				printf("\n\r*** allocating memory for token, %i", input_buffer_ptr - start_char);
 				memcpy(tail->tptr, start_char, input_buffer_ptr - start_char + 1);
 				tail->next = '\0';
 				start_char = input_buffer_ptr;
@@ -115,10 +116,11 @@ TQ *process_buffer(void) {
 				tail->next = malloc(sizeof(TQ));
 				tail = tail->next;
 			}
-			
+			printf("@@@@@@@@@@@@@@@@@@@@ %i\n\r", input_buffer_ptr - start_char);
 			tail->tptr = malloc(input_buffer_ptr - start_char + 1);
 			printf("****************** %i\n\r", input_buffer_ptr - start_char);
 			memcpy(tail->tptr, start_char, input_buffer_ptr - start_char + 1);
+			printf("memory allocated\n\r");
 			tail->next = '\0';
 			start_char = input_buffer_ptr;
 			start_char++;
@@ -382,8 +384,10 @@ int test_cmd_q(void) {
 /* pop token into buffer, return: 0 empty queue, -1 data placed in buffer  */
 int pop_cmd_q(char *buf) {
 // #if defined (_ATRACE) || defined (_FTRACE)
-// 	// trace1(_TRACE_FILE_NAME,"pop_cmd_q: called",1);
-// #endif
+	// trace(_TRACE_FILE_NAME, "pop_cmd_q", *state, input_buffer, "called", trace_flag);
+// #endi
+
+	printf("\n\r*** made it past here 0003\n\r\n");
 	TQ *hold;
 	char *ptr1, *ptr2;
 
@@ -400,6 +404,8 @@ int pop_cmd_q(char *buf) {
 	head = head->next;
 	free(hold->tptr);
 	free(hold);
+
+	printf("\n\r*** made it past here 0033\n\r\n");
 
 	return -1;
 }
