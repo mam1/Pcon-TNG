@@ -3,7 +3,7 @@
 #	
 #
 
-printf "\n load_bone 2.0.0\n\n"
+printf "\n load_bone 2.0.1\n\n"
 
 printf "    bone1=192.168.254.34\n"
 printf "    bone2=192.168.254.75\n\n"
@@ -34,16 +34,18 @@ else
 	program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
 fi
 
-printf "  copying binaries ans scripts to device at $target_IP\n"
+printf "  copying binaries and scripts to device at $target_IP\n"
 
 # move the bins to the bone
+printf "  copying binaries to device at $target_IP\n"
 printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR\n"
 rsync -azv      $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR
 
 # move shell scripts to the bone
+printf "  copying scripts to device at $target_IP\n"
 printf "\n *** rsync -> $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR" 
 rsync -azv      $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR
 
 # fix permissions
 ssh root@$target_IP chown root:root $bone_BIN_DIR/*	# change owner
-ssh root@$target_IP chmod 4755 $bone_BIN_DIR/*		# open access
+ssh root@$target_IP chmod 777 $bone_BIN_DIR/*		# open access
