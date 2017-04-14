@@ -387,7 +387,7 @@ int pop_cmd_q(char *buf) {
 	// trace(_TRACE_FILE_NAME, "pop_cmd_q", *state, input_buffer, "called", trace_flag);
 // #endi
 
-	printf("\n\r*** made it past here 0003\n\r\n");
+	printf("\n\r*** made it past here *1\n\r\n");
 	TQ *hold;
 	char *ptr1, *ptr2;
 
@@ -395,17 +395,30 @@ int pop_cmd_q(char *buf) {
 		*buf = '\0';    //set buffer to empty
 		return 0;
 	}
+	printf("\n\r*** made it past here *2\n\r\n");
+	printf("ptr1 <%i>\r\n\n", (int)ptr1);
+
+	printf("head <%i>\r\n\n", (int)head);
+	printf("head->tptr <%i>\r\n\n", (int)head->tptr);
+	printf("\n\r*** made it past here *3\n\r\n");
+
 	ptr1 = head->tptr;
 	ptr2 = buf;
+	printf("\n\r*** made it past here *4\n\r\n");
 	hold = head;
+	printf("\n\r*** made it past here *5\n\r\n");
 	while (*ptr1 != '\0')
 		*ptr2++ = *ptr1++;
+	
 	*ptr2 = '\0';
+	
+
 	head = head->next;
 	free(hold->tptr);
 	free(hold);
 
-	printf("\n\r*** made it past here 0033\n\r\n");
+	printf("\n\r*** made it past here *6\n\r\n");
+
 
 	return -1;
 }
