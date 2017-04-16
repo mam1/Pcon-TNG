@@ -107,14 +107,14 @@ TQ *process_buffer(void) {
 				trace(_TRACE_FILE_NAME, "process_buffer", char_state, input_buffer, "found a delimiter", trace_flag);
 				trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
 			#endif
-			*input_buffer_ptr = '\0';
-			if (tail == '\0') {
-				tail = malloc(sizeof(TQ));
-				head = tail;
-			}
-			else {
-				tail->next = malloc(sizeof(TQ));
-				tail = tail->next;
+				*input_buffer_ptr = '\0';
+				if (tail == '\0') {
+					tail = malloc(sizeof(TQ));
+					head = tail;
+				}
+				else {
+					tail->next = malloc(sizeof(TQ));
+					tail = tail->next;
 			}
 			printf("@@@@@@@@@@@@@@@@@@@@ %i\n\r", input_buffer_ptr - start_char);
 			tail->tptr = malloc(input_buffer_ptr - start_char + 1);
@@ -122,14 +122,19 @@ TQ *process_buffer(void) {
 			memcpy(tail->tptr, start_char, input_buffer_ptr - start_char + 1);
 			printf("memory allocated\n\r");
 			tail->next = '\0';
+			printf("%s\n\r","tail->next = NULL" );
 			start_char = input_buffer_ptr;
+			printf("start_char = input_buffer_ptr\n\r");
 			start_char++;
-			#if defined (_ATRACE) || defined (_FTRACE)
-				sprintf(trace_buf, "push token <%s>", tail->tptr);
-				trace(_TRACE_FILE_NAME, "process_buffer", char_state, tb, trace_buf, trace_flag);
-				trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
-			#endif
+			printf("start_char++\n\r");
+			// #if defined (_ATRACE) || defined (_FTRACE)
+			// 	sprintf(trace_buf, "push token <%s>", tail->tptr);
+			// 	trace(_TRACE_FILE_NAME, "process_buffer", char_state, tb, trace_buf, trace_flag);
+			// 	trace(_TRACE_FILE_NAME, "temp buffer", char_state, tb, "character added to temp buffer", trace_flag);
+			// #endif
 		}
+
+printf("999999999999999999 droping through\n\r\n");
 
 		*t_ptr++ = *input_buffer_ptr++;
 
