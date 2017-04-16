@@ -117,7 +117,7 @@ TQ *process_buffer(void) {
 			}
 			
 			tail->tptr = malloc(input_buffer_ptr - start_char + 1);
-			printf("****************** %i\n\r", input_buffer_ptr - start_char);
+			// printf("****************** %i\n\r", input_buffer_ptr - start_char);
 			memcpy(tail->tptr, start_char, input_buffer_ptr - start_char + 1);
 			tail->next = '\0';
 			start_char = input_buffer_ptr;

@@ -863,27 +863,27 @@ int c_22(_CMD_FSM_CB *cb)
 		hold.humid = 0;
 	}
 
-	printf(" ** c_22 after search, record count %i\r\n",cb->w_template_buffer.rcnt);
+	// printf(" ** c_22 after search, record count %i\r\n",cb->w_template_buffer.rcnt);
 
 	/* add new schedule record */
 	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 1, hold.temp, hold.humid);
 
-	printf(" ** c_22 after add_tmpl_rec, record count %i\r\n",cb->w_template_buffer.rcnt);
+	// printf(" ** c_22 after add_tmpl_rec, record count %i\r\n",cb->w_template_buffer.rcnt);
 
 	/*build prompt */
 	strcpy(cb->prompt_buffer, "\0");
-	printf(" ** c_22 before call to load_temps, record count %i, prompt_buffer <%s>\r\n",cb->w_template_buffer.rcnt, cb->prompt_buffer);
+	// printf(" ** c_22 before call to load_temps, record count %i, prompt_buffer <%s>\r\n",cb->w_template_buffer.rcnt, cb->prompt_buffer);
 	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
 
 
-printf(" ** c_22 after call to load_temps, record count i, prompt_buffer <s>\r\n");
-printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",99, "xxxxx");
+// printf(" ** c_22 after call to load_temps, record count i, prompt_buffer <s>\r\n");
+// printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",99, "xxxxx");
 
-	printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",cb->w_template_buffer.rcnt, cb->prompt_buffer);
+	// printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",cb->w_template_buffer.rcnt, cb->prompt_buffer);
 	
 	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter command or time");
 
-	printf(" ** c_22 returning, record count %i\r\n",cb->w_template_buffer.rcnt);
+	// printf(" ** c_22 returning, record count %i\r\n",cb->w_template_buffer.rcnt);
 	return 0;
 }
 
