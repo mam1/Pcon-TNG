@@ -233,7 +233,7 @@ void BBBIO_ADCTSC_module_ctrl(unsigned int work_type, unsigned int clkdiv)
 
 	if((clkdiv < 1) || (clkdiv > 65535)) {
 #ifdef BBBIO_LIB_DBG
-		fprintf(stderr, "BBBIO_ADCTSC_module_ctrl : Clock Divider value error [%d]\n");
+		fprintf(stderr, "BBBIO_ADCTSC_module_ctrl : Clock Divider value error\n");
 #endif
 		clkdiv = 1;
 	}
@@ -503,7 +503,7 @@ int BBBIO_ADCTSC_Init()
 {
 	unsigned int *reg = NULL;
 	unsigned int FIFO_count = 0;
-	unsigned int FIFO_data = 0;
+	// unsigned int FIFO_data = 0;
 	int i ;
 
 	if (memh == 0) {
@@ -546,12 +546,12 @@ int BBBIO_ADCTSC_Init()
 	/* Clear FIFO  */
 	FIFO_count = *((unsigned int*)((void *)adctsc_ptr + ADCTSC_FIFO0COUNT));
 	for(i = 0 ; i < FIFO_count ; i++) {
-		FIFO_data = *((unsigned int*)((void *)adctsc_ptr + ADCTSC_FIFO0DATA));
+		// FIFO_data = *((unsigned int*)((void *)adctsc_ptr + ADCTSC_FIFO0DATA));
 	}
 
 	FIFO_count = *((unsigned int*)((void *)adctsc_ptr + ADCTSC_FIFO1COUNT));
         for(i = 0 ; i < FIFO_count ; i++) {
-		FIFO_data = *((unsigned int*)((void *)adctsc_ptr + ADCTSC_FIFO1DATA));
+		// FIFO_data = *((unsigned int*)((void *)adctsc_ptr + ADCTSC_FIFO1DATA));
         }
 
 	/* init work struct */

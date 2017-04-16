@@ -58,7 +58,9 @@ int s_sort(_SEN_DAT f[])
 	_SEN_DAT 		destination[_NUMBER_OF_SENSORS];
 	int 			source_deleted[_NUMBER_OF_SENSORS];
 	int 			i,ii;
-	int 			index_b, index_f;
+	int 			index_b;
+	// int 			index_f;
+
 
 	/* copy sensor data to working buffer */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory

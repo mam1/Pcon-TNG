@@ -105,8 +105,8 @@ int iolib_init(void)
 		return -1;
 	}
 
-	PortSet_ptr[0]=(char*)p8_PortSet;
-	PortSet_ptr[1]=(char*)p9_PortSet;
+	PortSet_ptr[0]=(signed char*)p8_PortSet;
+	PortSet_ptr[1]=(signed char*)p9_PortSet;
 	PortIDSet_ptr[0]=(unsigned int*)p8_PortIDSet;
 	PortIDSet_ptr[1]=(unsigned int*)p9_PortIDSet;
 
@@ -688,9 +688,9 @@ int  BBBIO_sys_Disable_Debouncing(unsigned int port ,unsigned int pin ,unsigned 
 {
         volatile unsigned int* reg;
         int param_error=0;
-        const unsigned int GPIO_CLKCTRL[] ={BBBIO_CM_PER_GPIO1_CLKCTRL ,
-                                            BBBIO_CM_PER_GPIO2_CLKCTRL ,
-                                            BBBIO_CM_PER_GPIO3_CLKCTRL};
+        // const unsigned int GPIO_CLKCTRL[] ={BBBIO_CM_PER_GPIO1_CLKCTRL ,
+        //                                     BBBIO_CM_PER_GPIO2_CLKCTRL ,
+        //                                     BBBIO_CM_PER_GPIO3_CLKCTRL};
 
         // sanity checks
         if (memh == 0)
@@ -980,5 +980,5 @@ void BBBIO_GPIO_low(unsigned int gpio ,unsigned int pinset)
 
 int BBBIO_GPIO_get(char gpio, unsigned int pinset)
 {
-	 return *((unsigned int *)((void *)gpio_addr[gpio]+BBBIO_GPIO_DATAIN)) & pinset;
+	 return *((unsigned int *)((void *)gpio_addr[(int)gpio]+BBBIO_GPIO_DATAIN)) & pinset;
 }

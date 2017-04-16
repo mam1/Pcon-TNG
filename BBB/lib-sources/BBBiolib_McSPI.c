@@ -89,9 +89,9 @@ extern int memh;
 extern volatile unsigned int *cm_per_addr ;
 
 const unsigned int McSPI_AddressOffset[]={MCSPI0_MMAP_ADDR, MCSPI1_MMAP_ADDR};
-volatile unsigned int *mcspi_ptr[MCSPI_ARG_CHANNEL_COUNT] ={NULL};
+volatile unsigned int *mcspi_ptr[MCSPI_ARG_CHANNEL_COUNT] = {NULL};
+struct BBBIO_McSPI_struct McSPI_Module[MCSPI_ARG_MODULE_COUNT] = {0};
 
-struct BBBIO_McSPI_struct McSPI_Module[MCSPI_ARG_MODULE_COUNT] ={0} ;
 /* ----------------------------------------------------------------------------------------------- */
 static inline void write_reg(volatile void *reg_base ,unsigned int offset ,unsigned int data)
 {
@@ -139,7 +139,7 @@ int BBBIO_McSPI_work(unsigned int SPI_ID, unsigned int chn, unsigned int Tx_data
 {
 	unsigned int chn_offset =0;
 	unsigned int reg_value ;
-	unsigned int Tx_flag =0;
+	// unsigned int Tx_flag =0;
 	struct BBBIO_McSPI_CH_struct * chn_ptr = NULL;
 
 	/* check CM_PER enable status, or it may caue "Bus error" signal message. */

@@ -185,6 +185,7 @@ int test_sch_time(int key, _TMPL_DAT *t) {
 						return t->rec[i-1].state;
 			}
 	}
+	return 0;
 }
 
 /* given a key and schedule return state based on time of day and value of a sensor */

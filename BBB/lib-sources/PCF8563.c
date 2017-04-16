@@ -112,5 +112,5 @@ void set_tm(int rtc,_tm *tm){
     printf("\n\n");
   }
 
-  return 0;
+  return;
 }
