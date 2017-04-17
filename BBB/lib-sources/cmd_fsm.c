@@ -72,7 +72,7 @@ char    *keyword[_CMD_TOKENS] = {
 	/*  2 */    "humid",
 	/*  3 */    "schedule",
 	/*  4 */    "?",
-	/*  5 */    "clock",
+	/*  5 */    "display",
 	/*  6 */    "yes",
 	/*  7 */    "cancel",
 	/*  8 */    "replace",
@@ -116,15 +116,15 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/*  2  humid       */  { 0,  1,  2,  3,  4,  0,  6,  0,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 27, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/*  3  schedule    */  { 4,  1,  2,  3,  4,  0, 11, 23,  8,  9, 10, 11, 28, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/*  4  ?           */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
-	/*  5  clock       */  {13,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
+	/*  5  display     */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 13, 31, 32, 33, 34},
 	/*  6  yes         */  { 0,  1,  0,  3,  4,  0,  6,  0,  0,  0, 10, 11,  4, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
-	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  4,  4,  4,  4,  4, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,  8, 25,  8,  8, 28, 29, 30, 31, 32, 33, 34},
+	/*  7  cancel      */  { 0,  0,  0,  0,  0,  0,  4,  4,  4,  4,  4,  4,  4,  0, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,  8, 25,  8,  8, 28,  0,  0,  0,  0, 33, 34},
 	/*  8  replace     */  { 0,  1,  2,  3,  4,  5,  6,  0,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/*  9  sedit       */  {29,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 30, 31, 32, 33, 34},
-	/* 10  delete      */  { 0,  1,  2,  3, 12,  5,  4,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,  4, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
+	/* 10  delete      */  { 0,  1,  2,  3, 12,  5,  4,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,  4, 25, 26, 27, 28, 29,  0, 31, 32, 33, 34},
 	/* 11  active      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 32, 33, 34},
-	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,  4, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
-	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,  4, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
+	/* 12  on          */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 30, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,  4, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
+	/* 13  off         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 30, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,  4, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 14  clear       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,  0, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 15  status      */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 16  time        */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
@@ -132,14 +132,14 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 18  cycle       */  { 0,  2,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 19  ipc         */  { 0,  1,  2,  3,  4,  5,  4,  4,  8,  9, 10, 11,  4, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 20  name        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 31, 33, 32, 33, 34},
-	/* 21  save        */  { 0,  1,  2,  3,  6,  5,  4,  5,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
+	/* 21  save        */  { 0,  1,  2,  3,  6,  5,  4,  5,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 29, 31, 32, 33, 34},
 	/* 22  template    */  { 0,  1,  2,  3,  4,  5, 10, 22,  8,  9, 10, 11, 25, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 23  description */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 32, 34, 32, 33, 34},
 	/* 24  load        */  { 0,  1,  2,  3,  7,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 25  set         */  { 0,  1,  2,  3,  5,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 26  q           */  { 0,  1,  0,  0,  0,  0,  0,  0,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
-	/* 27  done        */  { 0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  4,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  4, 28, 29, 30, 31, 32, 33, 34},
-	/* 28  back        */  { 0,  0,  1,  2,  0,  4,  4,  4,  4,  5,  6,  6,  4,  0, 13, 14, 15, 16, 17, 18, 19,  1,  7,  7,  8, 12, 24, 24, 12, 29, 30, 31, 32, 33, 34},
+	/* 27  done        */  { 0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  4,  6,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  4, 28,  0,  0, 31, 32, 33, 34},
+	/* 28  back        */  { 0,  0,  1,  2,  0,  4,  4,  4,  4,  5,  6,  6,  4, 30, 13, 14, 15, 16, 17, 18, 19,  1,  7,  7,  8, 12, 24, 24, 12,  0, 29, 30, 30, 33, 34},
 	/* 29  system      */  { 0,  1,  2,  3,  4,  5,  4,  4,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 30  grab        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
 	/* 31  ssch        */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
@@ -179,8 +179,8 @@ int c_21(_CMD_FSM_CB *); /* set working schedule minute */
 int c_22(_CMD_FSM_CB *); /* set schedule record to on */
 int c_23(_CMD_FSM_CB *); /* set set schedule record to off */
 int c_24(_CMD_FSM_CB *); /* delete schedule record */
-int c_25(_CMD_FSM_CB *); /*  back up shared memory to file */
-int c_26(_CMD_FSM_CB *); /*  move sensor log to RAID */	//*******************************************************************************
+int c_25(_CMD_FSM_CB *); /* back up shared memory to file */
+int c_26(_CMD_FSM_CB *); /* set sedit display prompt */	
 int c_27(_CMD_FSM_CB *); /* update temperature in a schedule record */
 int c_28(_CMD_FSM_CB *); /* update humidity in a schedule record */
 int c_29(_CMD_FSM_CB *); /* load wsch from template buffer */
@@ -225,8 +225,9 @@ int c_67(_CMD_FSM_CB *); /* set sensor id prompt */
 int c_68(_CMD_FSM_CB *); /* set up working sensor buffer */
 int c_69(_CMD_FSM_CB *); /* set working sensor name */
 int c_70(_CMD_FSM_CB *); /* set working sensor description */
-
-
+int c_71(_CMD_FSM_CB *); /* set working sensor display to on */
+int c_72(_CMD_FSM_CB *); /* set working sensor display to off */
+int c_73(_CMD_FSM_CB *); /* move working data to ipc */
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -238,15 +239,15 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  2  humid       */  { c_7,  c_3,  c_7,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_3,  c_7,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  3  schedule    */  {c_35,  c_8,  c_7,  c_7,  c_7,  c_7, c_52,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  4  ?           */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  5  clock       */  {c_40,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  5  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_73,  c_7,  c_7,  c_7,  c_7},
 	/*  6  yes         */  { c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_48,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  7  cancel      */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/*  8  replace     */  { c_7,  c_7,  c_7,  c_7, c_39,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  9  sedit       */  {c_67,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},  //
+	/*  9  sedit       */  {c_67,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_67,  c_7,  c_7,  c_7,  c_7},  //
 	/* 10  delete      */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 11  active      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},  //
-	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_22,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 13  off         */  { c_7, c_10,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_71,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_22,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 13  off         */  { c_7, c_10,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23, c_72,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_23,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 14  clear       */  { c_7,  c_7,  c_7,  c_7, c_33,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_18,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 15  status      */  { c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_6,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 16  time        */  { c_2, c_11,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_2,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -254,14 +255,14 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 18  cycle       */  { c_7, c_13,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 19  ipc         */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_25, c_19,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 20  name        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7},  //
-	/* 21  save        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 21  save        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_73,  c_7,  c_7,  c_7,  c_7},
 	/* 22  template    */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_53, c_63,  c_7,  c_7,  c_7,  c_7, c_63,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 23  description */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7},  //
 	/* 24  load        */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 25  set         */  { c_7,  c_7,  c_7,  c_1, c_59,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 26  q           */  { c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3,  c_3},
-	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/* 27  done        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
+	/* 28  back        */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/* 29  system      */  {c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66, c_66,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 30  grab        */  {c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26, c_26,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 31  ssch        */  {c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57, c_57,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -366,6 +367,28 @@ void build_prompt(_CMD_FSM_CB * cb){
 			strcat(cb->prompt_buffer, "\r\nenter a command or time");
 			break;
 	}
+	return;
+}
+
+/* build sedit prompt */
+void sedit_prompt(_CMD_FSM_CB * cb){
+	char 				buf[10];
+
+	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
+	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
+	strcat(cmd_fsm_cb.prompt_buffer, buf);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     name: ");
+	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     description: ");
+	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     dislay: ");
+	if(cb->w_sen_dat.active == _ON)
+		strcat(cmd_fsm_cb.prompt_buffer, "on\n\r");
+	else
+		strcat(cmd_fsm_cb.prompt_buffer, "off\n\r");
+
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
+
 	return;
 }
 
@@ -943,14 +966,12 @@ int c_25(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/*  move sensor log to RAID */
+/*  set sedit dislay prompt */
 int c_26(_CMD_FSM_CB *cb)
 {
-	system("grabit");	// execut grabit script
 
 	/* build prompt */
-	strcpy(cb->prompt_buffer, "\rsensor log copied to RAID\n\renter command");
-
+	strcpy(cb->prompt_buffer, "enter <on> | <off> to control display of sensor data");
 	return 0;
 }
 
@@ -1493,18 +1514,13 @@ int c_65(_CMD_FSM_CB * cb)
 	int 			sensor;
 	// int 			i;
 
-	cb->ipc_ptr->s_dat[2].active = _TRUE;
-	cb->ipc_ptr->s_dat[4].active = _TRUE;
-	cb->ipc_ptr->s_dat[6].active = _TRUE;
-	cb->ipc_ptr->s_dat[7].active = _TRUE;
-
 	printf("\n  sensor temp  humid channels\r\n");
 	printf("  ------------------------------------------------\r\n");
 	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++){
-		if(cb->ipc_ptr->s_dat[sensor].active == _TRUE){
+		if(cb->ipc_ptr->s_dat[sensor].active == _ON){
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 			// printf("%6i", cb->ipc_ptr->s_dat[sensor].sensor_id);
-			printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
+			printf("%6i\t%s\t%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].name, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 
 			// for(i=0;i<cb->ipc_ptr->s_dat[sensor].channel_index;i++)
@@ -1574,14 +1590,16 @@ int c_68(_CMD_FSM_CB * cb)
 
 
 	/* build prompt */
-	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
-	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
-	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, "  name: ");
-	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
-	strcat(cmd_fsm_cb.prompt_buffer, ",  description: ");
-	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
+	sedit_prompt(cb);
+
+	// sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
+	// strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
+	// strcat(cmd_fsm_cb.prompt_buffer, buf);
+	// strcat(cmd_fsm_cb.prompt_buffer, "  name: ");
+	// strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
+	// strcat(cmd_fsm_cb.prompt_buffer, ",  description: ");
+	// strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
+	// strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
 
 	return 0;
 }
@@ -1589,47 +1607,84 @@ int c_68(_CMD_FSM_CB * cb)
 /* set working sensor name */
 int c_69(_CMD_FSM_CB *cb){
 
-	char 				buf[10];
+	// char 				buf[10];
 
 	strcpy(cb->w_sen_dat.name, cb->token);
 
 		/* build prompt */
-	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
-	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
-	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, "  name: ");
-	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
-	strcat(cmd_fsm_cb.prompt_buffer, ",  description: ");
-	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
+	sedit_prompt(cb);
+	// sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
+	// strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
+	// strcat(cmd_fsm_cb.prompt_buffer, buf);
+	// strcat(cmd_fsm_cb.prompt_buffer, "  name: ");
+	// strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
+	// strcat(cmd_fsm_cb.prompt_buffer, ",  description: ");
+	// strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
+	// strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
 
 	return 0;
 }
 
+
+
 /* set working sensor description */
 int c_70(_CMD_FSM_CB *cb){
 
-	char 				buf[10];
+	// char 				buf[10];
 
 	printf("token size %i\r\n", strlen(cb->token) );
 	strcpy(cb->w_sen_dat.description, cb->token);
 
 		/* build prompt */
-	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
-	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
-	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, "  name: ");
-	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
-	strcat(cmd_fsm_cb.prompt_buffer, ",  description: ");
-	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
+	sedit_prompt(cb);
+	// sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
+	// strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
+	// strcat(cmd_fsm_cb.prompt_buffer, buf);
+	// strcat(cmd_fsm_cb.prompt_buffer, "  name: ");
+	// strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
+	// strcat(cmd_fsm_cb.prompt_buffer, ",  description: ");
+	// strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
+	// strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
 
 	return 0;
 }
 
+/* set working sensor display to on */
+int c_71(_CMD_FSM_CB *cb){
+
+	cb->w_sen_dat.active = _ON;
+
+	/* build prompt */
+	sedit_prompt(cb);
+	return 0;
+}
+
+/* set working sensor display to off */
+int c_72(_CMD_FSM_CB *cb){
+
+	cb->w_sen_dat.active = _OFF;
+
+	/* build prompt */
+	sedit_prompt(cb);
+	return 0;
+}
+
+/* move working data to ipc */
+int c_73(_CMD_FSM_CB *cb){
+
+	cb->ipc_ptr->s_dat[cb->w_sen_dat.sensor_id] = cb->w_sen_dat;
+	cb->w_sen_dat.name[0] = '\0';
+	cb->w_sen_dat.description[0] = '\0';
+	cb->w_sen_dat.active = _OFF;
 
 
-/**************** end command fsm action routines ******************/
+	/* build prompt */
+	printf("sensor data saved\n\r");
+	sedit_prompt(cb);
+	return 0;
+}
+
+/******* end command fsm action routines ******************/
 
 /* cycle state machine */
 void cmd_fsm(_CMD_FSM_CB * cb)
