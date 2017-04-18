@@ -1604,7 +1604,7 @@ int c_68(_CMD_FSM_CB * cb)
 /* set working sensor name */
 int c_69(_CMD_FSM_CB *cb){
 
-	strcpy(cb->w_sen_dat.name, cb->token);
+	strcpy(cb->w_sen_dat.name, dequote(cb->token));
 
 	/* build prompt */
 	sedit_prompt(cb);
@@ -1617,8 +1617,8 @@ int c_69(_CMD_FSM_CB *cb){
 /* set working sensor description */
 int c_70(_CMD_FSM_CB *cb){
 
-	printf("token size %i\r\n", strlen(cb->token) );
-	strcpy(cb->w_sen_dat.description, cb->token);
+	// printf("token size %i\r\n", strlen(cb->token) );
+	strcpy(cb->w_sen_dat.description, dequote(cb->token));
 
 	/* build prompt */
 	sedit_prompt(cb);
