@@ -52,6 +52,7 @@ typedef struct {
 /* sensor data */
 typedef struct {
 	int 		sensor_id;
+	int			group_id;
 	int 		active;
 	char 	 	name[_SNAME_SIZE];
 	char 		description[_SDESCRIPTION];
