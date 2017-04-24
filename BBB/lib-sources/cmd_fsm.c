@@ -228,6 +228,7 @@ int c_70(_CMD_FSM_CB *); /* set working sensor description */
 int c_71(_CMD_FSM_CB *); /* set working sensor display to on */
 int c_72(_CMD_FSM_CB *); /* set working sensor display to off */
 int c_73(_CMD_FSM_CB *); /* move working data to ipc */
+int c_74(_CMD_FSM_CB *); /* set display prompt */
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -239,7 +240,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  2  humid       */  { c_7,  c_3,  c_7,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_3,  c_7,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  3  schedule    */  {c_35,  c_8,  c_7,  c_7,  c_7,  c_7, c_52,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  4  ?           */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  5  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_73,  c_7,  c_7,  c_7,  c_7},
+	/*  5  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_74,  c_7,  c_7,  c_7,  c_7},
 	/*  6  yes         */  { c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_48,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  7  cancel      */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/*  8  replace     */  { c_7,  c_7,  c_7,  c_7, c_39,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -277,6 +278,29 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 };
 
 /*************** start fsm support functions ********************/
+/* pad a string with trailing blenks */
+char *padstr(char *str, int len){
+	char 			buf[20];
+	char 			*ptr;
+	int 			i;
+
+	if(len>sizeof(buf))
+		return str;
+	if(strlen(str)>len)
+		return str;
+	ptr = str;
+	for(i=0;i<len;i++){
+		if((*ptr!='\0')
+			buf[i] = *ptr++;
+		else{
+			while(i < len)
+				buf[i++] = ' ';
+			buf[i] = '\0'
+			return buf;
+		}
+	}
+	return NULL;
+}
 
 /* test for a valid integer */
 int is_valid_int(const char *str)
@@ -1516,17 +1540,18 @@ int c_65(_CMD_FSM_CB * cb)
 	int 			sensor;
 	// int 			i;
 
-	printf("\n  sensor temp  humid channels\r\n");
-	printf("  ------------------------------------------------\r\n");
+	printf("\n  id/group     temp  humid      active  description\r\n");
+	printf("  ---------------------------------------------------------\r\n");
 	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++){
 		// if(cb->ipc_ptr->s_dat[sensor].active == _ON){
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 			// printf("%6i", cb->ipc_ptr->s_dat[sensor].sensor_id);
-			printf("%6i-%s\t%7.2f%6.2f\t%s", 
+			printf("%4i/%s\t%7.2f%6.2f\t%s\t%s", 
 				cb->ipc_ptr->s_dat[sensor].sensor_id, 
 				cb->ipc_ptr->s_dat[sensor].name, 
 				cb->ipc_ptr->s_dat[sensor].temp, 
 				cb->ipc_ptr->s_dat[sensor].humidity,
+				onoff[cb->ipc_ptr->s_dat[sensor].active],
 				cb->ipc_ptr->s_dat[sensor].description);
 
 
@@ -1575,9 +1600,14 @@ int c_66(_CMD_FSM_CB * cb)
 /* set sensor id prompt */
 int c_67(_CMD_FSM_CB * cb)
 {
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "enter sensor id (0-99)");
+	char 				buf[10];
 
+	sprintf(buf, "%d", _NUMBER_OF_SENSORS);
+
+	/* build prompt */
+	strcpy(cmd_fsm_cb.prompt_buffer, "enter sensor id (0-");
+	strcat(cmd_fsm_cb.prompt_buffer, buf);
+	strcat(cmd_fsm_cb.prompt_buffer, ")");
 	return 0;
 }
 
@@ -1591,7 +1621,7 @@ int c_68(_CMD_FSM_CB * cb)
 		sprintf(buf, "%d ", _NUMBER_OF_SENSORS);
 		strcat(cmd_fsm_cb.prompt_buffer, buf);
 		strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a sensor id");
-		return 0;
+		return 2;
 	}
 	s_load(cb->token_value,cb);
 	
@@ -1604,6 +1634,16 @@ int c_68(_CMD_FSM_CB * cb)
 /* set working sensor name */
 int c_69(_CMD_FSM_CB *cb){
 
+	char 			buf[10];
+
+	if(strlen(cb->token)>_MAX_GROUP_NAME_SIZE){
+		strcpy(cmd_fsm_cb.prompt_buffer, "group name limited to ");
+		sprintf(buf, "%d ", _MAX_GROUP_NAME_SIZE -1);
+		strcat(cmd_fsm_cb.prompt_buffer, buf);
+		strcat(cmd_fsm_cb.prompt_buffer, " characters\n\renter name in quotes");
+		return 2;
+	}
+
 	strcpy(cb->w_sen_dat.name, dequote(cb->token));
 
 	/* build prompt */
@@ -1611,8 +1651,6 @@ int c_69(_CMD_FSM_CB *cb){
 
 	return 0;
 }
-
-
 
 /* set working sensor description */
 int c_70(_CMD_FSM_CB *cb){
@@ -1648,17 +1686,29 @@ int c_72(_CMD_FSM_CB *cb){
 
 /* move working data to ipc */
 int c_73(_CMD_FSM_CB *cb){
+	char 				buf[10];
 
+	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
 	cb->ipc_ptr->s_dat[cb->w_sen_dat.sensor_id] = cb->w_sen_dat;
+	ipc_sem_free(semid, &sb);									// free lock on shared memory
+
 	cb->w_sen_dat.name[0] = '\0';
 	cb->w_sen_dat.description[0] = '\0';
 	cb->w_sen_dat.active = _OFF;
 
-
 	/* build prompt */
-	printf("sensor data saved\n\r");
-	sedit_prompt(cb);
+	sprintf(buf, "%d", _NUMBER_OF_SENSORS);
+	strcpy(cmd_fsm_cb.prompt_buffer, "sensor data saved\n\n\renter sensor id (0-");
+	strcat(cmd_fsm_cb.prompt_buffer, buf);
+	strcat(cmd_fsm_cb.prompt_buffer, ")");
 	return 0;
+}
+
+/* set display prompt */
+int c_74(_CMD_FSM_CB *cb){
+strcpy(cmd_fsm_cb.prompt_buffer, "sensor display <on>|<off> ");
+return 0;
+
 }
 
 /*********************************************************************/
@@ -1715,21 +1765,23 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
 #endif
 
-	if (cmd_action[index][cb->state](cb) == 0) {		// fire off a fsm action routine
-		cb->p_state = cb->state;
-		cb->state = cmd_new_state[index][cb->state];	// update state
-
-		#if defined (_ATRACE) || defined (_FTRACE)
-			sprintf(trace_buf, "cmd_fsm called after setting new state: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
-			strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-		#endif
-	}         //transition to next state
-	else
+	switch(cmd_action[index][cb->state](cb))				// fire off a fsm action routine
 	{
-		#if defined (_ATRACE) || defined (_FTRACE)
+		case 0:		// all is well
+			cb->state = cmd_new_state[index][cb->state];	// update state
+			break;
+		case 1:	// error in action routine
 			printf("error returned from action routine\n\r");
-		#endif
-		while (pop_cmd_q(cmd_fsm_cb.token)); //empty command queue
+			while (pop_cmd_q(cmd_fsm_cb.token)); 			//empty command queue
+			break;
+		case 2: 	// token failed range check	
+			break;
+		default: 	// bad return value from action routine
+			printf("\n\r********************************************\n\r");
+			printf("**** bad return value from action routine ****\n\r");
+			printf("**********************************************\n\r");
+			printf("\r\naborting application\n\r");
+			term1();
 	}
 	return;
 }
