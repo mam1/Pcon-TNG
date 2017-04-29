@@ -280,7 +280,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*************** start fsm support functions ********************/
 /* pad a string with trailing blenks */
 char *padstr(char *str, int len){
-	char 			buf[20];
+	static char 	buf[20];
 	char 			*ptr;
 	int 			i;
 
@@ -290,12 +290,12 @@ char *padstr(char *str, int len){
 		return str;
 	ptr = str;
 	for(i=0;i<len;i++){
-		if((*ptr!='\0')
+		if(*ptr!='\0')
 			buf[i] = *ptr++;
 		else{
 			while(i < len)
 				buf[i++] = ' ';
-			buf[i] = '\0'
+			buf[i] = '\0';
 			return buf;
 		}
 	}
@@ -1540,15 +1540,15 @@ int c_65(_CMD_FSM_CB * cb)
 	int 			sensor;
 	// int 			i;
 
-	printf("\n  id/group     temp  humid      active  description\r\n");
+	printf("\n  id/group     temp  humid    active    description\r\n");
 	printf("  ---------------------------------------------------------\r\n");
 	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++){
 		// if(cb->ipc_ptr->s_dat[sensor].active == _ON){
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 			// printf("%6i", cb->ipc_ptr->s_dat[sensor].sensor_id);
-			printf("%4i/%s\t%7.2f%6.2f\t%s\t%s", 
+			printf("%4i/%s\t%3.2f%6.2f\t%s\t%s", 
 				cb->ipc_ptr->s_dat[sensor].sensor_id, 
-				cb->ipc_ptr->s_dat[sensor].name, 
+				padstr(cb->ipc_ptr->s_dat[sensor].name, 6),
 				cb->ipc_ptr->s_dat[sensor].temp, 
 				cb->ipc_ptr->s_dat[sensor].humidity,
 				onoff[cb->ipc_ptr->s_dat[sensor].active],
