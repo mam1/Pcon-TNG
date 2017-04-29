@@ -68,6 +68,7 @@
 
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		20
+#define _MAX_GROUP_NAME_SIZE 	6
 // #define _MAX_SENSORS			25
 #define _SNAME_SIZE 			20
 #define _SDESCRIPTION			_MAX_TOKEN_SIZE
