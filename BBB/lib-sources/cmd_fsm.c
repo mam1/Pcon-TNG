@@ -1538,7 +1538,7 @@ int c_64(_CMD_FSM_CB * cb)
 int c_65(_CMD_FSM_CB * cb)
 {
 	int 			sensor;
-	// int 			i;
+	int 			i;
 
 	printf("\n  id/group     temp  humid    active    description\r\n");
 	printf("  ---------------------------------------------------------\r\n");
@@ -1546,22 +1546,21 @@ int c_65(_CMD_FSM_CB * cb)
 		// if(cb->ipc_ptr->s_dat[sensor].active == _ON){
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 			// printf("%6i", cb->ipc_ptr->s_dat[sensor].sensor_id);
-			printf("%4i/%s\t%3.2f%6.2f\t%s\t%s", 
+			printf("%4i/%s\t%3.2f%6.2f\t%s", 
 				cb->ipc_ptr->s_dat[sensor].sensor_id, 
 				padstr(cb->ipc_ptr->s_dat[sensor].name, 6),
 				cb->ipc_ptr->s_dat[sensor].temp, 
 				cb->ipc_ptr->s_dat[sensor].humidity,
-				onoff[cb->ipc_ptr->s_dat[sensor].active],
-				cb->ipc_ptr->s_dat[sensor].description);
+				onoff[cb->ipc_ptr->s_dat[sensor].active]);
 
 
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 
-			// for(i=0;i<cb->ipc_ptr->s_dat[sensor].channel_index;i++)
-			// 	if(i==0)
-			// 		printf("   %i",cb->ipc_ptr->s_dat[sensor].channel[i]);
-			// 	else
-			// 		printf(", %i",cb->ipc_ptr->s_dat[sensor].channel[i]);
+			for(i=0;i<cb->ipc_ptr->s_dat[sensor].channel_index;i++)
+				if(i==0)
+					printf("   %i",cb->ipc_ptr->s_dat[sensor].channel[i]);
+				else
+					printf(", %i",cb->ipc_ptr->s_dat[sensor].channel[i]);
 			printf("\n\r");
 		// }
 	}
