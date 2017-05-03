@@ -8,31 +8,31 @@ VER="2.0.1"
 DATE="$(date +'%m/%d/%Y')"
 TIME="$(date +'%r')" 
 
-echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> > /media/logs/exip.log
+echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/logs/exip.log
 
 # check for internet connection
 wget -q --spider http://google.com
 if [ $? -ne 0 ]; then
-    echo  -e "internet is not available - restarting Mint Box" >> > /media/logs/exip.log
+    echo  -e "internet is not available - restarting Mint Box" >> /media/logs/exip.log
 	init 6		# restart
 fi
 
 # reconnect the VPN if necessay
 if [[ "$(expressvpn status)" = "Not connected." ]]; then
-    echo  -e "vpn is not connected - reconnecting vpn" >> > /media/logs/exip.log
-	echo -e $(expressvpn connect) >> > /media/logs/exip.log
+    echo  -e "vpn is not connected - reconnecting vpn" >> /media/logs/exip.log
+	echo -e $(expressvpn connect) >> /media/logs/exip.log
 fi
 
 # get external IP addres
 IP="$(curl -s ipinfo.io/ip)"
-echo -e "VPN status" $(expressvpn status) >> > /media/logs/exip.log
-echo -e "external IP address" $IP >> > /media/logs/exip.log
+echo -e "VPN status" $(expressvpn status) >> /media/logs/exip.log
+echo -e "external IP address" $IP >> /media/logs/exip.log
 
 # write data to file
-rm /media/Raid/SensorMaster/exip.dat
-echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/Raid/SensorMaster/exip.dat
-echo -e "VPN status" $(expressvpn status) >> /media/Raid/SensorMaster/exip.dat
-echo -e "external IP address" $IP >> /media/Raid/SensorMaster/exip.dat
+rm /media/BlackHole/temp/exip.dat
+echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/BlackHole/temp/exip.dat
+echo -e "VPN status" $(expressvpn status) >> /media/BlackHole/temp/exip.dat
+echo -e "external IP address" $IP >> /media/BlackHole/temp/exip.dat
 
 # push external IP address to dropbox
-echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload /media/Raid/SensorMaster/exip.dat current_ip) >> > /media/logs/exip.log
+echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload /media/BlackHole/temp/exip.dat current_ip) >> /media/logs/exip.log
