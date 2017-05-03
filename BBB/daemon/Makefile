@@ -41,6 +41,7 @@ ifeq ($(UNAME_S),Darwin)
 else
 	PREFIX := /home/mam1/X-comp/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 endif
+
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
@@ -57,7 +58,7 @@ $(program_NAME): $(program_OBJS)
 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 # move the executable to the bone
-	load_bone
+	bload
 
 # clean up
 	@- $(RM) -v $(program_NAME)
