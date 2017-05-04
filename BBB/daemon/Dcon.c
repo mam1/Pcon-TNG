@@ -210,14 +210,14 @@ int main(void) {
 	   we can exit the parent process. */
 	if (pid > 0) {
 		/* create pid file */
-		fopen($PID_FILE_NAME, "w");
+		fopen(_PID_FILE_NAME, "w");
 		if (pidf != NULL){
 			
 			fprintf(pidf,"%i", pid);
 			fclose(pidf);
 		}
 		else{
-			printf(" can't write pid file <%s>\n", PID_FILE_NAME);
+			printf(" can't write pid file <%s>\n", _PID_FILE_NAME);
 			exit(EXIT_FAILURE);
 		}
 		exit(EXIT_SUCCESS);
