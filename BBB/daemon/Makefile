@@ -15,12 +15,14 @@ program_OBJS := $(program_C_OBJS) $(program_CXX_OBJS)
 # get the development machine OS
 UNAME_S := $(shell uname -s)
 
+
 # set directories
 ifeq ($(UNAME_S),Darwin)
 	program_DIR_PREFIX := /Users/mam1/Git/Pcon-TNG
 else
 	program_DIR_PREFIX := /home/mam1/Git/Pcon-TNG
 endif
+	
 
 system_BINARIES := $(program_DIR_PREFIX)/bin
 program_INCLUDE_DIRS := $(program_DIR_PREFIX)/BBB/include
@@ -38,18 +40,22 @@ LDFLAGS += $(CFLAGS) -fno-exceptions
 # set locations for basic gnu tools
 ifeq ($(UNAME_S),Darwin)
 	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
-else
-	PREFIX := /home/mam1/X-comp/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
-	#PREFIX := /usr/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/bin/arm-linux-gnueabihf-
-	# PREFIX := /usr/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
-endif
-
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
 	AS  := $(PREFIX)as
 	AR  := $(PREFIX)ar
 	OBJCOPY := $(PREFIX)objcopy
+else
+	CC=/gcc-linaro-5.4.1-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+	# PREFIX := `pwd`/gcc-linaro-5.4.1-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+	CC  := $(CC)gcc
+	CXX := $(CC)g++
+	LD  := $(CC)ld
+	AS  := $(CC)as
+	AR  := $(CC)ar
+	OBJCOPY := $(CC)objcopy
+endif
 
 .PHONY: all clean distclean
 
@@ -57,6 +63,8 @@ endif
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
+	@echo "\n$(UNAME_S)\n"
+	@echo "$(program_DIR_PREFIX)\n"
 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 # move the executable to the bone

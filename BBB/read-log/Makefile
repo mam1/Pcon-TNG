@@ -40,7 +40,7 @@ ifeq ($(UNAME_S),Darwin)
 	OBJCOPY := $(PREFIX)objcopy
 	OBJLOC :=  /Users/mam1/Git/Pcon-TNG/BBB/read-log
 else
-	PREFIX := /home/mam1/X-comp/gcc-linaro-4.9-2014.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+	PREFIX := /gcc-linaro-5.4.1-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
