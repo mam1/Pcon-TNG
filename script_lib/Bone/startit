@@ -51,7 +51,7 @@ fi
 if [ "$answr" == "y" ]
 	then
 		echo "starting daemon"
-		Dcon > /home/Pcon-data/Dcon.log &
+		Dcon >> /home/Pcon-data/Dcon.log &
 		echo "Dcon started"
 fi
 
