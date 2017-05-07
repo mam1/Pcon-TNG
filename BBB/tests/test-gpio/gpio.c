@@ -26,7 +26,7 @@
 #include <fcntl.h>
 #include <time.h>
 
-
+// #include "iolib.h"
 #include "BBBiolib.h"
 
 /* gpio enable list */
@@ -118,8 +118,12 @@ int main(void){
 	// }
 
 	/* initialise gpio access */
-	init_gpio();
 	iolib_init();
+
+
+
+	// init_gpio();
+	// iolib_init();
 
 
 
