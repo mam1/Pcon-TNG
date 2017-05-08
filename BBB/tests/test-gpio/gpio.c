@@ -26,7 +26,7 @@
 #include <fcntl.h>
 #include <time.h>
 
-
+// #include "iolib.h"
 #include "BBBiolib.h"
 
 /* gpio enable list */
@@ -118,8 +118,12 @@ int main(void){
 	// }
 
 	/* initialise gpio access */
-	init_gpio();
 	iolib_init();
+
+
+
+	// init_gpio();
+	// iolib_init();
 
 
 
@@ -166,16 +170,21 @@ int main(void){
 	// pin_low(8, _DIOB_SCLK_IN);
 	// pin_low(8, _DIOB_DIN);
 
+	printf("enter number > 17 to exit\n");
 	for(;;){
-		printf("enter r number 1-17 > ");
+		printf("enter relay number 0 - 17 > ");
 		scanf ("%d",&rnum);
-		if ((rnum < 0) || (rnum > 17))
+		if ((rnum < 0) || (rnum > 17)){
+			printf("\nnormal exit\n");
 			return 0;
-		printf("enter 0 for off or 1 for on > ");
-		scanf ("%d",&state);
-		if ((state < 0) || (state > 1))
-			return 0;
-		printf("rnum %i set to %i\n", rnum, state);
+		}
+		state = -1;
+		while((state != 0) && (state != 1)){
+			printf("enter 0 for off or 1 for on > ");
+			scanf ("%d",&state);
+			if ((state == 0) || (state == 1))
+				printf("rnum %i set to %i\n", rnum, state);
+		}
 
 	}
 
