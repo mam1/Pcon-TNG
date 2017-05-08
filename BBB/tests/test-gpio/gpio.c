@@ -27,7 +27,7 @@
 #include <time.h>
 
 // #include "iolib.h"
-#include "BBBiolib.h"
+#include "bbb.h"
 
 /* gpio enable list */
 #define _NUMBER_OF_GPIOS	17
@@ -118,7 +118,7 @@ int main(void){
 	// }
 
 	/* initialise gpio access */
-	iolib_init();
+	// iolib_init();
 
 
 
@@ -184,6 +184,9 @@ int main(void){
 			scanf ("%d",&state);
 			if ((state == 0) || (state == 1))
 				printf("rnum %i set to %i\n", rnum, state);
+				digital_output(P9, 12, 1);
+			    sleep(1);
+			    digital_output(P9, 12, 0);
 		}
 
 	}

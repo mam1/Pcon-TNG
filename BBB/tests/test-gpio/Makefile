@@ -72,8 +72,8 @@ clean:
 
 # rebuild the project ibrary from lib-sources 
 lib: 
-	cd .. && $(MAKE) clean
-	cd .. && $(MAKE)
+	cd ../../ && $(MAKE) clean
+	cd ../../ && $(MAKE)
 
 # build all project moduals
 project:
