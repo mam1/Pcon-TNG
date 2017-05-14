@@ -24,17 +24,25 @@
 #include "bbb.h"
 
 
+/*	gpio pin assignment {header,pin}  	*/
+#define _RLY1			{9,12}
+#define _RLY2			{9,15}
+#define _RLY3			{9,23}
+#define _RLY4			{8,27}
+
+
+
 int main(void){
 
-	int 		rnum,state,lcount,i,ii;
+	int 		rnum,state;
 
 	typedef struct {
 		int         header;
 		int         pin;
-	} _LED;
+	} _GPIO;
 
-	_LED 			led[19] = {{9,12},{9,15},{9,23},{8,27}};
-	lcount = 4;
+	_GPIO 			gpio[19] = {_RLY1,_RLY2,_RLY3,_RLY4};
+
 
 	show_gpio();
 									
@@ -51,8 +59,8 @@ int main(void){
 			printf("enter 0 for off or 1 for on > ");
 			scanf ("%d",&state);
 			if ((state == 0) || (state == 1)){
-				printf("led %i on header %i, pin %i set to %i\n", rnum, led[rnum].header, led[rnum].pin, state );
-				digital_output(led[rnum].header, led[rnum].pin, state);
+				printf("led %i on header %i, pin %i set to %i\n", rnum, gpio[rnum].header, gpio[rnum].pin, state );
+				digital_output(gpio[rnum].header, gpio[rnum].pin, state);
 			}
 
 		}
