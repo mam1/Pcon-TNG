@@ -226,8 +226,6 @@ int main(void) {
 	/* Change the file mode mask */
 	umask(0);
 
-	/* Open log file */
-
 	/* Create a new SID for the child process */
 	sid = setsid();
 	if (sid < 0) {
@@ -248,8 +246,8 @@ int main(void) {
 
 	/* Daemon-specific initializations */
 
-	/* setup PCF8563 RTC */
-	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
+	// /* setup PCF8563 RTC */
+	// rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 	logit("\n*****************\ndaemon started");
 	logit("starting initializations");
 
