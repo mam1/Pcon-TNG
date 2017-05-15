@@ -73,6 +73,7 @@ int pin_high(int h, int p){
 	strcat(cmd,".");
 	strcat(cmd,pin);
 	strcat(cmd," high");
+	system(cmd);
 
 	return 0;
 }
@@ -91,28 +92,10 @@ int pin_low(int h, int p){
 	strcat(cmd,".");
 	strcat(cmd,pin);
 	strcat(cmd," low");
+	system(cmd);
 
 	return 0;
 }
-// /* send control byte to dio board */
-// void send_ccb(uint8_t byte)
-// {
-// 	int         i;
-// 	pin_low(8, _DIOB_DIN);
-// 	for (i = 7; i >= 0; i--)   			//serialize and reverse bits
-// 	{
-// 		if ((1 << i) & byte)
-// 			pin_high(8, _DIOB_DIN); //send bit high
-// 		else
-// 			pin_low(8, _DIOB_DIN);  //send bit low
-// 		/* send clock pluse */
-// 		pin_high(8, _DIOB_SCLK_IN);
-// 		pin_low(8, _DIOB_SCLK_IN);
-// 	}
-// 	pin_high(8, _DIOB_LAT_RLY);      //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */
-// 	pin_low(8, _DIOB_LAT_RLY);       //done - ready for next write */
-// 	return;
-// }
 
 /* write an entry to the daemon log file */
 void logit(char *mess){
@@ -138,39 +121,43 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	int 				key;
 	int 				state;
 	int 				channel;
-	uint8_t 			ccb;
-	int 				i;
-	static _GPIO 			gpio[_NUMBER_OF_CHANNELS] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
+	// uint8_t 			ccb;
+	// int 				i;
+	static _GPIO 		gpio[_NUMBER_OF_CHANNELS] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
 
+// char debug_buff[128];
+	
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	key =  tm->tm_hour * 60 + tm->tm_min;		// generate key
-
+	// logit(" ");
+	logit("starting channel update *******************************************");
 	/* set channel state based on channel mode */
-	// logit("updating relays");
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
+		// sprintf(debug_buff,"updating channel %d",channel);
+		// logit(debug_buff);
 		switch (ipc_ptr->sys_data.c_data[channel].mode) {
 		case 0:	// manual
-			logit("manual control");
+			// logit("manual control");
 			state = ipc_ptr->sys_data.c_data[channel].state;
 			break;
 		case 1:	// time
-			logit("time control");
+			// logit("time control");
 			state =  test_sch_time(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
-// ----------------------------------------------------------------------------------------------------------
-char 			buff[128];
-sprintf(buff, "current time generated key %i,  %i returned from test_sch_time\ndump schedule\n",key, state);
-logit(buff);
-for(i=0;i<ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rcnt;i++){
-	sprintf(buff, "  schedule record %i, key= %i, state=%i, channel=%i",
-		    i, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].key, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].state, channel);
-	logit(buff);
-}
-// -------------------------------------------------------------------------------------------------------------
+			// ----------------------------------------------------------------------------------------------------------
+			// // char 			buff[128];
+			// // sprintf(buff, "current time generated key %i,  %i returned from test_sch_time\ndump schedule\n",key, state);
+			// // logit(buff);
+			// for(i=0;i<ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rcnt;i++){
+			// 	sprintf(buff, "  schedule record %i, key= %i, state=%i, channel=%i",
+			// 		    i, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].key, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].state, channel);
+			// 	logit(buff);
+			// }
+			// -------------------------------------------------------------------------------------------------------------
 
-			// ipc_ptr->sys_data.c_data[channel].state = state;
+						// ipc_ptr->sys_data.c_data[channel].state = state;
 			break;
 		case 2:	// time & sensor
-			logit("sensor & time control");
+			// logit("sensor & time control");
 			state =  test_sch_sensor(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 
 			// ipc_ptr->sys_data.c_data[channel].state = state;
@@ -183,20 +170,25 @@ for(i=0;i<ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rcnt;i++){
 		}
 		ipc_ptr->sys_data.c_data[channel].state = state;
 	}
-
-	/* update on board outpust for all channels */
+	// logit("end channel update *******************************************");
+	logit("starting pin update *******************************************");
+	/* update gpio pins for all channels */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
+		// sprintf(debug_buff,"updating pin %d",channel);
+		// logit(debug_buff);
 		if (ipc_ptr->sys_data.c_data[channel].state) {
 			pin_high(gpio[channel].header, gpio[channel].pin);
+			// logit("pin set high");
 		}
 		else {
 			pin_low(gpio[channel].header, gpio[channel].pin);
+			// logit("pin set low");
 		}
 	}
 
 	ipc_sem_free(semid, &sb);	// free lock on shared memory
 	// send_ccb(ccb);         		// send control byte to the DIOB
-	
+	logit("end pin update *******************************************");
 	return;
 }
 
@@ -204,11 +196,12 @@ int main(void) {
 
 	/* Our process ID and Session ID */
 	pid_t 		pid, sid;
-	// int 		toggle;
+	int 		toggle;
 	int 		h_min;
 	_tm 		t;
 	int 		ipc;
 	FILE 		*pidf;
+	static _GPIO 		heart = {.header=8, .pin=27};
 
 	/* Fork off the parent process */
 	pid = fork();
@@ -219,7 +212,7 @@ int main(void) {
 	   we can exit the parent process. */
 	if (pid > 0) {
 		/* create pid file */
-		fopen(_PID_FILE_NAME, "w");
+		pidf = fopen(_PID_FILE_NAME, "w");
 		if (pidf != NULL){
 			
 			fprintf(pidf,"%i", pid);
@@ -255,8 +248,7 @@ int main(void) {
 
 	/* Daemon-specific initializations */
 
-	// /* setup PCF8563 RTC */
-	// rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
+
 	logit("\n*****************\ndaemon started");
 	logit("starting initializations");
 
@@ -300,53 +292,6 @@ int main(void) {
         ipc_sem_free(semid, &sb);                   // free lock on shared memory
 	}
 
-	// /* initialise gpio access */
-	// init_gpio();
-	// iolib_init();
-
-	// /* setup gpio access to LEDs on the WaveShare Cape*/
-	// logit("iolib initialized");
-	// logit("mapping WaveShare Misc Cape leds to gpio pins");
-	// iolib_setdir(8, _LED_1, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _LED_2, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _LED_3, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _LED_4, BBBIO_DIR_OUT);
-
-	// /* turn off the LEDs */
-	// pin_low(8, _LED_1);
-	// pin_low(8, _LED_2);
-	// pin_low(8, _LED_3);
-	// pin_low(8, _LED_4);
-
-	// /* setup gpio access to PhotoMos relays */
-	// logit("mapping PhotoMos relays to gpio pins");
-	// iolib_setdir(8, _R1_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _R2_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _R3_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _R4_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(9, _R5_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(9, _R6_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(9, _R7_CAPE, BBBIO_DIR_OUT);
-	// iolib_setdir(9, _R8_CAPE, BBBIO_DIR_OUT);
-
-	// /* turn all relays off */
-	// pin_low(8, _R1_CAPE);
-	// pin_low(8, _R2_CAPE);
-	// pin_low(8, _R3_CAPE);
-	// pin_low(8, _R4_CAPE);
-	// pin_low(9, _R5_CAPE);
-	// pin_low(9, _R6_CAPE);
-	// pin_low(9, _R7_CAPE);
-	// pin_low(9, _R8_CAPE);
-
-	// /* setup gpio access to serial header on the DIOB */
-	// logit("mapping DIOB serial header to gpio pins");
-	// iolib_setdir(8, _DIOB_DIN, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _DIOB_SCLK_IN, BBBIO_DIR_OUT);
-	// iolib_setdir(8, _DIOB_LAT_RLY, BBBIO_DIR_OUT);
-	// pin_low(8, _DIOB_SCLK_IN);
-	// pin_low(8, _DIOB_DIN);
-
 	/* The Big Loop */
 	logit("initialization complete");
 	logit("starting main loop");
@@ -358,6 +303,7 @@ int main(void) {
 			ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
 			ipc_ptr->force_update = 0;
 			ipc_sem_free(semid, &sb);                   // free lock on shared memory
+			logit("*********************");
 			logit("update forced");
 			update_relays(&t, ipc_ptr);
 			continue;
@@ -365,25 +311,22 @@ int main(void) {
 		else {
 			if (h_min != t.tm_min) {	// see if we are on a new minute
 				h_min = t.tm_min;
+				logit("*********************");
 				logit("update triggered by time");
 				update_relays(&t, ipc_ptr);
 				continue;
 			}
 		}
-		// if (toggle) {					// cycle cape leds
-		// 	toggle = 0;
-		// 	pin_low(8,  _LED_1);
-		// 	pin_high(8,  _LED_2);
-		// 	pin_low(8,  _LED_3);
-		// 	pin_high(8,  _LED_4);
-		// }
-		// else {
-		// 	toggle = 1;
-		// 	pin_high(8,  _LED_1);
-		// 	pin_low(8,  _LED_2);
-		// 	pin_high(8,  _LED_3);
-		// 	pin_low(8,  _LED_4);
-		// }
+		if (toggle) {					// cycle cape leds
+			toggle = 0;
+			pin_low(heart.header,heart.pin);
+
+		}
+		else {
+			toggle = 1;
+			pin_high(heart.header,heart.pin);
+
+		}
 		// usleep(300000);
 	}
 
