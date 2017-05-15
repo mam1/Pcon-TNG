@@ -25,12 +25,23 @@
 
 
 /*	gpio pin assignment {header,pin}  	*/
-#define _HB 			{8,27}
-#define _CHAN1			{9,12}
-#define _CHAN2			{9,15}
-#define _CHAN3			{9,23}
-#define _CHAN4			{8,28}
-#define _CHAN5			{8,29}
+#define _CHAN0			{8,3}
+#define _CHAN1			{8,4}
+#define _CHAN2			{8,5}
+#define _CHAN3			{8,6}
+#define _CHAN4			{8,11}
+#define _CHAN5			{8,12}
+#define _CHAN6			{8,15}
+#define _CHAN7			{8,16}
+#define _CHAN8			{8,18}
+#define _CHAN9			{8,20}
+#define _CHAN10			{8,21}
+#define _CHAN11			{8,22}
+#define _CHAN12			{8,23}
+#define _CHAN13			{8,24}
+#define _CHAN14			{8,25}
+#define _CHAN15			{8,26}
+
 
 int dout(){
 
@@ -49,7 +60,7 @@ int main(void){
 		int         pin;
 	} _GPIO;
 
-	_GPIO 			gpio[19] = {_HB,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5};
+	_GPIO 			gpio[19] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
 
 
 	show_gpio();
