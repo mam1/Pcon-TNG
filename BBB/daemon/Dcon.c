@@ -25,7 +25,6 @@
 #include "bitlit.h"
 #include "PCF8563.h"
 #include "sch.h"
-// #include "BBBiolib.h"
 #include "trace.h"
 #include "typedefs.h"
 #include "sys_dat.h"
@@ -121,46 +120,23 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	int 				key;
 	int 				state;
 	int 				channel;
-	// uint8_t 			ccb;
-	// int 				i;
 	static _GPIO 		gpio[_NUMBER_OF_CHANNELS] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
-
-// char debug_buff[128];
 	
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	key =  tm->tm_hour * 60 + tm->tm_min;		// generate key
-	// logit(" ");
-	logit("starting channel update *******************************************");
+	logit("starting channel update");
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
-		// sprintf(debug_buff,"updating channel %d",channel);
-		// logit(debug_buff);
 		switch (ipc_ptr->sys_data.c_data[channel].mode) {
 		case 0:	// manual
-			// logit("manual control");
 			state = ipc_ptr->sys_data.c_data[channel].state;
 			break;
 		case 1:	// time
-			// logit("time control");
 			state =  test_sch_time(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
-			// ----------------------------------------------------------------------------------------------------------
-			// // char 			buff[128];
-			// // sprintf(buff, "current time generated key %i,  %i returned from test_sch_time\ndump schedule\n",key, state);
-			// // logit(buff);
-			// for(i=0;i<ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rcnt;i++){
-			// 	sprintf(buff, "  schedule record %i, key= %i, state=%i, channel=%i",
-			// 		    i, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].key, ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel].rec[i].state, channel);
-			// 	logit(buff);
-			// }
-			// -------------------------------------------------------------------------------------------------------------
-
-						// ipc_ptr->sys_data.c_data[channel].state = state;
 			break;
 		case 2:	// time & sensor
-			// logit("sensor & time control");
-			state =  test_sch_sensor(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 
-			// ipc_ptr->sys_data.c_data[channel].state = state;
+			state =  test_sch_sensor(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 			break;
 		case 3:	// cycle
 			logit("*** error mode set to <3>");
@@ -170,25 +146,19 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 		}
 		ipc_ptr->sys_data.c_data[channel].state = state;
 	}
-	// logit("end channel update *******************************************");
-	logit("starting pin update *******************************************");
+	logit("starting pin update");
 	/* update gpio pins for all channels */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
-		// sprintf(debug_buff,"updating pin %d",channel);
-		// logit(debug_buff);
 		if (ipc_ptr->sys_data.c_data[channel].state) {
 			pin_high(gpio[channel].header, gpio[channel].pin);
-			// logit("pin set high");
 		}
 		else {
 			pin_low(gpio[channel].header, gpio[channel].pin);
-			// logit("pin set low");
 		}
 	}
 
 	ipc_sem_free(semid, &sb);	// free lock on shared memory
-	// send_ccb(ccb);         		// send control byte to the DIOB
-	logit("end pin update *******************************************");
+	logit("end pin update");
 	return;
 }
 
@@ -264,7 +234,6 @@ int main(void) {
     if( access(_IPC_FILE_NAME, F_OK ) != -1 ){
         ipc = 1;
         logit(" ipc file found" );
-
     }
     else
         ipc = 0;
@@ -303,7 +272,7 @@ int main(void) {
 			ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
 			ipc_ptr->force_update = 0;
 			ipc_sem_free(semid, &sb);                   // free lock on shared memory
-			logit("*********************");
+			// logit("*********************");
 			logit("update forced");
 			update_relays(&t, ipc_ptr);
 			continue;
@@ -311,7 +280,7 @@ int main(void) {
 		else {
 			if (h_min != t.tm_min) {	// see if we are on a new minute
 				h_min = t.tm_min;
-				logit("*********************");
+				// logit("*********************");
 				logit("update triggered by time");
 				update_relays(&t, ipc_ptr);
 				continue;
