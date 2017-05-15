@@ -95,13 +95,7 @@
 
 #define	_BYTES_PER_INT 			4
 #define _BYTES_PER_SCHEDULE 	_SCHEDULE_SIZE * _BYTES_PER_INT
-#define _BYTES_PER_DAY 			_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE
-
-// /* gpio enable list */
-// #define _NUMBER_OF_GPIOS	16
-// #define _GPIOS              66,67,69,68,45,44,26,115,46,27,65,61,60,48,49,20	
-// #define _HEADERS			 8, 8, 8, 8, 8, 8, 8, 9, 8, 8, 8, 8, 9, 9, 9, 9
-// #define _PINS  				 7, 9, 8,10,11,12,14,27,16,17,18,26,12,15,23,41	 	
+#define _BYTES_PER_DAY 			_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE 	
 
 /*	gpio pin assignment {header,pin}  	*/
 #define _CHAN0			{8,3}
@@ -121,29 +115,7 @@
 #define _CHAN14			{8,25}
 #define _CHAN15			{8,26}
 
-#define _HB 			{8,27}	
-
-// /* map P8 header pins */
-// #define _LED_1			7	
-// #define _LED_2			9		
-// #define _LED_3			8			
-// #define _LED_4			10
-// #define _DIOB_DIN 		11
-// #define _DIOB_DATA_RLY	11
-// #define _DIOB_SCLK_IN	12
-// #define	_DIOB_SCLK_RLY	12
-// #define	_DIOB_LAT_RLY	14
-// #define	_DIOB_LOAD_IN	27
-// #define _R1_CAPE		16
-// #define _R2_CAPE		17
-// #define _R3_CAPE		18
-// #define _R4_CAPE		26
- 
-// /* map P9 header pins  */
-// #define _R5_CAPE		12
-// #define _R6_CAPE		15
-// #define _R7_CAPE		23
-// #define _R8_CAPE		41
+#define _HB 			{.header=8, .pin=27}	
 
 /* general */
 #define _DAYS_PER_WEEK 	7
@@ -155,7 +127,5 @@
 /* macros */
 #define handle_error(msg) \
    do { perror(msg); exit(EXIT_FAILURE); } while (0)
-
-
 
 #endif	//_SHARE_H_

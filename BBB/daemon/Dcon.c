@@ -171,7 +171,7 @@ int main(void) {
 	_tm 		t;
 	int 		ipc;
 	FILE 		*pidf;
-	static _GPIO 		heart = {.header=8, .pin=27};
+	static _GPIO 		heart = _HB;
 
 	/* Fork off the parent process */
 	pid = fork();
@@ -217,20 +217,9 @@ int main(void) {
 	close(STDERR_FILENO);
 
 	/* Daemon-specific initializations */
-
-
 	logit("\n*****************\ndaemon started");
 	logit("starting initializations");
 
-	/* check for ipc file and ipc backup file */	
-    // if( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ){
-    //     bkup = 1;
-    //     fprintf(stderr, "%s\n"," ipc backup found" );
-    // }
-    // else{ 
-    //     bkup = 0;
-    //     fprintf(stderr, "%s\n"," ipc backup not found" );
-    // }
     if( access(_IPC_FILE_NAME, F_OK ) != -1 ){
         ipc = 1;
         logit(" ipc file found" );
@@ -238,7 +227,6 @@ int main(void) {
     else
         ipc = 0;
     
-
 	/* setup shared memory */
 	ipc_sem_init();
 	semid = ipc_sem_id(skey);					// get semaphore id
@@ -265,14 +253,11 @@ int main(void) {
 	logit("initialization complete");
 	logit("starting main loop");
 	while (1) {
-
 		get_tm(&t);
-
 		if (ipc_ptr->force_update == 1) {
 			ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
 			ipc_ptr->force_update = 0;
 			ipc_sem_free(semid, &sb);                   // free lock on shared memory
-			// logit("*********************");
 			logit("update forced");
 			update_relays(&t, ipc_ptr);
 			continue;
@@ -280,25 +265,20 @@ int main(void) {
 		else {
 			if (h_min != t.tm_min) {	// see if we are on a new minute
 				h_min = t.tm_min;
-				// logit("*********************");
 				logit("update triggered by time");
 				update_relays(&t, ipc_ptr);
 				continue;
 			}
 		}
-		if (toggle) {					// cycle cape leds
+		if (toggle) {					// cycle heart beat led
 			toggle = 0;
 			pin_low(heart.header,heart.pin);
-
 		}
 		else {
 			toggle = 1;
 			pin_high(heart.header,heart.pin);
-
 		}
-		// usleep(300000);
 	}
-
 	exit(EXIT_SUCCESS);
 }
 
