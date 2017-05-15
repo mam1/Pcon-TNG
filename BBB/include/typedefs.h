@@ -8,6 +8,11 @@
 #include "Pcon.h"
 
 typedef struct {
+		int         header;
+		int         pin;
+	} _GPIO;
+
+typedef struct {
 	int    tm_sec;   // seconds [0,61]
 	int    tm_min;   // minutes [0,59]
 	int    tm_hour;  // hour [0,23]
