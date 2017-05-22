@@ -28,6 +28,7 @@
 #include "trace.h"
 #include "typedefs.h"
 #include "sys_dat.h"
+#include "bbb.h"
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -59,39 +60,46 @@ SEMBUF sb = {0, -1, 0};  /* set to allocate resource */
 
 int pin_high(int h, int p){
 
-	static char 	*prefix="config-pin P";
-	char 			header[4];
-	char 			pin[5];
-	char 			cmd[30];
+	if (digital_output(h, h, 1))
+		logit("digital_output error");
 
 
-	sprintf(header, "%d", h);
-	sprintf(pin, "%d", p);
-	strcpy(cmd,prefix);
-	strcat(cmd,header);
-	strcat(cmd,".");
-	strcat(cmd,pin);
-	strcat(cmd," high");
-	system(cmd);
+	// static char 	*prefix="config-pin P";
+	// char 			header[4];
+	// char 			pin[5];
+	// char 			cmd[30];
+
+	// sprintf(header, "%d", h);
+	// sprintf(pin, "%d", p);
+	// strcpy(cmd,prefix);
+	// strcat(cmd,header);
+	// strcat(cmd,".");
+	// strcat(cmd,pin);
+	// strcat(cmd," high");
+	// system(cmd);
 
 	return 0;
 }
 
 int pin_low(int h, int p){
 
-	static char 	*prefix="config-pin P";
-	char 			header[4];
-	char 			pin[5];
-	char 			cmd[30];
+	if (digital_output(h, h, 0))
+		logit("digital_output error");
 
-	sprintf(header, "%d", h);
-	sprintf(pin, "%d", p);
-	strcpy(cmd,prefix);
-	strcat(cmd,header);
-	strcat(cmd,".");
-	strcat(cmd,pin);
-	strcat(cmd," low");
-	system(cmd);
+
+	// static char 	*prefix="config-pin P";
+	// char 			header[4];
+	// char 			pin[5];
+	// char 			cmd[30];
+
+	// sprintf(header, "%d", h);
+	// sprintf(pin, "%d", p);
+	// strcpy(cmd,prefix);
+	// strcat(cmd,header);
+	// strcat(cmd,".");
+	// strcat(cmd,pin);
+	// strcat(cmd," low");
+	// system(cmd);
 
 	return 0;
 }
@@ -116,12 +124,14 @@ void logit(char *mess){
 
 /* update all relays */
 void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
-
 	int 				key;
 	int 				state;
 	int 				channel;
 	static _GPIO 		gpio[_NUMBER_OF_CHANNELS] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
+
+
 	
+
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	key =  tm->tm_hour * 60 + tm->tm_min;		// generate key
 	logit("starting channel update");
@@ -133,9 +143,15 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 			break;
 		case 1:	// time
 			state =  test_sch_time(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
+	
+			FILE *saved = stdout;
+			stdout = fopen(_DAEMON_LOG, "a");
+			printf("    channel %i conreoled by time, test_sch_time returned <%i>\n", channel, state);
+			fclose(stdout);
+			stdout = saved;
+
 			break;
 		case 2:	// time & sensor
-
 			state =  test_sch_sensor(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 			break;
 		case 3:	// cycle
@@ -273,10 +289,12 @@ int main(void) {
 		if (toggle) {					// cycle heart beat led
 			toggle = 0;
 			pin_low(heart.header,heart.pin);
+			// digital_output(heart.header, heart.pin, 0);
 		}
 		else {
 			toggle = 1;
 			pin_high(heart.header,heart.pin);
+			// digital_output(heart.header, heart.pin, 1);
 		}
 	}
 	exit(EXIT_SUCCESS);
