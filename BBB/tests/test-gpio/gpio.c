@@ -21,7 +21,7 @@
 #include <fcntl.h>
 #include <time.h>
 
-#include "bbb.h"
+// #include "bbb.h"
 
 
 /*	gpio pin assignment {header,pin}  	*/
@@ -42,8 +42,10 @@
 #define _CHAN14			{8,25}
 #define _CHAN15			{8,26}
 
-#define _HB 			{8,27}
+#define _HB0 			{8,27}
+#define _HB1 			{8,28}
 
+init_gpio
 
 int dout(){
 
@@ -62,7 +64,9 @@ int main(void){
 		int         pin;
 	} _GPIO;
 
-	_GPIO 			gpio[19] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15,_HB};
+	_GPIO 			chan[16] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15,_HB};
+	_GPIO 			heart[2] = {_HB0, _HB1};
+
 
 
 	show_gpio();
