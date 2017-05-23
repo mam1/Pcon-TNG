@@ -1,5 +1,5 @@
 [Eagle]
-Version="08 01 01"
+Version="08 02 00"
 Platform="Mac OS X"
 Globals="Globals"
 Desktop="Desktop"
@@ -349,12 +349,5 @@ UsedLibrary="/Applications/EAGLE-8.1.0/lbr/xilinx-xcv.lbr"
 UsedLibrary="/Applications/EAGLE-8.1.0/lbr/zetex.lbr"
 UsedLibrary="/Applications/EAGLE-8.1.0/lbr/zilog.lbr"
 
-[Win_1]
-Type="Control Panel"
-Loc="482 58 1919 931"
-State=2
-Number=0
-
 [Desktop]
 Screen="1920 1080"
-Window="Win_1"
