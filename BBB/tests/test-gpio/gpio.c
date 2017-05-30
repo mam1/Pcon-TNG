@@ -21,7 +21,7 @@
 #include <fcntl.h>
 #include <time.h>
 
-// #include "bbb.h"
+#include "bbb.h"
 /* files within sysfs */
 
 #define BONE_SLOTS   "/sys/devices/platform/bone_capemgr/slots"
@@ -58,26 +58,26 @@
 #define REG                 volatile unsigned int
 
 
-/*	gpio pin assignment {header,pin}  	*/
-#define _CHAN0			{8,3}
-#define _CHAN1			{8,4}
-#define _CHAN2			{8,5}
-#define _CHAN3			{8,6}
-#define _CHAN4			{8,11}
-#define _CHAN5			{8,12}
-#define _CHAN6			{8,15}
-#define _CHAN7			{8,16}
-#define _CHAN8			{8,18}
-#define _CHAN9			{8,20}
-#define _CHAN10			{8,21}
-#define _CHAN11			{8,22}
-#define _CHAN12			{8,23}
-#define _CHAN13			{8,24}
-#define _CHAN14			{8,25}
-#define _CHAN15			{8,26}
+/*	gpio pin assignment {header,pin,gpio}  	*/
+#define _CHAN0			{8,3,38}
+#define _CHAN1			{8,4,39}
+#define _CHAN2			{8,5,34}
+#define _CHAN3			{8,6,35}
+#define _CHAN4			{8,11,45}
+#define _CHAN5			{8,12,44}
+#define _CHAN6			{8,15,47}
+#define _CHAN7			{8,16,46}
+#define _CHAN8			{8,18,65}
+#define _CHAN9			{8,20,63}
+#define _CHAN10			{8,21,62}
+#define _CHAN11			{8,22,37}
+#define _CHAN12			{8,23,36}
+#define _CHAN13			{8,24,33}
+#define _CHAN14			{8,25,32}
+#define _CHAN15			{8,26,61}
 
-#define _HB0 			{8,27}
-#define _HB1 			{8,28}
+#define _HB0 			{8,27,86}
+#define _HB1 			{8,28,88}
 
 /* GPIO 1 */
 
@@ -163,55 +163,19 @@
 #define P9 1
 
 
-/**
- * @brief Given the header and pin number return the gpio number
- * @param header Either P8 or P9
- * @param pin Pin number on the header (not the gpio number)
- * @return The gpio number
- */
-int header_pin(int header, int pin)
-{
-    int i;
-    int p8_gpio1[] = {3, 4, 5, 6, 11,12,15,16,20,21, 22,23,24,25,26,12};
-    int p8_gpio1_pin[] = {P8_3, P8_4, P8_5, P8_6, P8_11,P8_12,P8_15,P8_16,P8_20,P8_21, P8_22,P8_23,P8_24,P8_25,P8_26,P8_12};
-    int p8_gpio2[] = {18,27,28,29,30,39,40,41,42,43, 44,45,46};
-    int p8_gpio2_pin[] = {P8_18,P8_27,P8_28,P8_29,P8_30,P8_39,P8_40,P8_41,P8_42,P8_43, P8_44,P8_45,P8_46};
-    int p9_gpio1[] = {12,15,23};
-    int p9_gpio1_pin[] = {P9_12,P9_15,P9_23};
-    int p9_gpio3[] = {25,27};
-    int p9_gpio3_pin[] = {P9_25,P9_27};
 
-    if (header == P8) {
-        for (i = 0; i < 16; i++)
-            if (pin == p8_gpio1[i]) return p8_gpio1_pin[i];
-        for (i = 0; i < 13; i++)
-            if (pin == p8_gpio2[i]) return p8_gpio2_pin[i];
-    }
-    else {
-        for (i = 0; i < 3; i++)
-            if (pin == p9_gpio1[i]) return p9_gpio1_pin[i];
-        for (i = 0; i < 2; i++)
-            if (pin == p9_gpio3[i]) return p9_gpio3_pin[i];
-    }
+/* initialise gpio pin */
+int init_gpio(int gpio) {
+	char 				command[120];
 
-    return 0;
-}
-
-/* initialise gpio pins for iolib */
-int init_gpio(void) {
-	// char 				command[120];
-	// int 				i;
-	// int 				gpios[_NUMBER_OF_GPIOS] = {_GPIOS};
-
-	// for (i = 0; i < _NUMBER_OF_GPIOS; i++) {
-	// 	sprintf(command, "if [ ! -d /sys/class/gpio/gpio%i ]; then echo %i > /sys/class/gpio/export; fi", gpios[i], gpios[i] );
-	// 	// logit(NULL, command);
-	// 	printf("system command %s returned %i\n", command, system(command));
-	// }
-
+	sprintf(command, "if [ ! -d /sys/class/gpio/gpio%i ]; then echo %i > /sys/class/gpio/export; fi", gpio, gpio);
+	printf("system command %s returned %i\n", command, system(command));
+	sprintf(command, "echo out > /sys/class/gpio/gpio%i/direction", gpio);
+	printf("system command %s returned %i\n", command, system(command));
+	sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", gpio);
+	printf("system command %s returned %i\n", command, system(command));
 	return 0;
 }
-
 
 int dout(){
 
@@ -224,6 +188,7 @@ int main(void){
 	char 		header[10];
 	char 		pin[10];
 	char 		cmd[30];
+		char 				command[120];
 
 	int 			i;
 
@@ -231,21 +196,36 @@ int main(void){
 	typedef struct {
 		int         header;
 		int         pin;
+		int 		gpio;
 	} _GPIO;
 
 	_GPIO 			chan[16] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
 	_GPIO 			heart[2] = {_HB0, _HB1};
 
 	for(i=0; i<16; i++){
-		printf("  P%i.%i .... %i\n", chan[i].header, chan[i].pin, header_pin(chan[i].header, chan[i].pin));
+		printf(" P%i.%i", chan[i].header, chan[i].pin);
+		init_gpio(chan[i].gpio);
 	}
 
 	for(i=0; i<2; i++){
-		printf("  P%i.%i .... %i\n", heart[i].header, heart[i].pin, header_pin(heart[i].header, heart[i].pin));
+		printf(" P%i.%i", heart[i].header, heart[i].pin);
+		init_gpio(heart[i].gpio);
 	}
 
+	printf("\ndone with initializations\n\n");
+ 
+	show_gpio();
+	for(i=0; i<16; i++){
+		sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", chan[i].gpio);
+		printf("system command %s returned %i\n", command, system(command));
+	}
 
-	// show_gpio();
+	for(i=0; i<2; i++){
+		sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[i].gpio);
+		printf("system command %s returned %i\n", command, system(command));
+	}
+
+		show_gpio();
 									
 	// printf("enter number > 17 to exit\n");
 	// for(;;){
