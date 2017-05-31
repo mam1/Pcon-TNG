@@ -62,8 +62,8 @@
 #define _CHAN15			{8,42,75}
 #define _HB0 			{8,43,72}
 #define _HB1 			{8,44,73}
-#define _HB2 			{8,43,70}
-#define _HB3 			{8,44,71}
+#define _HB2 			{8,45,70}
+#define _HB3 			{8,46,71}
 
 /* initialise gpio pin */
 int init_gpio(int gpio) {
@@ -101,9 +101,10 @@ int main(void){
 	} _GPIO;
 
 	_GPIO 			chan[16] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
-	_GPIO 			heart[2] = {_HB0, _HB1};
+	_GPIO 			heart[2] = {_HB0, _HB1, _HB2, _HB3};
 
-
+	show_gpio();
+	
 	sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
 	printf("system command %s returned %i\n", command, system(command));
 
@@ -112,7 +113,7 @@ int main(void){
 		init_gpio(chan[i].gpio);
 	}
 
-	for(i=0; i<2; i++){
+	for(i=0; i<4; i++){
 		// printf(" P%i.%i", heart[i].header, heart[i].pin);
 		init_gpio(heart[i].gpio);
 	}
@@ -124,17 +125,17 @@ int main(void){
 		sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", chan[i].gpio);
 		printf("system command %s returned %i\n", command, system(command));
 		show_gpio();
-		sleep(2);
+		sleep(1);
 	}
 
-	for(i=0; i<2; i++){
+	for(i=0; i<4; i++){
 		sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[i].gpio);
 		printf("system command %s returned %i\n", command, system(command));
 		show_gpio();
-		sleep(2);
+		sleep(1);
 	}
-	sleep (5);
-	// show_gpio();
+	sleep (3);
+
 
 	// for(i=0; i<16; i++){
 	// 	sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", chan[i].gpio);
