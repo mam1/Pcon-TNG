@@ -97,23 +97,28 @@
 #define _BYTES_PER_SCHEDULE 	_SCHEDULE_SIZE * _BYTES_PER_INT
 #define _BYTES_PER_DAY 			_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE 	
 
-/*	gpio pin assignment {header,pin}  	*/
-#define _CHAN0			{8,3}
-#define _CHAN1			{8,4}
-#define _CHAN2			{8,5}
-#define _CHAN3			{8,6}
-#define _CHAN4			{8,11}
-#define _CHAN5			{8,12}
-#define _CHAN6			{8,15}
-#define _CHAN7			{8,16}
-#define _CHAN8			{8,18}
-#define _CHAN9			{8,20}
-#define _CHAN10			{8,21}
-#define _CHAN11			{8,22}
-#define _CHAN12			{8,23}
-#define _CHAN13			{8,24}
-#define _CHAN14			{8,25}
-#define _CHAN15			{8,26}
+/*	gpio pin assignment {header,pin,gpio}  	*/
+#define _CHAN0			{8,27,86}
+#define _CHAN1			{8,28,88}
+#define _CHAN2			{8,29,87}
+#define _CHAN3			{8,30,89}
+#define _CHAN4			{8,31,10}
+#define _CHAN5			{8,32,11}
+#define _CHAN6			{8,33,9}
+#define _CHAN7			{8,34,81}
+#define _CHAN8			{8,35,8}
+#define _CHAN9			{8,36,80}
+#define _CHAN10			{8,37,78}
+#define _CHAN11			{8,38,79}
+#define _CHAN12			{8,39,86}
+#define _CHAN13			{8,40,77}
+#define _CHAN14			{8,41,74}
+#define _CHAN15			{8,42,75}
+#define _HB0 			{8,43,72}
+#define _HB1 			{8,44,73}
+#define _HB2 			{8,45,70}
+#define _HB3 			{8,46,71}
+
 
 #define _HB 			{.header=8, .pin=27}	
 

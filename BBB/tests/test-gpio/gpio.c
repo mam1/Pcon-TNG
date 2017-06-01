@@ -102,39 +102,31 @@ int main(void){
 
 	_GPIO 			chan[16] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
 	_GPIO 			heart[2] = {_HB0, _HB1, _HB2, _HB3};
-
-	show_gpio();
 	
 	sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
 	printf("system command %s returned %i\n", command, system(command));
 
-	for(i=0; i<16; i++){
-		// printf(" P%i.%i", chan[i].header, chan[i].pin);
-		init_gpio(chan[i].gpio);
-	}
+	// for(i=0; i<16; i++){
+	// 	// printf(" P%i.%i", chan[i].header, chan[i].pin);
+	// 	init_gpio(chan[i].gpio);
+	// }
 
-	for(i=0; i<4; i++){
-		// printf(" P%i.%i", heart[i].header, heart[i].pin);
-		init_gpio(heart[i].gpio);
-	}
+	// for(i=0; i<4; i++){
+	// 	// printf(" P%i.%i", heart[i].header, heart[i].pin);
+	// 	init_gpio(heart[i].gpio);
+	// }
 
 	printf("\ndone with initializations\n\n");
-	show_gpio();
 
 	for(i=0; i<16; i++){
 		sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", chan[i].gpio);
 		printf("system command %s returned %i\n", command, system(command));
-		show_gpio();
-		sleep(1);
 	}
 
 	for(i=0; i<4; i++){
 		sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[i].gpio);
 		printf("system command %s returned %i\n", command, system(command));
-		show_gpio();
-		sleep(1);
 	}
-	sleep (3);
 
 
 	// for(i=0; i<16; i++){
@@ -205,6 +197,7 @@ int main(void){
 
 	// 	}
 	// }
+	printf("normal termination\n");
 
 	return 0;
 }

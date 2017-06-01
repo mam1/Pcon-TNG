@@ -28,7 +28,7 @@
 #include "trace.h"
 #include "typedefs.h"
 #include "sys_dat.h"
-#include "bbb.h"
+// #include "bbb.h"
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -58,52 +58,6 @@ SEMBUF sb = {0, -1, 0};  /* set to allocate resource */
 
 /********** support functions *******************************************************************/
 
-int pin_high(int h, int p){
-
-	if (digital_output(h, h, 1))
-		logit("digital_output error");
-
-
-	// static char 	*prefix="config-pin P";
-	// char 			header[4];
-	// char 			pin[5];
-	// char 			cmd[30];
-
-	// sprintf(header, "%d", h);
-	// sprintf(pin, "%d", p);
-	// strcpy(cmd,prefix);
-	// strcat(cmd,header);
-	// strcat(cmd,".");
-	// strcat(cmd,pin);
-	// strcat(cmd," high");
-	// system(cmd);
-
-	return 0;
-}
-
-int pin_low(int h, int p){
-
-	if (digital_output(h, h, 0))
-		logit("digital_output error");
-
-
-	// static char 	*prefix="config-pin P";
-	// char 			header[4];
-	// char 			pin[5];
-	// char 			cmd[30];
-
-	// sprintf(header, "%d", h);
-	// sprintf(pin, "%d", p);
-	// strcpy(cmd,prefix);
-	// strcat(cmd,header);
-	// strcat(cmd,".");
-	// strcat(cmd,pin);
-	// strcat(cmd," low");
-	// system(cmd);
-
-	return 0;
-}
-
 /* write an entry to the daemon log file */
 void logit(char *mess){
 	FILE 		*dlog;
@@ -127,10 +81,14 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	int 				key;
 	int 				state;
 	int 				channel;
-	static _GPIO 		gpio[_NUMBER_OF_CHANNELS] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
+	typedef struct {
+		int         header;
+		int         pin;
+		int 		gpio;
+	} _GPIO;
 
-
-	
+	static _GPIO 			chan[16] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
+	char 				command[120];
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	key =  tm->tm_hour * 60 + tm->tm_min;		// generate key
@@ -166,13 +124,16 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	/* update gpio pins for all channels */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 		if (ipc_ptr->sys_data.c_data[channel].state) {
-			pin_high(gpio[channel].header, gpio[channel].pin);
+			sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", chan[channel].gpio);
+			// logit(command);
+			system(command);
 		}
 		else {
-			pin_low(gpio[channel].header, gpio[channel].pin);
+			sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", chan[channel].gpio);
+			// logit(command);
+			system(command);
 		}
 	}
-
 	ipc_sem_free(semid, &sb);	// free lock on shared memory
 	logit("end pin update");
 	return;
@@ -187,7 +148,15 @@ int main(void) {
 	_tm 		t;
 	int 		ipc;
 	FILE 		*pidf;
-	static _GPIO 		heart = _HB;
+	char 				command[120];
+
+typedef struct {
+		int         header;
+		int         pin;
+		int 		gpio;
+	} _GPIO;
+
+	_GPIO 			heart[4] = {_HB0, _HB1, _HB2, _HB3};
 
 	/* Fork off the parent process */
 	pid = fork();
@@ -233,7 +202,14 @@ int main(void) {
 	close(STDERR_FILENO);
 
 	/* Daemon-specific initializations */
-	logit("\n*****************\ndaemon started");
+	logit("\n*****************\ndaemon 3.0 started");
+
+	/* load cape that disables HDMI and gives me back the gpios */
+	sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
+	logit(command);
+	system(command);
+
+
 	logit("starting initializations");
 
     if( access(_IPC_FILE_NAME, F_OK ) != -1 ){
@@ -288,13 +264,13 @@ int main(void) {
 		}
 		if (toggle) {					// cycle heart beat led
 			toggle = 0;
-			pin_low(heart.header,heart.pin);
-			// digital_output(heart.header, heart.pin, 0);
+			sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", heart[0].gpio);
+			system(command);
 		}
 		else {
 			toggle = 1;
-			pin_high(heart.header,heart.pin);
-			// digital_output(heart.header, heart.pin, 1);
+			sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[0].gpio);
+			system(command);
 		}
 	}
 	exit(EXIT_SUCCESS);
