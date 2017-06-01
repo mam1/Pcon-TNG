@@ -8,11 +8,6 @@
 #include "Pcon.h"
 
 typedef struct {
-		int         header;
-		int         pin;
-	} _GPIO;
-
-typedef struct {
 	int    tm_sec;   // seconds [0,61]
 	int    tm_min;   // minutes [0,59]
 	int    tm_hour;  // hour [0,23]
@@ -150,6 +145,13 @@ typedef struct {
 	_S_TAB 			*wsch_ptr;			// pointer to working schedule
 	_CHN_DAT 		*cdat_ptr; 			// pointer to channel data in shared memory
 } _CMD_FSM_CB;
+
+/* gpio data  */
+typedef struct {
+	int         header;
+	int         pin;
+	int 		gpio;
+} _GPIO;
 
 /* buffer for semaphores */
 typedef struct sembuf SEMBUF;
