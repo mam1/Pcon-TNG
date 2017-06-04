@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#	binload
+#	binload - move binaries from development machine to a bone
 #
 
 if [ $# == 0 ]

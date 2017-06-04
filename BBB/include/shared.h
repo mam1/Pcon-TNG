@@ -25,7 +25,7 @@
 #define _TRACE_FILE_NAME			"/hmedia/data/trace/Pcon-trace.dat" 	// trace file
 #define _DAEMON_LOG 				"/media/data/logs/daemon.log" 			// daemon log file name
 #define _SENSOR_MASTER_FILE_NAME    "/media/Raid/sensor logs/master.dat"	// cumulative history of sensor readings
-#define _PID_FILE_NAME 				"/var/run/Dcon.pid"
+#define _PID_FILE_NAME 				"/run/Dcon.pid"
 
 /* semaphore key */
 #define _SEM_KEY 				1234321

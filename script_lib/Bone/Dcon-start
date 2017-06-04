@@ -1,0 +1,19 @@
+#!/bin/bash
+#####################################
+# 
+#		start Dcon
+#
+#####################################
+
+#	checking for active processes - kill if found
+plist=$(pidof /usr/local/sbin/Dcon)
+if [ "$plist" != "" ] 
+	then
+		kill $plist
+fi
+sleep 1
+# start daemon *
+echo -e "\n*****************************************\nsystemd starting daemon" >> /media/data/logs/daemon.log
+Dcon >> /media/data/logs/daemon.log &
+
+exit 0

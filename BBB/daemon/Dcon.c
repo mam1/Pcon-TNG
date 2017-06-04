@@ -89,6 +89,7 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	int 				state;
 	int 				channel;
 
+	logit("trying for a lock on shared memory");
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	key =  tm->tm_hour * 60 + tm->tm_min;		// generate key
 	logit("starting channel update");
@@ -195,22 +196,13 @@ int main(void) {
 	/* Daemon-specific initializations */
 	sprintf(command, "\n ************************************\n daemon %i.%i.%i started\n",_MAJOR_VERSION_Dcon, _MINOR_VERSION_Dcon, _MINOR_REVISION_Dcon);
 	logit(command);
+	logit("starting initializations"); 
 
 	/* load cape that disables HDMI and gives me back the gpios */
 	sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
 	logit(command);
 	system(command);
-
-
-	logit("starting initializations");
-
-    if( access(_IPC_FILE_NAME, F_OK ) != -1 ){
-        ipc = 1;
-        logit(" ipc file found" );
-    }
-    else
-        ipc = 0;
-    
+ 
 	/* setup shared memory */
 	ipc_sem_init();
 	semid = ipc_sem_id(skey);					// get semaphore id
@@ -218,10 +210,20 @@ int main(void) {
 	fd = ipc_open(ipc_file, ipc_size());      	// create/open ipc file
 	data = ipc_map(fd, ipc_size());           	// map file to memory
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
+    ipc_sem_free(semid, &sb);                   // free lock on shared memory
+
+	/* check for ipc file */
+	if ( access(_IPC_FILE_NAME, F_OK ) != -1 ) {
+		ipc = 0;
+		logit("* ipc file not found");
+	}
+	else {
+		ipc = 1;
+		logit("ipc file found");
+	}
 
 	if(ipc==0){
-		logit(" ipc file not found" );
-		logit(" new ipc file created and initialized" );
+		logit("* new ipc file created and initialized" );
 		ipc_sem_lock(semid, &sb);                   // wait for a lock on shared memory
         ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
         ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;

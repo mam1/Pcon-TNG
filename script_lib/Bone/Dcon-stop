@@ -1,0 +1,15 @@
+#!/bin/bash
+#####################################
+# 
+#		stop Dcon
+#
+#####################################
+
+#	checking for active processes - kill if found
+plist=$(pidof /usr/local/sbin/Dcon)
+if [ "$plist" != "" ] 
+	then
+		kill $plist
+fi
+
+exit 0

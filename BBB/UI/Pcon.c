@@ -204,22 +204,22 @@ int main(void) {
 	trace(_TRACE_FILE_NAME, "\nPcon", char_state, NULL, "semaphores id set", trace_flag);
 #endif
 
-	/* check for ipc file and ipc backup file */
-	if ( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ) {
-		// bkup = 1;
-		fprintf(stderr, "%s\n", " ipc backup found" );
-	}
-	else {
-		// bkup = 0;
-		fprintf(stderr, "%s\n", " ipc backup not found" );
-	}
-	if ( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ) {
-		// ipc = 1;
-		fprintf(stderr, "%s\n", " ipc file found" );
+	// /* check for ipc file and ipc backup file */
+	// if ( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ) {
+	// 	// bkup = 1;
+	// 	fprintf(stderr, "%s\n", " ipc backup found" );
+	// }
+	// else {
+	// 	// bkup = 0;
+	// 	fprintf(stderr, "%s\n", " ipc backup not found" );
+	// }
+	// if ( access(_IPC_FILE_BACKUP_NAME, F_OK ) != -1 ) {
+	// 	// ipc = 1;
+	// 	fprintf(stderr, "%s\n", " ipc file found" );
 
-	}
-	else
-		// ipc = 0;
+	// }
+	// else
+	// 	// ipc = 0;
 
 	/* set up shared memory */
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
