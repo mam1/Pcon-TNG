@@ -139,9 +139,8 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 }
 
 int main(void) {
-
-	/* Our process ID and Session ID */
-	pid_t 		pid, sid;
+	
+	pid_t 		pid, sid;		// process ID and Session ID
 	int 		toggle;
 	int 		h_min;
 	_tm 		t;
@@ -202,6 +201,16 @@ int main(void) {
 	sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
 	logit(command);
 	system(command);
+
+	/* check for ipc file */
+	if (access(ipc_file, F_OK) == 0) {
+		ipc = 1;
+		logit("ipc file found");
+	}
+	else {
+		ipc = 0;
+		logit("* ipc file not found");
+	}
  
 	/* setup shared memory */
 	ipc_sem_init();
@@ -212,15 +221,6 @@ int main(void) {
 	ipc_ptr = (_IPC_DAT *)data;					// overlay ipc data structure on shared memory
     ipc_sem_free(semid, &sb);                   // free lock on shared memory
 
-	/* check for ipc file */
-	if ( access(_IPC_FILE_NAME, F_OK ) != -1 ) {
-		ipc = 0;
-		logit("* ipc file not found");
-	}
-	else {
-		ipc = 1;
-		logit("ipc file found");
-	}
 
 	if(ipc==0){
 		logit("* new ipc file created and initialized" );

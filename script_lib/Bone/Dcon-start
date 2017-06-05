@@ -5,15 +5,22 @@
 #
 #####################################
 
+# PATH=/sbin:/usr/sbin:/bin:/usr/bin
+# DESC="Programmable controller deamon"
+# NAME=Dcon
+# DAEMON=/usr/local/sbin/$NAME
+# DAEMON_ARGS=""
+# PIDFILE=/run/$NAME.pid
+
 #	checking for active processes - kill if found
 plist=$(pidof /usr/local/sbin/Dcon)
 if [ "$plist" != "" ] 
 	then
 		kill $plist
 fi
-sleep 1
-# start daemon *
-echo -e "\n*****************************************\nsystemd starting daemon" >> /media/data/logs/daemon.log
-Dcon >> /media/data/logs/daemon.log &
+
+# start daemon 
+echo -e "\n*****************************************\nsystemd starting Pcon daemon" >> /media/data/logs/daemon.log
+Dcon >> /media/data/logs/daemon.log
 
 exit 0
