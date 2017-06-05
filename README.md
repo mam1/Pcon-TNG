@@ -3,67 +3,51 @@
 ------
 ### *** under construction and not stable ***
 ------
-These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a Beagle Bone Black (BBB), A BBB Cape from Waveshare with a real time clock, a BBB custom Control Cape built for this project and a Digital IO Board from Parallax. The hardware supports 16 channels:
+These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a Beagle Bone Black (BBB), a BBB custom Control Cape built for this project and a Digital IO Board(s) from Parallax. The hardware supports 16 channels:
 
-	channel number
-    	0-7 ............ low voltge/current channels (e.g. controlling zone valves) 
-    	8-15 ........... high voltage/current channels (e.g. controling 120 volt AC motors)
-
-Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modules read HDT22 sensors and use a wireless connection to post the data to the cloud (ThingSpeak) and to an Apache sever running on the BBB. The BBB logs the data from the ESP8266 modules. A process running on the BBB decides if a channel should be on or off.  A channel can be controlled by:
+Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modules read HDT22 sensors and use a wireless connection to post the data to the cloud (ThingSpeak) and to an Apache sever running on the BBB. The BBB logs the data from the ESP8266 modules. A daemon process running on the BBB decides if a channel should be on or off.  A channel can be controlled by:
 
 * time of day
 * time of day and a sensor value
 * cycle (seconds on, seconds off)
 * manually
 
-The BBB Control Cape (part of this project) uses PhotoMOS relays for controlling 24 volt zone valves.  PhotoMOS are resistant to inrush current (due to phase shift) and eliminate the need for snubber circuits as long as they are operated within the ratings. Furthermore, use of PhotoMOS® decreases the mounting area requirements, resulting in more compact programmable controllers. LEDs are used to indicate the state of the 16 channels.  There is a 16 position header connected to the photoMOS relays for directly switching 8, 24 volt, zone valves. A second 20 position header provides TTL signals for controlling a Parallax Digital IO Board (DIOB). The DIOB can control 8, 120VAC 8A loads.
+The BBB Control Cape (part of this project) connects 16 beaglebone gpio pins to 2 2x10 pin headers.  Each header can drive 1 Paralax Digital IO board (DIOB).  It also connects 4 gpio pins to a heart beat display on the cape.
 
-The BBB provides a state machine driven user interface to configure channels, build and maintain schedules, query sensor and channel data, manually control channel states, etc.
+THe Pcon application runs on the BBB.  It interacts with the daemon using shared memeory.  Pcon provides a state machine driven user interface to configure channels, build and maintain schedules, query sensor and channel data, manually control channel states, etc.
 - - - - - - - - -
 #### Hardware
   * **BeagleBone Black Rev C - 4GB Flash, adafruit**
   * **BBB Control Cape**
-    *  1 - Beaglebone Black expansion board, Waveshare
-    *  8 - AQY212GH PhotoMOS relays, Newark
-    * 16 - red LEDs
-    *  2 - 100 ohm, 8 resistor DIP
-    *  1 - 2 x 8 header, zone valve control
-    *  1 - 2 x 5 header, DIOB control
+    *  2 - 2 x 10 headers, DIOB control
             * Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax
-  * **BBB Misc Cape, Waveshare**
-    * PCF8563 RTC
+    *  4 - heart beat leds
   * **Wireless Sensors**
     * ESP8266 NodeMCU Dev Board, R2, Electro Dragon
     * DHT22 temperature/humidity sensor, Electro Dragon
     * 0.96” 128*64 OLED Display (i2c), Electro Dragon
 
 ##### BeagleBone GPIO assignments
-      header  pin #   gpio    use
-    -------------------------------------------------------------------
-    LEDs on WaveShare Misc Cape
-        P8      7      66     Led 1 on WaveShare Misc Cape
-        P8      8      67     Led 2 on WaveShare Misc Cape
-        P8      9      69     Led 3 on WaveShare Misc Cape
-        P8     10      68     Led 4 on WaveShare Misc Cape
-
-
-     DIOB serial interface
-        P8     11      45     DIN on DIOB serial header 		connected to DATA_RLY on cape
-        P8     11      45     DATA_RLY on DIOB serial header 	connected to DIN on cape
-        P8     12      44     SCLK_IN on DIOB serial header 	connected to SCLK_RLY on cape
-        P8     12      44     SCLK_RLY on DIOB serial header 	connected to SCLK_IN on cape
-        P8     14      26     LOAD_IN on DIOB serial header
-        P8     15      47     LAT_RLY on DIOB serial header
-
-	Relays on my cape       
-        P8     16      46     Relay 1 on proto Cape
-        P8     17      27     Relay 2 on proto Cape
-        P8     18      65     Relay 3 on proto Cape
-        P8     26      61     Relay 4 on proto Cape
-        P9     12      60     Relay 5 on proto Cape
-        P9     15      48     Relay 6 on proto Cape
-        P9     23      49     Relay 7 on proto Cape
-        P9     41      20     Relay 8 on proto Cape
+  * #define _CHAN0          {8,27,86}
+  * #define _CHAN1          {8,28,88}
+  * #define _CHAN2          {8,29,87}
+  * #define _CHAN3          {8,30,89}
+  * #define _CHAN4          {8,31,10}
+  * #define _CHAN5          {8,32,11}
+  * #define _CHAN6          {8,33,9}
+  * #define _CHAN7          {8,34,81}
+  * #define _CHAN8          {8,35,8}
+  * #define _CHAN9          {8,36,80}
+  * #define _CHAN10         {8,37,78}
+  * #define _CHAN11         {8,38,79}
+  * #define _CHAN12         {8,39,76}
+  * #define _CHAN13         {8,40,77}
+  * #define _CHAN14         {8,41,74}
+  * #define _CHAN15         {8,42,75}
+  * #define _HB0            {8,43,72}
+  * #define _HB1            {8,44,73}
+  * #define _HB2            {8,45,70}
+  * #define _HB3            {8,46,71}
 
 
 
