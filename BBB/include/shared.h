@@ -110,7 +110,7 @@
 #define _CHAN9			{8,36,80}
 #define _CHAN10			{8,37,78}
 #define _CHAN11			{8,38,79}
-#define _CHAN12			{8,39,86}
+#define _CHAN12			{8,39,76}
 #define _CHAN13			{8,40,77}
 #define _CHAN14			{8,41,74}
 #define _CHAN15			{8,42,75}
@@ -118,9 +118,6 @@
 #define _HB1 			{8,44,73}
 #define _HB2 			{8,45,70}
 #define _HB3 			{8,46,71}
-
-
-#define _HB 			{.header=8, .pin=27}	
 
 /* general */
 #define _DAYS_PER_WEEK 	7

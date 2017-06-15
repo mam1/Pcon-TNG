@@ -47,6 +47,8 @@ int         	rtc;							// file descriptor for PCF8563 RTC
 _tm         	tm;								// time date structure
 key_t 			skey = _SEM_KEY;
 int 			semid;
+
+/* global memory mapped io variables */
 unsigned short 	semval;
 union semun {
 	int val;              						// used for SETVAL only
@@ -54,7 +56,12 @@ union semun {
 	ushort *array;        						// used for GETALL and SETALL
 };
 union 			semun dummy;
-SEMBUF sb = {0, -1, 0};  /* set to allocate resource */
+SEMBUF sb = {0, -1, 0};  						// set to allocate resource 
+
+/* gpio assignments */
+static _GPIO 			chan[16] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
+static _GPIO 			heart[4] = {_HB0, _HB1, _HB2, _HB3};
+char 				command[120];
 
 /********** support functions *******************************************************************/
 
@@ -81,14 +88,6 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	int 				key;
 	int 				state;
 	int 				channel;
-	typedef struct {
-		int         header;
-		int         pin;
-		int 		gpio;
-	} _GPIO;
-
-	static _GPIO 			chan[16] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
-	char 				command[120];
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
 	key =  tm->tm_hour * 60 + tm->tm_min;		// generate key
@@ -101,27 +100,26 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 			break;
 		case 1:	// time
 			state =  test_sch_time(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
-	
-			FILE *saved = stdout;
-			stdout = fopen(_DAEMON_LOG, "a");
-			printf("    channel %i conreoled by time, test_sch_time returned <%i>\n", channel, state);
-			fclose(stdout);
-			stdout = saved;
-
+			// FILE *saved = stdout;
+			// stdout = fopen(_DAEMON_LOG, "a");
+			// printf("    channel %i conreoled by time, test_sch_time returned <%i>\n", channel, state);
+			// fclose(stdout);
+			// stdout = saved;
 			break;
 		case 2:	// time & sensor
 			state =  test_sch_sensor(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
 			break;
 		case 3:	// cycle
-			logit("*** error mode set to <3>");
+			logit("*** error channel mode set to 3 - cycle mode not supported");
 			break;
 		default: // error
-			logit("*** error mode set to a bad value");
+			logit("*** error channel mode set to a bad value");
 		}
 		ipc_ptr->sys_data.c_data[channel].state = state;
 	}
-	logit("starting pin update");
+	
 	/* update gpio pins for all channels */
+	logit("starting pin update");
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
 		if (ipc_ptr->sys_data.c_data[channel].state) {
 			sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", chan[channel].gpio);
@@ -148,15 +146,8 @@ int main(void) {
 	_tm 		t;
 	int 		ipc;
 	FILE 		*pidf;
-	char 				command[120];
-
-typedef struct {
-		int         header;
-		int         pin;
-		int 		gpio;
-	} _GPIO;
-
-	_GPIO 			heart[4] = {_HB0, _HB1, _HB2, _HB3};
+	char 		command[120];
+	int 		i;
 
 	/* Fork off the parent process */
 	pid = fork();
@@ -202,7 +193,8 @@ typedef struct {
 	close(STDERR_FILENO);
 
 	/* Daemon-specific initializations */
-	logit("\n*****************\ndaemon 3.0 started");
+	sprintf(command, "\n ************************************\n daemon %i.%i.%i started\n",_MAJOR_VERSION_Dcon, _MINOR_VERSION_Dcon, _MINOR_REVISION_Dcon);
+	logit(command);
 
 	/* load cape that disables HDMI and gives me back the gpios */
 	sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
@@ -241,6 +233,16 @@ typedef struct {
         ipc_sem_free(semid, &sb);                   // free lock on shared memory
 	}
 
+	/* set the gpio direction */
+	for(i=0;i<_NUMBER_OF_CHANNELS;i++){
+		sprintf(command, "echo out > /sys/class/gpio/gpio%i/direction", chan[i].gpio);
+		system(command);
+	}
+	for(i=0;i<4;i++){
+		sprintf(command, "echo out > /sys/class/gpio/gpio%i/direction", heart[i].gpio);
+		system(command);
+	}
+
 	/* The Big Loop */
 	logit("initialization complete");
 	logit("starting main loop");
@@ -264,14 +266,27 @@ typedef struct {
 		}
 		if (toggle) {					// cycle heart beat led
 			toggle = 0;
-			sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", heart[0].gpio);
+			sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[0].gpio);
 			system(command);
+			sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", heart[1].gpio);
+			system(command);
+			sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[2].gpio);
+			system(command);
+			sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", heart[3].gpio);
+			system(command);			
 		}
 		else {
 			toggle = 1;
-			sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[0].gpio);
+			sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", heart[0].gpio);
 			system(command);
+			sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[1].gpio);
+			system(command);
+			sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", heart[2].gpio);
+			system(command);
+			sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[3].gpio);
+			system(command);;
 		}
+		// usleep(30000);
 	}
 	exit(EXIT_SUCCESS);
 }
