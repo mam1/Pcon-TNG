@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+# backup Blackhole, Abyss and Logs
+#
+export PATH=$PATH:/usr/local/myscripts
+
+echo -n $(date) >> /media/Logs/bkup-log.log
+echo ' **** BlackHole backup started' >> /media/Logs/bkup-log.log
+mount -lv UUID=6bb923c4-6ee3-4623-bdf9-a3a9d06a6b9b  /media/BlackHole_bkup >> /media/Logs/bkup-log.log
+rsync   -avH  --delete  /media/BlackHole/ /media/BlackHole_bkup/ >> /media/Logs/bkup-log.log
+sleep 2
+umount /media/BlackHole_bkup
+echo '**** BlackHole backup finished' >> /media/Logs/bkup-log.log
+
+echo -n $(date) >> /media/Logs/bkup-log.log
+echo  ' **** Abyss backup started' >> /media/Logs/bkup-log.log
+mount -lv UUID=affc284d-5f53-4353-81d3-eb22f45856ad  /media/Abyss_bkup >> /media/Logs/bkup-log.log
+rsync   -avH  --delete  /media/Abyss/ /media/Abyss_bkup/ >> /media/Logs/bkup-log.log
+sleep 2
+umount /media/Abyss_bkup
+echo '**** Abyss backup finished' >> /media/Logs/bkup-log.log
+
+echo -n $(date) >> /media/Logs/bkup-log.log
+echo ' **** Logs backup started' >> /media/Logs/bkup-log.log
+mount -lv UUID=69e4e0f1-9d85-4036-b62f-823b6fef4b8e  /media/Logs_bkup >> /media/Logs/bkup-log.log
+rsync   -avH  --delete  /media/Logs/ /media/Logs_bkup/ >> /media/Logs/bkup-log.log
+sleep 2
+umount /media/Logs_bkup
+echo '**** Logs backup finished' >> /media/Logs/bkup-log.log
+
+echo -n $(date) >> /media/Logs/bkup-log.log
+echo ' **** all backups finished' >> /media/Logs/bkup-log.log
+echo '********************************************************' >> /media/Logs/bkup-log.log

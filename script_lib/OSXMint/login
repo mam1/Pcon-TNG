@@ -5,102 +5,42 @@
 if [ $# == 0 ]
 	then
 		printf "\n    bone1=192.168.254.34\n"
-		printf "    bone2=192.168.254.75\n\n"
-		printf "  login to bone1 or bone2? > "
+		printf "    bone2=192.168.254.75\n"
+		printf "    bone3=192.168.254.80\n\n"
+		printf "  login to bone1, bone2 or bone3? > "
 		read answr
 		if [ "$answr" == "bone1" ] 
-		then
-			target_IP=192.168.254.34
-		else
-				if [ "$answr" == "bone2" ]
+			then
+				target_IP=192.168.254.34
+			else if [ "$answr" == "bone2" ]
 				then
 					target_IP=192.168.254.75
-				else
-					printf "must select bone1 or bone2\nscript aborted\n"
-					exit 1
+				else if [ "$answr" == "bone3" ]
+					then
+						target_IP=192.168.254.80
+					else
+						printf "must select bone1 or bone2\nscript aborted\n"
+						exit 1
 				fi
+			fi
 		fi
 	else
 
 		if [ "$1" == "bone1" ] 
-		then
-			target_IP=192.168.254.34
-		else
-				if [ "$1" == "bone2" ]
+			then
+				target_IP=192.168.254.34
+			else if [ "$1" == "bone2" ]
 				then
 					target_IP=192.168.254.75
-				else
-					printf "must select bone1 or bone2\nscript aborted\n"
-					exit 1
+				else if [ "$1" == "bone3" ]
+					then
+						target_IP=192.168.254.80
+					else
+						printf "must select bone1, bone2 or bone3\nscript aborted\n"
+						exit 1
 				fi
-		fi
-	fi 
-
+			fi
+		fi 
+	fi
 
 ssh root@$target_IP
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# printf "\n load_bone 2.0.1\n\n"
-
-# printf "    bone1=192.168.254.34\n"
-# printf "    bone2=192.168.254.75\n\n"
-
-# printf "  load bone1 or bone2? > "
-# 		read answr
-# 		if [ "$answr" == "bone1" ] 
-# 		then
-# 			target_IP=192.168.254.34
-# 		else
-# 				if [ "$answr" == "bone2" ]
-# 				then
-# 					target_IP=192.168.254.75
-# 				else
-# 					printf "must select bone1 or bone2\nscript aborted\n"
-# 					exit 1
-# 				fi
-# 		fi
-
-# bone_BIN_DIR=/usr/local/sbin
-
-# # set directories
-# CURRENT_OS=$(uname)
-# if [ $CURRENT_OS == "Linux" ]
-# then 
-# 	program_DIR_PREFIX=/home/mam1/Git/Pcon-TNG
-# else 
-# 	program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
-# fi
-
-# printf "  copying binaries and scripts to device at $target_IP\n"
-
-# # move the bins to the bone
-# printf "  copying binaries to device at $target_IP\n"
-# printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR\n"
-# rsync -azv      $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR
-
-# # move shell scripts to the bone
-# printf "  copying scripts to device at $target_IP\n"
-# printf "\n *** rsync -> $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR" 
-# rsync -azv      $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR
-
-# # fix permissions
-# ssh root@$target_IP chown root:root $bone_BIN_DIR/*	# change owner
-# ssh root@$target_IP chmod 777 $bone_BIN_DIR/*		# open access
