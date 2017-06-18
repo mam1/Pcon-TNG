@@ -56,7 +56,7 @@ The Pcon application runs on the BBB.  It interacts with the daemon using shared
 
 #### Development Environment:
 
-All code is stored on github.  The repository is cloned on two development machines.  At one site I have a MacMini running Linux Mint 18.x and at the other I have have an iMac running OS X 10.10.x . The Bone is connected to my network. I can access it from either site using ssh. I use rsync to move the binaries from the development machines to the Bone. 
+All code is stored on github.  The repository is cloned on two development machines.  At one site I have a Linux box running Mint 18.x and at the other I have have an iMac running OS X 10.10.x . The Bone is connected to my network. I can access it from either site using ssh. I use rsync to move the binaries from the development machines to the Bone. 
 
 When cross compiling for the Bone on OS X I am using a tool chain I got from http://will-tm.com/cross-compiling-mac-os-x-mavericks. The only thing I needed to do was to create a case sensitive partition before copying the files from the .dmg file.  On the Linux box I tried installing installing a cross compile tool chain using the Mint software manager and experienced a lot of problems. After spending a lot of time dealing with missing files I gave up and installed the linaro-arm-linux-gnueabihf-4.9-2014.09_linux tool chain and it worked on the first try.
 
@@ -92,19 +92,11 @@ will result in the channel being off between 1:00 - 13:00. It will be on at any 
 will result in the channel turning on at 1:00, off at 13:00 and on at 18:00.  If the current time is between 1:00 and 13:00 the channel will be on, between 13:00 and 18:00 it will be off, between 18:00 and 0:0 it will be on and between 0:0 and 13:00 it will also be on.  
 
 #### Application Architecture
-The state of each channel is reset once every minute by a daemon process (Dcon), running on the bone.  The daemon does not require the command processor (Pcon) to be active.  The command processor controls the daemon by setting values in a shared memory space implemented with memory mapped file io.  
+The ESP8266 modules run independently of other system components.  Each module posts its sensor readings to an Apache web server running on the bone.  A CGI (Scon) loads the readings into a shared memory space that can be accessed by the command processor and the daemon.  The state of each channel is reset once every minute by the daemon process (Dcon), running on the bone.  The daemon does not require the command processor (Pcon) to be active.  The command processor controls the daemon by setting values in a shared memory space implemented with memory mapped file io.  
 
-The complex part of the application is the command processor. It uses a finite state machine (fsm) to parse the input character stream into tokens and a second fsm to process the tokens.  This type of command processor is probably inappropriate for a micro controller, however no one is paying me anymore so I can do what I want. 
+The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the command processor handle the arrow and delete keys. The command processor maintains a buffer which matches the user's screen. The process loops waiting for a character to be detected.  ESC, Del, up_arrow, down_arrow, left_arrow and right_arrow are handled directly.  An ESC will clear all buffers and reset both state machines.  The delete and arrow commands work as they do on the command line. Any other character is passed to the first state machine (char_fsm).  It parses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor.  
 
-The command processor loops checking to see if a character has been typed. Input buffering has been disabled so the read is non blocking.
-
-**If a character is present**, unless it is ESC, up_arrow, down_arrow, left_arrow or right_arrow it is passed to the first state machine (char_fsm). An ESC will clear all buffers and reset both state machines.  The arrow commands work as they do on the command line. 
-
-The first fsm parses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor.  
-
-The command processor pops tokens off the stack and feeds them to a second fsm (cmd_fsm).  It takes some action based on the token.  If more input is required it is popped off the stack, if present, or the user is prompted. This continues until the stack is empty. Then the command processor lets the cms_fsm know there is no more input then continues the main loop, waiting for user input.
-
-The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS or arrow keys, but it requires that the application handle backspace/delete. The app maintains a buffer which matches the user's screen. When a CR is entered the screen buffer is passed to a state machine(char_fsm) which parses the screen buffer into a fifo stack of tokens. 
+The command processor pops tokens off the stack and feeds them to a second fsm (cmd_fsm).  It takes some action based on the token.  If more input is required it is popped off the stack, if present, or the user is prompted. This continues until the stack is empty. Then the command processor lets the cms_fsm know there is no more input then continues the main loop, waiting for user input. 
 
 ![character parser state diagram](./support_docs/state_diagrams/char_fsm.jpg?raw=true "character parser FSM")
 

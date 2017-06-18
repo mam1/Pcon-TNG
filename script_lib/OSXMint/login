@@ -5,8 +5,8 @@
 if [ $# == 0 ]
 	then
 		printf "\n    bone1=192.168.254.34\n"
-		printf "    bone2=192.168.254.75\n"
-		printf "    bone3=192.168.254.80\n\n"
+		printf "    bone2=192.168.254.65\n"
+		printf "    bone3=192.168.254.206\n\n"
 		printf "  login to bone1, bone2 or bone3? > "
 		read answr
 		if [ "$answr" == "bone1" ] 
@@ -14,10 +14,10 @@ if [ $# == 0 ]
 				target_IP=192.168.254.34
 			else if [ "$answr" == "bone2" ]
 				then
-					target_IP=192.168.254.75
+					target_IP=192.168.254.65
 				else if [ "$answr" == "bone3" ]
 					then
-						target_IP=192.168.254.80
+						target_IP=192.168.254.206
 					else
 						printf "must select bone1 or bone2\nscript aborted\n"
 						exit 1
@@ -31,10 +31,10 @@ if [ $# == 0 ]
 				target_IP=192.168.254.34
 			else if [ "$1" == "bone2" ]
 				then
-					target_IP=192.168.254.75
+					target_IP=192.168.254.65
 				else if [ "$1" == "bone3" ]
 					then
-						target_IP=192.168.254.80
+						target_IP=192.168.254.206
 					else
 						printf "must select bone1, bone2 or bone3\nscript aborted\n"
 						exit 1
