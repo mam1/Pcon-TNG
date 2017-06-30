@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+#	restore-image
+#
+if [ $# != 2 ]
+	then
+		printf "\nusage: set-image <source location> <target location>\n\n"
+		exit 1
+fi
+img_host_name=bone-img
+img_host_ip=192.168.254.207
+printf "enter new host name > "
+read answr
+host_name=$answr
+case  $host_name  in
+    bone1)       
+	    host_ip=192.168.254.204;;
+    bone2)
+	    host_ip=192.168.254.205;; 
+    bone3)       
+	    host_ip=192.168.254.206;;
+    bone-img)
+	    host_ip=192.168.254.207;;           
+    *) 
+    	printf "unrecognized host name <$host_name>\n" 
+    	printf "valid host names are:\n    bone1\n    bone2\n    bone3\n    bone-img\n\n"
+    	exit 1            
+esac	
+printf "\ncopy $1 to $2\nset host name to $host_name\nip set to $host_ip\n"
+printf "\ncopy <y|n> ? "
+read answr
+if [ "$answr" == "y" ]
+	then
+		printf "\ndd if=$1 of=$2\n\n"
+		printf ""
+		exit 0
+fi
+printf "\nno action taken\n\n"
+exit 1

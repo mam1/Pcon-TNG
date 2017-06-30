@@ -14,7 +14,7 @@ printf "  load bone1 or bone2? > "
 		then
 			target_IP=192.168.254.34
 		else
-				if [ "$answr" == "bone2" ]
+			if [ "$answr" == "bone2" ]
 				then
 					target_IP=192.168.254.75
 				else

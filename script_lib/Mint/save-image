@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+#	save-image
+#
+if [ $# != 2 ]
+	then
+		printf "\nusage: set-image <source location> <target location>\n\n"
+		exit 1
+fi
+i
+printf "\ncopy $1 to $2\n"
+printf "\ncopy <y|n> ? "
+read answr
+if [ "$answr" == "y" ]
+	then
+		printf "\ndd if=$1 of=$2\n\n"
+		exit 0
+fi
+printf "\nno action taken\n\n"
+exit 1
