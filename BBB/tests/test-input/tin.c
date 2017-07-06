@@ -31,11 +31,12 @@ void delete(char *bpt, char *cptr){
 
 int main(void) {		
 	char 			c, *work_buffer_ptr, *end_buff, *start_buff;
-	static char 	work_buffer[_INPUT_BUFFER_SIZE];
+	static char 	work_buffer[15];
 
 	/* initialize input buffer */
+	work_buffer_ptr = work_buffer;
 	start_buff = work_buffer;	
- 	end_buff = (char *)((int)start_buff + _INPUT_BUFFER_SIZE);
+ 	end_buff = (char *)((int)start_buff + 15);
 
 	/* set up unbuffered io */
 	fflush(stdout);
@@ -44,13 +45,15 @@ int main(void) {
 	int flags = fcntl(STDOUT_FILENO, F_GETFL);
 	fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
 
+	printf("starting maim loop\n\r");
+
 	while (1) {
 		c = fgetc(stdin);
 		switch (c) {
 			case _NO_CHAR:	/* NOCR */ 
 				break;
 			case _CR:		/* CR */	
-				printf("process buffer\n");
+				printf("process buffer\n\r");
 				break;
 			case _DEL:		/* DEL */ 
 				if (work_buffer_ptr > start_buff){
@@ -66,19 +69,39 @@ int main(void) {
 				c = fgetc(stdin);		// skip to next character
 				switch(c){
 					case 'A':	// up arrow
-						printf("up asrrow\n");
+						printf("\n\rup arrow\n\r");
+						printf("%s\n\r", work_buffer);
+						continue;
 						break;	
 					case 'B':	// down arrow
-						printf("down asrrow\n");	
+						printf("\n\rdown arrow\n\r");	
+						printf("%s\n\r", work_buffer);
+						continue;
 						break;		
 					case 'C':	// right arrow
-						printf("right asrrow\n");
+						if ((int)work_buffer_ptr < (int)end_buff){
+							work_buffer_ptr++;
+							printf("\033[1C");
+						}	
+						// printf("\n\rright arrow\n\r");
+						// printf("%s\n\r", work_buffer);
+						continue;
 						break;
 					case 'D':	// left arrow
-						printf("left asrrow\n");
+						if ((int)work_buffer_ptr > (int)start_buff){
+							work_buffer_ptr--;
+							printf("\033[1D");
+						}
+						// printf("\n\rleft arrow\n\r");
+						// printf("%s\n\r", work_buffer);
+						continue;
 						break;
 					default:	// ESC
-						printf("\nprocess escape\n");
+						printf("\nprocess escape\n\r");
+						system("/bin/stty cooked");			//switch to buffered iput
+						system("/bin/stty echo");			//turn on terminal echo
+						printf("\f\n***normal termination\n\n\r");
+						return 0;
 						break;
 				}
 			default:	/* OTHER */ 
