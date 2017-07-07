@@ -60,24 +60,38 @@ int main(void) {
 				 memset(work_buffer, '\0', sizeof(work_buffer));
 				input_ptr = work_buffer_ptr;
 				break;
-			case _DEL:		/* DEL */ 
-				printf("\033[s");	// save cursor position
-				if (work_buffer_ptr >= start_buff){
-					if(work_buffer_ptr > start_buff){
-						move_ptr = --work_buffer_ptr;
-						// printf("\033[1D");	// move cursor left						
-						while((move_ptr < end_buff) && (*(move_ptr+1) != '\0')){
-							*move_ptr = *(move_ptr+1);
-							move_ptr++;
-							if(*move_ptr == '\0'){
-								*(move_ptr-2)='\0';
-							}
-						}
-					}
+			case _DEL:		/* DEL */
+				if(work_buffer_ptr <= start_buff)
+					break; 
+
+				if(input_ptr == work_buffer_ptr){	// no arrow keys in play
+					*input_ptr-- = '\0';
+					work_buffer_ptr--;
+					printf("\033[s");	// save cursor position	       			
+					printf("\r> %s", work_buffer);
+					printf("\033[u");	// Restore cursor position
+					printf("\033[1C");	
+							
+
 				}
-				printf("\r\033[K");
-				printf("\r> %s", work_buffer);
-				printf("\033[u");	//Restore cursor position
+				else {
+
+					while(input_ptr > work_buffer_ptr){
+						*input_ptr = *(input_ptr + 1);
+						input_ptr++;
+					}
+
+					*work_buffer_ptr-- = '\0';
+					printf("\033[s");	// save cursor position	       			
+					printf("\r> %s", work_buffer);
+					printf("\033[u");	// Restore cursor position
+					printf("\033[1C");	// move cursor right
+
+				
+					printf("\r\033[K");
+					printf("\r> %s", work_buffer);
+					printf("\033[u");	//Restore cursor position
+				}
 				break;
 			case _ESC:		/* ESC */  
 				c = fgetc(stdin);		// skip to next character
@@ -94,16 +108,16 @@ int main(void) {
 						continue;
 						break;		
 					case 'C':	// right arrow
-						input_ptr = work_buffer_ptr;
-						if (work_buffer_ptr < (end_buff -1)){
+						// input_ptr = work_buffer_ptr;
+						if (input_ptr < (end_buff -1)){
 							input_ptr++;
 							printf("\033[1C");	// move cursor right
 						}	
 						continue;
 						break;
 					case 'D':	// left arrow
-						input_ptr = work_buffer_ptr;
-						if (work_buffer_ptr > start_buff){
+						// input_ptr = work_buffer_ptr;
+						if (input_ptr > start_buff){
 							input_ptr--;
 							printf("\033[1D");	// move cursor left
 						}
@@ -118,34 +132,28 @@ int main(void) {
 						break;
 				}
 			default:	/* OTHER */ 
-				if (work_buffer_ptr < end_buff){
-					if(input_ptr == work_buffer_ptr){
-						printf("\033[1C");	// move cursor right
-						printf("\033[s");	// save cursor position
-						*work_buffer_ptr++ = c;	       			
+				if (work_buffer_ptr < end_buff){		// room to add character ?
+					if(input_ptr == work_buffer_ptr){	// no arrow keys in play
+						*work_buffer_ptr++ = c;
+						input_ptr = work_buffer_ptr;	       			
 						printf("\r> %s", work_buffer);
-						printf("\033[u");
 					}
 
-
-					if((*work_buffer_ptr == '\0') && (work_buffer_ptr < end_buff)){
-						*work_buffer_ptr++ = c;	
-						printf("%s", &c);       				// echo char
-					}
-					else{
-						move_ptr = work_buffer_ptr;
-						end_ptr = start_buff;
-						while(*end_ptr != '\0')
-							end_ptr++;
-
-						while(end_ptr > work_buffer_ptr){
-							*end_ptr = *(end_ptr-1);
-							end_ptr--;
+					else{		// cursor is not at the end of the input buffer
+						move_ptr = work_buffer_ptr++;
+						move_ptr++;
+						*move_ptr-- = '\0';
+						while(move_ptr > input_ptr){
+							*move_ptr = *(move_ptr - 1);
+							move_ptr--;
 						}
-						*work_buffer_ptr++ = c;	       			
+						*input_ptr++ = c;
+						printf("\033[s");	// save cursor position	       			
 						printf("\r> %s", work_buffer);
-						printf("\033[u");
-				}
+						printf("\033[u");	// Restore cursor position
+						printf("\033[1C");	// move cursor right
+
+					}
 		}
 
 	}
