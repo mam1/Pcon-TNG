@@ -31,12 +31,14 @@ void delete(char *bpt, char *cptr){
 
 int main(void) {		
 	char 			c, *work_buffer_ptr, *end_buff, *start_buff, *move_ptr, *end_ptr;
-	static char 	work_buffer[15];
+	char 			*input_ptr;
+	static char 	work_buffer[_INPUT_BUFFER_SIZE];
+	static char 	ring_buffer[_INPUT_BUFFER_SIZE][_CMD_BUFFER_DEPTH];
 
 	/* initialize input buffer */
 	work_buffer_ptr = work_buffer;
 	start_buff = work_buffer;	
- 	end_buff = (char *)((int)start_buff + 15);
+ 	end_buff = (char *)((int)start_buff + _INPUT_BUFFER_SIZE);
 
 	/* set up unbuffered io */
 	fflush(stdout);
@@ -46,14 +48,17 @@ int main(void) {
 	fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
 
 	printf("starting main loop\n\n\r> ");
-
+	input_ptr = work_buffer_ptr;
 	while (1) {
 		c = fgetc(stdin);
 		switch (c) {
 			case _NO_CHAR:	/* NOCR */ 
 				break;
 			case _CR:		/* CR */	
-				printf("process buffer\n\r");
+				printf("\n\rprocess buffer\n\r> ");
+				work_buffer_ptr = work_buffer;
+				 memset(work_buffer, '\0', sizeof(work_buffer));
+				input_ptr = work_buffer_ptr;
 				break;
 			case _DEL:		/* DEL */ 
 				printf("\033[s");	// save cursor position
@@ -89,15 +94,17 @@ int main(void) {
 						continue;
 						break;		
 					case 'C':	// right arrow
-						if ((int)work_buffer_ptr < ((int)end_buff) -1){
-							work_buffer_ptr++;
+						input_ptr = work_buffer_ptr;
+						if (work_buffer_ptr < (end_buff -1)){
+							input_ptr++;
 							printf("\033[1C");	// move cursor right
 						}	
 						continue;
 						break;
 					case 'D':	// left arrow
-						if ((int)work_buffer_ptr > (int)start_buff){
-							work_buffer_ptr--;
+						input_ptr = work_buffer_ptr;
+						if (work_buffer_ptr > start_buff){
+							input_ptr--;
 							printf("\033[1D");	// move cursor left
 						}
 						continue;
@@ -111,9 +118,16 @@ int main(void) {
 						break;
 				}
 			default:	/* OTHER */ 
-				if ((int)work_buffer_ptr < (int)end_buff){
-					// printf("\033[1C");	// move cursor right
-					printf("\033[s");	// save cursor position
+				if (work_buffer_ptr < end_buff){
+					if(input_ptr == work_buffer_ptr){
+						printf("\033[1C");	// move cursor right
+						printf("\033[s");	// save cursor position
+						*work_buffer_ptr++ = c;	       			
+						printf("\r> %s", work_buffer);
+						printf("\033[u");
+					}
+
+
 					if((*work_buffer_ptr == '\0') && (work_buffer_ptr < end_buff)){
 						*work_buffer_ptr++ = c;	
 						printf("%s", &c);       				// echo char
@@ -128,8 +142,7 @@ int main(void) {
 							*end_ptr = *(end_ptr-1);
 							end_ptr--;
 						}
-						*work_buffer_ptr++ = c;	
-						printf("%s", &c);        				// echo char
+						*work_buffer_ptr++ = c;	       			
 						printf("\r> %s", work_buffer);
 						printf("\033[u");
 				}
