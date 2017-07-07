@@ -30,7 +30,7 @@ void delete(char *bpt, char *cptr){
 }
 
 int main(void) {		
-	char 			c, *work_buffer_ptr, *end_buff, *start_buff;
+	char 			c, *work_buffer_ptr, *end_buff, *start_buff, *move_ptr, *end_ptr;
 	static char 	work_buffer[15];
 
 	/* initialize input buffer */
@@ -45,7 +45,7 @@ int main(void) {
 	int flags = fcntl(STDOUT_FILENO, F_GETFL);
 	fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
 
-	printf("starting maim loop\n\r");
+	printf("starting main loop\n\n\r> ");
 
 	while (1) {
 		c = fgetc(stdin);
@@ -56,13 +56,23 @@ int main(void) {
 				printf("process buffer\n\r");
 				break;
 			case _DEL:		/* DEL */ 
-				if (work_buffer_ptr > start_buff){
-					fputc(_BS, stdout);
-					fputc(' ', stdout);
-					fputc(_BS, stdout);
-					*work_buffer_ptr-- = '\0';
-					*work_buffer_ptr = '\0';
+				printf("\033[s");	// save cursor position
+				if (work_buffer_ptr >= start_buff){
+					if(work_buffer_ptr > start_buff){
+						move_ptr = --work_buffer_ptr;
+						// printf("\033[1D");	// move cursor left						
+						while((move_ptr < end_buff) && (*(move_ptr+1) != '\0')){
+							*move_ptr = *(move_ptr+1);
+							move_ptr++;
+							if(*move_ptr == '\0'){
+								*(move_ptr-2)='\0';
+							}
+						}
+					}
 				}
+				printf("\r\033[K");
+				printf("\r> %s", work_buffer);
+				printf("\033[u");	//Restore cursor position
 				break;
 			case _ESC:		/* ESC */  
 				c = fgetc(stdin);		// skip to next character
@@ -79,39 +89,54 @@ int main(void) {
 						continue;
 						break;		
 					case 'C':	// right arrow
-						if ((int)work_buffer_ptr < (int)end_buff){
+						if ((int)work_buffer_ptr < ((int)end_buff) -1){
 							work_buffer_ptr++;
-							printf("\033[1C");
+							printf("\033[1C");	// move cursor right
 						}	
-						// printf("\n\rright arrow\n\r");
-						// printf("%s\n\r", work_buffer);
 						continue;
 						break;
 					case 'D':	// left arrow
 						if ((int)work_buffer_ptr > (int)start_buff){
 							work_buffer_ptr--;
-							printf("\033[1D");
+							printf("\033[1D");	// move cursor left
 						}
-						// printf("\n\rleft arrow\n\r");
-						// printf("%s\n\r", work_buffer);
 						continue;
 						break;
 					default:	// ESC
-						printf("\nprocess escape\n\r");
-						system("/bin/stty cooked");			//switch to buffered iput
+						printf("\n\rprocess escape\n\r");
+						system("/bin/stty cooked");			//switch to buffered input
 						system("/bin/stty echo");			//turn on terminal echo
-						printf("\f\n***normal termination\n\n\r");
+						printf("\r\n***normal termination\n\n\r");
 						return 0;
 						break;
 				}
 			default:	/* OTHER */ 
 				if ((int)work_buffer_ptr < (int)end_buff){
-					*work_buffer_ptr++ = c;	
-					fputc(c, stdout);       				// echo char
+					// printf("\033[1C");	// move cursor right
+					printf("\033[s");	// save cursor position
+					if((*work_buffer_ptr == '\0') && (work_buffer_ptr < end_buff)){
+						*work_buffer_ptr++ = c;	
+						printf("%s", &c);       				// echo char
+					}
+					else{
+						move_ptr = work_buffer_ptr;
+						end_ptr = start_buff;
+						while(*end_ptr != '\0')
+							end_ptr++;
+
+						while(end_ptr > work_buffer_ptr){
+							*end_ptr = *(end_ptr-1);
+							end_ptr--;
+						}
+						*work_buffer_ptr++ = c;	
+						printf("%s", &c);        				// echo char
+						printf("\r> %s", work_buffer);
+						printf("\033[u");
 				}
 		}
 
-	};
+	}
+}
 
 
 
