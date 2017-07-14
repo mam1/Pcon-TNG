@@ -136,6 +136,7 @@ int main(void) {
 					}
 
 					else{		// cursor is not at the end of the input buffer
+						printf("\033[s");	// save cursor position	
 						move_ptr = work_buffer_ptr++;
 						move_ptr++;
 						*move_ptr-- = '\0';
@@ -144,10 +145,10 @@ int main(void) {
 							move_ptr--;
 						}
 						*input_ptr++ = c;
-						printf("\033[s");	// save cursor position	       			
+    			
 						printf("\r> %s", work_buffer);
 						printf("\033[u");	// Restore cursor position
-						printf("\033[1C");	// move cursor right
+						// printf("\033[1C");	// move cursor right
 
 					}
 		}
