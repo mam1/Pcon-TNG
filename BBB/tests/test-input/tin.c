@@ -20,25 +20,21 @@
 #include "cmd_defs.h"
 
 
-
-void insert(char *bpt, char *cptr, int max){
-
-}
-
-void delete(char *bpt, char *cptr){
-
-}
-
 int main(void) {		
 	char 			c, *work_buffer_ptr, *end_buff, *start_buff, *move_ptr, *end_ptr;
 	char 			*input_ptr;
 	static char 	work_buffer[_INPUT_BUFFER_SIZE];
 	static char 	ring_buffer[_INPUT_BUFFER_SIZE][_CMD_BUFFER_DEPTH];
+	static int 		rb_in_idx, rb_out_idx;
 
 	/* initialize input buffer */
 	work_buffer_ptr = work_buffer;
 	start_buff = work_buffer;	
  	end_buff = (char *)((int)start_buff + _INPUT_BUFFER_SIZE);
+
+ 	/* initialize ring buffer */
+ 	rb_in_idx  = 0;
+ 	rb_out_idx = 0;
 
 	/* set up unbuffered io */
 	fflush(stdout);
@@ -55,7 +51,7 @@ int main(void) {
 			case _NO_CHAR:	/* NOCR */ 
 				break;
 			case _CR:		/* CR */	
-				printf("\n\rprocess buffer\n\r> ");
+				printf("\n\rprocess buffer  {%s}\n\r> ", work_buffer);
 				work_buffer_ptr = work_buffer;
 				 memset(work_buffer, '\0', sizeof(work_buffer));
 				input_ptr = work_buffer_ptr;
@@ -65,32 +61,32 @@ int main(void) {
 					break; 
 
 				if(input_ptr == work_buffer_ptr){	// no arrow keys in play
-					*input_ptr-- = '\0';
-					work_buffer_ptr--;
+					*work_buffer_ptr-- = '\0';
+					*work_buffer_ptr = '\0';
+					input_ptr = work_buffer_ptr;
+					printf("\033[2D");	// move cursor left
+					printf("\033[K");	// Erase to end of line
 					printf("\033[s");	// save cursor position	       			
 					printf("\r> %s", work_buffer);
-					printf("\033[u");	// Restore cursor position
-					printf("\033[1C");	
-							
-
+					printf("\033[u");	// Restore cursor position			
 				}
 				else {
 
-					while(input_ptr > work_buffer_ptr){
-						*input_ptr = *(input_ptr + 1);
-						input_ptr++;
-					}
+					// while(input_ptr > work_buffer_ptr){
+					// 	*input_ptr = *(input_ptr + 1);
+					// 	input_ptr++;
+					// }
 
-					*work_buffer_ptr-- = '\0';
-					printf("\033[s");	// save cursor position	       			
-					printf("\r> %s", work_buffer);
-					printf("\033[u");	// Restore cursor position
-					printf("\033[1C");	// move cursor right
+					// *work_buffer_ptr-- = '\0';
+					// printf("\033[s");	// save cursor position	       			
+					// printf("\r> %s", work_buffer);
+					// printf("\033[u");	// Restore cursor position
+					// printf("\033[1C");	// move cursor right
 
 				
-					printf("\r\033[K");
-					printf("\r> %s", work_buffer);
-					printf("\033[u");	//Restore cursor position
+					// printf("\r\033[K");
+					// printf("\r> %s", work_buffer);
+					// printf("\033[u");	//Restore cursor position
 				}
 				break;
 			case _ESC:		/* ESC */  
@@ -109,7 +105,7 @@ int main(void) {
 						break;		
 					case 'C':	// right arrow
 						// input_ptr = work_buffer_ptr;
-						if (input_ptr < (end_buff -1)){
+						if (input_ptr < work_buffer_ptr){
 							input_ptr++;
 							printf("\033[1C");	// move cursor right
 						}	
