@@ -56,7 +56,8 @@ int main(void) {
 			case _CR:		/* CR */
 				strcpy(&ring_buffer[rb_in_idx++][0], work_buffer);
 				if(rb_in_idx > _CMD_BUFFER_DEPTH - 1)
-					rb_in_idx = 0;	
+					rb_in_idx = 0;
+				rb_out_idx = rb_in_idx;	
 				printf("\n\rprocess buffer  {%s}\n\r> ", work_buffer);
 				work_buffer_ptr = work_buffer;
 				memset(work_buffer, '\0', sizeof(work_buffer));
@@ -107,7 +108,13 @@ int main(void) {
 				switch(c){
 					case 'A':	// up arrow
 						// printf("\n\rup arrow\n\r");
-						strcpy(work_buffer,&ring_buffer[rb_out_idx++][0]);
+
+						if(rb_out_idx > 0)
+							rb_out_idx--;
+						else
+							rb_out_idx = rb_in_idx - 1;
+
+						strcpy(work_buffer,&ring_buffer[rb_out_idx][0]);
 						if(rb_out_idx >= rb_in_idx)
 							rb_out_idx = 0;
 						printf("\r");
@@ -117,9 +124,10 @@ int main(void) {
 						break;	
 					case 'B':	// down arrow
 						// printf("\n\rdown arrow\n\r");
-						rb_out_idx -= 1;
-						if(rb_out_idx < 0)
-							rb_out_idx = rb_in_idx - 1;
+						rb_out_idx++;
+						if(rb_out_idx > rb_in_idx)
+							rb_out_idx = rb_in_idx;
+						
 						strcpy(work_buffer,&ring_buffer[rb_out_idx][0]);	
 						printf("\r");
 						printf("\033[K");	// Erase to end of line
