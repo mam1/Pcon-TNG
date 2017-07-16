@@ -21,7 +21,7 @@
 
 
 int main(void) {		
-	char 			c, *work_buffer_ptr, *end_buff, *start_buff, *move_ptr, *end_ptr;
+	char 			c, *work_buffer_ptr, *end_buff, *start_buff, *move_ptr;
 	char 			*input_ptr;
 	static char 	work_buffer[_INPUT_BUFFER_SIZE];
 	char 			ring_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE];	// char array[NUMBER_STRINGS][STRING_MAX_SIZE];
@@ -80,7 +80,7 @@ int main(void) {
 				else {
 					mv = work_buffer_ptr - input_ptr;
 					input_ptr--;
-					*input_ptr = "*";
+					*input_ptr = '*';
 					while(input_ptr < work_buffer_ptr){
 						*input_ptr = *(input_ptr+1);
 						input_ptr++;
