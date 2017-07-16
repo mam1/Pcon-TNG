@@ -22,7 +22,7 @@
 
 int main(void) {		
 	char 			c, *work_buffer_ptr, *end_buff, *start_buff, *move_ptr;
-	char 			*input_ptr;
+	char 			*input_ptr, *hptr;
 	static char 	work_buffer[_INPUT_BUFFER_SIZE];
 	char 			ring_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE];	// char array[NUMBER_STRINGS][STRING_MAX_SIZE];
 	int 			rb_in_idx, rb_out_idx;
@@ -81,19 +81,15 @@ int main(void) {
 				else {
 					mv = work_buffer_ptr - input_ptr;
 					input_ptr--;
-					*input_ptr = '*';
+					hptr = input_ptr;
+					// *input_ptr = '*';
 					while(input_ptr < work_buffer_ptr){
 						*input_ptr = *(input_ptr+1);
 						input_ptr++;
 					}
+					input_ptr = hptr;
 					*work_buffer_ptr-- = '\0';
-					// printf("\033[s");	// save cursor position	       			
-					// printf("\r> %s", work_buffer);
-					// printf("\033[u");	// Restore cursor position
-					// printf("\033[1C");	// move cursor right
-
-				
-					// printf("\r\033[K");
+					*work_buffer_ptr = '\0';
 					printf("\033[K");	// Erase to end of line
 					printf("\r> %s", work_buffer);
 					while(mv > 0){
@@ -107,13 +103,10 @@ int main(void) {
 				c = fgetc(stdin);		// skip to next character
 				switch(c){
 					case 'A':	// up arrow
-						// printf("\n\rup arrow\n\r");
-
 						if(rb_out_idx > 0)
 							rb_out_idx--;
 						else
 							rb_out_idx = rb_in_idx - 1;
-
 						strcpy(work_buffer,&ring_buffer[rb_out_idx][0]);
 						if(rb_out_idx >= rb_in_idx)
 							rb_out_idx = 0;
@@ -123,11 +116,9 @@ int main(void) {
 						continue;
 						break;	
 					case 'B':	// down arrow
-						// printf("\n\rdown arrow\n\r");
 						rb_out_idx++;
 						if(rb_out_idx > rb_in_idx)
 							rb_out_idx = rb_in_idx;
-						
 						strcpy(work_buffer,&ring_buffer[rb_out_idx][0]);	
 						printf("\r");
 						printf("\033[K");	// Erase to end of line
@@ -135,7 +126,6 @@ int main(void) {
 						continue;
 						break;		
 					case 'C':	// right arrow
-						// input_ptr = work_buffer_ptr;
 						if (input_ptr < work_buffer_ptr){
 							input_ptr++;
 							printf("\033[1C");	// move cursor right
@@ -143,7 +133,6 @@ int main(void) {
 						continue;
 						break;
 					case 'D':	// left arrow
-						// input_ptr = work_buffer_ptr;
 						if (input_ptr > start_buff){
 							input_ptr--;
 							printf("\033[1D");	// move cursor left
@@ -155,14 +144,11 @@ int main(void) {
 						printf("ring buffer dump: rb_in_idx {%i}, rb_out_idx {%i}\n\r",rb_in_idx, rb_out_idx);
 						for(i=0;i<_CMD_BUFFER_DEPTH;i++)
 							printf("    {%s}\n\r", &ring_buffer[i][0]);
-
-
 						system("/bin/stty cooked");			//switch to buffered input
 						system("/bin/stty echo");			//turn on terminal echo
 						printf("\r\n***normal termination\n\n\r");
 						return 0;
 						break;
-						
 				}
 			default:	/* OTHER */ 
 				if (work_buffer_ptr < end_buff){		// room to add character ?
@@ -171,10 +157,7 @@ int main(void) {
 						input_ptr = work_buffer_ptr;	       			
 						printf("\r> %s", work_buffer);
 					}
-
 					else{		// cursor is not at the end of the input buffer
-
-						// fputc('\033[s', stdin);		// save cursor position	
 						move_ptr = work_buffer_ptr++;
 						move_ptr++;
 						*move_ptr-- = '\0';
@@ -183,20 +166,12 @@ int main(void) {
 							move_ptr--;
 						}
 						*input_ptr++ = c;
-
 						mv = work_buffer_ptr - input_ptr;
-						// printf("\033[s");	// save cursor position	
-						// printf("\033[s");	// save cursor position	
 						printf("\r> %s", work_buffer);
-						// printf("\033[u");	// Restore cursor position
-						// printf("\033[u");	// Restore cursor position
-						// fputc('\033[u', stdin);	// Restore cursor position
-						// printf("\033[3C");	// move cursor right
 						while(mv > 0){
 							printf("\033[1D");	// move cursor left
 							mv--;
 						}
-
 					}
 		}
 
