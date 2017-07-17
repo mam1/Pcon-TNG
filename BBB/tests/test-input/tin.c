@@ -51,9 +51,9 @@ int main(void) {
 	while (1) {
 		c = fgetc(stdin);
 		switch (c) {
-			case _NO_CHAR:	/* NOCR */ 
+/* NOCR */	case _NO_CHAR:	
 				break;
-			case _CR:		/* CR */
+/* CR */	case _CR:		
 				strcpy(&ring_buffer[rb_in_idx++][0], work_buffer);
 				if(rb_in_idx > _CMD_BUFFER_DEPTH - 1)
 					rb_in_idx = 0;
@@ -64,7 +64,7 @@ int main(void) {
 				memset(&ring_buffer[rb_in_idx][0], '\0', _INPUT_BUFFER_SIZE);
 				input_ptr = work_buffer_ptr;
 				break;
-			case _DEL:		/* DEL */
+/* DEL */	case _DEL:		
 				if(work_buffer_ptr <= start_buff)
 					break; 
 
@@ -98,11 +98,11 @@ int main(void) {
 						}
 				}
 				break;
-			case _ESC:		/* ESC */  
+/* ESC */ 	case _ESC:		 
 				c = fgetc(stdin);		// skip to next character
 				c = fgetc(stdin);		// skip to next character
 				switch(c){
-					case 'A':	// up arrow
+	/* up arrow */	case 'A':	
 						if(rb_out_idx > 0)
 							rb_out_idx--;
 						else
@@ -113,9 +113,12 @@ int main(void) {
 						printf("\r");
 						printf("\033[K");	// Erase to end of line
 						printf("\r> %s", work_buffer);
+						work_buffer_ptr = work_buffer;
+						while(*work_buffer_ptr++);	// move pointer to end of line
+						input_ptr = work_buffer_ptr;
 						continue;
 						break;	
-					case 'B':	// down arrow
+	/* down arrow */case 'B':	
 						rb_out_idx++;
 						if(rb_out_idx > rb_in_idx)
 							rb_out_idx = rb_in_idx;
@@ -125,21 +128,21 @@ int main(void) {
 						printf("\r> %s", work_buffer);
 						continue;
 						break;		
-					case 'C':	// right arrow
+	/* right arrow */case 'C':	
 						if (input_ptr < work_buffer_ptr){
 							input_ptr++;
 							printf("\033[1C");	// move cursor right
 						}	
 						continue;
 						break;
-					case 'D':	// left arrow
+	/* left arrow */case 'D':	
 						if (input_ptr > start_buff){
 							input_ptr--;
 							printf("\033[1D");	// move cursor left
 						}
 						continue;
 						break;
-					default:	// ESC
+	/* ESC */		default:	
 						printf("\n\rprocess escape\n\r");
 						printf("ring buffer dump: rb_in_idx {%i}, rb_out_idx {%i}\n\r",rb_in_idx, rb_out_idx);
 						for(i=0;i<_CMD_BUFFER_DEPTH;i++)
@@ -150,7 +153,7 @@ int main(void) {
 						return 0;
 						break;
 				}
-			default:	/* OTHER */ 
+/* OTHER */ default:	
 				if (work_buffer_ptr < end_buff){		// room to add character ?
 					if(input_ptr == work_buffer_ptr){	// no arrow keys in play
 						*work_buffer_ptr++ = c;
@@ -173,14 +176,11 @@ int main(void) {
 							mv--;
 						}
 					}
+				}
+
 		}
-
 	}
-}
 
-
-
-	// s_close(bbb);
 	system("/bin/stty cooked");			//switch to buffered iput
 	system("/bin/stty echo");			//turn on terminal echo
 	printf("\f\n***normal termination -  but should not happen\n\n");
