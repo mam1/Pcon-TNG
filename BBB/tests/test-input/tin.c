@@ -28,7 +28,7 @@ int main(void) {
 	int 			rb_in_idx, rb_out_idx;
 	int 			mv, i;
 
-	printf("\ncommand line input simulator v 0.0\n\n");
+	printf("\ncommand line input simulator v 1.0\n\n");
 
 	/* initialize input buffer */
 	work_buffer_ptr = work_buffer;
