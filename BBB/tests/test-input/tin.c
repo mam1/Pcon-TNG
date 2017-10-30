@@ -28,10 +28,13 @@ int main(void) {
 	int 			rb_in_idx, rb_out_idx;
 	int 			mv, i;
 
+	printf("\ncommand line input simulator v 0.0\n\n");
+
 	/* initialize input buffer */
 	work_buffer_ptr = work_buffer;
 	start_buff = work_buffer;	
  	end_buff = (char *)((int)start_buff + _INPUT_BUFFER_SIZE);
+
 
  	/* initialize ring buffer & indexs*/
  	for(i=0;i<_CMD_BUFFER_DEPTH;i++)
@@ -74,7 +77,8 @@ int main(void) {
 					*work_buffer_ptr-- = '\0';
 					*work_buffer_ptr = '\0';
 					input_ptr = work_buffer_ptr;
-					printf("\033[2D");	// move cursor left
+
+					printf("\033[1D");	// move cursor left
 					printf("\033[K");	// Erase to end of line
 					printf("\033[s");	// save cursor position	       			
 					printf("\r> %s", work_buffer);
