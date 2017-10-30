@@ -79,7 +79,7 @@ lib:
 project:
 	cd .. && $(MAKE) clean
 	cd .. && $(MAKE)
-	cd ../CGI && $(MAKE)
+	# cd ../CGI && $(MAKE)
 	cd ../UI && $(MAKE)
 	cd ../daemon && $(MAKE)	
 
