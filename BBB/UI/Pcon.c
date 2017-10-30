@@ -95,6 +95,7 @@ int main(void) {
 	char 			ring_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE];	// char array[NUMBER_STRINGS][STRING_MAX_SIZE];
 	int 			rb_in_idx, rb_out_idx;
 	int 			mv;
+	int  			escape;
 
 	/*********************** setup console *******************************/
 
@@ -163,6 +164,7 @@ int main(void) {
 	work_buffer_ptr = work_buffer;
 	start_buff = work_buffer;
 	end_buff = (char *)((int)start_buff + _INPUT_BUFFER_SIZE);
+	escape = false;
 
 	/* initialize ring buffer & indexs*/
 	for (i = 0; i < _CMD_BUFFER_DEPTH; i++)
@@ -186,6 +188,8 @@ int main(void) {
 	/************************************************************/
 	/**************** start main processing loop ****************/
 	/************************************************************/
+
+
 
 	while (1) {
 		/* check the token stack */
@@ -271,8 +275,12 @@ int main(void) {
 						if(rb_out_idx >= rb_in_idx)
 							rb_out_idx = 0;
 						printf("\r");
+						printf("\033[1A");
+						prompt(cmd_fsm_cb.state);
+						// printf("\033[K");	// Erase to end of line
+						// strcpy(&cmd_fsm_cb.prompt_buffer[0], &cmd_fsm_cb.prompt_buffer[2]);
+						printf("%s", work_buffer);
 						printf("\033[K");	// Erase to end of line
-						printf("\r> %s", work_buffer);
 						work_buffer_ptr = work_buffer;
 						while(*work_buffer_ptr++);	// move pointer to end of line
 						input_ptr = work_buffer_ptr;
@@ -302,42 +310,51 @@ int main(void) {
 						}
 						continue;
 						break;
-	/* ESC */		default:	
-						printf("\n\rprocess escape\n\r");
-						printf("ring buffer dump: rb_in_idx {%i}, rb_out_idx {%i}\n\r",rb_in_idx, rb_out_idx);
-						for(i=0;i<_CMD_BUFFER_DEPTH;i++)
-							printf("    {%s}\n\r", &ring_buffer[i][0]);
-						system("/bin/stty cooked");			//switch to buffered input
-						system("/bin/stty echo");			//turn on terminal echo
-						printf("\r\n***normal termination\n\n\r");
-						return 0;
+	/* ESC */		default:
+						escape = true;
+						while (pop_cmd_q(cmd_fsm_cb.token)); 	//empty command queue
+						cmd_fsm_reset(&cmd_fsm_cb);				//reset command fsm
+						memset(work_buffer, '\0', sizeof(work_buffer));	//clean out work buffer
+						work_buffer_ptr = work_buffer;
+						char_fsm_reset();						//reset char fsm
+						prompted = false;						//force a prompt
+						strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
 						break;
 				}
-/* OTHER */ default:	
-				if (work_buffer_ptr < end_buff){		// room to add character ?
-					if(input_ptr == work_buffer_ptr){	// no arrow keys in play
-						*work_buffer_ptr++ = c;
-						input_ptr = work_buffer_ptr;	       			
-						printf("%c", c);
-					}
-					else{		// cursor is not at the end of the input buffer
+/* OTHER */ default:
+				if(escape == true)
+					escape = false;
+				else 
+				{
+					if (work_buffer_ptr < end_buff)	// room to add character ?
+					{	
+						if(input_ptr == work_buffer_ptr)
+						{	// no arrow keys in play
+							*work_buffer_ptr++ = c;
+							input_ptr = work_buffer_ptr;	       			
+							printf("%c", c);
+						}
+					else
+					{		// cursor is not at the end of the input buffer
 						move_ptr = work_buffer_ptr++;
 						move_ptr++;
 						*move_ptr-- = '\0';
-						while(move_ptr > input_ptr){
+						while(move_ptr > input_ptr)
+						{
 							*move_ptr = *(move_ptr - 1);
 							move_ptr--;
 						}
 						*input_ptr++ = c;
 						mv = work_buffer_ptr - input_ptr;
 						printf("\r> %s", work_buffer);
-						while(mv > 0){
+						while(mv > 0)
+						{
 							printf("\033[1D");	// move cursor left
 							mv--;
 						}
 					}
 				}
-
+			}
 		}
 	/* do suff while waiting or the keyboard */
 
