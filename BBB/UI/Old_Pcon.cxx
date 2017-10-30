@@ -216,7 +216,8 @@ int main(void) {
 				*work_buffer_ptr++ = '\0';		// load the NULL into the work buffer
 				work_buffer_ptr = work_buffer;	// reset pointer
 				char_fsm_reset();				// reset char_fsm
-				while (*work_buffer_ptr != '\0')// send the work buffer content char_fsm
+				printf("\n\rprocess buffer  {%s}\n\r> ", work_buffer);
+				while (*work_buffer_ptr != '\0')		// send the work buffer content char_fsm
 					char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr++); 
 				work_buffer_ptr = work_buffer;
 				memset(work_buffer, '\0', sizeof(work_buffer));
@@ -318,7 +319,7 @@ int main(void) {
 					if(input_ptr == work_buffer_ptr){	// no arrow keys in play
 						*work_buffer_ptr++ = c;
 						input_ptr = work_buffer_ptr;	       			
-						printf("%c", c);
+						printf("%s", work_buffer);
 					}
 					else{		// cursor is not at the end of the input buffer
 						move_ptr = work_buffer_ptr++;
