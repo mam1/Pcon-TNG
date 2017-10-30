@@ -59,6 +59,8 @@ int main(void) {
 					rb_in_idx = 0;
 				rb_out_idx = rb_in_idx;	
 				printf("\n\rprocess buffer  {%s}\n\r> ", work_buffer);
+				// while (*work_buffer_ptr != '\0')		// send the work buffer content char_fsm
+				// 	char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr++); 
 				work_buffer_ptr = work_buffer;
 				memset(work_buffer, '\0', sizeof(work_buffer));
 				memset(&ring_buffer[rb_in_idx][0], '\0', _INPUT_BUFFER_SIZE);
