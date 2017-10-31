@@ -216,7 +216,8 @@ int main(void) {
 				if(rb_in_idx > _CMD_BUFFER_DEPTH - 1)
 					rb_in_idx = 0;
 				rb_out_idx = rb_in_idx;	
-				*work_buffer_ptr++ = c;			// load the CR into the work buffer
+				printf("\r\n");					// move cursor to next line
+				*work_buffer_ptr++ = _CR;		// load the CR into the work buffer
 				*work_buffer_ptr++ = '\0';		// load the NULL into the work buffer
 				work_buffer_ptr = work_buffer;	// reset pointer
 				char_fsm_reset();				// reset char_fsm
@@ -274,16 +275,16 @@ int main(void) {
 						strcpy(work_buffer,&ring_buffer[rb_out_idx][0]);
 						if(rb_out_idx >= rb_in_idx)
 							rb_out_idx = 0;
+
 						printf("\r");
-						printf("\033[1A");
-						prompt(cmd_fsm_cb.state);
-						// printf("\033[K");	// Erase to end of line
-						// strcpy(&cmd_fsm_cb.prompt_buffer[0], &cmd_fsm_cb.prompt_buffer[2]);
-						printf("%s", work_buffer);
-						printf("\033[K");	// Erase to end of line
+						// printf("\033[1A");				// move cursor up one line
+						prompt(cmd_fsm_cb.state);		// display user prompt
+
+						printf("%s", work_buffer);		// print work_buffer
+						printf("\033[K");				// Erase to end of line
 						work_buffer_ptr = work_buffer;
-						while(*work_buffer_ptr++);	// move pointer to end of line
-						input_ptr = work_buffer_ptr;
+						while(*work_buffer_ptr++);		// move pointer to end of line
+						input_ptr = --work_buffer_ptr;
 						continue;
 						break;	
 	/* down arrow */case 'B':	
