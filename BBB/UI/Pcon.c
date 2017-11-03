@@ -90,6 +90,7 @@ int main(void) {
 	int 			fd;					//file descriptor for ipc data file
 
 	char 			*work_buffer_ptr, *end_buff, *start_buff, *move_ptr;
+	char 			screen_buf[_SCREEN_BUFFER_SIZE], *cursor_ptr;
 	char 			*input_ptr, *hptr;
 	static char 	work_buffer[_INPUT_BUFFER_SIZE];
 	char 			ring_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE];	// char array[NUMBER_STRINGS][STRING_MAX_SIZE];
@@ -208,65 +209,16 @@ int main(void) {
 		/************************************************************/
 
 		c = fgetc(stdin);	// read the keyboard
-		switch (c) {
+		switch (c) 
+		{
 /* NOCR */	case _NO_CHAR:	
 				break;
-/* CR */	case _CR:		
-				strcpy(&ring_buffer[rb_in_idx++][0], work_buffer);
-				if(rb_in_idx > _CMD_BUFFER_DEPTH - 1)
-					rb_in_idx = 0;
-				rb_out_idx = rb_in_idx;	
-				printf("\r\n");					// move cursor to next line
-				*work_buffer_ptr++ = _CR;		// load the CR into the work buffer
-				*work_buffer_ptr++ = '\0';		// load the NULL into the work buffer
-				work_buffer_ptr = work_buffer;	// reset pointer
-				char_fsm_reset();				// reset char_fsm
-				while (*work_buffer_ptr != '\0')// send the work buffer content char_fsm
-					char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr++); 
-				work_buffer_ptr = work_buffer;
-				memset(work_buffer, '\0', sizeof(work_buffer));
-				memset(&ring_buffer[rb_in_idx][0], '\0', _INPUT_BUFFER_SIZE);
-				input_ptr = work_buffer_ptr;
-				break;
-/* DEL */	case _DEL:		
-				if(work_buffer_ptr <= start_buff)
-					break; 
 
-				if(input_ptr == work_buffer_ptr){	// no arrow keys in play
-					*work_buffer_ptr-- = '\0';
-					*work_buffer_ptr = '\0';
-					input_ptr = work_buffer_ptr;
-
-					printf("\033[1D");	// move cursor left
-					printf("\033[K");	// Erase to end of line
-					printf("\033[s");	// save cursor position	       			
-					printf("\r> %s", work_buffer);
-					printf("\033[u");	// Restore cursor position			
-				}
-				else {
-					mv = work_buffer_ptr - input_ptr;
-					input_ptr--;
-					hptr = input_ptr;
-					// *input_ptr = '*';
-					while(input_ptr < work_buffer_ptr){
-						*input_ptr = *(input_ptr+1);
-						input_ptr++;
-					}
-					input_ptr = hptr;
-					*work_buffer_ptr-- = '\0';
-					*work_buffer_ptr = '\0';
-					printf("\033[K");	// Erase to end of line
-					printf("\r> %s", work_buffer);
-					while(mv > 0){
-							printf("\033[1D");	// move cursor left
-							mv--;
-						}
-				}
-				break;
 /* ESC */ 	case _ESC:		 
 				c = fgetc(stdin);		// skip to next character
 				c = fgetc(stdin);		// skip to next character
-				switch(c){
+				switch(c)
+				{
 	/* up arrow */	case 'A':	
 						if(rb_out_idx > 0)
 							rb_out_idx--;
@@ -322,6 +274,68 @@ int main(void) {
 						strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
 						break;
 				}
+
+/* CR */	case _CR:		
+				if(work_buffer_ptr != start_buff)
+				{
+					strcpy(&ring_buffer[rb_in_idx++][0], work_buffer);
+					if(rb_in_idx > _CMD_BUFFER_DEPTH - 1)
+						rb_in_idx = 0;
+					rb_out_idx = rb_in_idx;	
+				}
+				printf("\r\n");						// move cursor to next line
+				*work_buffer_ptr++ = _CR;			// load the CR into the work buffer
+				*work_buffer_ptr++ = '\0';			// load the NULL into the work buffer
+				char_fsm_reset();					// reset char_fsm
+				work_buffer_ptr = work_buffer;		// reset pointer				
+				while (*work_buffer_ptr != '\0')	// send characters to char_fsm
+					char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr); 
+				work_buffer_ptr = work_buffer;		// reset pointer
+				input_ptr = work_buffer_ptr;
+				cursor_ptr = screen_buf;
+				memset(work_buffer, '\0', sizeof(work_buffer));
+				memset(screen_buf, '\0', sizeof(screen_buf));
+				strcpy(screen_buf,prompt_buffer);
+				printf("s",screen_buf);
+
+				memset(&ring_buffer[rb_in_idx][0], '\0', _INPUT_BUFFER_SIZE);
+				break;
+/* DEL */	case _DEL:		
+				if(work_buffer_ptr <= start_buff)
+					break; 
+
+				if(input_ptr == work_buffer_ptr){	// no arrow keys in play
+					*work_buffer_ptr-- = '\0';
+					*work_buffer_ptr = '\0';
+					input_ptr = work_buffer_ptr;
+
+					printf("\033[1D");	// move cursor left
+					printf("\033[K");	// Erase to end of line
+					printf("\033[s");	// save cursor position	       			
+					printf("\r> %s", work_buffer);
+					printf("\033[u");	// Restore cursor position			
+				}
+				else {
+					mv = work_buffer_ptr - input_ptr;
+					input_ptr--;
+					hptr = input_ptr;
+					// *input_ptr = '*';
+					while(input_ptr < work_buffer_ptr){
+						*input_ptr = *(input_ptr+1);
+						input_ptr++;
+					}
+					input_ptr = hptr;
+					*work_buffer_ptr-- = '\0';
+					*work_buffer_ptr = '\0';
+					printf("\033[K");	// Erase to end of line
+					printf("\r> %s", work_buffer);
+					while(mv > 0){
+							printf("\033[1D");	// move cursor left
+							mv--;
+						}
+				}
+				break;
+
 /* OTHER */ default:
 				if(escape == true)
 					escape = false;
