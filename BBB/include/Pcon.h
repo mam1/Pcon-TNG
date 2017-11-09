@@ -1,5 +1,5 @@
 /**************************************************/
-/*  Pcon.h version 0.0                            */
+/*  Pcon.h 		                                  */
 /*  header file for Pcon.c                        */
 /*                                                */
 /**************************************************/
@@ -10,7 +10,7 @@
 /* Pcon version info */
 #define _MAJOR_VERSION_Pcon    	13
 #define _MINOR_VERSION_Pcon   	3
-#define _MINOR_REVISION_Pcon   	0
+#define _MINOR_REVISION_Pcon   	1
 
 
 // #define _TRACE 				// turn on trace

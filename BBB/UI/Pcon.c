@@ -63,10 +63,6 @@ char *mode[4] = {"manual", "  time", "sensor", " cycle"};
 
 /***************************** support routines ********************************/
 
-/* check system status */
-
-
-
 /* prompt for user input */
 void prompt(int s) {
 
@@ -98,6 +94,8 @@ int main(void) {
 	int 			mv;
 	int  			escape;
 
+	char 			*ppp;
+
 	/*********************** setup console *******************************/
 
 	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
@@ -127,9 +125,11 @@ int main(void) {
 	printf(" System version (app) %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
 	printf(" System version (shr mem) %d.%d.%d\n\r", ipc_ptr->sys_data.config.major_version, ipc_ptr->sys_data.config.minor_version, ipc_ptr->sys_data.config.minor_revision);
 
-	if (sys_comp(&(ipc_ptr->sys_data.config))) {
+	if (sys_comp(&(ipc_ptr->sys_data.config))) 
+	{
 		printf("*** the system configuration in shared memory and in the application are different\n update shared memory? (y)|(n) > ");
-		if (getchar() == 'y') {
+		if (getchar() == 'y') 
+		{
 			ipc_ptr->sys_data.config.major_version = _MAJOR_VERSION_system;
 			ipc_ptr->sys_data.config.minor_version = _MINOR_VERSION_system;
 			ipc_ptr->sys_data.config.minor_revision = _MINOR_REVISION_system;
@@ -139,7 +139,8 @@ int main(void) {
 			ipc_ptr->sys_data.config.states = _CMD_STATES;
 			c = fgetc(stdin);			// get rid of trailing CR
 		}
-		else {
+		else 
+		{
 			c = fgetc(stdin);			// get rid of trailing CR
 			printf("*** application terminated\n");
 			exit(1);
@@ -162,8 +163,10 @@ int main(void) {
 	char_state = 0;							//initialize the character fsm
 
 	/* initialize input buffer */
+	memset(work_buffer, '\0', sizeof(work_buffer));
 	work_buffer_ptr = work_buffer;
 	start_buff = work_buffer;
+	input_ptr = work_buffer;
 	end_buff = (char *)((int)start_buff + _INPUT_BUFFER_SIZE);
 	escape = false;
 
@@ -172,7 +175,6 @@ int main(void) {
 		memset(&ring_buffer[i][0], '\0', _INPUT_BUFFER_SIZE);
 	rb_in_idx  = 0;
 	rb_out_idx = 0;
-	input_ptr = work_buffer_ptr;
 
 	/* set up unbuffered io */
 	fflush(stdout);
@@ -180,6 +182,7 @@ int main(void) {
 	system("/bin/stty raw");				// use system call to make terminal send all keystrokes directly to stdin
 	int flags = fcntl(STDOUT_FILENO, F_GETFL);
 	fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
+	escape = false;
 
 	printf("initializations complete\r\nenter ? for a list of commands\r\n\n");
 
@@ -192,7 +195,8 @@ int main(void) {
 
 
 
-	while (1) {
+	while (1) 
+	{
 		/* check the token stack */
 		while (pop_cmd_q(cmd_fsm_cb.token))
 		{
@@ -275,28 +279,34 @@ int main(void) {
 						break;
 				}
 
-/* CR */	case _CR:		
-				if(work_buffer_ptr != start_buff)
+/* CR */	case _CR:
+
+				if(work_buffer_ptr != start_buff) // skip null lines
 				{
 					strcpy(&ring_buffer[rb_in_idx++][0], work_buffer);
 					if(rb_in_idx > _CMD_BUFFER_DEPTH - 1)
 						rb_in_idx = 0;
 					rb_out_idx = rb_in_idx;	
 				}
+
 				printf("\r\n");						// move cursor to next line
 				*work_buffer_ptr++ = _CR;			// load the CR into the work buffer
 				*work_buffer_ptr++ = '\0';			// load the NULL into the work buffer
-				char_fsm_reset();					// reset char_fsm
-				work_buffer_ptr = work_buffer;		// reset pointer				
-				while (*work_buffer_ptr != '\0')	// send characters to char_fsm
-					char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr); 
 				work_buffer_ptr = work_buffer;		// reset pointer
-				input_ptr = work_buffer_ptr;
-				cursor_ptr = screen_buf;
+				char_fsm_reset();					// reset char_fsm
+
+				while (*work_buffer_ptr != '\0')	// send characters to char_fsm
+					char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr++); 
+
+				work_buffer_ptr = work_buffer;		// reset pointer
+				input_ptr = work_buffer_ptr;		// reset pointer
+				cursor_ptr = screen_buf;			// reset pointer
+
 				memset(work_buffer, '\0', sizeof(work_buffer));
 				memset(screen_buf, '\0', sizeof(screen_buf));
-				strcpy(screen_buf,prompt_buffer);
-				printf("s",screen_buf);
+
+				strcpy(screen_buf,cmd_fsm_cb.prompt_buffer);
+				printf("%s",screen_buf);
 
 				memset(&ring_buffer[rb_in_idx][0], '\0', _INPUT_BUFFER_SIZE);
 				break;
@@ -345,10 +355,13 @@ int main(void) {
 					{	
 						if(input_ptr == work_buffer_ptr)
 						{	// no arrow keys in play
+
 							*work_buffer_ptr++ = c;
 							input_ptr = work_buffer_ptr;	       			
 							printf("%c", c);
+
 						}
+					}
 					else
 					{		// cursor is not at the end of the input buffer
 						move_ptr = work_buffer_ptr++;
@@ -368,8 +381,7 @@ int main(void) {
 							mv--;
 						}
 					}
-				}
-			}
+				}			
 		}
 	/* do suff while waiting or the keyboard */
 
