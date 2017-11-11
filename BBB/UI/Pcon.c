@@ -213,11 +213,12 @@ int main(void) {
 					rb_out_idx--;
 				else
 					rb_out_idx = rb_in_idx - 1;
+
 				strcpy(work_buffer, &ring_buffer[rb_out_idx][0]);
 				if (rb_out_idx >= rb_in_idx)
 					rb_out_idx = 0;
 
-				printf("\r");
+				// printf("\r");
 				// printf("\033[1A");			// move cursor up one line
 				prompt(cmd_fsm_cb.state);		// display user prompt
 
@@ -232,12 +233,28 @@ int main(void) {
 				rb_out_idx++;
 				if (rb_out_idx > rb_in_idx)
 					rb_out_idx = rb_in_idx;
+
+
+
 				strcpy(work_buffer, &ring_buffer[rb_out_idx][0]);
-				printf("\r");
-				printf("\033[K");	// Erase to end of line
-				printf("\r> %s", work_buffer);
+
+				// printf("\r");
+				// printf("\033[1A");			// move cursor up one line
+				prompt(cmd_fsm_cb.state);		// display user prompt
+
+				printf("%s", work_buffer);		// print work_buffer
+				printf("\033[K");				// Erase to end of line
+				work_buffer_ptr = work_buffer;
+				while (*work_buffer_ptr++);		// move pointer to end of line
+				input_ptr = --work_buffer_ptr;
 				continue;
 				break;
+
+				// printf("\r");
+				// printf("\033[K");	// Erase to end of line
+				// printf("\r> %s", work_buffer);
+				// continue;
+				// break;
 		/* right arrow */case 'C':
 				if (input_ptr < work_buffer_ptr) {
 					input_ptr++;
