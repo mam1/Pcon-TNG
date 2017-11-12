@@ -218,15 +218,15 @@ int main(void) {
 				if (rb_out_idx >= rb_in_idx)
 					rb_out_idx = 0;
 
-				// printf("\r");
+				printf("\r");
 				// printf("\033[1A");			// move cursor up one line
 				prompt(cmd_fsm_cb.state);		// display user prompt
-
 				printf("%s", work_buffer);		// print work_buffer
 				printf("\033[K");				// Erase to end of line
 				work_buffer_ptr = work_buffer;
 				while (*work_buffer_ptr++);		// move pointer to end of line
 				input_ptr = --work_buffer_ptr;
+				prompted = true;
 				continue;
 				break;
 		/* down arrow */case 'B':
@@ -241,12 +241,12 @@ int main(void) {
 				// printf("\r");
 				// printf("\033[1A");			// move cursor up one line
 				prompt(cmd_fsm_cb.state);		// display user prompt
-
 				printf("%s", work_buffer);		// print work_buffer
 				printf("\033[K");				// Erase to end of line
 				work_buffer_ptr = work_buffer;
 				while (*work_buffer_ptr++);		// move pointer to end of line
 				input_ptr = --work_buffer_ptr;
+				prompted = true;
 				continue;
 				break;
 
@@ -277,7 +277,7 @@ int main(void) {
 				work_buffer_ptr = work_buffer;
 				char_fsm_reset();						//reset char fsm
 				prompted = false;						//force a prompt
-				strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
+				strcpy(cmd_fsm_cb.prompt_buffer, "\r\n\ncommand processor reset\n\r\nenter a command");
 				break;
 			}
 
@@ -292,6 +292,7 @@ int main(void) {
 			}
 
 			printf("\r\n");						// move cursor to next line
+
 			*work_buffer_ptr++ = _CR;			// load the CR into the work buffer
 			*work_buffer_ptr++ = '\0';			// load the NULL into the work buffer
 			work_buffer_ptr = work_buffer;		// reset pointer
@@ -311,6 +312,7 @@ int main(void) {
 			// printf("%s",screen_buf);
 
 			memset(&ring_buffer[rb_in_idx][0], '\0', _INPUT_BUFFER_SIZE);
+
 			break;
 	/* DEL */	case _DEL:
 			if (work_buffer_ptr <= start_buff)
