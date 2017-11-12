@@ -611,7 +611,7 @@ int c_8(_CMD_FSM_CB *cb)
 {
 	strcpy(cb->prompt_buffer, "'");
 	strcat(cb->prompt_buffer, cb->token);
-	strcat(cb->prompt_buffer, "' is not a valid command\n\r> ");
+	strcat(cb->prompt_buffer, "' is not a valid command\n\r");
 	printf("%s", cb->prompt_buffer);
 	strcpy(cb->prompt_buffer, "\0");
 	return 1;
@@ -1759,10 +1759,10 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 		index = cb->token_value;
 	}
 
-#if defined (_ATRACE) || defined (_FTRACE)
-	sprintf(trace_buf, "cmd_fsm called before setting new state: index <%i>token <%s>, token value <%i>, token type <%i>, state <%i>\n", index, cb->token, cb->token_value, cb->token_type, cb->state);
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-#endif
+// #if defined (_ATRACE) || defined (_FTRACE)
+// 	sprintf(trace_buf, "cmd_fsm called before setting new state: index <%i>token <%s>, token value <%i>, token type <%i>, state <%i>\n", index, cb->token, cb->token_value, cb->token_type, cb->state);
+// 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
+// #endif
 
 	switch(cmd_action[index][cb->state](cb))				// fire off a fsm action routine
 	{
@@ -1770,8 +1770,9 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 			cb->state = cmd_new_state[index][cb->state];	// update state
 			break;
 		case 1:	// error in action routine
-			printf("error returned from action routine\n\r");
+			// printf("error returned from action routine\n\r");
 			while (pop_cmd_q(cmd_fsm_cb.token)); 			//empty command queue
+			strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
 			break;
 		case 2: 	// token failed range check	
 			break;

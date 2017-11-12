@@ -52,6 +52,22 @@ struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
 int 		cmd_buffer_push_index, cmd_buffer_pop_index;
 char 		cmd_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE + 1]; // array to hold multiple single arrays of characters
 
+uint8_t 		c;       			// character typed on keyboard
+// int				char_state;			// current state of the character processing fsm
+int 			prompted = false;	// has a prompt been sent
+int 			fd;					// file descriptor for ipc data file
+char 			work_buffer[_INPUT_BUFFER_SIZE];	// containes the user input	
+char 			*work_buffer_ptr, *end_buff, *start_buff, *move_ptr;
+
+char 			screen_buf[_SCREEN_BUFFER_SIZE], *cursor_ptr;
+char 			*input_ptr, *hptr;
+
+char 			ring_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE];	// char array[NUMBER_STRINGS][STRING_MAX_SIZE];
+int 			rb_in_idx, rb_out_idx;
+int 			mv;
+int  			escape;				// have we just processed an escape
+
+
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -79,21 +95,9 @@ void prompt(int s) {
 /********************************************************************/
 
 int main(void) {
-	uint8_t 		c;       			// character typed on keyboard
-	int				char_state;			// current state of the character processing fsm
-	int 			prompted = false;	// has a prompt been sent
+
+
 	int 			i;
-	int 			fd;					// file descriptor for ipc data file
-
-	char 			*work_buffer_ptr, *end_buff, *start_buff, *move_ptr;
-	char 			screen_buf[_SCREEN_BUFFER_SIZE], *cursor_ptr;
-	char 			*input_ptr, *hptr;
-	static char 	work_buffer[_INPUT_BUFFER_SIZE];
-	char 			ring_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE];	// char array[NUMBER_STRINGS][STRING_MAX_SIZE];
-	int 			rb_in_idx, rb_out_idx;
-	int 			mv;
-	int  			escape;
-
 	char 			*ppp;
 
 	/************************ initializations ****************************/
@@ -193,7 +197,8 @@ int main(void) {
 			cmd_fsm(&cmd_fsm_cb);   		// cycle cmd fsm until queue is empty
 			prompted = false;
 		}
-		if (prompted == false) {			// display prompt if necessary
+		if (prompted == false) 				// display prompt if necessary
+		{			
 			prompted = true;
 			prompt(cmd_fsm_cb.state);
 		}
@@ -213,48 +218,21 @@ int main(void) {
 					rb_out_idx--;
 				else
 					rb_out_idx = rb_in_idx - 1;
-
 				strcpy(work_buffer, &ring_buffer[rb_out_idx][0]);
 				if (rb_out_idx >= rb_in_idx)
 					rb_out_idx = 0;
-
-				printf("\r");
-				// printf("\033[1A");			// move cursor up one line
-				prompt(cmd_fsm_cb.state);		// display user prompt
-				printf("%s", work_buffer);		// print work_buffer
-				printf("\033[K");				// Erase to end of line
-				work_buffer_ptr = work_buffer;
-				while (*work_buffer_ptr++);		// move pointer to end of line
-				input_ptr = --work_buffer_ptr;
-				prompted = true;
+				arrow_reprompt();
 				continue;
 				break;
 		/* down arrow */case 'B':
 				rb_out_idx++;
-				if (rb_out_idx > rb_in_idx)
-					rb_out_idx = rb_in_idx;
-
-
-
+				if (rb_out_idx >= rb_in_idx)
+					rb_out_idx = 0;
 				strcpy(work_buffer, &ring_buffer[rb_out_idx][0]);
-
-				// printf("\r");
-				// printf("\033[1A");			// move cursor up one line
-				prompt(cmd_fsm_cb.state);		// display user prompt
-				printf("%s", work_buffer);		// print work_buffer
-				printf("\033[K");				// Erase to end of line
-				work_buffer_ptr = work_buffer;
-				while (*work_buffer_ptr++);		// move pointer to end of line
-				input_ptr = --work_buffer_ptr;
-				prompted = true;
+				arrow_reprompt();
 				continue;
 				break;
 
-				// printf("\r");
-				// printf("\033[K");	// Erase to end of line
-				// printf("\r> %s", work_buffer);
-				// continue;
-				// break;
 		/* right arrow */case 'C':
 				if (input_ptr < work_buffer_ptr) {
 					input_ptr++;
@@ -432,5 +410,18 @@ void term1(void) {
 	printf("semaphore set removed\n\r");
 	printf("\n*** program terminated\n\n");
 	exit(-1);
+	return;
+}
+
+void arrow_reprompt(void)
+{
+	printf("\r");
+	prompt(cmd_fsm_cb.state);		// display user prompt
+	printf("%s", work_buffer);		// print work_buffer
+	printf("\033[K");				// Erase to end of line
+	work_buffer_ptr = work_buffer;
+	while (*work_buffer_ptr++);		// move pointer to end of line
+	input_ptr = --work_buffer_ptr;
+	prompted = true;
 	return;
 }

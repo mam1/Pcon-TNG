@@ -21,5 +21,6 @@ int term(int);
 void term1(void);
 void disp_sys(void);
 char *cmd_def(int token_number, int state);
+void arrow_reprompt(void);
 
 #endif

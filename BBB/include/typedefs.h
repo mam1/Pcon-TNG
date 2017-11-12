@@ -160,4 +160,23 @@ typedef struct sembuf SEMBUF;
 typedef int (*CMD_ACTION_PTR)(_CMD_FSM_CB *);
 typedef int (*CHAR_ACTION_PTR)(char *);
 
+/* Pcon control block */
+// typedef struct $
+// {
+// 	uint8_t 		c;       							// character typed on keyboard
+// 	int				char_state;							// current state of the character processing fsm
+// 	int 			prompted = false;					// has a prompt been sent
+// 	int 			fd;									// file descriptor for ipc data file
+// 	char 			work_buffer[_INPUT_BUFFER_SIZE];	// containes the user input	
+// 	char 			*work_buffer_ptr, *end_buff, *start_buff, *move_ptr;
+
+// 	char 			screen_buf[_SCREEN_BUFFER_SIZE], *cursor_ptr;
+// 	char 			*input_ptr, *hptr;
+
+// 	char 			ring_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE];	// char array[NUMBER_STRINGS][STRING_MAX_SIZE];
+// 	int 			rb_in_idx, rb_out_idx;
+// 	int 			mv;
+// 	int  			escape;				// have we just processed an escape	
+// } _PCON;
+
 #endif
