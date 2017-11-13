@@ -218,7 +218,6 @@ int main(void) {
 					rb_out_idx--;
 				else
 					rb_out_idx = rb_in_idx - 1;
-				strcpy(work_buffer, &ring_buffer[rb_out_idx][0]);
 				if (rb_out_idx >= rb_in_idx)
 					rb_out_idx = 0;
 				arrow_reprompt();
@@ -228,7 +227,6 @@ int main(void) {
 				rb_out_idx++;
 				if (rb_out_idx >= rb_in_idx)
 					rb_out_idx = 0;
-				strcpy(work_buffer, &ring_buffer[rb_out_idx][0]);
 				arrow_reprompt();
 				continue;
 				break;
@@ -415,6 +413,7 @@ void term1(void) {
 
 void arrow_reprompt(void)
 {
+	strcpy(work_buffer, &ring_buffer[rb_out_idx][0]);
 	printf("\r");
 	prompt(cmd_fsm_cb.state);		// display user prompt
 	printf("%s", work_buffer);		// print work_buffer
