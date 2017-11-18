@@ -56,8 +56,9 @@ uint8_t 		c;       			// character typed on keyboard
 // int				char_state;			// current state of the character processing fsm
 int 			prompted = false;	// has a prompt been sent
 int 			fd;					// file descriptor for ipc data file
-char 			work_buffer[_INPUT_BUFFER_SIZE];	// containes the user input	
+char 			work_buffer[_INPUT_BUFFER_SIZE];				// contains the user input	
 char 			*work_buffer_ptr, *end_buff, *start_buff, *move_ptr;
+char 			previous_work_buffer[_INPUT_BUFFER_SIZE]; 		// points to the  previous user input
 
 char 			screen_buf[_SCREEN_BUFFER_SIZE], *cursor_ptr;
 char 			*input_ptr, *hptr;
@@ -203,6 +204,9 @@ int main(void) {
 			prompt(cmd_fsm_cb.state);
 		}
 		c = fgetc(stdin);					// read the keyboard
+
+//************************************************************************************************
+
 		switch (c)
 		{
 	/* NOCR */	case _NO_CHAR:
@@ -212,6 +216,9 @@ int main(void) {
 			c = fgetc(stdin);		// skip to next character
 			c = fgetc(stdin);		// skip to next character
 			switch (c)
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7
+
 			{
 		/* up arrow */	case 'A':
 				if (rb_out_idx > 0)
@@ -257,15 +264,23 @@ int main(void) {
 				break;
 			}
 
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
 	/* CR */	case _CR:
 
-			if (work_buffer_ptr != start_buff) // skip null lines
+			if (work_buffer_ptr != start_buff) 						// skip null input lines
 			{
-				strcpy(&ring_buffer[rb_in_idx++][0], work_buffer);
-				if (rb_in_idx > _CMD_BUFFER_DEPTH - 1)
-					rb_in_idx = 0;
-				rb_out_idx = rb_in_idx;
+				if (strcmp(work_buffer, previous_work_buffer) != 0)	// remove duplicates
+				{
+					strcpy(&ring_buffer[rb_in_idx++][0], work_buffer);
+					if (rb_in_idx > _CMD_BUFFER_DEPTH - 1)
+						rb_in_idx = 0;
+					rb_out_idx = rb_in_idx;
+					strcpy(previous_work_buffer, work_buffer);
+				}
 			}
+
 
 			printf("\r\n");						// move cursor to next line
 
@@ -363,6 +378,9 @@ int main(void) {
 				}
 			}
 		}
+
+
+//*****************************************************************************************************		
 		/* do suff while waiting or the keyboard */
 
 	}
