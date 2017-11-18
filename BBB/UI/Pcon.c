@@ -277,6 +277,7 @@ int main(void) {
 					if (rb_in_idx > _CMD_BUFFER_DEPTH - 1)
 						rb_in_idx = 0;
 					rb_out_idx = rb_in_idx;
+					memset(previous_work_buffer, '\0', sizeof(work_buffer));
 					strcpy(previous_work_buffer, work_buffer);
 				}
 			}
@@ -320,20 +321,24 @@ int main(void) {
 				printf("\r> %s", work_buffer);
 				printf("\033[u");	// Restore cursor position
 			}
-			else {
+			else 
+			{
 				mv = work_buffer_ptr - input_ptr;
 				input_ptr--;
 				hptr = input_ptr;
-				// *input_ptr = '*';
-				while (input_ptr < work_buffer_ptr) {
+				while (input_ptr < work_buffer_ptr)	// shift buffer left
+				{
 					*input_ptr = *(input_ptr + 1);
 					input_ptr++;
 				}
 				input_ptr = hptr;
 				*work_buffer_ptr-- = '\0';
 				*work_buffer_ptr = '\0';
+
+				printf("\r");
 				printf("\033[K");	// Erase to end of line
-				printf("\r> %s", work_buffer);
+				prompt(cmd_fsm_cb.state);
+				printf("%s", work_buffer);
 				while (mv > 0) {
 					printf("\033[1D");	// move cursor left
 					mv--;
