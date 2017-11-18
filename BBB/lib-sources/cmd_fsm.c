@@ -1772,7 +1772,7 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 		case 1:	// error in action routine
 			// printf("error returned from action routine\n\r");
 			while (pop_cmd_q(cmd_fsm_cb.token)); 			//empty command queue
-			strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
+			strcpy(cmd_fsm_cb.prompt_buffer, "error returned from an action routine\n\renter a command");
 			break;
 		case 2: 	// token failed range check	
 			break;
