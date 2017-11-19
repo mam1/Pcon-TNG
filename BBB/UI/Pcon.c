@@ -53,7 +53,6 @@ int 		cmd_buffer_push_index, cmd_buffer_pop_index;
 char 		cmd_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE + 1]; // array to hold multiple single arrays of characters
 
 uint8_t 		c;       			// character typed on keyboard
-// int				char_state;			// current state of the character processing fsm
 int 			prompted = false;	// has a prompt been sent
 int 			fd;					// file descriptor for ipc data file
 char 			work_buffer[_INPUT_BUFFER_SIZE];				// contains the user input	
@@ -68,8 +67,6 @@ int 			rb_in_idx, rb_out_idx;
 int 			mv;
 int  			escape;				// have we just processed an escape
 
-
-
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 char *day_names_short[7] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -78,26 +75,12 @@ char *con_mode[3] = {"manual", "  time", "time & sensor"};
 char *sch_mode[2] = {"day", "week"};
 char *mode[4] = {"manual", "  time", "sensor", " cycle"};
 
-/***************************** support routines ********************************/
-
-/* prompt for user input */
-void prompt(int s) {
-
-	// printf("************** prompt called\r\n");
-	// printf("********** record count before call to build_prompt %i\r\n", cmd_fsm_cb.w_template_buffer.rcnt);
-	build_prompt(&cmd_fsm_cb);
-	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer, s);
-	// printf("************** prompt returning\r\n");
-	return;
-}
-
 /********************************************************************/
 /************************** start main  *****************************/
 /********************************************************************/
 
-int main(void) {
-
-
+int main(void) 
+{
 	int 			i;
 	char 			*ppp;
 
@@ -115,12 +98,13 @@ int main(void) {
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
 
 	/* setup control block pointers */
-	cmd_fsm_cb.ipc_ptr = ipc_ptr;					 	//set pointer to shared memory
-	cmd_fsm_cb.sys_ptr = &(ipc_ptr->sys_data);		 	//set pointer to system data in shared memory
-	cmd_fsm_cb.ssch_ptr = &ipc_ptr->sys_data.sys_sch; 	//set pointer to active shecule in shared memory
-	cmd_fsm_cb.wsch_ptr = &cmd_fsm_cb.w_sch;		 	//set pointer to working schedule
+	cmd_fsm_cb.ipc_ptr = ipc_ptr;					 	// set pointer to shared memory
+	cmd_fsm_cb.sys_ptr = &(ipc_ptr->sys_data);		 	// set pointer to system data in shared memory
+	cmd_fsm_cb.ssch_ptr = &ipc_ptr->sys_data.sys_sch; 	// set pointer to active shecule in shared memory
+	cmd_fsm_cb.wsch_ptr = &cmd_fsm_cb.w_sch;		 	// set pointer to working schedule
 
-	if (sys_comp(&(ipc_ptr->sys_data.config)))
+	/* check system versions */
+	if (sys_comp(&(ipc_ptr->sys_data.config)))			
 	{
 		printf("*** the system configuration in shared memory and in the application are different\n update shared memory? (y)|(n) > ");
 		if (getchar() == 'y')
@@ -153,9 +137,9 @@ int main(void) {
 	cmd_fsm_cb.w_sen_dat.description[1] = '\0';
 
 	/* initialize state machines */
-	cmd_fsm_reset(&cmd_fsm_cb); 				//initialize the command processor fsm
-	char_fsm_reset();
-	char_state = 0;								//initialize the character fsm
+	cmd_fsm_reset(&cmd_fsm_cb); 				// initialize the command processor fsm
+	char_fsm_reset();							// initialize the character fsm
+	char_state = 0;								
 
 	/* initialize input buffer */
 	memset(work_buffer, '\0', sizeof(work_buffer));
@@ -179,6 +163,7 @@ int main(void) {
 	fcntl(STDOUT_FILENO, F_SETFL, flags | O_NONBLOCK);
 	escape = false;
 
+	/* initialize user interface */
 	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
 	printf(" System version (app) %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
 	printf(" System version (shr mem) %d.%d.%d\n\r", ipc_ptr->sys_data.config.major_version, ipc_ptr->sys_data.config.minor_version, ipc_ptr->sys_data.config.minor_revision);
@@ -254,13 +239,22 @@ int main(void) {
 				break;
 		/* ESC */		default:
 				escape = true;
-				while (pop_cmd_q(cmd_fsm_cb.token)); 	//empty command queue
-				cmd_fsm_reset(&cmd_fsm_cb);				//reset command fsm
-				memset(work_buffer, '\0', sizeof(work_buffer));	//clean out work buffer
-				work_buffer_ptr = work_buffer;
-				char_fsm_reset();						//reset char fsm
-				prompted = false;						//force a prompt
-				strcpy(cmd_fsm_cb.prompt_buffer, "\r\n\ncommand processor reset\n\r\nenter a command");
+				while (pop_cmd_q(cmd_fsm_cb.token)); 						// empty command queue
+				
+				memset(work_buffer, '\0', sizeof(work_buffer));				// clean out work buffer
+				memset(previous_work_buffer, '\0', sizeof(work_buffer));	// clean out previous command buffer
+
+				work_buffer_ptr = work_buffer;				// set pointer to start of buffer
+				input_ptr = work_buffer;					// set pointer to start of buffer
+
+				cmd_fsm_reset(&cmd_fsm_cb); 				// initialize the command processor fsm
+				char_fsm_reset();							// initialize the character fsm
+				char_state = 0;								
+
+				prompted = false;											// force a prompt
+				strcpy(cmd_fsm_cb.prompt_buffer, "\r\n\ncommand processor reset\n\renter a command");
+
+				continue;
 				break;
 			}
 
@@ -307,19 +301,18 @@ int main(void) {
 
 			break;
 	/* DEL */	case _DEL:
-			if (work_buffer_ptr <= start_buff)
+			if (input_ptr == start_buff)
 				break;
 
 			if (input_ptr == work_buffer_ptr) {	// no arrow keys in play
 				*work_buffer_ptr-- = '\0';
 				*work_buffer_ptr = '\0';
 				input_ptr = work_buffer_ptr;
-
-				printf("\033[1D");	// move cursor left
-				printf("\033[K");	// Erase to end of line
-				printf("\033[s");	// save cursor position
-				printf("\r> %s", work_buffer);
-				printf("\033[u");	// Restore cursor position
+				printf("\r");
+				prompt(cmd_fsm_cb.state);		// display user prompt
+				printf("%s", work_buffer);		// print work_buffer
+				printf("\033[K");				// Erase to end of line
+				prompted = true;
 			}
 			else 
 			{
@@ -347,23 +340,17 @@ int main(void) {
 			break;
 
 	/* OTHER */ default:
-			if (escape == true)
-				escape = false;
-			else
+
+			if (work_buffer_ptr <= end_buff)		// room to add character ?
 			{
-				if (work_buffer_ptr < end_buff)	// room to add character ?
+				if (input_ptr == work_buffer_ptr) 	// cursor is at the end of the input buffer
 				{
-					if (input_ptr == work_buffer_ptr)
-					{	// no arrow keys in play
-
-						*work_buffer_ptr++ = c;
-						input_ptr = work_buffer_ptr;
-						printf("%c", c);
-
-					}
+					*work_buffer_ptr++ = c;
+					input_ptr = work_buffer_ptr;
+					printf("%c", c);
 				}
-				else
-				{	// cursor is not at the end of the input buffer
+				else 								// cursor is not at the end of the input buffer
+				{	
 					move_ptr = work_buffer_ptr++;
 					move_ptr++;
 					*move_ptr-- = '\0';
@@ -374,7 +361,14 @@ int main(void) {
 					}
 					*input_ptr++ = c;
 					mv = work_buffer_ptr - input_ptr;
-					printf("\r> %s", work_buffer);
+
+					// printf("\r> %s", work_buffer);
+
+					printf("\r");
+					printf("\033[K");	// Erase to end of line
+					prompt(cmd_fsm_cb.state);
+					printf("%s", work_buffer);
+					
 					while (mv > 0)
 					{
 						printf("\033[1D");	// move cursor left
@@ -396,6 +390,19 @@ int main(void) {
 	return 0;
 }
 
+/********************************************************************/
+/*************************** end main  ******************************/
+/********************************************************************/
+
+
+/***************************** support routines ********************************/
+/* prompt for user input */
+void prompt(int s) {
+
+	build_prompt(&cmd_fsm_cb);
+	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer, s);
+	return;
+}
 
 int term(int t) {
 	// semctl(semid, 0, IPC_RMID, dummy);
