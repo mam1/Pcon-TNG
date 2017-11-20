@@ -40,6 +40,7 @@ typedef struct {
 	int 		sensor_id;  		// sensor id of sensor associated with the channel
 	int 		sensor_assigned;
 	char 		name[_CHANNEL_NAME_SIZE];
+	int 		hide; 				// do not dispplay channel data
 } _CHN_DAT;
 
 // typedef struct sl_node {

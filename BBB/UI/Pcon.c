@@ -277,7 +277,7 @@ int main(void)
 			}
 
 
-			printf("\r\n");						// move cursor to next line
+			printf("\n\r");						// move cursor to next line
 
 			*work_buffer_ptr++ = _CR;			// load the CR into the work buffer
 			*work_buffer_ptr++ = '\0';			// load the NULL into the work buffer
@@ -289,14 +289,10 @@ int main(void)
 
 			work_buffer_ptr = work_buffer;		// reset pointer
 			input_ptr = work_buffer_ptr;		// reset pointer
-			cursor_ptr = screen_buf;			// reset pointer
+			// cursor_ptr = screen_buf;			// reset pointer
 
 			memset(work_buffer, '\0', sizeof(work_buffer));
 			memset(screen_buf, '\0', sizeof(screen_buf));
-
-			// strcpy(screen_buf,cmd_fsm_cb.prompt_buffer);
-			// printf("%s",screen_buf);
-
 			memset(&ring_buffer[rb_in_idx][0], '\0', _INPUT_BUFFER_SIZE);
 
 			break;
@@ -368,7 +364,7 @@ int main(void)
 					printf("\033[K");	// Erase to end of line
 					prompt(cmd_fsm_cb.state);
 					printf("%s", work_buffer);
-					
+
 					while (mv > 0)
 					{
 						printf("\033[1D");	// move cursor left
@@ -397,10 +393,24 @@ int main(void)
 
 /***************************** support routines ********************************/
 /* prompt for user input */
-void prompt(int s) {
-
+void prompt(int s) 
+{
 	build_prompt(&cmd_fsm_cb);
 	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer, s);
+	return;
+}
+
+void arrow_reprompt(void)
+{
+	strcpy(work_buffer, &ring_buffer[rb_out_idx][0]);
+	printf("\r");
+	prompt(cmd_fsm_cb.state);		// display user prompt
+	printf("%s", work_buffer);		// print work_buffer
+	printf("\033[K");				// Erase to end of line
+	work_buffer_ptr = work_buffer;
+	while (*work_buffer_ptr++);		// move pointer to end of line
+	input_ptr = --work_buffer_ptr;
+	prompted = true;
 	return;
 }
 
@@ -441,16 +451,3 @@ void term1(void) {
 	return;
 }
 
-void arrow_reprompt(void)
-{
-	strcpy(work_buffer, &ring_buffer[rb_out_idx][0]);
-	printf("\r");
-	prompt(cmd_fsm_cb.state);		// display user prompt
-	printf("%s", work_buffer);		// print work_buffer
-	printf("\033[K");				// Erase to end of line
-	work_buffer_ptr = work_buffer;
-	while (*work_buffer_ptr++);		// move pointer to end of line
-	input_ptr = --work_buffer_ptr;
-	prompted = true;
-	return;
-}
