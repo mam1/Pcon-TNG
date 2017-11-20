@@ -384,12 +384,17 @@ void cmd_fsm_reset(_CMD_FSM_CB *cb) {
 
 /* build a prompt that is correct for the active state */
 void build_prompt(_CMD_FSM_CB * cb){
-	switch(cb->state){
+	switch(cb->state)
+	{
 		case 4:
 			strcpy(cb->prompt_buffer, "\r\n editing schedule buffer\n\r");
 			load_temps(&cb->w_template_buffer, cb->prompt_buffer);
 			strcat(cb->prompt_buffer, "\r\nenter a command or time");
 			break;
+
+		default:
+			;
+			
 	}
 	return;
 }

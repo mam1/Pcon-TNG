@@ -9,14 +9,14 @@
 
 /* Pcon version info */
 #define _MAJOR_VERSION_Pcon    	13
-#define _MINOR_VERSION_Pcon   	3
-#define _MINOR_REVISION_Pcon   	4
-
+#define _MINOR_VERSION_Pcon   	4
+#define _MINOR_REVISION_Pcon   	3
 
 // #define _TRACE 				// turn on trace
 #include "shared.h"
 
 /* fuctions */
+void prompt(int);
 int term(int);
 void term1(void);
 void disp_sys(void);
