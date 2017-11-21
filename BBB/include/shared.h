@@ -98,15 +98,15 @@
 #define _BYTES_PER_DAY 			_NUMBER_OF_CHANNELS * _BYTES_PER_SCHEDULE 	
 
 /*	gpio pin assignment {header,pin,gpio}  	*/
-#define _CHAN0			{8,27,86}
-#define _CHAN1			{8,28,88}
-#define _CHAN2			{8,29,87}
-#define _CHAN3			{8,30,89}
-#define _CHAN4			{8,31,10}
-#define _CHAN5			{8,32,11}
-#define _CHAN6			{8,33,9}
-#define _CHAN7			{8,34,81}
-#define _CHAN8			{8,35,8}
+#define _CHAN0			{8,16,46}
+#define _CHAN1			{8,17,27}
+#define _CHAN2			{8,18,65}
+#define _CHAN3			{8,26,61}
+#define _CHAN4			{9,12,60}
+#define _CHAN5			{9,15,48}
+#define _CHAN6			{9,23,49}
+#define _CHAN7			{9,41,20}
+#define _CHAN8			{8,41,20}
 #define _CHAN9			{8,36,80}
 #define _CHAN10			{8,37,78}
 #define _CHAN11			{8,38,79}
@@ -114,10 +114,48 @@
 #define _CHAN13			{8,40,77}
 #define _CHAN14			{8,41,74}
 #define _CHAN15			{8,42,75}
-#define _HB0 			{8,43,72}
-#define _HB1 			{8,44,73}
-#define _HB2 			{8,45,70}
-#define _HB3 			{8,46,71}
+#define _HB0 			{8,7,66}
+#define _HB1 			{8,9,67}
+#define _HB2 			{8,8,69}
+#define _HB3 			{8,10,68}
+
+// #define _CHAN0			{8,27,86}
+// #define _CHAN1			{8,28,88}
+// #define _CHAN2			{8,29,87}
+// #define _CHAN3			{8,30,89}
+// #define _CHAN4			{8,31,10}
+// #define _CHAN5			{8,32,11}
+// #define _CHAN6			{8,33,9}
+// #define _CHAN7			{8,34,81}
+// #define _CHAN8			{8,35,8}
+// #define _CHAN9			{8,36,80}
+// #define _CHAN10			{8,37,78}
+// #define _CHAN11			{8,38,79}
+// #define _CHAN12			{8,39,76}
+// #define _CHAN13			{8,40,77}
+// #define _CHAN14			{8,41,74}
+// #define _CHAN15			{8,42,75}
+// #define _HB0 			{8,43,72}
+// #define _HB1 			{8,44,73}
+// #define _HB2 			{8,45,70}
+// #define _HB3 			{8,46,71}
+
+
+ // #define _GPIOS            66,  67,  69,  68,  45,  44,  26,  115,  46,  27,  65,  61,  60,  48,  49,  20	
+ // #define _HEADERS			 8,   8,   8,   8,   8,   8,   8,   9,   8,   8,   8,   8,   9,   9,   9,   9
+ // #define _PINS  				 7,   9,   8,  10,  11,  12,  14,  27,  16,  17,  18,  26,  12,  15,  23,  41	 		
+
+ // #define _R1_CAPE		16
+ // #define _R2_CAPE		17
+ // #define _R3_CAPE		18
+ // #define _R4_CAPE		26
+  
+ // /* map P9 header pins  */
+ // #define _R5_CAPE		12
+ // #define _R6_CAPE		15
+ // #define _R7_CAPE		23
+ // #define _R8_CAPE		41
+
 
 /* general */
 #define _DAYS_PER_WEEK 	7
