@@ -355,6 +355,8 @@ void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 
 	for (channel=0; channel < _NUMBER_OF_CHANNELS; channel++)
 	{
+		if(cb->sys_ptr->c_data[channel].hide == _TRUE)
+			continue;
 		/* print channel header */
 		printf("\r\nchannel %i <%s>\r\n", channel, cb->sys_ptr->c_data[channel].name);
 
