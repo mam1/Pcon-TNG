@@ -68,7 +68,7 @@ $(program_NAME): $(program_OBJS)
 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 
 # move the executable to the bone
-	bload bone1
+	bload bone2
 
 # clean up
 	@- $(RM) -v $(program_NAME)
