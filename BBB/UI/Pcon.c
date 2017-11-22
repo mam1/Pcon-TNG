@@ -52,12 +52,12 @@ struct sembuf sb = {0, -1, 0};  /* set to allocate resource */
 int 		cmd_buffer_push_index, cmd_buffer_pop_index;
 char 		cmd_buffer[_CMD_BUFFER_DEPTH][_INPUT_BUFFER_SIZE + 1]; // array to hold multiple single arrays of characters
 
-uint8_t 		c;       			// character typed on keyboard
-int 			prompted = false;	// has a prompt been sent
-int 			fd;					// file descriptor for ipc data file
-char 			work_buffer[_INPUT_BUFFER_SIZE];				// contains the user input	
+uint8_t 		c;											// character typed on keyboard
+int 			prompted = false;							// has a prompt been sent
+int 			fd;											// file descriptor for ipc data file
+char 			work_buffer[_INPUT_BUFFER_SIZE];			// contains the user input	
 char 			*work_buffer_ptr, *end_buff, *start_buff, *move_ptr;
-char 			previous_work_buffer[_INPUT_BUFFER_SIZE]; 		// points to the  previous user input
+char 			previous_work_buffer[_INPUT_BUFFER_SIZE];	// points to the  previous user input
 
 char 			screen_buf[_SCREEN_BUFFER_SIZE], *cursor_ptr;
 char 			*input_ptr, *hptr;
