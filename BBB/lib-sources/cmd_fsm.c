@@ -1587,6 +1587,7 @@ int c_66(_CMD_FSM_CB * cb)
 {
 
 	printf("\nSystem configuration\r\n");
+	printf(" Git tag - %s\r\n", _TAG);
 	printf(" System version (app) %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
 	printf(" System version (shr mem) %d.%d.%d\n\r", (cb->ipc_ptr)->sys_data.config.major_version, (cb->ipc_ptr)->sys_data.config.minor_version,(cb->ipc_ptr)->sys_data.config.minor_revision);
 	printf(" Inter Process Commucination support %d.%d.%d\n\r", _MAJOR_VERSION_ipc, _MINOR_VERSION_ipc, _MINOR_REVISION_ipc);
