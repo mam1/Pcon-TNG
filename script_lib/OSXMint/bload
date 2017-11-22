@@ -11,7 +11,7 @@ if [ $# == 0 ]
 		read answr
 		if [ "$answr" == "bone1" ] 
 		then
-			target_IP=192.168.254.34
+			target_IP=192.168.254.206
 		else
 				if [ "$answr" == "bone2" ]
 				then
