@@ -10,7 +10,7 @@
 /* Pcon version info */
 #define _MAJOR_VERSION_Pcon    	13
 #define _MINOR_VERSION_Pcon   	4
-#define _MINOR_REVISION_Pcon   	5
+#define _MINOR_REVISION_Pcon   	6
 
 // #define _TRACE 				// turn on trace
 #include "shared.h"

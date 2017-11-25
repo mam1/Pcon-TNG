@@ -392,7 +392,7 @@ void build_prompt(_CMD_FSM_CB * cb){
 		case 4:
 			strcpy(cb->prompt_buffer, "\r\n editing schedule buffer\n\r");
 			load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-			strcat(cb->prompt_buffer, "\r\nenter a command or time");
+			strcat(cb->prompt_buffer, "enter a command or time");
 			break;
 
 		default:
@@ -487,7 +487,7 @@ int c_1(_CMD_FSM_CB *cb)
 		}
 	}
 	/* build prompt */
-	c_34(cb);  // state 0 prompt
+	strcpy(cb->prompt_buffer, "enter a command");
 	return 0;
 }
 /* display time and date from PCF8563 */
@@ -562,7 +562,7 @@ int c_5(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, "\r\n");
-	c_34(cb);   //append state 0 prompt to prompt buffer
+	strcat(cb->prompt_buffer, "enter a command");   //append state 0 prompt to prompt buffer
 	return 0;
 }
 /* status - display channel data */
@@ -647,7 +647,7 @@ int c_9(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n");
-	c_36(cb);   //append state 0 prompt to prompt buffer
+	strcat(cb->prompt_buffer, "enter a command");   //append state 0 prompt to prompt buffer
 
 	return 0;
 }
@@ -674,7 +674,7 @@ int c_10(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, " turned off and mode set to manual\r\n");
-	c_34(cb);   //append state 0 prompt to prompt buffer
+	strcat(cb->prompt_buffer, "enter a command");   //append state 0 prompt to prompt buffer
 
 	return 0;
 }
@@ -696,7 +696,7 @@ int c_11(_CMD_FSM_CB *cb)
 	sprintf(numstr, "%d", cb->w_channel);
 	strcat(cb->prompt_buffer, numstr);
 	strcat(cb->prompt_buffer, " mode set to time\r\n");
-	c_36(cb);   //append state 0 prompt to prompt buffer
+	strcat(cb->prompt_buffer, "enter a command");   //append state 0 prompt to prompt buffer
 
 	return 0;
 }
