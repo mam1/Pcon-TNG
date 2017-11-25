@@ -3,18 +3,19 @@
 ------
 ### *** under construction and not stable ***
 ------
-These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a Beagle Bone Black (BBB), a BBB custom Control Cape built for this project and a Digital IO Board(s) from Parallax. The hardware supports 16 channels:
+These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a BeagleBone Black (BBB), a BBB custom Control Cape built for this project and Digital IO Board(s) from Parallax. The system supports 16 channels.
 
-Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modules read HDT22 sensors and use a wireless connection to post the data to the cloud (ThingSpeak) and to an Apache sever running on the BBB. The BBB logs the data from the ESP8266 modules. A daemon process running on the BBB decides if a channel should be on or off.  A channel can be controlled by:
+A daemon (Dcon) is started as part of the boot process of the BeagleBone. The daemon decides if a channel should be on or off.  It does this by looking at a memory mapped file (ipc.dat).  If the file does not exist the daemon creates and initializes it.  The memory mapped file creates a persistent space in virtual memory allowing processes to communicate.  It is maintained by a user interface process (Pcon).  Pcon is only active when a user is interacting with the system.  Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modules read HDT22 sensors and use a wireless connection to post the data to the cloud (ThingSpeak) and to an Apache sever running on the BBB. A CGI on the BBB makes the data available to the daemon by updating shared memory and posts the data to a SQL database.
+
+A channel can be controlled by:
 
 * time of day
 * time of day and a sensor value
-* cycle (seconds on, seconds off)
 * manually
 
-The BBB Control Cape (part of this project) connects 16 beaglebone gpio pins to 2 2x10 pin headers.  Each header can drive 1 Paralax Digital IO board (DIOB).  It also connects 4 gpio pins to a heart beat display on the cape.
+The BBB Control Cape (part of this project) maps 16 BeagleBone gpio pins to 2 2x10 pin headers.  Each header can drive 1 Parallax Digital IO board (DIOB).  It also connects 4 gpio pins to a heart beat display on the cape.
 
-The Pcon application runs on the BBB.  It interacts with the daemon using shared memeory.  Pcon provides a state machine driven user interface to configure channels, build and maintain schedules, query sensor and channel data, manually control channel states, etc.
+The Pcon application runs on the BBB.  It interacts with the daemon using shared memory.  Pcon provides a state machine driven user interface to configure channels, build and maintain schedules, query sensor and channel data, manually control channel states, etc.
 - - - - - - - - -
 #### Hardware
   * **BeagleBone Black Rev C - 4GB Flash, adafruit**
@@ -56,13 +57,15 @@ The Pcon application runs on the BBB.  It interacts with the daemon using shared
 
 #### Development Environment:
 
-All code is stored on github.  The repository is cloned on two development machines.  At one site I have a Linux box running Mint 18.x and at the other I have have an iMac running OS X 10.10.x . The Bone is connected to my network. I can access it from either site using ssh. I use rsync to move the binaries from the development machines to the Bone. 
+All code is stored on github.  The repository is cloned on two development machines.  At one site I have a Linux box running Mint 18.x and at the other I have have an iMac running OS X 10.10.x . The Bone is connected to my network. I can access it from either site using ssh. My makefiles use rsync to move the binaries from the development machines to the Bone as part of the build process. 
 
-When cross compiling for the Bone on OS X I am using a tool chain I got from http://will-tm.com/cross-compiling-mac-os-x-mavericks. The only thing I needed to do was to create a case sensitive partition before copying the files from the .dmg file.  On the Linux box I tried installing installing a cross compile tool chain using the Mint software manager and experienced a lot of problems. After spending a lot of time dealing with missing files I gave up and installed the linaro-arm-linux-gnueabihf-4.9-2014.09_linux tool chain and it worked on the first try.
+When cross compiling for the Bone on OS X I am using a tool chain I got from http://will-tm.com/cross-compiling-mac-os-x-mavericks. The only thing I needed to do was to create a case sensitive partition before copying the files from the .dmg file.  On the Linux box I tried installing a cross compile tool chain using the Mint software manager and experienced a lot of problems. After spending a lot of time dealing with missing files I gave up and installed the linaro-arm-linux-gnueabihf-4.9-2014.09_linux tool chain and it worked on the first try.
 
 #### Language
 * C - BBB
 * Lua - ESP8266
+* Bash Script
+* Makes
 
 #### Envirnoment
 * Development machines - core 5i Linux Mint 18.x - OS X 10.11.x
@@ -73,7 +76,7 @@ When cross compiling for the Bone on OS X I am using a tool chain I got from htt
 A channel is controlled by a schedule. There is a different schedule for each day of the week. Each channel has it own set of schedules. Channels 0-7 can switch a 60 volt 1.1 amp loads.  Channels 8 -15 can switch 120 volt 8 amp loads.  Each channel can be set manually to on or off.  Channels and also be controlled by time of day, i.e. on at 8:00 off at 14:30 or sensor value and time.  When a channel is controlled by time and sensor once a minute the remote sensor value is compared to the value stored in the schedule for current time and day of the week. If the actual values exceeds the schedule value the channel is turned off when. If the schedule values is less than the actual value the channel is turned on.  
 
 ##### Schedules:
-A schedule  is a list of times and corresponding states.  A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
+A schedule is a list of times and corresponding states.  A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
 
 * 1:00  on
 * 13:00 off
