@@ -241,7 +241,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  0  temp        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_38,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  1  *           */  { c_7,  c_8,  c_7,  c_7,  c_7, c_32, c_31,  c_7,  c_7, c_31,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  2  humid       */  { c_7,  c_3,  c_7,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_3,  c_7,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  3  schedule    */  {c_35,  c_8,  c_7,  c_7,  c_7,  c_7, c_52,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  3  schedule    */  {c_0,   c_8,  c_7,  c_7,  c_7,  c_7, c_52,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  4  ?           */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  5  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_74,  c_7,  c_7,  c_7,  c_7},
 	/*  6  yes         */  { c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_48,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -1176,8 +1176,8 @@ int  c_35(_CMD_FSM_CB * cb)
 {
 	/* build prompt */
 	// cb->prompt_buffer[0] = '\0';
-	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter a command or time");
+	// load_temps(&cb->w_template_buffer, cb->prompt_buffer);
+	// strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter a command or time");
 	return 0;
 }
 
@@ -1456,7 +1456,7 @@ int c_56(_CMD_FSM_CB * cb)
 		}
 
 	/* build prompt */
-	c_34(cb);
+	// c_34(cb);
 	return 0;
 }
 
@@ -1467,7 +1467,7 @@ int c_57(_CMD_FSM_CB * cb)
 	sch_print(cb, cb->ssch_ptr); // print a formated dump od schedules for each channel and day
 
 	/* build prompt */
-	c_34(cb);
+	// c_34(cb);
 	return 0;
 }
 
@@ -1478,7 +1478,7 @@ int c_58(_CMD_FSM_CB * cb)
 	sch_print(cb, cb->wsch_ptr);  // print a formated dump od schedules for each channel and day
 
 	/* build prompt */
-	c_34(cb);
+	// c_34(cb);
 	return 0;
 }
 

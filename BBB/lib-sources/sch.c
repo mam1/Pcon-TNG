@@ -315,7 +315,7 @@ int load_temps(_TMPL_DAT *t_sch, char *b) {
 	// printf(" ^^^^^^ tbuff <%s>\r\n", tbuff);
 	// printf("************** load temps called, record count %i\r\n", t_sch->rcnt);
 	if (t_sch->rcnt < 1) {
-		strcat(b, "    no records in schedule");
+		strcat(b, "\n\r    no records in schedule\r\n");
 		return 0;
 	}
 	// printf("************** record 2 count %i\r\n", t_sch->rcnt);
