@@ -3,9 +3,9 @@
 ------
 ### *** under construction and not stable ***
 ------
-These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a BeagleBone Black (BBB), a BBB custom Control Cape built for this project and Digital IO Board(s) from Parallax. The system supports 16 channels.
+These are my notes on developing a multi channel programmable HVAC controller. The current iteration of the system is comprised of several ESP8266 modules, a BeagleBone Black (BBB), a BBB custom Control Cape and Digital IO Board(s) from Parallax. The system supports 16 channels.
 
-A daemon (Dcon) is started as part of the boot process of the BeagleBone. The daemon decides if a channel should be on or off.  It does this by looking at a memory mapped file (ipc.dat).  If the file does not exist the daemon creates and initializes it.  The memory mapped file creates a persistent space in virtual memory allowing processes to communicate.  It is maintained by a user interface process (Pcon).  Pcon is only active when a user is interacting with the system.  Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modules read HDT22 sensors and use a wireless connection to post the data to the cloud (ThingSpeak) and to an Apache sever running on the BBB. A CGI on the BBB makes the data available to the daemon by updating shared memory and posts the data to a SQL database.
+A daemon (Dcon) is started as part of the boot process of the BeagleBone. The daemon decides if a channel should be on or off.  It does this by looking at a memory mapped file (ipc.dat). The memory mapped file creates a persistent space in virtual memory allowing processes to communicate.  It is maintained by a user interface process (Pcon).  Pcon is only active when a user is interacting with the system.  Temperature and humidity data is collected by ESP8266 modules. The ESP8266 modules read HDT22 sensors and use a wireless connection to post the data to the cloud (ThingSpeak) and to an Apache sever running on the BBB. A CGI on the BBB makes the data available to the daemon by updating shared memory and posts the data to a SQL database running on the Linux development machine.
 
 A channel can be controlled by:
 
@@ -65,10 +65,12 @@ When cross compiling for the Bone on OS X I am using a tool chain I got from htt
 * C - BBB
 * Lua - ESP8266
 * Bash Script
-* Makes
+* Make
 
 #### Envirnoment
-* Development machines - core 5i Linux Mint 18.x - OS X 10.11.x
+* Development machines
+	*	Mint 18.x - Intel Core i5-6600K 3.5GHz Quad-Core, Asus Z170-A ATX LGA1151 Motherboard Processor
+	*	OS X 10.11.x - 3.4 GHz Intel Core i7 (iMac)
 * BeagleBone Black (rev C)- Debian, jessie
 * ESP8266 (nodeMCU dev board r2) - nodeMCU firmware 
 
@@ -95,12 +97,20 @@ will result in the channel being off between 1:00 - 13:00. It will be on at any 
 will result in the channel turning on at 1:00, off at 13:00 and on at 18:00.  If the current time is between 1:00 and 13:00 the channel will be on, between 13:00 and 18:00 it will be off, between 18:00 and 0:0 it will be on and between 0:0 and 13:00 it will also be on.  
 
 #### Application Architecture
-The ESP8266 modules run independently of other system components.  Each module posts its sensor readings to an Apache web server running on the bone.  A CGI (Scon) loads the readings into a shared memory space that can be accessed by the command processor and the daemon.  The state of each channel is reset once every minute by the daemon process (Dcon), running on the bone.  The daemon does not require the command processor (Pcon) to be active.  The command processor controls the daemon by setting values in a shared memory space implemented with memory mapped file io.  
+##### Interprocess Communication (BBB)
+A memory mapped file is used to create a shared memory space in virtual memory.  This file contains communication, system, schedule and sensor data.  A daemon is started as part of the boot process on the BBB. If the daemon does not find the file it creates and initializes it.  Other processes can access this shared memory space.  Semaphores are used to control access to shared memory.
+##### Processes
+A deamon (Dcon) running on the BBB communicates with the DIOB(s).  It uses data located in a memory mapped file (ipc.dat) and the real time clock to determine the state of each channel. The state of each channel is reset once every minute. The daemon does not require any other processes to be active.
 
+A command processor (Pcon) is the user interface to the system.  It allows the user to modify the data in shared memory.
+
+ESP8266 modules run independently of other system components.  Each module posts its sensor readings to an Apache web server running on the BBB.  A CGI (Scon) loads the readings into  shared memory. 
 ##### Command Processor
+The command processor is the most complex part of this project. 
+
 ![Pcon flow chart](./BBB/UI/Pcon_flow.jpg?raw=true "Pcon flow chart")
 
-The command processor is the most complex part of this project. The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the command processor handle the arrow and delete keys. The command processor maintains a buffer which matches the user's screen. The process loops waiting for a character to be detected.  ESC, Del, up_arrow, down_arrow, left_arrow and right_arrow are handled directly.  An ESC will clear all buffers and reset both state machines.  The delete and arrow commands work as they do on the command line. Any other character is passed to the first state machine (char_fsm).  It parses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor.  
+The use of unbuffered input allows the application to mediately react to the press of the ECS key, but it requires that the command processor handle the arrow and delete keys. The command processor maintains a buffer which matches the user's screen. The process loops waiting for a character to be detected.  ESC, Del, up_arrow, down_arrow, left_arrow and right_arrow are handled directly.  An ESC will clear all buffers and reset both state machines.  The delete and arrow commands work as they do on the command line. Any other character is passed to the first state machine (char_fsm).  It parses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor.  
 
 The command processor pops tokens off the stack and feeds them to a second fsm (cmd_fsm).  It takes some action based on the token.  If more input is required it is popped off the stack, if present, or the user is prompted. This continues until the stack is empty. Then the command processor lets the cms_fsm know there is no more input then continues the main loop, waiting for user input. 
 
