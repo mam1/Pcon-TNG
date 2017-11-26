@@ -490,18 +490,18 @@ int c_1(_CMD_FSM_CB *cb)
 	strcpy(cb->prompt_buffer, "enter a command");
 	return 0;
 }
-/* display time and date from PCF8563 */
+/* display time and date  */
 int c_2(_CMD_FSM_CB *cb)
 {
 	_tm         tm;
-	int         rtc;
+	// int         rtc;
 
-	rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
+	// rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 	get_tm(&tm);							// read the clock
-	sleep(1);
+	// sleep(1);
 	printf(" %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
-	close(rtc);
+	// close(rtc);
 	printf("\n\r");
 	strcpy(cb->prompt_buffer, "enter a command");
 	return 0;

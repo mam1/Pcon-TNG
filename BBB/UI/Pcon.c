@@ -240,19 +240,16 @@ int main(void)
 		/* ESC */		default:
 				escape = true;
 				while (pop_cmd_q(cmd_fsm_cb.token)); 						// empty command queue
-				
 				memset(work_buffer, '\0', sizeof(work_buffer));				// clean out work buffer
 				memset(previous_work_buffer, '\0', sizeof(work_buffer));	// clean out previous command buffer
 
 				work_buffer_ptr = work_buffer;				// set pointer to start of buffer
 				input_ptr = work_buffer;					// set pointer to start of buffer
-
-				cmd_fsm_reset(&cmd_fsm_cb); 				// initialize the command processor fsm
 				char_fsm_reset();							// initialize the character fsm
+				cmd_fsm_reset(&cmd_fsm_cb); 				// initialize the command processor fsm
 				char_state = 0;								
-
-				prompted = false;											// force a prompt
-				strcpy(cmd_fsm_cb.prompt_buffer, "\r\n\ncommand processor reset\n\renter a command");
+				prompted = false;							// force a prompt
+				strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
 
 				continue;
 				break;
@@ -305,7 +302,7 @@ int main(void)
 				*work_buffer_ptr = '\0';
 				input_ptr = work_buffer_ptr;
 				printf("\r");
-				prompt(cmd_fsm_cb.state);		// display user prompt
+				prompt(cmd_fsm_cb.state);		// display user prompt				
 				printf("%s", work_buffer);		// print work_buffer
 				printf("\033[K");				// Erase to end of line
 				prompted = true;
