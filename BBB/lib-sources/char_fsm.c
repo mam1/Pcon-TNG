@@ -358,22 +358,16 @@ int char_new_state[_CHAR_TOKENS][_CHAR_STATES] = {
 /****  character input parser state machine end  *****/
 /*****************************************************/
 
-void char_fsm(int c_type, int *state, char *c) {
-#if defined (_ATRACE) || defined (_FTRACE)
-	sprintf(trace_buf, "called with - c_type %d, char<%u>, state %d", c_type, *c, *state);
-	trace(_TRACE_FILE_NAME, "char_fsm", *state, input_buffer, trace_buf, trace_flag);
-#endif
-
+void char_fsm(int c_type, int *state, char *c) 
+{
 	char_action[c_type][*state](c);
 	*state = char_new_state[c_type][*state];
-#if defined (_ATRACE) || defined (_FTRACE)
-	trace(_TRACE_FILE_NAME, "char_fsm", *state, input_buffer, "after state change", trace_flag);
-#endif
 	return;
 }
 
 /* test command queue return: 0 empty queue, -1 toke available */
-int test_cmd_q(void) {
+int test_cmd_q(void) 
+{
 	if (head == '\0')
 		return 0;
 	return -1;

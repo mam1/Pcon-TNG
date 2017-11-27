@@ -35,7 +35,7 @@ _CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 _IPC_DAT 		*ipc_ptr; 							//ipc data
 void			*data = NULL;						//pointer to ipc data
 char           	ipc_file[] = {_IPC_FILE_NAME};  			//name of ipc file
-uint8_t 		cmd_state, char_state;				//fsm current state
+int 		cmd_state, char_state;				//fsm current state
 char 			tbuf[_TOKEN_BUFFER_SIZE];
 key_t 			skey = _SEM_KEY;
 int 			semid;
@@ -82,7 +82,7 @@ char *mode[4] = {"manual", "  time", "sensor", " cycle"};
 int main(void) 
 {
 	int 			i;
-	char 			*ppp;
+	// char 			*ppp;
 
 	/************************ initializations ****************************/
 
@@ -242,13 +242,12 @@ int main(void)
 				while (pop_cmd_q(cmd_fsm_cb.token)); 						// empty command queue
 				memset(work_buffer, '\0', sizeof(work_buffer));				// clean out work buffer
 				memset(previous_work_buffer, '\0', sizeof(work_buffer));	// clean out previous command buffer
-
-				work_buffer_ptr = work_buffer;				// set pointer to start of buffer
-				input_ptr = work_buffer;					// set pointer to start of buffer
-				char_fsm_reset();							// initialize the character fsm
-				cmd_fsm_reset(&cmd_fsm_cb); 				// initialize the command processor fsm
+				work_buffer_ptr = work_buffer;								// set pointer to start of buffer
+				input_ptr = work_buffer;									// set pointer to start of buffer
+				char_fsm_reset();											// initialize the character fsm
+				cmd_fsm_reset(&cmd_fsm_cb); 								// initialize the command processor fsm
 				char_state = 0;								
-				prompted = false;							// force a prompt
+				prompted = false;											// force a prompt
 				strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
 
 				continue;
@@ -282,7 +281,10 @@ int main(void)
 			char_fsm_reset();					// reset char_fsm
 
 			while (*work_buffer_ptr != '\0')	// send characters to char_fsm
-				char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr++);
+			{	
+				char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr);
+				work_buffer_ptr++;
+			}
 
 			work_buffer_ptr = work_buffer;		// reset pointer
 			input_ptr = work_buffer_ptr;		// reset pointer
@@ -333,6 +335,11 @@ int main(void)
 			break;
 
 	/* OTHER */ default:
+			// if(escape)
+			// {
+			// 	escape = false;
+			// 	break;
+			// } 
 
 			if (work_buffer_ptr <= end_buff)		// room to add character ?
 			{

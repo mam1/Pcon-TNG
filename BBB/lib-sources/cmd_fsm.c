@@ -469,14 +469,16 @@ int c_1(_CMD_FSM_CB *cb)
 		}
 	}
 	/* print list of valid commands */
-	for (i = 0; i < _CMD_TOKENS; i++) {
+	for (i = 0; i < _CMD_TOKENS; i++) 
+	{
 		if ((cmd_action[i][cb->state] == c_8) || (cmd_action[i][cb->state] == c_7) || (cmd_action[i][cb->state] == c_0)
 		        || (cmd_action[i][cb->state] == c_1) || (cmd_action[i][cb->state] == c_3) || (cmd_action[i][cb->state] == c_34)
 		        || (cmd_action[i][cb->state] == c_2) || (cmd_action[i][cb->state] == c_6) || (cmd_action[i][cb->state] == c_55)
 		        || (cmd_action[i][cb->state] == c_57) || (cmd_action[i][cb->state] == c_58) || (cmd_action[i][cb->state] == c_26) 
 		        || (cmd_action[i][cb->state] == c_56) || (cmd_action[i][cb->state] == c_66))
 			continue;
-		else {
+		else 
+		{
 			printf("  %s ", keyword[i]);
 			for (ii = 0; ii < ((dots + 2) - strlen(keyword[i])); ii++)
 				printf(".");
@@ -515,25 +517,20 @@ int c_3(_CMD_FSM_CB *cb)
 /* set working channel number */
 int c_4(_CMD_FSM_CB *cb)
 {
-	if (cb->token_value < _NUMBER_OF_CHANNELS) {
+	if (cb->token_value < _NUMBER_OF_CHANNELS) 
+	{
 		cb->w_channel = cb->token_value;
 		cb->w_minutes = 0;
 		cb->w_hours = 0;
 		strcpy(cb->prompt_buffer, "enter action for channel ");
 		strcat(cb->prompt_buffer, cb->token);
-		// strcat(cb->prompt_buffer, "\n\r> ");
-
-#if defined (_ATRACE) || defined (_FTRACE)
-		sprintf(trace_buf, "c_4 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
-		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-		sprintf(trace_buf, "c_4 set working channel to %i\n", cb->w_channel);
-		strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-#endif
-
 		return 0;
 	}
-	strcpy(cb->prompt_buffer, "channel number must be 0 to 15\r\n> ");
-	return 1;
+	else
+	{
+		strcpy(cb->prompt_buffer, "channel number must be 0 to 15\r\nenter a command");
+		return 1;
+	}
 }
 /* set channel name for working channel */
 int c_5(_CMD_FSM_CB *cb)
@@ -1743,14 +1740,6 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 {
 	int         num, index;
 
-
-	// cb->token_type = cmd_type(cb->token);
-
-// #if defined (_ATRACE) || defined (_FTRACE)
-// 	sprintf(trace_buf, "cmd_fsm called: token <%s>, token value <%i>, token type <%i>, state <%i>, new token type <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state, token_type(cb->token));
-// 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-// #endif
-
 	/* set up control block values based on token type */
 	cb->token_type = token_type(cb->token);
 	switch (cb->token_type) {
@@ -1783,11 +1772,6 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 		index = cb->token_value;
 	}
 
-// #if defined (_ATRACE) || defined (_FTRACE)
-// 	sprintf(trace_buf, "cmd_fsm called before setting new state: index <%i>token <%s>, token value <%i>, token type <%i>, state <%i>\n", index, cb->token, cb->token_value, cb->token_type, cb->state);
-// 	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-// #endif
-
 	switch(cmd_action[index][cb->state](cb))				// fire off a fsm action routine
 	{
 		case 0:		// all is well
@@ -1796,7 +1780,7 @@ void cmd_fsm(_CMD_FSM_CB * cb)
 		case 1:	// error in action routine
 			// printf("error returned from action routine\n\r");
 			while (pop_cmd_q(cmd_fsm_cb.token)); 			//empty command queue
-			strcpy(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
+			// strcpy(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
 			break;
 		case 2: 	// token failed range check	
 			break;
