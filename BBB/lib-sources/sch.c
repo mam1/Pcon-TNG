@@ -315,7 +315,7 @@ int load_temps(_TMPL_DAT *t_sch, char *b) {
 	// printf(" ^^^^^^ tbuff <%s>\r\n", tbuff);
 	// printf("************** load temps called, record count %i\r\n", t_sch->rcnt);
 	if (t_sch->rcnt < 1) {
-		strcat(b, "\n\r    no records in schedule\r\n");
+		strcat(b, "\n\r  no records in schedule\r\n");
 		return 0;
 	}
 	// printf("************** record 2 count %i\r\n", t_sch->rcnt);
@@ -330,13 +330,13 @@ int load_temps(_TMPL_DAT *t_sch, char *b) {
 		con_key(t_sch->rec[i].key, &h, &m);
 		// printf("           record count a %i\r\n", t_sch->rcnt);
 		// printf("           tbuff ((%s))\r\n",tbuff);
-		sprintf(tbuff, "\r    %02i:%02i - state %i temp %0.2f humid %0.2f\r\n",
+		sprintf(tbuff, "\n\r  %02i:%02i - state %i temp %0.2f humid %0.2f\r\n",
 		        h, m, t_sch->rec[i].state, t_sch->rec[i].temp, t_sch->rec[i].humid);
 		// printf("           record count %i\r\n", t_sch->rcnt);
 
 		// printf("\n\r      tbuff ((%s))\r\n", tbuff);
 		// printf("\n\r      b ((%s))\n\r", b);
-		strcat(b, tbuff);
+		strcpy(b, tbuff);
 		// printf("           record count end of loop  %i\r\n", t_sch->rcnt);
 	}
 

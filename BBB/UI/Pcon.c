@@ -248,7 +248,10 @@ int main(void)
 				cmd_fsm_reset(&cmd_fsm_cb); 								// initialize the command processor fsm
 				char_state = 0;								
 				prompted = false;											// force a prompt
-				strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
+				// strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
+				// strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
+				printf("\n\rcommand processor reset\n\r");
+				strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
 
 				continue;
 				break;
@@ -304,7 +307,7 @@ int main(void)
 				*work_buffer_ptr = '\0';
 				input_ptr = work_buffer_ptr;
 				printf("\r");
-				prompt(cmd_fsm_cb.state);		// display user prompt				
+				del_prompt(cmd_fsm_cb.state);		// display user prompt				
 				printf("%s", work_buffer);		// print work_buffer
 				printf("\033[K");				// Erase to end of line
 				prompted = true;
@@ -325,7 +328,7 @@ int main(void)
 
 				printf("\r");
 				printf("\033[K");	// Erase to end of line
-				prompt(cmd_fsm_cb.state);
+				del_prompt(cmd_fsm_cb.state);
 				printf("%s", work_buffer);
 				while (mv > 0) {
 					printf("\033[1D");	// move cursor left
@@ -401,6 +404,28 @@ int main(void)
 void prompt(int s) 
 {
 	build_prompt(&cmd_fsm_cb);
+	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer, s);
+	return;
+}
+
+/* prompt for user input after a character is deleted*/
+void del_prompt(int s) 
+{
+	int 		index, start, end;
+
+
+	// build_prompt(&cmd_fsm_cb);
+
+	// if((cmd_fsm_cb.prompt_buffer[0] == '\n') || (cmd_fsm_cb.prompt_buffer[0] == '\r') || 
+	//    (cmd_fsm_cb.prompt_buffer[1] == '\n') || (cmd_fsm_cb.prompt_buffer[1] == '\r'))
+	// {
+	// 	index = 0;
+	// 	while((index < _PROMPT_BUFFER_SIZE) && (cmd_fsm_cb.prompt_buffer[index] != '\0'))
+	// 	{
+	// 		cmd_fsm_cb.prompt_buffer[index] = cmd_fsm_cb.prompt_buffer[index + 2];
+	// 		index += 1;
+	// 	}
+	// }
 	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer, s);
 	return;
 }

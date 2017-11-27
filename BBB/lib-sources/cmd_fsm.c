@@ -386,13 +386,21 @@ void cmd_fsm_reset(_CMD_FSM_CB *cb) {
 }
 
 /* build a prompt that is correct for the active state */
-void build_prompt(_CMD_FSM_CB * cb){
+void build_prompt(_CMD_FSM_CB * cb)
+{
+	char 			pbuff[_PROMPT_BUFFER_SIZE];
+	memset(pbuff, '\0', _PROMPT_BUFFER_SIZE);
 	switch(cb->state)
 	{
+		case 0:
+			strcpy(cb->prompt_buffer, "enter a command or channel number");
+			break;
+
 		case 4:
-			strcpy(cb->prompt_buffer, "\r\n editing schedule buffer\n\r");
-			load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-			strcat(cb->prompt_buffer, "enter a command or time");
+			printf("\r\n editing schedule buffer");
+			load_temps(&cb->w_template_buffer, pbuff);
+			printf("%s",pbuff);
+			strcpy(cb->prompt_buffer, "please enter a command or time");
 			break;
 
 		default:
@@ -431,9 +439,9 @@ void sedit_prompt(_CMD_FSM_CB * cb){
 /* do nothing */
 int c_0(_CMD_FSM_CB *cb)
 {
-	cb->prompt_buffer[0] = '\0';
-	cb->prompt_buffer[1] = ' ';
-	cb->prompt_buffer[2] = '\0';
+	// cb->prompt_buffer[0] = '\0';
+	// cb->prompt_buffer[1] = ' ';
+	// cb->prompt_buffer[2] = '\0';
 	return 0;
 }
 /* display all valid commands for the current state */
@@ -616,9 +624,9 @@ int c_8(_CMD_FSM_CB *cb)
 {
 	strcpy(cb->prompt_buffer, "'");
 	strcat(cb->prompt_buffer, cb->token);
-	strcat(cb->prompt_buffer, "' is not a valid command\n\r");
-	printf("%s", cb->prompt_buffer);
-	strcpy(cb->prompt_buffer, "\0");
+	strcat(cb->prompt_buffer, "' is not a valid command\n\renter a command > ");
+	// printf("%s", cb->prompt_buffer);
+	// strcpy(cb->prompt_buffer, "\0");
 	return 1;
 }
 /* set channel control mode to manual and turn channel on */
@@ -907,7 +915,6 @@ int c_22(_CMD_FSM_CB *cb)
 	int 			i;
 	_S_REC 			hold;
 
-	// printf("********** c_22 called, record count %i\r\n",cb->w_template_buffer.rcnt);
 	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
 	if (i != -1)
@@ -917,12 +924,8 @@ int c_22(_CMD_FSM_CB *cb)
 		hold.humid = 0;
 	}
 
-	// printf(" ** c_22 after search, record count %i\r\n",cb->w_template_buffer.rcnt);
-
 	/* add new schedule record */
 	add_tmpl_rec(&cb->w_template_buffer, cb->w_hours, cb->w_minutes, 1, hold.temp, hold.humid);
-
-	// printf(" ** c_22 after add_tmpl_rec, record count %i\r\n",cb->w_template_buffer.rcnt);
 
 	/*build prompt */
 	strcpy(cb->prompt_buffer, "\0");
@@ -934,8 +937,8 @@ int c_22(_CMD_FSM_CB *cb)
 // printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",99, "xxxxx");
 
 	// printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",cb->w_template_buffer.rcnt, cb->prompt_buffer);
-	
-	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter command or time");
+	printf("\r\n editing schedule buffer\n\r");
+	strcpy(cb->prompt_buffer, "enter command or time");
 
 	// printf(" ** c_22 returning, record count %i\r\n",cb->w_template_buffer.rcnt);
 	return 0;
