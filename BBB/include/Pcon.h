@@ -17,6 +17,7 @@
 
 /* fuctions */
 void prompt(int);
+void del_prompt(int);
 int term(int);
 void term1(void);
 void disp_sys(void);

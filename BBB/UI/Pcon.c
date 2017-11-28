@@ -165,9 +165,11 @@ int main(void)
 
 	/* initialize user interface */
 	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
+	printf("\nSystem configuration\r\n");
+	printf(" Git tag - %s\r\n", _TAG);
 	printf(" System version (app) %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
 	printf(" System version (shr mem) %d.%d.%d\n\r", ipc_ptr->sys_data.config.major_version, ipc_ptr->sys_data.config.minor_version, ipc_ptr->sys_data.config.minor_revision);
-	printf("initializations complete\r\nenter ? for a list of commands\r\n\n");
+	printf("initializations complete\r\n\nenter ? for a list of commands\r\n\n");
 
 	/* set initial prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "Pcon enter a command");
