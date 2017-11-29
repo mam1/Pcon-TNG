@@ -2,37 +2,46 @@
 #
 #	binload - move binaries from development machine to a bone
 #
-
 if [ $# == 0 ]
 	then
-		printf "\n    bone1=192.168.254.206\n"
-		printf "    bone2=192.168.254.75\n\n"
-		printf "  login to bone1 or bone2? > "
+		printf "\n    bone1=192.168.254.204\n"
+		printf 	 "    bone2=192.168.254.205\n"
+		printf   "    bone3=192.168.254.206\n\n"
+		printf "  enter target > "
 		read answr
 		if [ "$answr" == "bone1" ] 
 		then
-			target_IP=192.168.254.206
+			target_IP=192.168.254.204
 		else
-				if [ "$answr" == "bone2" ]
+			if [ "$answr" == "bone2" ]
 				then
 					target_IP=192.168.254.205
 				else
-					printf "must select bone1 or bone2\nscript aborted\n"
-					exit 1
+					if [ "$answr" == "bone3" ]
+					then
+						target_IP=192.168.254.206
+					else
+						printf "must select bone1, bone2 or bone3\nscript aborted\n"
+						exit 1
+					fi
 				fi
 		fi
 	else
-
 		if [ "$1" == "bone1" ] 
 		then
-			target_IP=192.168.254.206
+			target_IP=192.168.254.204
 		else
 				if [ "$1" == "bone2" ]
 				then
 					target_IP=192.168.254.205
 				else
-					printf "must select bone1 or bone2\nscript aborted\n"
-					exit 1
+					if [ "$1" == "bone3" ]
+					then
+						target_IP=192.168.254.206
+					else
+						printf "must select bone1, bone2 or bone3\nscript aborted\n"
+						exit 1
+					fi
 				fi
 		fi
 	fi 
