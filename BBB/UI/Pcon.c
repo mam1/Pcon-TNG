@@ -168,7 +168,6 @@ int main(void)
 	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
 	printf("\nSystem configuration\r\n");
 	printf(" Git tag - %s\r\n", _TAG);
-	printf(" System version (app) %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
 	printf(" System version (shr mem) %d.%d.%d\n\r", cmd_fsm_cb.ipc_ptr_.sys_data.config.major_version, 
 			cmd_fsm_cb.ipc_ptr->sys_data.config.minor_version,cmd_fsm_cb.ipc_ptr->sys_data.config.minor_revision);
 	printf(" Inter Process Commucination support %d.%d.%d\n\r", _MAJOR_VERSION_ipc, _MINOR_VERSION_ipc, _MINOR_REVISION_ipc);
@@ -176,7 +175,8 @@ int main(void)
 	printf(" Dcon version %d.%d.%d\n\r", _MAJOR_VERSION_Dcon, _MINOR_VERSION_Dcon, _MINOR_REVISION_Dcon);
 	printf(" char_fsm version %d.%d.%d\n\r", _MAJOR_VERSION_char_fsm, _MINOR_VERSION_char_fsm, _MINOR_REVISION_char_fsm);
 	printf(" cmd_fsm version %d.%d.%d\n\n\r", _MAJOR_VERSION_cmd_fsm, _MINOR_VERSION_cmd_fsm, _MINOR_REVISION_cmd_fsm);
-	printf("\n\r");
+
+	printf("initializations complete\r\n\nenter ? for a list of commands\r\n\n");
 
 
 	/* set initial prompt */
