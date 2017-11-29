@@ -1595,7 +1595,6 @@ int c_66(_CMD_FSM_CB * cb)
 	printf(" Dcon version %d.%d.%d\n\r", _MAJOR_VERSION_Dcon, _MINOR_VERSION_Dcon, _MINOR_REVISION_Dcon);
 	printf(" char_fsm version %d.%d.%d\n\r", _MAJOR_VERSION_char_fsm, _MINOR_VERSION_char_fsm, _MINOR_REVISION_char_fsm);
 	printf(" cmd_fsm version %d.%d.%d\n\n\r", _MAJOR_VERSION_cmd_fsm, _MINOR_VERSION_cmd_fsm, _MINOR_REVISION_cmd_fsm);
-	
 	printf("\n\r");
 	strcpy(cb->prompt_buffer, "enter a command");
 

@@ -18,6 +18,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include "Pcon.h"
+#include "Dcon.h"
 #include "typedefs.h"
 #include "char_fsm.h"
 #include "cmd_fsm.h"
@@ -34,8 +35,8 @@ int 			bbb;								//UART1 file descriptor
 _CMD_FSM_CB  	cmd_fsm_cb;							//cmd_fsm control block
 _IPC_DAT 		*ipc_ptr; 							//ipc data
 void			*data = NULL;						//pointer to ipc data
-char           	ipc_file[] = {_IPC_FILE_NAME};  			//name of ipc file
-int 		cmd_state, char_state;				//fsm current state
+char           	ipc_file[] = {_IPC_FILE_NAME};  	//name of ipc file
+int 			cmd_state, char_state;				//fsm current state
 char 			tbuf[_TOKEN_BUFFER_SIZE];
 key_t 			skey = _SEM_KEY;
 int 			semid;
@@ -165,9 +166,18 @@ int main(void)
 
 	/* initialize user interface */
 	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
+	printf("\nSystem configuration\r\n");
+	printf(" Git tag - %s\r\n", _TAG);
 	printf(" System version (app) %d.%d.%d\n\r", _MAJOR_VERSION_system, _MINOR_VERSION_system, _MINOR_REVISION_system);
-	printf(" System version (shr mem) %d.%d.%d\n\r", ipc_ptr->sys_data.config.major_version, ipc_ptr->sys_data.config.minor_version, ipc_ptr->sys_data.config.minor_revision);
-	printf("initializations complete\r\nenter ? for a list of commands\r\n\n");
+	printf(" System version (shr mem) %d.%d.%d\n\r", cmd_fsm_cb.ipc_ptr_.sys_data.config.major_version, 
+			cmd_fsm_cb.ipc_ptr->sys_data.config.minor_version,cmd_fsm_cb.ipc_ptr->sys_data.config.minor_revision);
+	printf(" Inter Process Commucination support %d.%d.%d\n\r", _MAJOR_VERSION_ipc, _MINOR_VERSION_ipc, _MINOR_REVISION_ipc);
+	printf(" Pcon version %d.%d.%d\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
+	printf(" Dcon version %d.%d.%d\n\r", _MAJOR_VERSION_Dcon, _MINOR_VERSION_Dcon, _MINOR_REVISION_Dcon);
+	printf(" char_fsm version %d.%d.%d\n\r", _MAJOR_VERSION_char_fsm, _MINOR_VERSION_char_fsm, _MINOR_REVISION_char_fsm);
+	printf(" cmd_fsm version %d.%d.%d\n\n\r", _MAJOR_VERSION_cmd_fsm, _MINOR_VERSION_cmd_fsm, _MINOR_REVISION_cmd_fsm);
+	printf("\n\r");
+
 
 	/* set initial prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "Pcon enter a command");

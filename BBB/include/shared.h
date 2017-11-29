@@ -9,7 +9,7 @@
 // #define _FTRACE			// trace library functions
 
 /* version info */
-#define _TAG		"v1.0"
+#define _TAG		"v1.1"
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
