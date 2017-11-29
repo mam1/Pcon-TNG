@@ -168,8 +168,6 @@ int main(void)
 	printf("Pcon %d.%d.%d starting\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
 	printf("\nSystem configuration\r\n");
 	printf(" Git tag - %s\r\n", _TAG);
-	printf(" System version (shr mem) %d.%d.%d\n\r", cmd_fsm_cb.ipc_ptr_.sys_data.config.major_version, 
-			cmd_fsm_cb.ipc_ptr->sys_data.config.minor_version,cmd_fsm_cb.ipc_ptr->sys_data.config.minor_revision);
 	printf(" Inter Process Commucination support %d.%d.%d\n\r", _MAJOR_VERSION_ipc, _MINOR_VERSION_ipc, _MINOR_REVISION_ipc);
 	printf(" Pcon version %d.%d.%d\n\r", _MAJOR_VERSION_Pcon, _MINOR_VERSION_Pcon, _MINOR_REVISION_Pcon);
 	printf(" Dcon version %d.%d.%d\n\r", _MAJOR_VERSION_Dcon, _MINOR_VERSION_Dcon, _MINOR_REVISION_Dcon);
@@ -199,9 +197,6 @@ int main(void)
 			prompt(cmd_fsm_cb.state);
 		}
 		c = fgetc(stdin);					// read the keyboard
-
-//************************************************************************************************
-
 		switch (c)
 		{
 	/* NOCR */	case _NO_CHAR:
@@ -211,9 +206,6 @@ int main(void)
 			c = fgetc(stdin);		// skip to next character
 			c = fgetc(stdin);		// skip to next character
 			switch (c)
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&7
-
 			{
 		/* up arrow */	case 'A':
 				if (rb_out_idx > 0)
@@ -266,10 +258,6 @@ int main(void)
 				continue;
 				break;
 			}
-
-//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-
 	/* CR */	case _CR:
 
 			if (work_buffer_ptr != start_buff) 						// skip null input lines
@@ -284,15 +272,11 @@ int main(void)
 					strcpy(previous_work_buffer, work_buffer);
 				}
 			}
-
-
 			printf("\n\r");						// move cursor to next line
-
 			*work_buffer_ptr++ = _CR;			// load the CR into the work buffer
 			*work_buffer_ptr++ = '\0';			// load the NULL into the work buffer
 			work_buffer_ptr = work_buffer;		// reset pointer
 			char_fsm_reset();					// reset char_fsm
-
 			while (*work_buffer_ptr != '\0')	// send characters to char_fsm
 			{	
 				char_fsm(char_type(*work_buffer_ptr), &char_state, work_buffer_ptr);
@@ -301,8 +285,6 @@ int main(void)
 
 			work_buffer_ptr = work_buffer;		// reset pointer
 			input_ptr = work_buffer_ptr;		// reset pointer
-			// cursor_ptr = screen_buf;			// reset pointer
-
 			memset(work_buffer, '\0', sizeof(work_buffer));
 			memset(screen_buf, '\0', sizeof(screen_buf));
 			memset(&ring_buffer[rb_in_idx][0], '\0', _INPUT_BUFFER_SIZE);
@@ -348,12 +330,6 @@ int main(void)
 			break;
 
 	/* OTHER */ default:
-			// if(escape)
-			// {
-			// 	escape = false;
-			// 	break;
-			// } 
-
 			if (work_buffer_ptr <= end_buff)		// room to add character ?
 			{
 				if (input_ptr == work_buffer_ptr) 	// cursor is at the end of the input buffer
@@ -374,9 +350,6 @@ int main(void)
 					}
 					*input_ptr++ = c;
 					mv = work_buffer_ptr - input_ptr;
-
-					// printf("\r> %s", work_buffer);
-
 					printf("\r");
 					printf("\033[K");	// Erase to end of line
 					prompt(cmd_fsm_cb.state);
@@ -389,13 +362,8 @@ int main(void)
 					}
 				}
 			}
-		}
-
-
-//*****************************************************************************************************		
+		}		
 		/* do suff while waiting or the keyboard */
-		
-
 	}
 
 	system("/bin/stty cooked");			//switch to buffered iput
@@ -421,21 +389,6 @@ void prompt(int s)
 /* prompt for user input after a character is deleted*/
 void del_prompt(int s) 
 {
-	int 		index, start, end;
-
-
-	// build_prompt(&cmd_fsm_cb);
-
-	// if((cmd_fsm_cb.prompt_buffer[0] == '\n') || (cmd_fsm_cb.prompt_buffer[0] == '\r') || 
-	//    (cmd_fsm_cb.prompt_buffer[1] == '\n') || (cmd_fsm_cb.prompt_buffer[1] == '\r'))
-	// {
-	// 	index = 0;
-	// 	while((index < _PROMPT_BUFFER_SIZE) && (cmd_fsm_cb.prompt_buffer[index] != '\0'))
-	// 	{
-	// 		cmd_fsm_cb.prompt_buffer[index] = cmd_fsm_cb.prompt_buffer[index + 2];
-	// 		index += 1;
-	// 	}
-	// }
 	printf("%s <%i> ", cmd_fsm_cb.prompt_buffer, s);
 	return;
 }
