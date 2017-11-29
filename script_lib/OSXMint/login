@@ -3,7 +3,7 @@
 #	login to beaglebone on local network
 #
 
-
+target_ip=''
 if [ $# == 0 ]
 	then
 		printf "\n    bone1=192.168.254.204\n"
