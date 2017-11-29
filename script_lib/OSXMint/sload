@@ -28,25 +28,27 @@ if [ $# == 0 ]
 					fi
 				fi
 		fi
-	else
-		if [ "$1" == "bone1" ] 
-		then
-			target_IP=192.168.254.204
-		else
-				if [ "$1" == "bone2" ]
-				then
-					target_IP=192.168.254.205
-				else
-					if [ "$1" == "bone3" ]
-					then
-						target_IP=192.168.254.206
-					else
-						printf "must select bone1, bone2 or bone3\nscript aborted\n"
-						exit 1
-					fi
-				fi
-		fi
-	fi 
+fi
+
+case "$1" in
+'bone1' | '192.168.254.204')
+target_IP=192.168.254.204
+;;
+'bone2' | '192.168.254.205' | 'dev')
+target_IP=192.168.254.205
+;;
+'bone3' | '192.168.254.206' | 'prod')
+target_IP=192.168.254.206
+;;
+esac
+
+if [ -z $target_IP]
+	then
+		printf "invalid parameter\nscript aborted\n"
+	exit
+fi
+
+
 
 
 bone_BIN_DIR=/usr/local/sbin
