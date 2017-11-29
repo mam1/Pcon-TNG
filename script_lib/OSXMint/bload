@@ -2,6 +2,8 @@
 #
 #	binload - move binaries from development machine to a bone
 #
+
+
 if [ $# == 0 ]
 	then
 		printf "\n    bone1=192.168.254.204\n"
@@ -38,9 +40,10 @@ target_IP=192.168.254.205
 'bone3' | '192.168.254.206' | 'prod')
 target_IP=192.168.254.206
 ;;
+
 esac
 
-if [ -z $target_IP]
+if [ -z $target_IP ]
 	then
 		printf "invalid parameter\nscript aborted\n"
 	exit
