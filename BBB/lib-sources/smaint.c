@@ -40,13 +40,13 @@ int s_load(int id, _CMD_FSM_CB *cb)
 		if (cb->ipc_ptr->s_dat[i].sensor_id == id)
 		{
 			cb->w_sen_dat.sensor_id = id;
-			strcpy(cb->w_sen_dat.name, cb->ipc_ptr->s_dat[i].name);
+			strcpy(cb->w_sen_dat.group, cb->ipc_ptr->s_dat[i].group);
 			strcpy(cb->w_sen_dat.description, cb->ipc_ptr->s_dat[i].description);
 			return id;
 		}
 	
 	cb->w_sen_dat.sensor_id = id;
-	strcpy(cb->w_sen_dat.name, "");
+	strcpy(cb->w_sen_dat.group, "");
 	strcpy(cb->w_sen_dat.description, "");
 
 	return id;
@@ -110,7 +110,7 @@ int s_save(_CMD_FSM_CB *cb){
 		if(buf[i].active == _FALSE){
 			buf[i].active = _TRUE;
 			buf[i].sensor_id = cb->w_sen_dat.sensor_id;
-			strcpy(buf[i].name, cb->w_sen_dat.name);
+			strcpy(buf[i].group, cb->w_sen_dat.group);
 			strcpy(buf[i].description, cb->w_sen_dat.description);
 		}
 		else{

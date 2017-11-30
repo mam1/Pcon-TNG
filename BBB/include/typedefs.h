@@ -55,8 +55,8 @@ typedef struct {
 	int 		sensor_id;
 	int			group_id;
 	int 		active;
-	char 	 	name[_SNAME_SIZE];
-	char 		description[_SDESCRIPTION];
+	char 	 	group[_GROUP_NAME_SIZE];			// sort tag for sensor display
+	char 		description[_DESCRIPTION_NAME_SIZE];		// description
 	int 		channel[_NUMBER_OF_CHANNELS];  	// channel assignments
 	int 		channel_index;					// points to the next open assingment
 	float		temp;							// current sensor reading

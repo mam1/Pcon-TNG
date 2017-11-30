@@ -65,12 +65,11 @@
 #define _CMD_BUFFER_DEPTH 		10 
 #define _TRACE_BUFFER_SIZE 		128		
 #define _SCREEN_BUFFER_SIZE		_INPUT_BUFFER_SIZE + _PROMPT_BUFFER_SIZE
+
 /* sensor parameteres */
 #define _NUMBER_OF_SENSORS		20
-#define _MAX_GROUP_NAME_SIZE 	6
-// #define _MAX_SENSORS			25
-#define _SNAME_SIZE 			20
-#define _SDESCRIPTION			_MAX_TOKEN_SIZE
+#define _GROUP_NAME_SIZE 		10
+#define _DESCRIPTION_NAME_SIZE			_MAX_TOKEN_SIZE
 #define _MAX_SENSOR_ID			99
 
 /* channel parameters */

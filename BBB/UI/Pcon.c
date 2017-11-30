@@ -133,7 +133,7 @@ int main(void)
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
 	/* initialize working sensor name and description */
-	cmd_fsm_cb.w_sen_dat.name[0] = '\0';
+	cmd_fsm_cb.w_sen_dat.group[0] = '\0';
 	cmd_fsm_cb.w_sen_dat.description[0] = '\0';
 	cmd_fsm_cb.w_sen_dat.description[1] = '\0';
 

@@ -105,8 +105,8 @@ char    *keyword[_CMD_TOKENS] = {
 	/* 35 */    "INT",
 	/* 36 */    "STR",
 	/* 37 */    "OTHER",
-	/* 38 */	"slist"
-	/* 39 */	"group"
+	/* 38 */	"slist",
+	/* 39 */	"group",
 	/* 40 */	"description"
 };
 
@@ -151,11 +151,9 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] = {
 	/* 35  INT         */  { 1,  1,  3,  0,  8,  9,  6, 21, 24,  4, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20,  0,  0,  4,  4, 24,  4,  4,  4, 28, 30, 31, 31, 32, 33, 34},
 	/* 36  STR         */  { 0,  0,  2,  3,  4,  5,  6,  7,  8,  9,  4,  4, 12, 13,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 30, 30, 33, 34},
 	/* 37  OTHER       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,  0,  0,  0,  0, 21,  0,  0, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34},
-	/* 38  slist       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 32, 33, 34}
-
-
-	/* 39 */	"group"
-
+	/* 38  slist       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32, 32, 33, 34},
+	/* 39  group       */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 31, 31, 32, 33, 34},
+	/* 40  description */  { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 32, 31, 32, 33, 34}
 };
 
 /*cmd processor functions */
@@ -228,7 +226,7 @@ int c_65(_CMD_FSM_CB *); /* display current sensor values */
 int c_66(_CMD_FSM_CB *); /* display system configuration */
 int c_67(_CMD_FSM_CB *); /* set sensor id prompt */
 int c_68(_CMD_FSM_CB *); /* set up working sensor buffer */
-int c_69(_CMD_FSM_CB *); /* set working sensor name */
+int c_69(_CMD_FSM_CB *); /* set working sensor group */
 int c_70(_CMD_FSM_CB *); /* set working sensor description */
 int c_71(_CMD_FSM_CB *); /* set working sensor display to on */
 int c_72(_CMD_FSM_CB *); /* set working sensor display to off */
@@ -279,14 +277,15 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 33  slib        */  {c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56, c_56,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 34  tlib        */  {c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55, c_55,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7, c_14, c_27, c_28,  c_7, c_68,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_69, c_69, c_70,  c_7,  c_7},
+	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_69, c_70,  c_7,  c_7},
 	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 38  slist       */  {c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65},
-
+	/* 39  group       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7},
+	/* 40  description */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7}
 };
 
 /*************** start fsm support functions ********************/
-/* pad a string with trailing blenks */
+/* pad a string with trailing blanks */
 char *padstr(char *str, int len){
 	static char 	buf[20];
 	char 			*ptr;
@@ -422,11 +421,11 @@ void sedit_prompt(_CMD_FSM_CB * cb){
 	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
 	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
 	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     name: ");
-	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.name);
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     group: ");
+	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.group);
 	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     description: ");
 	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     dislay: ");
+	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     display: ");
 	if(cb->w_sen_dat.active == _ON)
 		strcat(cmd_fsm_cb.prompt_buffer, "on\n\r");
 	else
@@ -1005,7 +1004,7 @@ int c_25(_CMD_FSM_CB *cb)
 	return 0;
 }
 
-/*  set sedit dislay prompt */
+/*  set sedit display prompt */
 int c_26(_CMD_FSM_CB *cb)
 {
 
@@ -1553,18 +1552,19 @@ int c_65(_CMD_FSM_CB * cb)
 	int 			sensor;
 	int 			i;
 
-	printf("\n  id/group     temp  humid    active    description\r\n");
+	printf("\n  id  group       temp  humid    active    description\r\n");
 	printf("  ---------------------------------------------------------\r\n");
 	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++){
 		// if(cb->ipc_ptr->s_dat[sensor].active == _ON){
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
 			// printf("%6i", cb->ipc_ptr->s_dat[sensor].sensor_id);
-			printf("%4i/%s\t%3.2f%6.2f\t%s", 
+			printf("  %02i  %s  %3.2f%6.2f\t%s\t%s", 
 				cb->ipc_ptr->s_dat[sensor].sensor_id, 
-				padstr(cb->ipc_ptr->s_dat[sensor].name, 6),
+				padstr(cb->ipc_ptr->s_dat[sensor].group, _GROUP_NAME_SIZE),
 				cb->ipc_ptr->s_dat[sensor].temp, 
 				cb->ipc_ptr->s_dat[sensor].humidity,
-				onoff[cb->ipc_ptr->s_dat[sensor].active]);
+				onoff[cb->ipc_ptr->s_dat[sensor].active],
+				cb->ipc_ptr->s_dat[sensor].description);
 
 
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
@@ -1643,20 +1643,20 @@ int c_68(_CMD_FSM_CB * cb)
 	return 0;
 }
 
-/* set working sensor name */
+/* set working sensor group */
 int c_69(_CMD_FSM_CB *cb){
 
 	char 			buf[10];
 
-	if(strlen(cb->token)>_MAX_GROUP_NAME_SIZE){
+	if(strlen(cb->token)>_GROUP_NAME_SIZE + 2){
 		strcpy(cmd_fsm_cb.prompt_buffer, "group name limited to ");
-		sprintf(buf, "%d ", _MAX_GROUP_NAME_SIZE -1);
+		sprintf(buf, "%d ", _GROUP_NAME_SIZE);
 		strcat(cmd_fsm_cb.prompt_buffer, buf);
 		strcat(cmd_fsm_cb.prompt_buffer, " characters\n\renter name in quotes");
 		return 2;
 	}
 
-	strcpy(cb->w_sen_dat.name, dequote(cb->token));
+	strcpy(cb->w_sen_dat.group, dequote(cb->token));
 
 	/* build prompt */
 	sedit_prompt(cb);
@@ -1704,7 +1704,7 @@ int c_73(_CMD_FSM_CB *cb){
 	cb->ipc_ptr->s_dat[cb->w_sen_dat.sensor_id] = cb->w_sen_dat;
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
 
-	cb->w_sen_dat.name[0] = '\0';
+	cb->w_sen_dat.group[0] = '\0';
 	cb->w_sen_dat.description[0] = '\0';
 	cb->w_sen_dat.active = _OFF;
 
