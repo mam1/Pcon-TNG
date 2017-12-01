@@ -418,21 +418,14 @@ void build_prompt(_CMD_FSM_CB * cb)
 void sedit_prompt(_CMD_FSM_CB * cb){
 	char 				buf[10];
 
-	sprintf(buf, "%02d ", cb->w_sen_dat.sensor_id);
-	strcpy(cmd_fsm_cb.prompt_buffer, "editing sensor id ");
-	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     group: ");
-	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.group);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     description: ");
-	strcat(cmd_fsm_cb.prompt_buffer, cb->w_sen_dat.description);
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\r                     display: ");
+	printf(" editing sensor id %d\n\r", cb->w_sen_dat.sensor_id);
+	printf("   group: %s\r\n   description: %s\r\n   active: ", cb->w_sen_dat.group, cb->w_sen_dat.description);
 	if(cb->w_sen_dat.active == _ON)
-		strcat(cmd_fsm_cb.prompt_buffer, "on\n\r");
+		printf("on\n\r");
 	else
-		strcat(cmd_fsm_cb.prompt_buffer, "off\n\r");
+		printf("off\n\r");
 
-	strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a command");
-
+	strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
 	return;
 }
 

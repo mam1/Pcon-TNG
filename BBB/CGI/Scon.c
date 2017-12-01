@@ -21,7 +21,6 @@
 #include "shared.h"
 #include "bitlit.h"
 #include "PCF8563.h"
-s
 #include "trace.h"
 #include "typedefs.h"
 #include "sys_dat.h"
