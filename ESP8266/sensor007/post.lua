@@ -62,7 +62,7 @@ end
  temp,humidity = rdDHT22(7,flip)
  conn=net.createConnection(net.TCP, 0)
  conn:on("receive", function(conn, payload) print(payload) end )
- conn:connect(8080,"192.168.254.34")
+ conn:connect(8080,"192.168.254.205")
  mess = "GET /cgi-bin/Scon?snesor=" .. sensor .. "&temp=" .. temp .. "&humid=" .. humidity .. "\r\n"
  conn:send(mess)
  end)
