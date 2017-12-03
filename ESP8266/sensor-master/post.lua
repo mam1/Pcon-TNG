@@ -1,6 +1,5 @@
 --read-post.lua
-version="1.0.1"
-ip="192.168.254.205"
+
 sensor=6
 US_TO_MS = 1000
 flip = 0

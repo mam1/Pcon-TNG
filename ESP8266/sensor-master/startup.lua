@@ -1,6 +1,9 @@
 
 --startup.lua
 
+version="1.0.1"
+ip="192.168.254.205"
+
  -- setup I2c and connect display
 function init_i2c_display()
      -- SDA and SCL can be assigned freely to available GPIOs
@@ -44,6 +47,7 @@ tmr.alarm(1,1000,1,function()
      print("    MAC address is: " .. wifi.ap.getmac())
      init_i2c_display()
      print("\n    starting sensor read loop")
+     print("    sending data to: " ..ip)
      dofile("post.lua")
   end
 end)
