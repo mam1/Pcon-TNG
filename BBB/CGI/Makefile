@@ -59,9 +59,9 @@ $(program_NAME): $(program_OBJS)
 
 # move the executable to cgi directory on the bone
 ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/CGI/Scon root@192.168.254.205:/usr/lib/cgi-bin
+	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/CGI/Scon root@192.168.254.205:/var/www/cgi-bin
 else
-	rsync -avz /home/mam1/Git/Pcon-TNG/BBB/CGI/Scon root@192.168.254.205:/usr/lib/cgi-bin
+	rsync -avz /home/mam1/Git/Pcon-TNG/BBB/CGI/Scon root@192.168.254.205:/var/www/cgi-bin
 endif
 
 	ssh root@192.168.254.205 'chown root /usr/lib/cgi-bin/Scon'		# change owner
