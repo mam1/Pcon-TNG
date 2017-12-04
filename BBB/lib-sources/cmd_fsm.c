@@ -399,12 +399,14 @@ void build_prompt(_CMD_FSM_CB * cb)
 		case 0:
 			strcpy(cb->prompt_buffer, "enter a command or channel number");
 			break;
-
+		case 1:
+			strcpy(cb->prompt_buffer, "enter action for channel");
+			break;
 		case 4:
 			printf("\r\n editing schedule buffer");
 			load_temps(&cb->w_template_buffer, pbuff);
 			printf("%s",pbuff);
-			strcpy(cb->prompt_buffer, "please enter a command or time");
+			strcpy(cb->prompt_buffer, "enter a command or time");
 			break;
 
 		default:
@@ -415,9 +417,8 @@ void build_prompt(_CMD_FSM_CB * cb)
 }
 
 /* build sedit prompt */
-void sedit_prompt(_CMD_FSM_CB * cb){
-	char 				buf[10];
-
+void sedit_prompt(_CMD_FSM_CB * cb)
+{
 	printf(" editing sensor id %d\n\r", cb->w_sen_dat.sensor_id);
 	printf("   group: %s\r\n   description: %s\r\n   active: ", cb->w_sen_dat.group, cb->w_sen_dat.description);
 	if(cb->w_sen_dat.active == _ON)
@@ -436,9 +437,7 @@ void sedit_prompt(_CMD_FSM_CB * cb){
 /* do nothing */
 int c_0(_CMD_FSM_CB *cb)
 {
-	// cb->prompt_buffer[0] = '\0';
-	// cb->prompt_buffer[1] = ' ';
-	// cb->prompt_buffer[2] = '\0';
+
 	return 0;
 }
 /* display all valid commands for the current state */
@@ -501,16 +500,12 @@ int c_1(_CMD_FSM_CB *cb)
 int c_2(_CMD_FSM_CB *cb)
 {
 	_tm         tm;
-	// int         rtc;
 
-	// rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
 	get_tm(&tm);							// read the clock
-	// sleep(1);
 	printf(" %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
-	// close(rtc);
 	printf("\n\r");
-	strcpy(cb->prompt_buffer, "enter a command");
+	// strcpy(cb->prompt_buffer, "enter a command");
 	return 0;
 }
 /* terminate program */
@@ -527,44 +522,24 @@ int c_4(_CMD_FSM_CB *cb)
 		cb->w_channel = cb->token_value;
 		cb->w_minutes = 0;
 		cb->w_hours = 0;
-		strcpy(cb->prompt_buffer, "enter action for channel ");
-		strcat(cb->prompt_buffer, cb->token);
+		printf(" editing channel %d\r\n",cb->token_value);
 		return 0;
 	}
 	else
 	{
-		strcpy(cb->prompt_buffer, "channel number must be 0 to 15\r\nenter a command");
+		strcpy(cb->prompt_buffer, "channel number must be 0 to 15");
 		return 1;
 	}
 }
 /* set channel name for working channel */
 int c_5(_CMD_FSM_CB *cb)
 {
-	char        numstr[2];
-	// FILE 		*f;
-
-#if defined (_ATRACE) || defined (_FTRACE)
-	sprintf(trace_buf, "c_5 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-	sprintf(trace_buf, "c_4 set working channel name to  %s\n", cb->token);
-#endif
-
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-
 	strcpy(cb->sys_ptr->c_data[cb->w_channel].name, dequote(cb->token));// update ipc data
-
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	// sys_save(f, cb->sys_ptr);	// write data to disk
-	// fclose(f);
-
 	/* build prompt */
-	strcpy(cb->prompt_buffer, "name set for channel ");
-	sprintf(numstr, "%d", cb->w_channel);
-	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, "\r\n");
-	strcat(cb->prompt_buffer, "enter a command");   //append state 0 prompt to prompt buffer
+	printf(" name set for channel %d\n\r", cb->w_channel);
 	return 0;
 }
 /* status - display channel data */
@@ -573,13 +548,12 @@ int c_6(_CMD_FSM_CB *cb)
 	int         i;
 	printf("\n  channel  state   mode  sensor    name\n\r");
 	printf("  ----------------------------------------------------------");
-	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
+	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) 
+	{
 		printf("\n\r%6i", i);
-		// printf(" indexes cb->sys_ptr->c_data[i].state -> %i,\tcb->sys_ptr->c_data[i].mode -> %i", cb->sys_ptr->c_data[i].state, cb->sys_ptr->c_data[i].mode);
-		// printf("***** state = %i\n\r", cb->sys_ptr->c_data[i].state);
 		printf("%9s%9s", onoff[cb->sys_ptr->c_data[i].state], mode[cb->sys_ptr->c_data[i].mode]);
-		// printf(" %i    %i   ", cb->sys_ptr->c_data[i].state, cb->sys_ptr->c_data[i].mode);
-		switch (cb->sys_ptr->c_data[i].mode) {
+		switch (cb->sys_ptr->c_data[i].mode) 
+		{
 		case 2:	// time & sensor
 			if(cb->sys_ptr->c_data[i].sensor_assigned == 1)
 				printf("%5i", cb->sys_ptr->c_data[i].sensor_id);
@@ -595,89 +569,44 @@ int c_6(_CMD_FSM_CB *cb)
 		printf("%s", cb->sys_ptr->c_data[i].name);
 	}
 	printf("\n\n\r");
-	strcpy(cb->prompt_buffer, "enter a commamd");
-	// c_34(cb);  // state 0 prompt
 	return 0;
 }
 /* command is not valid in current state */
 int c_7(_CMD_FSM_CB *cb)
 {
-	char        numstr[2];
-	char        hold_prompt[_PROMPT_BUFFER_SIZE];
-	/* build prompt */
-	strcpy(hold_prompt, cb->prompt_buffer);
-	strcpy(cb->prompt_buffer, "'");
-	strcat(cb->prompt_buffer, cb->token);
-	strcat(cb->prompt_buffer, "' is not a valid command in state ");
-	sprintf(numstr, "%d", cb->state);
-	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, "\n\r");
-	strcat(cb->prompt_buffer, hold_prompt);
-
+	printf(" <%s> is not a valid command in state %d\r\n", cb->token, cb->state);
 	return 1;
 }
 /* command is not recognized */
 int c_8(_CMD_FSM_CB *cb)
-{
-	strcpy(cb->prompt_buffer, "'");
-	strcat(cb->prompt_buffer, cb->token);
-	strcat(cb->prompt_buffer, "' is not a valid command\n\renter a command > ");
-	// printf("%s", cb->prompt_buffer);
-	// strcpy(cb->prompt_buffer, "\0");
+{ 
+	printf(" <%s> is not a valid command\r\n", cb->token);
 	return 1;
 }
 /* set channel control mode to manual and turn channel on */
 int c_9(_CMD_FSM_CB *cb)
 {
-	char        numstr[2];
-	// FILE 		*f;
-
-	// printf("waiting for lock\n\r");
 	ipc_sem_lock(semid, &sb);						// wait for a lock on shared memory
-	// printf("got lock\n\r");
 	cb->sys_ptr->c_data[cb->w_channel].mode = 0;	// update ipc data
 	cb->sys_ptr->c_data[cb->w_channel].state = 1;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 	ipc_sem_free(semid, &sb);						// free lock on shared memory
 
-	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	// sys_save(f, cb->sys_ptr);	// write data to disk
-	// fclose(f);
-
 	/* build prompt */
-	strcpy(cb->prompt_buffer, "channel ");
-	sprintf(numstr, "%d", cb->w_channel);
-	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, " turned on and mode set to manual\r\n");
-	strcat(cb->prompt_buffer, "enter a command");   //append state 0 prompt to prompt buffer
-
+	printf(" channel %d turned on and mode set to manual\r\n", cb->w_channel);
 	return 0;
 }
 /* set channel control mode to manual and turn channel off */
 int c_10(_CMD_FSM_CB *cb)
 {
-	char        numstr[2];
-	// FILE 		*f;
-
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-
 	cb->sys_ptr->c_data[cb->w_channel].mode = 0;	// update ipc data
 	cb->sys_ptr->c_data[cb->w_channel].state = 0;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
-
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	// sys_save(f, cb->sys_ptr);	// write data to disk
-	// fclose(f);
-
 	/* build prompt */
-	strcpy(cb->prompt_buffer, "channel ");
-	sprintf(numstr, "%d", cb->w_channel);
-	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, " turned off and mode set to manual\r\n");
-	strcat(cb->prompt_buffer, "enter a command");   //append state 0 prompt to prompt buffer
-
+	printf(" channel %d turned off and mode set to manual\r\n", cb->w_channel);
 	return 0;
 }
 /* set channel control mode to time */

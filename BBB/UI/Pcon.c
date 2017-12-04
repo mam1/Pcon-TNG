@@ -250,11 +250,8 @@ int main(void)
 				cmd_fsm_reset(&cmd_fsm_cb); 								// initialize the command processor fsm
 				char_state = 0;								
 				prompted = false;											// force a prompt
-				// strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
-				// strcpy(cmd_fsm_cb.prompt_buffer, "\r\ncommand processor reset\n\renter a command");
 				printf("\n\rcommand processor reset\n\r");
 				strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
-
 				continue;
 				break;
 			}
@@ -408,8 +405,6 @@ void arrow_reprompt(void)
 }
 
 int term(int t) {
-	// semctl(semid, 0, IPC_RMID, dummy);
-	// printf("    semaphore set removed\n\r");
 	switch (t) {
 	case 1:
 		system("/bin/stty cooked");			//switch to buffered iput

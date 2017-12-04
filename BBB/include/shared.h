@@ -1,13 +1,6 @@
 #ifndef _SHARE_H_
 #define _SHARE_H_
 
-/* trace options */
-// #define _ATRACE			// trace all functions 
-// #define _PTRACE			// trace Pcon 
-// #define _DTRACE			// trace Dcon
-// #define _STRACE			// trace Scon
-// #define _FTRACE			// trace library functions
-
 /* version info */
 #define _TAG		"v1.3"
 
@@ -23,7 +16,7 @@
 #define _TRACE_FILE_NAME			"/hmedia/data/trace/Pcon-trace.dat" 	// trace file
 #define _DAEMON_LOG 				"/media/data/logs/daemon.log" 			// daemon log file name
 #define _SENSOR_MASTER_FILE_NAME    "/media/Raid/sensor logs/master.dat"	// cumulative history of sensor readings
-#define _PID_FILE_NAME 				"/run/Dcon.pid"
+#define _PID_FILE_NAME 				"/run/Dcon.pid"							// daemon pid
 
 /* semaphore key */
 #define _SEM_KEY 				1234321
