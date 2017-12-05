@@ -37,6 +37,7 @@ int dump_template(_TMPL_DAT *t_sch);
 
 /* load template dump into bufer */
 int load_temps(_TMPL_DAT *t_sch, char *b);
+int print_temps(_TMPL_DAT *t_sch);
 
 /* add new template record */
 int add_tmpl_rec(_TMPL_DAT *t, int hour, int minute, int state, int temp, int humid);

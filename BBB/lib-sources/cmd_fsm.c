@@ -197,6 +197,7 @@ int c_36(_CMD_FSM_CB *); /* append state 0 prompt to prompt buffer */
 int c_37(_CMD_FSM_CB *); /* set humidity prompt */
 int c_38(_CMD_FSM_CB *); /* set temperature prompt */
 int c_39(_CMD_FSM_CB *); /* replace system schedule */
+// ----------------------------------------------------------------------- //
 int c_40(_CMD_FSM_CB *); /* set real time clock */
 int c_41(_CMD_FSM_CB *); /* set real time clock hours */
 int c_42(_CMD_FSM_CB *); /* set real time clock minutes */
@@ -206,6 +207,7 @@ int c_45(_CMD_FSM_CB *); /* set real time clock day */
 int c_46(_CMD_FSM_CB *); /* set real time clock year */
 int c_47(_CMD_FSM_CB *); /* set real time clock day of the week */
 int c_48(_CMD_FSM_CB *); /* set PCF8563 */
+// ------------------------------------------------------------------------ //
 int c_49(_CMD_FSM_CB *); /* set channel sensor_id */
 int c_50(_CMD_FSM_CB *); /* set template/schedule prompt */
 int c_51(_CMD_FSM_CB *); /* save template  */
@@ -242,8 +244,8 @@ int c_76(_CMD_FSM_CB *); /* show channel info */
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*          STATE          0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21    22    23    24    25    26    27    28    29    30    31    32    33    34  */
 	/*  0  temp        */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_38,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  1  *           */  { c_7,  c_8,  c_7,  c_7,  c_7, c_32, c_31,  c_7,  c_7, c_31,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  2  humid       */  { c_7,  c_3,  c_7,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_3,  c_7,  c_3,  c_3,  c_7,  c_3,  c_3,  c_3,  c_3,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  1  *           */  { c_7,  c_7,  c_7,  c_7,  c_7, c_32, c_31,  c_7,  c_7, c_31,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
+	/*  2  humid       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_37,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  3  schedule    */  {c_0,   c_8,  c_7,  c_7,  c_7,  c_7, c_52,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  4  ?           */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_7},
 	/*  5  display     */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_74,  c_7,  c_7,  c_7,  c_7},
@@ -392,8 +394,8 @@ void cmd_fsm_reset(_CMD_FSM_CB *cb) {
 /* build a prompt that is correct for the active state */
 void build_prompt(_CMD_FSM_CB * cb)
 {
-	char 			pbuff[_PROMPT_BUFFER_SIZE];
-	memset(pbuff, '\0', _PROMPT_BUFFER_SIZE);
+	// char 			pbuff[_PROMPT_BUFFER_SIZE];
+	// memset(pbuff, '\0', _PROMPT_BUFFER_SIZE);
 	switch(cb->state)
 	{
 		case 0:
@@ -404,11 +406,22 @@ void build_prompt(_CMD_FSM_CB * cb)
 			break;
 		case 4:
 			printf("\r\n editing schedule buffer");
-			load_temps(&cb->w_template_buffer, pbuff);
-			printf("%s",pbuff);
+			print_temps(&cb->w_template_buffer);
+			// printf("%s",pbuff);
 			strcpy(cb->prompt_buffer, "enter a command or time");
 			break;
-
+		case 8:
+			strcpy(cb->prompt_buffer, "enter minute");
+			break;
+		case 21:
+			strcpy(cb->prompt_buffer, "enter sensor id");
+			break;
+		case 24:
+			strcpy(cb->prompt_buffer, " enter action for ");
+			strcat(cb->prompt_buffer, cb->w_hours_str);
+			strcat(cb->prompt_buffer, ":");
+			strcat(cb->prompt_buffer, cb->w_minutes_str);
+			break;
 		default:
 			;
 			
@@ -492,8 +505,7 @@ int c_1(_CMD_FSM_CB *cb)
 			printf("\r\n");
 		}
 	}
-	/* build prompt */
-	strcpy(cb->prompt_buffer, "enter a command");
+
 	return 0;
 }
 /* display time and date  */
@@ -505,7 +517,6 @@ int c_2(_CMD_FSM_CB *cb)
 	printf(" %02i:%02i:%02i  %s %02i/%02i/%02i\n\r",
 	       tm.tm_hour, tm.tm_min, tm.tm_sec, day_names_long[tm.tm_wday], tm.tm_mon, tm.tm_mday, tm.tm_year);
 	printf("\n\r");
-	// strcpy(cb->prompt_buffer, "enter a command");
 	return 0;
 }
 /* terminate program */
@@ -538,7 +549,6 @@ int c_5(_CMD_FSM_CB *cb)
 	strcpy(cb->sys_ptr->c_data[cb->w_channel].name, dequote(cb->token));// update ipc data
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	/* build prompt */
 	printf(" name set for channel %d\n\r", cb->w_channel);
 	return 0;
 }
@@ -592,7 +602,6 @@ int c_9(_CMD_FSM_CB *cb)
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 	ipc_sem_free(semid, &sb);						// free lock on shared memory
 
-	/* build prompt */
 	printf(" channel %d turned on and mode set to manual\r\n", cb->w_channel);
 	return 0;
 }
@@ -605,52 +614,31 @@ int c_10(_CMD_FSM_CB *cb)
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	/* build prompt */
 	printf(" channel %d turned off and mode set to manual\r\n", cb->w_channel);
 	return 0;
 }
 /* set channel control mode to time */
 int c_11(_CMD_FSM_CB *cb)
 {
-	char        numstr[2];
-
-	printf("cb->w_channel <%i>\n\r", cb->w_channel);
 	ipc_sem_lock(semid, &sb);					 // wait for a lock on shared memory
-
 	cb->sys_ptr->c_data[cb->w_channel].mode = 1;	// update ipc data
 	cb->sys_ptr->c_data[cb->w_channel].state = 0;	// update ipc data
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
-
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	strcpy(cb->prompt_buffer, "channel ");
-	sprintf(numstr, "%d", cb->w_channel);
-	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, " mode set to time\r\n");
-	strcat(cb->prompt_buffer, "enter a command");   //append state 0 prompt to prompt buffer
-
+	printf(" channel %d mode set to time\r\n", cb->w_channel);
 	return 0;
 }
 /* set channel control mode to time and sensor */
 int c_12(_CMD_FSM_CB *cb)
 {
-	char        numstr[2];
-	// FILE 		*f;
-
 	ipc_sem_lock(semid, &sb);						// wait for a lock on shared memory
 	cb->sys_ptr->c_data[cb->w_channel].mode = 2;
 	cb->sys_ptr->c_data[cb->w_channel].state = 0;	
 	cb->ipc_ptr->force_update = 1;					// force relays to be updated
 	ipc_sem_free(semid, &sb);						// free lock on shared memory
 
-	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	// sys_save(f, cb->sys_ptr);	// write data to disk
-	// fclose(f);
-
-	strcpy(cb->prompt_buffer, "channel ");
-	sprintf(numstr, "%d", cb->w_channel);
-	strcat(cb->prompt_buffer, numstr);
-	strcat(cb->prompt_buffer, " mode set to sensor\r\nenter sensor id");
+	printf(" channel %d mode set to sensor\r\n", cb->w_channel);
 	return 0;
 }
 /* set channel control mode to cycle */
@@ -689,11 +677,7 @@ int c_14(_CMD_FSM_CB *cb)
 		cb->sys_ptr->tpl_lib[i] = cb->sys_ptr->tpl_lib[i+1];
 	cb->sys_ptr->tpl_index -= 1;
 
-	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	// sys_save(f, cb->sys_ptr);							// write data to disk
-	// fclose(f);
 	printf("template deleted \n\r");
-	c_35(cb);
 
 	return 0;
 }
@@ -752,17 +736,14 @@ int c_18(_CMD_FSM_CB *cb)
 	int 		i;
 
 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	cb->sys_ptr->c_data[cb->w_channel].sensor_assigned = 0;		// set false
+	cb->sys_ptr->c_data[cb->w_channel].sensor_assigned = 0;	// set to false
 	for(i=0;i<_NUMBER_OF_SENSORS;i++)
 		del_elm(cb->ipc_ptr->s_dat[i].channel, 
 		&(cb->ipc_ptr->s_dat[i].channel_index), 
 		cb->w_channel, 
 		sizeof(cb->ipc_ptr->s_dat[i].channel));
-	cb->ipc_ptr->force_update = 1;					// force relays to be updated
+	cb->ipc_ptr->force_update = 1;				// force relays to be updated
 	ipc_sem_free(semid, &sb);					// free lock on shared memory
-
-	/* build prompt */
-	// strcpy(cb->prompt_buffer, " ");
 
 	return 0;
 }
@@ -776,8 +757,6 @@ int c_19(_CMD_FSM_CB *cb)
 	else{
 		strcpy(cb->prompt_buffer, " *** error ***  backup file not found\n\r");
 	}
-	/* build prompt */
-	strcat(cb->prompt_buffer, "enter command");
 
 	return 0;
 }
@@ -794,21 +773,12 @@ int c_20(_CMD_FSM_CB *cb)
 	cb->w_hours = cb->token_value;
 	strcpy(cb->w_hours_str, cb->token);
 
-	/* build prompt */
-	// strcpy(cb->prompt_buffer, "editing schedule: ");
-	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	// strcat(cb->prompt_buffer, " ");
-	// strcat(cb->prompt_buffer, cb->w_hours_str);
-	// strcat(cb->prompt_buffer, ":\r\n");
-	strcpy(cb->prompt_buffer, " enter minute > ");
 	return 0;
 }
 
 /* set schedule minute */
 int c_21(_CMD_FSM_CB *cb)
 {
-	// char            temp[_PROMPT_BUFFER_SIZE];
-
 	/* check value */
 	if ((cb->token_value > 59) || (cb->token_value < 0)) {
 		strcpy(cb->prompt_buffer, " minute must be 0 - 59\r\n  enter minute");
@@ -816,22 +786,8 @@ int c_21(_CMD_FSM_CB *cb)
 	}
 	/* update control block */
 	cb->w_minutes = cb->token_value;
-	
 	strcpy(cb->w_minutes_str, cb->token);
 
-	/* build prompt */
-	// strcpy(cb->prompt_buffer, "editing schedule template: ");
-	// strcat(cb->prompt_buffer, (char *)cb->w_schedule_name);
-	// strcat(cb->prompt_buffer, "\r\n");
-
-
-	// load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-
-	strcpy(cb->prompt_buffer, " enter action for ");
-	strcat(cb->prompt_buffer, cb->w_hours_str);
-	strcat(cb->prompt_buffer, ":");
-	strcat(cb->prompt_buffer, cb->w_minutes_str);
-	// strcat(cb->prompt_buffer, " > ");
 	return 0;
 }
 
@@ -855,18 +811,9 @@ int c_22(_CMD_FSM_CB *cb)
 
 	/*build prompt */
 	strcpy(cb->prompt_buffer, "\0");
-	// printf(" ** c_22 before call to load_temps, record count %i, prompt_buffer <%s>\r\n",cb->w_template_buffer.rcnt, cb->prompt_buffer);
 	load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-
-
-// printf(" ** c_22 after call to load_temps, record count i, prompt_buffer <s>\r\n");
-// printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",99, "xxxxx");
-
-	// printf(" ** c_22 after call to load_temps, record count %i, prompt_buffer <%s>\r\n",cb->w_template_buffer.rcnt, cb->prompt_buffer);
 	printf("\r\n editing schedule buffer\n\r");
-	strcpy(cb->prompt_buffer, "enter command or time");
-
-	// printf(" ** c_22 returning, record count %i\r\n",cb->w_template_buffer.rcnt);
+	printf("%s",cb->prompt_buffer);
 	return 0;
 }
 
@@ -874,11 +821,8 @@ int c_22(_CMD_FSM_CB *cb)
 int c_23(_CMD_FSM_CB *cb)
 {
 	int 			i;
-	// int 			key;
 	_S_REC 			hold;
 
-	// key = cb->w_hours * 60 + cb->w_minutes;
-	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
 	if (i != -1)
 		hold = cb->w_template_buffer.rec[i];
@@ -896,8 +840,6 @@ int c_23(_CMD_FSM_CB *cb)
 	strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter command or time");
 	return 0;
 }
-
-
 
 /* delete schedule record */
 int c_24(_CMD_FSM_CB *cb)
@@ -939,11 +881,7 @@ int c_26(_CMD_FSM_CB *cb)
 int c_27(_CMD_FSM_CB *cb)
 {
 	int 			i;
-	// int 			key;
 	_S_REC 			hold;
-
-
-	// key = cb->w_hours * 60 + cb->w_minutes;
 
 	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
@@ -968,11 +906,7 @@ int c_27(_CMD_FSM_CB *cb)
 int c_28(_CMD_FSM_CB *cb)
 {
 	int 			i;
-	// int 			key;
 	_S_REC 			hold;
-
-
-	// key = cb->w_hours * 60 + cb->w_minutes;
 
 	/* serch for key in a schedule */
 	i = find_tmpl_key(&cb->w_template_buffer, cb->w_hours, cb->w_minutes);
@@ -994,26 +928,10 @@ int c_28(_CMD_FSM_CB *cb)
 }
 
 /* load wsch from working template buffer */
-int c_29(_CMD_FSM_CB *cb) {
-	// char 				numstr[2];
-	// int 				i;
-
+int c_29(_CMD_FSM_CB *cb) 
+{
 	cb->w_channel = cb->token_value;
-	// if (cb->w_day == _ALL_DAYS){
-	// 	for (i = 0; i < _DAYS_PER_WEEK; i++) 
-	// 		cb->wsch_ptr->sch[i][cb->w_channel] = cb->w_template_buffer;
-	// 	printf(" schedule loaded into working schedule table (all days, channel %i)\n\r",cb->w_channel );
-	// }
-	// else {
-	// 	cb->wsch_ptr->sch[cb->w_day][cb->w_channel] = cb->w_template_buffer;
-	// 	printf(" schedule loaded into working schedule table (day %i, channel %i)\n\r",cb->w_day,cb->w_channel );
-	// }
-
 	load_wsch(cb);
-
-	// strcat(cb->prompt_buffer, " channel");
-	// sprintf(numstr, "%2d)", cb->w_channel);
-	// strcat(cb->prompt_buffer, numstr);
 	strcpy(cb->prompt_buffer, "\r\n\n enter command");
 	return 0;
 
@@ -1042,27 +960,9 @@ int c_30(_CMD_FSM_CB * cb)
 /* set working channel to all */
 int c_31(_CMD_FSM_CB * cb)
 {
-	// int 		c;
-	// int 		d;
 	printf("%s\n\r", " channel set all");
 	cb->w_channel = _ALL_CHANNELS;
-
 	load_wsch(cb);
-
-
-
-	// if(cb->w_day == _ALL_DAYS){
-	// 	for(d=0;d<_DAYS_PER_WEEK;d++)
-	// 		for(c=0;c<_NUMBER_OF_CHANNELS;c++)
-	// 			cb->w_sch.sch[d][c] = cb->w_template_buffer;
-	// 	printf(" schedule loaded into working schedule table (all days, all channels)\n\r");
-	// }
-	// else{
-	// 	for(c=0;c<_NUMBER_OF_CHANNELS;c++)
-	// 		cb->w_sch.sch[cb->w_day][c] = cb->w_template_buffer;
-	// 	printf(" schedule loaded into working schedule table (day %i, all channels)\n\r",cb->w_day+1);
-
-	// }
 
 	/* build prompt */
 	strcpy(cb->prompt_buffer, "\r\n\n enter command");
@@ -1072,7 +972,6 @@ int c_31(_CMD_FSM_CB * cb)
 /* set working day to all */
 int c_32(_CMD_FSM_CB * cb)
 {
-	// printf("editing system schedule\r\n");
 	cb->w_day = _ALL_DAYS;
 
 	/* build prompt */
@@ -1085,7 +984,6 @@ int c_33(_CMD_FSM_CB * cb)
 {
 	cb->w_template_buffer.rcnt = 0;
 	strcpy(cmd_fsm_cb.prompt_buffer, " schedule buffer cleared\r\n\n editing schedule buffer, enter command or time ");
-	// c_34(cb);
 	return 0;
 }
 
@@ -1100,10 +998,7 @@ int c_34(_CMD_FSM_CB * cb)
 /* set schedule maint prompt */
 int  c_35(_CMD_FSM_CB * cb)
 {
-	/* build prompt */
-	// cb->prompt_buffer[0] = '\0';
-	// load_temps(&cb->w_template_buffer, cb->prompt_buffer);
-	// strcat(cb->prompt_buffer, "\r\n editing schedule buffer, enter a command or time");
+
 	return 0;
 }
 
@@ -1135,16 +1030,10 @@ int c_38(_CMD_FSM_CB * cb)
 /* replace system schedule */
 int c_39(_CMD_FSM_CB * cb)
 {
-	// FILE 				*f;
-
 	ipc_sem_lock(semid, &sb);							// wait for a lock on shared memory
 	*cb->ssch_ptr = *cb->wsch_ptr;						// move working schedule from fsm controol block to shared memory
 	ipc_ptr->force_update = 1;							// force relays to be updated
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
-
-	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	// sys_save(f, cb->sys_ptr);							// write data to disk
-	// fclose(f);
 
 	/* build prompt */
 	printf("\r\n system schedule replaced\n\r");
@@ -1155,10 +1044,6 @@ int c_39(_CMD_FSM_CB * cb)
 /* set real time clock */
 int c_40(_CMD_FSM_CB * cb)
 {
-#if defined (_ATRACE) || defined (_FTRACE)
-	sprintf(trace_buf, "c_40 called: token <%s>, token value <%i>, token type <%i>, state <%i>\n", cb->token, cb->token_value, cb->token_type, cb->state);
-	strace(_TRACE_FILE_NAME, trace_buf, trace_flag);
-#endif
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter time, date and day of the week - <Hour>:<Min>:<Sec> <month>/<day>/<year> <dow>\r\n> ");
 	return 0;
@@ -1255,7 +1140,6 @@ int c_48(_CMD_FSM_CB * cb)
 int c_49(_CMD_FSM_CB * cb)
 {
 	char        numstr[15];
-	// FILE 		*f;
 	int  		i;
 
 	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
@@ -1275,9 +1159,6 @@ int c_49(_CMD_FSM_CB * cb)
 	cb->ipc_ptr->force_update  = 1;								// force relays to be updated
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
 
-	// f = sys_open(_SYSTEM_FILE_NAME, cb->sys_ptr);
-	// sys_save(f, cb->sys_ptr);	// write data to disk
-	// fclose(f);
  printf("starting to build prompt\r\n");
 	/* build prompt */
 	strcpy(cmd_fsm_cb.prompt_buffer, "sensor id for channel ");
@@ -1285,11 +1166,9 @@ int c_49(_CMD_FSM_CB * cb)
 	strcat(cb->prompt_buffer, numstr);
 	sprintf(numstr, "%d", cb->sys_ptr->c_data[cb->w_channel].sensor_id);
 	strcat(cb->prompt_buffer, numstr);
-	// strcat(cb->prompt_buffer, "\r\n");
 	c_36(cb);
 	return 0;
 }
-
 
 /* set save prompt */
 int c_50(_CMD_FSM_CB * cb)
@@ -1303,10 +1182,6 @@ int c_50(_CMD_FSM_CB * cb)
 /* save template */
 int c_51(_CMD_FSM_CB * cb)
 {
-	// FILE 			*f;
-
-	/* see if there is room to save template */
-	// printf("index %i\n\r", cb->sys_ptr->tpl_index);
 	if ((cb->sys_ptr->tpl_index + 1 ) > _MAX_TEMPLATES) {
 		strcpy(cmd_fsm_cb.prompt_buffer, " no room for another template\n template not saved");
 		c_36(cb);
@@ -1362,9 +1237,6 @@ int c_55(_CMD_FSM_CB * cb)
 			list_template(&cb->sys_ptr->tpl_lib[i]);
 			printf("\n\r");
 		}
-
-	/* build prompt */
-	// strcpy(cb->prompt_buffer, "");
 	return 0;
 }
 
@@ -1381,8 +1253,6 @@ int c_56(_CMD_FSM_CB * cb)
 			printf("\n\r");
 		}
 
-	/* build prompt */
-	// c_34(cb);
 	return 0;
 }
 
@@ -1391,9 +1261,6 @@ int c_57(_CMD_FSM_CB * cb)
 {
 
 	sch_print(cb, cb->ssch_ptr); // print a formated dump od schedules for each channel and day
-
-	/* build prompt */
-	// c_34(cb);
 	return 0;
 }
 
@@ -1402,9 +1269,6 @@ int c_58(_CMD_FSM_CB * cb)
 {
 
 	sch_print(cb, cb->wsch_ptr);  // print a formated dump od schedules for each channel and day
-
-	/* build prompt */
-	// c_34(cb);
 	return 0;
 }
 
@@ -1433,10 +1297,7 @@ int c_61(_CMD_FSM_CB * cb)
 		printf(" number must be between 0 and %i\r\n", cb->sys_ptr->tpl_index - 1);
 	}
 	cb->w_template_buffer = cb->sys_ptr->tpl_lib[cb->token_value];
-
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, " schedule loaded from library\n\r ");
-	c_35(cb);
+	printf(" template %d loaded from library\n\r ", cb->token_value);
 	return 0;
 }
 
@@ -1522,12 +1383,6 @@ int c_66(_CMD_FSM_CB * cb)
 	printf(" Dcon version %d.%d.%d\n\r", _MAJOR_VERSION_Dcon, _MINOR_VERSION_Dcon, _MINOR_REVISION_Dcon);
 	printf(" char_fsm version %d.%d.%d\n\r", _MAJOR_VERSION_char_fsm, _MINOR_VERSION_char_fsm, _MINOR_REVISION_char_fsm);
 	printf(" cmd_fsm version %d.%d.%d\n\n\r", _MAJOR_VERSION_cmd_fsm, _MINOR_VERSION_cmd_fsm, _MINOR_REVISION_cmd_fsm);
-	printf("\n\r");
-	strcpy(cb->prompt_buffer, "enter a command");
-
-	/* build prompt */
-	// c_34(cb);
-	// strcpy(cmd_fsm_cb.prompt_buffer, " enter enter table number");
 	return 0;
 }
 

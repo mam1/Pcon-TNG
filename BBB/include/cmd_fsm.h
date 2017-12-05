@@ -7,8 +7,8 @@
 #define _CMD_FSM_H_
 
 /* cmd_fsm.c version */
-#define _MAJOR_VERSION_cmd_fsm		10
-#define _MINOR_VERSION_cmd_fsm		5
+#define _MAJOR_VERSION_cmd_fsm		11
+#define _MINOR_VERSION_cmd_fsm		0
 #define _MINOR_REVISION_cmd_fsm		0
 
 /* fuctions */

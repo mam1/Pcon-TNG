@@ -344,6 +344,31 @@ int load_temps(_TMPL_DAT *t_sch, char *b) {
 	return 0;
 }
 
+/* print a formated dump of template buffer */
+int print_temps(_TMPL_DAT *t_sch) 
+{
+	int             i, h, m;
+
+	if (t_sch->rcnt < 1) 
+	{
+		printf("\n\r   no records in schedule\r\n");
+		return 0;
+	}
+	if (t_sch->rcnt > _MAX_SCHEDULE_RECS) 
+	{
+		printf("************* your screwed record count trashed\n\r\n aborting\r\n");
+		exit(1);
+	}
+	for (i = 0; i < t_sch->rcnt; i++) 
+	{
+		con_key(t_sch->rec[i].key, &h, &m);
+		printf("\n\r  %02i:%02i - state %i temp %0.2f humid %0.2f",
+		       h, m, t_sch->rec[i].state, t_sch->rec[i].temp, t_sch->rec[i].humid);
+	}
+	printf("\r\n");
+	return 0;
+}
+
 /* print a formated dump of schedules for each channel and day */
 void sch_print(_CMD_FSM_CB *cb, _S_TAB *s) {
 	// uint32_t        *rec_ptr;
