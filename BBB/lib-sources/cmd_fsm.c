@@ -566,7 +566,7 @@ int c_6(_CMD_FSM_CB *cb)
 		{
 		case 2:	// time & sensor
 			if(cb->sys_ptr->c_data[i].sensor_assigned == 1)
-				printf("%5i", cb->sys_ptr->c_data[i].sensor_id);
+				printf("%5i      ", cb->sys_ptr->c_data[i].sensor_id);
 			break;
 
 		case 3:	// cycle
