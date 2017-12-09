@@ -409,7 +409,7 @@ int term(int t) {
 	case 1:
 		system("/bin/stty cooked");			//switch to buffered iput
 		system("/bin/stty echo");			//turn on terminal echo
-		printf("*** normal termination\n\n");
+		printf("\n*** normal termination\n\n");
 		exit(-1);
 		break;
 	case 2:

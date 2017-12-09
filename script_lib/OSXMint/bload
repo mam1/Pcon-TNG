@@ -3,7 +3,7 @@
 #	binload - move binaries from development machine to a bone
 #
 
-target_ip=''
+# target_IP=192.168.254.205
 if [ $# == 0 ]
 	then
 		printf "\n    bone1=192.168.254.204\n"
@@ -62,11 +62,12 @@ else
 fi
 
 # move the bins to the bone
-printf "  copying binaries to device at $target_IP"
+# target_IP=192.168.254.205
+printf "  copying binaries to device at $target_ip"
 printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR\n"
-rsync -azv      $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR
+rsync -azv      $program_DIR_PREFIX/bin/ root@$target_ip:$bone_BIN_DIR
 printf "\n"
 
 # fix permissions
-ssh root@$target_IP chown root:root $bone_BIN_DIR/*	# change owner
-ssh root@$target_IP chmod 777 $bone_BIN_DIR/*		# open access
+ssh root@$target_ip chown root:root $bone_BIN_DIR/*	# change owner
+ssh root@$target_ip chmod 777 $bone_BIN_DIR/*		# open access
