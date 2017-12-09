@@ -958,7 +958,7 @@ int c_30(_CMD_FSM_CB * cb)
 /* set working channel to all */
 int c_31(_CMD_FSM_CB * cb)
 {
-	printf("%s\n\r", " channel set all");
+	// printf("%s\n\r", " channel set all");
 	cb->w_channel = _ALL_CHANNELS;
 	load_wsch(cb);
 

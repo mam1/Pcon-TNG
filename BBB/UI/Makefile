@@ -77,9 +77,9 @@ lib:
 
 # build all project moduals
 project:
-	cd .. && $(MAKE) cleans
+	cd .. && $(MAKE) clean
 	cd .. && $(MAKE)
-	# cd ../CGI && $(MAKE)
+	cd ../CGI && $(MAKE)
 	cd ../UI && $(MAKE)
 	cd ../daemon && $(MAKE)	
 

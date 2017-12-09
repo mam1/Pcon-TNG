@@ -64,7 +64,7 @@ fi
 # move the bins to the bone
 # target_IP=192.168.254.205
 printf "  copying binaries to device at $target_ip"
-printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR\n"
+printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_ip:$bone_BIN_DIR\n"
 rsync -azv      $program_DIR_PREFIX/bin/ root@$target_ip:$bone_BIN_DIR
 printf "\n"
 
