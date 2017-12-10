@@ -48,6 +48,14 @@ else
 	OBJCOPY := $(PREFIX)objcopy
 endif
 
+# set the local CGI directory
+ifeq ($(UNAME_S),Darwin)
+	LOCAL_CGI_DIR := /Users/mam1/Git/Pcon-TNG/BBB/CGI/Scon
+else
+	LOCAL_CGI_DIR := /home/mam1/Git/Pcon-TNG/BBB/CGI/Scon 
+endif
+
+
 .PHONY: all clean distclean
 
 all: $(program_NAME)
@@ -58,12 +66,7 @@ $(program_NAME): $(program_OBJS)
 	$(CXX) $(program_OBJS) -lm -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti 
 
 # move the executable to cgi directory on the bone
-ifeq ($(UNAME_S),Darwin)
-	rsync -avz  /Users/mam1/Git/Pcon-TNG/BBB/CGI/Scon root@192.168.254.205:/var/www/cgi-bin
-else
-	rsync -avz /home/mam1/Git/Pcon-TNG/BBB/CGI/Scon root@192.168.254.205:/var/www/cgi-bin
-endif
-
+	rsync -avz  $(LOCAL_CGI_DIR) root@192.168.254.205:/var/www/cgi-bin
 	ssh root@192.168.254.205 'chown root /usr/lib/cgi-bin/Scon'		# change owner
 	ssh root@192.168.254.205 'chmod 4755 /usr/lib/cgi-bin/Scon'		# open access
 
@@ -82,6 +85,6 @@ dump:
 	@echo CPPFLAGS $(CPPFLAGS)
 	@echo CFLAGS $(CFLAGS)
 	@echo LINK.cc $(LINK.cc)
-
+	@echo LOGAL_CGI_DIT $(LOCAL_CGI_DIR)
 
 distclean: clean

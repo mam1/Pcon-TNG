@@ -61,11 +61,11 @@ else
 fi
 
 # move shell scripts to the bone
-printf "  copying scripts to device at $target_IP\n"
-printf "\n *** rsync -> $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR\n" 
-rsync -azv      $program_DIR_PREFIX/script_lib/Bone/ root@$target_IP:$bone_BIN_DIR
+printf "  copying scripts to device at $target_ip\n"
+printf "\n *** rsync -> $program_DIR_PREFIX/script_lib/Bone/ root@$target_ip:$bone_BIN_DIR\n" 
+rsync -azv      $program_DIR_PREFIX/script_lib/Bone/ root@$target_ip:$bone_BIN_DIR
 printf "\n"
 
 # fix permissions
-ssh root@$target_IP chown root:root $bone_BIN_DIR/*	# change owner
-ssh root@$target_IP chmod 777 $bone_BIN_DIR/*		# open access
+ssh root@$target_ip chown root:root $bone_BIN_DIR/*	# change owner
+ssh root@$target_ip chmod 777 $bone_BIN_DIR/*		# open access

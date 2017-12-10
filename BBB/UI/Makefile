@@ -82,6 +82,8 @@ project:
 	cd ../CGI && $(MAKE)
 	cd ../UI && $(MAKE)
 	cd ../daemon && $(MAKE)	
+	cd ../../script_lib/OSXMint && $(MAKE)
+	sload dev
 
 dump:
 	@echo CC ............... $(CC)
