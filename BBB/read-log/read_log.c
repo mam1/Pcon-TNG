@@ -11,12 +11,12 @@
 #include "shared.h"
 #include "ipc.h"
 #include "Pcon.h"
-#include "bitlit.h"
-#include "PCF8563.h"
+
+
 // #include "gpio.h"
 // #include "led.h"
 // #include "schedule.h"
-#include "BBBiolib.h"
+
 #include "typedefs.h"
 
 
@@ -46,7 +46,7 @@ int main (void) {
 	while(fread(&buffer, sizeof(buffer), 1, sensor_data) == 1){
 
 		tm = *localtime(&buffer.ts);
-		printf(" CGI: sensor %i, %i:%i:%i,  %i/%i/%i,  temp %0.2f,  humidity %0.2f\n\r",
+		printf("sensor %i %02i:%02i:%02i,%02i/%02i/%02i temp %0.2f humidity %0.2f\n\r",
 			buffer.sensor_id, 
 			tm.tm_hour, 
 			tm.tm_min, 
@@ -56,7 +56,7 @@ int main (void) {
 			tm.tm_year + 1900,
 			buffer.temp,
 			buffer.humidity);
-		printf(" CGI: data logged to %s\n\r", _SENSOR_DATA_FILE_NAME);
+		// printf(" CGI: data logged to %s\n\r", _SENSOR_DATA_FILE_NAME);
 		// printf("  %02i:%02i:%02i  %s %02i/%02i/%02i sensor %i temp %0.2f humidity %0.2f\n",
 	 //       buffer.ts.tm_hour, buffer.ts.tm_min, buffer.ts.tm_sec, day_names_long[buffer.ts.tm_wday], 
 	 //       buffer.ts.tm_mon, buffer.ts.tm_mday, buffer.ts.tm_year, buffer.sensor_id, buffer.temp, buffer.humidity);
