@@ -1,5 +1,8 @@
-# scan directory 
 program_NAME := Scon
+target_ip := 192.168.254.205
+cgi_dir := /usr/lib/cgi-bin
+
+# scan directory 
 program_C_SRCS := $(wildcard *.c)
 program_CXX_SRCS := $(wildcard *.cpp)
 program_C_OBJS := ${program_C_SRCS:.c=.o}
@@ -66,9 +69,9 @@ $(program_NAME): $(program_OBJS)
 	$(CXX) $(program_OBJS) -lm -o $(program_NAME) -Wall -I../include -L../lib -lPcon -Wall -fno-exceptions -fno-rtti 
 
 # move the executable to cgi directory on the bone
-	rsync -avz  $(LOCAL_CGI_DIR) root@192.168.254.205:/var/www/cgi-bin
-	ssh root@192.168.254.205 'chown root /usr/lib/cgi-bin/Scon'		# change owner
-	ssh root@192.168.254.205 'chmod 4755 /usr/lib/cgi-bin/Scon'		# open access
+	rsync -avz  $(LOCAL_CGI_DIR) root@$(target_ip):$(cgi_dir)
+	ssh root@$(target_ip) 'chown root $(cgi_dir)/Scon'		# change owner
+	ssh root@$(target_ip) 'chmod 4755 $(cgi_dir)/Scon'		# open access
 
 # clean up
 	@- $(RM) -v $(program_NAME)

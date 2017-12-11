@@ -186,35 +186,21 @@ int main(void) {
 	char 			*s_num, *s_temp, *s_humid;
 	long 			l_num;
 	float 			l_temp, l_humid;
-	// char 			file_name[_FILE_NAME_SIZE];
-	// char           	sensor_log_file[] = {_SENSOR_DATA_FILE_NAME};   			// name of sensor log file
-
 	char 			*eptr;
-
 	_SEN_DAT_REC 		buffer;
-
-	// int 			ipc;
-	// int 			bkup;
-
-	printf("Content-type: text/html\n\n");
-	printf("\n  **** cgi %i.%i.%i active ****\n\r",_MAJOR_VERSION_Scon,_MINOR_VERSION_Scon,_MINOR_REVISION_Scon);
-		// printf("\n  **** cgi active %s.%s.%s ****\n\r",_MAJOR_VERSION_Scon,_MINOR_VERSION_Scon,_MINOR_REVISION_Scon);
-
 
 	/********** initializations *******************************************************************/
 
-	// /* setup PCF8563 RTC */
-	// rtc = open_tm(I2C_BUSS, PCF8583_ADDRESS);	// Open the i2c-0 bus
+	printf("Content-type:text/html\r\n\r\n");
+	printf("\n  **** cgi %i.%i.%i active ****\n\r",_MAJOR_VERSION_Scon,_MINOR_VERSION_Scon,_MINOR_REVISION_Scon);
 
 	/* open files */
-
-	cgi_log = fopen(_CGI_LOG_FILE_NAME,"ab");
+	cgi_log = fopen(_CGI_LOG_FILE_NAME,"a");
 	if(cgi_log == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));
 		printf("    attempting to open %s\n\n application terminated\n\n", _CGI_LOG_FILE_NAME);
 		return 1;
 	}
-
 	cgi_data = fopen(_SENSOR_DATA_FILE_NAME,"a");
 	if(cgi_data == NULL){
 		sleep (1000);
@@ -226,8 +212,6 @@ int main(void) {
 			return 1;
 		}
 	}
-	
-
 	printf("%s"," CGI: files opened\n\r" );
 
 	/* setup shared memory */
@@ -253,8 +237,6 @@ int main(void) {
 		(void) fprintf(cgi_log, "*** error Scon passed null valuse from ESP8266\n\r");
 		return 1;
 	}
-
-
 	l_num = strtol(s_num, &eptr, 10);
 	if (l_num == 0)
 	{
@@ -268,7 +250,6 @@ int main(void) {
 		(void) fprintf(cgi_log, "*** sensor id out of range: %d", errno);
 		exit(0);
 	}
-
 	l_temp = new_strtof(s_temp, &eptr, 10);
 	if (l_temp == 0)
 	{
@@ -276,8 +257,6 @@ int main(void) {
 		(void) fprintf(cgi_log, "*** Conversion error occurred: %d", errno);
 		exit(0);
 	}
-
-
 	l_humid = new_strtof(s_humid, &eptr, 10);
 	if (l_humid == 0)
 	{
@@ -316,8 +295,7 @@ int main(void) {
 	}
 	else
 	{
-		/* get the system time */
-		tm = *localtime(&buffer.ts);
+		tm = *localtime(&buffer.ts);	// convet time stamp  time_t to tm
 		printf(" CGI: sensor %i, %i:%i:%i,  %i/%i/%i,  temp %0.2f,  humidity %0.2f\n\r",
 			buffer.sensor_id, 
 			tm.tm_hour, 
