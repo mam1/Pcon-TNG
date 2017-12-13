@@ -1,0 +1,43 @@
+#!/bin/bash
+# cron job to archive sensor data
+
+export PATH=$PATH:/usr/local/myscripts
+
+	TARGET_IP=192.168.254.202
+
+	LOCAL_DIR=/media/data/sensors
+	REMOTE_DIR=/media/Logs
+
+	LOG_FILE=/media/data/logs/maint.log
+
+	ARCHIVE_FILE=master.dat
+	TEMP_FILE=td.dat
+	SENSOR_FILE=sensor.dat
+
+echo -n '** ' >> $LOG_FILE
+echo -n $(date) >> $LOG_FILE
+echo ' sensor log archive started' >> $LOG_FILE
+mv $LOCAL_DIR/$SENSOR_FILE $LOCAL_DIR/$TEMP_FILE 														# rename sensor log file file
+echo -e $(rsync -avz  $LOCAL_DIR/$TEMP_FILE mam1@$TARGET_IP:$REMOTE_DIR/$TEMP_FILE) >> $LOG_FILE		# move temp file to ShopMint
+echo -n $? >> $LOG_FILE																					# print rsync return code
+echo -e ' returned from rsync' >> $LOG_FILE																# print rsync return code
+if [ $? == 0 ] 																							# test returncode
+	then	
+		echo -e $(rm -v $LOCAL_DIR/$TEMP_FILE ) >> $LOG_FILE
+	else
+		echo 'rsync error script aborted'
+		exit 1
+fi
+
+															
+# echo -e $(ssh mam1@$TARGET_IP 'cat $REMOTE_DIR/$ARCHIVE_FILE >> $REMOTE_DIR/$TEMP_FILE') >> $LOG_FILE	# append temp file to master
+# echo -n 'temp file appended to '  >> $LOG_FILE
+# echo -n $ARCHIVE_FILE >> $LOG_FILE
+# echo -e $(ssh mam1@$TARGET_IP 'rm -v $LOCAL_DIR/$TEMP_FILE' ) >> $LOG_FILE
+# echo -n $LOCAL_DIR/$TEMP_FILE  >> $LOG_FILE
+# echo -e ' has been erased'  >> $LOG_FILE
+
+# echo -n $(date) >> $LOG_FILE
+# echo ' archive finished' >> $LOG_FILE
+# echo '**********************************************' >> $LOG_FILE
+
