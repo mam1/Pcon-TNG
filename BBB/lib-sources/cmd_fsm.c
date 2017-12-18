@@ -16,6 +16,7 @@
 #include <sys/sem.h>
 #include <sys/ipc.h>
 #include <errno.h>
+#include <time.h>
 
 #include "Pcon.h"
 #include "Dcon.h"
@@ -60,7 +61,7 @@ extern char *mode[4];
 #if defined (_ATRACE) || defined (_FTRACE)
 char			trace_buf[128];
 #endif
-_tm 			tm;			// buffer fir time abd date
+_tm 			tm;			// buffer for time and date
 
 /***************************************/
 /*****  command  parser fsm start ******/
@@ -198,8 +199,9 @@ int c_36(_CMD_FSM_CB *); /* append state 0 prompt to prompt buffer */
 int c_37(_CMD_FSM_CB *); /* set humidity prompt */
 int c_38(_CMD_FSM_CB *); /* set temperature prompt */
 int c_39(_CMD_FSM_CB *); /* replace system schedule */
+int c_40(_CMD_FSM_CB *); /* display complete sensor list */
 // ----------------------------------------------------------------------- //
-int c_40(_CMD_FSM_CB *); /* set real time clock */
+
 int c_41(_CMD_FSM_CB *); /* set real time clock hours */
 int c_42(_CMD_FSM_CB *); /* set real time clock minutes */
 int c_43(_CMD_FSM_CB *); /* set real time clock seconds */
@@ -282,7 +284,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/* 35  INT         */  { c_4,  c_7, c_16, c_17, c_20, c_30, c_20,  c_7, c_21, c_29,  c_7, c_21,  c_7, c_41, c_42, c_43, c_44, c_45, c_46, c_47,  c_7, c_49, c_61,  c_7,  c_7, c_14, c_27, c_28,  c_7, c_68,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 36  STR         */  { c_7,  c_5,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_51,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_69, c_70,  c_7,  c_7},
 	/* 37  OTHER       */  { c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_8,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/* 38  slist       */  {c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65},
+	/* 38  slist       */  {c_40, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65, c_65},
 	/* 39  group       */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7},
 	/* 40  description */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7}
 };
@@ -1040,11 +1042,50 @@ int c_39(_CMD_FSM_CB * cb)
 	return 0;
 }
 
-/* set real time clock */
+/* display complete sensor list */
+
 int c_40(_CMD_FSM_CB * cb)
 {
-	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "\r\nenter time, date and day of the week - <Hour>:<Min>:<Sec> <month>/<day>/<year> <dow>\r\n> ");
+	int 			sensor;
+	int 			i;
+	struct tm 		tm;
+	char 			sbuf[20]; 
+
+	printf("\n  id group      temp  humid    date    active    description\r\n");
+	printf("  ---------------------------------------------------------\r\n");
+	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++)
+	{
+		if(cb->ipc_ptr->s_dat[sensor].active)
+		{
+			tm = *localtime(&(cb->ipc_ptr->s_dat[sensor].ts));	// convet time stamp  time_t to tm
+			sprintf(sbuf,"%02d:%02d:%02d %02d/%02d/%2d",
+					tm.tm_hour, 
+					tm.tm_min, 
+					tm.tm_sec, 
+					tm.tm_mon + 1, 
+					tm.tm_mday, 
+					tm.tm_year  + 1900);
+			printf("  %02i %s %05.2f %05.2f %s\t%s\t%s", 
+					cb->ipc_ptr->s_dat[sensor].sensor_id, 
+					padstr(cb->ipc_ptr->s_dat[sensor].group, _GROUP_NAME_SIZE),
+					cb->ipc_ptr->s_dat[sensor].temp, 
+					cb->ipc_ptr->s_dat[sensor].humidity,
+					sbuf,
+					onoff[cb->ipc_ptr->s_dat[sensor].active],
+					cb->ipc_ptr->s_dat[sensor].description);
+			for(i=0;i<cb->ipc_ptr->s_dat[sensor].channel_index;i++)
+				if(i==0)
+					printf("   %i",cb->ipc_ptr->s_dat[sensor].channel[i]);
+				else
+					printf(", %i",cb->ipc_ptr->s_dat[sensor].channel[i]);
+			printf("\n\r");
+		}
+		else
+			memset(sbuf, '\0', sizeof(sbuf));
+		printf("\n\r");
+	}
+	// printf("\n\r");
+	// strcpy(cb->prompt_buffer, "enter a command");
 	return 0;
 }
 
@@ -1328,25 +1369,41 @@ int c_64(_CMD_FSM_CB * cb)
 	return 0;
 }
 
-/* display curent sensor values */
+
+/* display all sensors */
 int c_65(_CMD_FSM_CB * cb)
 {
 	int 			sensor;
 	int 			i;
+	struct tm 		tm;
+	char 			sbuf[20]; 
 
-	printf("\n  id  group       temp  humid    active    description\r\n");
+	printf("\n  id group      temp  humid    date    active    description\r\n");
 	printf("  ---------------------------------------------------------\r\n");
-	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++){
-		// if(cb->ipc_ptr->s_dat[sensor].active == _ON){
-			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
-			// printf("%6i", cb->ipc_ptr->s_dat[sensor].sensor_id);
-			printf("  %02i  %s  %3.2f%6.2f\t%s\t%s", 
-				cb->ipc_ptr->s_dat[sensor].sensor_id, 
-				padstr(cb->ipc_ptr->s_dat[sensor].group, _GROUP_NAME_SIZE),
-				cb->ipc_ptr->s_dat[sensor].temp, 
-				cb->ipc_ptr->s_dat[sensor].humidity,
-				onoff[cb->ipc_ptr->s_dat[sensor].active],
-				cb->ipc_ptr->s_dat[sensor].description);
+	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++)
+	{
+		if(cb->ipc_ptr->s_dat[sensor].active)
+		{
+			tm = *localtime(&(cb->ipc_ptr->s_dat[sensor].ts));	// convet time stamp  time_t to tm
+			sprintf(sbuf,"%02d:%02d:%02d %02d/%02d/%2d",
+					tm.tm_hour, 
+					tm.tm_min, 
+					tm.tm_sec, 
+					tm.tm_mon + 1, 
+					tm.tm_mday, 
+					tm.tm_year  + 1900);
+		}
+		else
+			memset(sbuf, '\0', sizeof(sbuf));
+
+		printf("  %02i %s %05.2f %05.2f %s\t%s\t%s", 
+			cb->ipc_ptr->s_dat[sensor].sensor_id, 
+			padstr(cb->ipc_ptr->s_dat[sensor].group, _GROUP_NAME_SIZE),
+			cb->ipc_ptr->s_dat[sensor].temp, 
+			cb->ipc_ptr->s_dat[sensor].humidity,
+			sbuf,
+			onoff[cb->ipc_ptr->s_dat[sensor].active],
+			cb->ipc_ptr->s_dat[sensor].description);
 
 
 			// printf("%6i%7.2f%6.2f", cb->ipc_ptr->s_dat[sensor].sensor_id, cb->ipc_ptr->s_dat[sensor].temp, cb->ipc_ptr->s_dat[sensor].humidity);
