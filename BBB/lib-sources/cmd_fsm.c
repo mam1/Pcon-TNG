@@ -292,7 +292,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*************** start fsm support functions ********************/
 /* pad a string with trailing blanks */
 char *padstr(char *str, int len){
-	static char 	buf[20];
+	static char 	buf[120];
 	char 			*ptr;
 	int 			i;
 
@@ -304,7 +304,8 @@ char *padstr(char *str, int len){
 	for(i=0;i<len;i++){
 		if(*ptr!='\0')
 			buf[i] = *ptr++;
-		else{
+		else
+		{
 			while(i < len)
 				buf[i++] = ' ';
 			buf[i] = '\0';
@@ -424,6 +425,19 @@ void build_prompt(_CMD_FSM_CB * cb)
 			strcat(cb->prompt_buffer, cb->w_hours_str);
 			strcat(cb->prompt_buffer, ":");
 			strcat(cb->prompt_buffer, cb->w_minutes_str);
+			break;
+		case 29:
+			strcpy(cmd_fsm_cb.prompt_buffer, "enter sensor id");
+			break;
+		case 30:
+			printf("\r\n editing sensor id %d\n\r", cb->w_sen_dat.sensor_id);
+			printf("   group: %s\r\n   description: %s\r\n   display: ", cb->w_sen_dat.group, cb->w_sen_dat.description);
+			if(cb->w_sen_dat.active == _ON)
+				printf("on\n\r");
+			else
+				printf("off\n\r");
+
+			strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
 			break;
 		default:
 			;
@@ -1051,27 +1065,26 @@ int c_40(_CMD_FSM_CB * cb)
 	struct tm 		tm;
 	char 			sbuf[20]; 
 
-	printf("\n  id group      temp  humid    date    active    description\r\n");
+	printf("\n  id group     temp  humid     time-date        description\r\n");
 	printf("  ---------------------------------------------------------\r\n");
 	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++)
 	{
 		if(cb->ipc_ptr->s_dat[sensor].active)
 		{
 			tm = *localtime(&(cb->ipc_ptr->s_dat[sensor].ts));	// convet time stamp  time_t to tm
-			sprintf(sbuf,"%02d:%02d:%02d %02d/%02d/%2d",
+			sprintf(sbuf,"%02d:%02d:%02d-%02d/%02d/%2d",
 					tm.tm_hour, 
 					tm.tm_min, 
 					tm.tm_sec, 
 					tm.tm_mon + 1, 
 					tm.tm_mday, 
 					tm.tm_year  + 1900);
-			printf("  %02i %s %05.2f %05.2f %s\t%s\t%s", 
+			printf("  %02i %s %05.2f %05.2f %s\t%s", 
 					cb->ipc_ptr->s_dat[sensor].sensor_id, 
 					padstr(cb->ipc_ptr->s_dat[sensor].group, _GROUP_NAME_SIZE),
 					cb->ipc_ptr->s_dat[sensor].temp, 
 					cb->ipc_ptr->s_dat[sensor].humidity,
 					sbuf,
-					onoff[cb->ipc_ptr->s_dat[sensor].active],
 					cb->ipc_ptr->s_dat[sensor].description);
 			for(i=0;i<cb->ipc_ptr->s_dat[sensor].channel_index;i++)
 				if(i==0)
@@ -1376,14 +1389,14 @@ int c_65(_CMD_FSM_CB * cb)
 	struct tm 		tm;
 	char 			sbuf[20]; 
 
-	printf("\n  id group      temp  humid    date    active    description\r\n");
+	printf("\n  id group    temp  humid    time-date    display    description\r\n");
 	printf("  ---------------------------------------------------------\r\n");
 	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++)
 	{
 		if(cb->ipc_ptr->s_dat[sensor].active)
 		{
 			tm = *localtime(&(cb->ipc_ptr->s_dat[sensor].ts));	// convet time stamp  time_t to tm
-			sprintf(sbuf,"%02d:%02d:%02d %02d/%02d/%2d",
+			sprintf(sbuf,"%02d:%02d:%02d-%02d/%02d/%2d",
 					tm.tm_hour, 
 					tm.tm_min, 
 					tm.tm_sec, 
@@ -1449,9 +1462,9 @@ int c_67(_CMD_FSM_CB * cb)
 	sprintf(buf, "%d", _NUMBER_OF_SENSORS);
 
 	/* build prompt */
-	strcpy(cmd_fsm_cb.prompt_buffer, "enter sensor id (0-");
-	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, ")");
+	// strcpy(cmd_fsm_cb.prompt_buffer, "enter sensor id (0-");
+	// strcat(cmd_fsm_cb.prompt_buffer, buf);
+	// strcat(cmd_fsm_cb.prompt_buffer, ")");
 	return 0;
 }
 
@@ -1469,8 +1482,8 @@ int c_68(_CMD_FSM_CB * cb)
 	}
 	s_load(cb->token_value,cb);
 	
-	/* build prompt */
-	sedit_prompt(cb);
+	// /* build prompt */
+	// sedit_prompt(cb);
 
 	return 0;
 }
@@ -1490,8 +1503,8 @@ int c_69(_CMD_FSM_CB *cb){
 
 	strcpy(cb->w_sen_dat.group, dequote(cb->token));
 
-	/* build prompt */
-	sedit_prompt(cb);
+	// /* build prompt */
+	// sedit_prompt(cb);
 
 	return 0;
 }
@@ -1502,8 +1515,8 @@ int c_70(_CMD_FSM_CB *cb){
 	// printf("token size %i\r\n", strlen(cb->token) );
 	strcpy(cb->w_sen_dat.description, dequote(cb->token));
 
-	/* build prompt */
-	sedit_prompt(cb);
+	// /* build prompt */
+	// sedit_prompt(cb);
 
 	return 0;
 }
@@ -1513,8 +1526,8 @@ int c_71(_CMD_FSM_CB *cb){
 
 	cb->w_sen_dat.active = _ON;
 
-	/* build prompt */
-	sedit_prompt(cb);
+	// /* build prompt */
+	// sedit_prompt(cb);
 	return 0;
 }
 
@@ -1523,28 +1536,27 @@ int c_72(_CMD_FSM_CB *cb){
 
 	cb->w_sen_dat.active = _OFF;
 
-	/* build prompt */
-	sedit_prompt(cb);
+	// /* build prompt */
+	// sedit_prompt(cb);
 	return 0;
 }
 
 /* move working data to ipc */
 int c_73(_CMD_FSM_CB *cb){
-	char 				buf[10];
+	// char 				buf[10];
 
 	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
 	cb->ipc_ptr->s_dat[cb->w_sen_dat.sensor_id] = cb->w_sen_dat;
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
 
-	cb->w_sen_dat.group[0] = '\0';
-	cb->w_sen_dat.description[0] = '\0';
-	cb->w_sen_dat.active = _OFF;
+	// cb->w_sen_dat.group[0] = '\0';
+	// cb->w_sen_dat.description[0] = '\0';
+	// cb->w_sen_dat.active = _OFF;
 
 	/* build prompt */
-	sprintf(buf, "%d", _NUMBER_OF_SENSORS);
-	strcpy(cmd_fsm_cb.prompt_buffer, "sensor data saved\n\n\renter sensor id (0-");
-	strcat(cmd_fsm_cb.prompt_buffer, buf);
-	strcat(cmd_fsm_cb.prompt_buffer, ")");
+
+	printf("sensor data saved\r\n");
+
 	return 0;
 }
 
