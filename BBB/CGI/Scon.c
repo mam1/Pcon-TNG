@@ -228,7 +228,7 @@ int main(void) {
 	/*********** start main process *******************************************************************/
 
 	/* parce the query string for values sent by a ESP8266 */
-	s_num = cgigetval("snesor");
+	s_num = cgigetval("sensor");
 	s_temp = cgigetval("temp");
 	s_humid = cgigetval("humid");
 

@@ -1,5 +1,7 @@
-
 --startup.lua
+
+version="1.0.1"
+ip="192.168.254.205"
 
  -- setup I2c and connect display
 function init_i2c_display()
@@ -25,7 +27,7 @@ print('\n *** startup.lua ver 2.0')
 
 wifi.setmode(wifi.STATION);
 wifi.sta.config("FrontierHSI","")
-wifi.sta.sethostname("sen04")
+wifi.sta.sethostname("sen06")
 
 print('    set mode=STATION (mode='..wifi.getmode()..')')
 print('    MAC: ',wifi.sta.getmac())
@@ -44,6 +46,7 @@ tmr.alarm(1,1000,1,function()
      print("    MAC address is: " .. wifi.ap.getmac())
      init_i2c_display()
      print("\n    starting sensor read loop")
+     print("    sending data to: " ..ip)
      dofile("post.lua")
   end
 end)

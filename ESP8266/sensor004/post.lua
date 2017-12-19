@@ -1,5 +1,5 @@
 --read-post.lua
-version="1.0.0"
+
 sensor=4
 US_TO_MS = 1000
 flip = 0
@@ -62,7 +62,7 @@ end
  temp,humidity = rdDHT22(7,flip)
  conn=net.createConnection(net.TCP, 0)
  conn:on("receive", function(conn, payload) print(payload) end )
- conn:connect(8080,"192.168.254.34")
- mess = "GET /cgi-bin/Scon?snesor=" .. sensor .. "&temp=" .. temp .. "&humid=" .. humidity .. "\r\n"
+ conn:connect(8080,ip)
+ mess = "GET /cgi-bin/Scon?sensor=" .. sensor .. "&temp=" .. temp .. "&humid=" .. humidity .. "\r\n"
  conn:send(mess)
  end)
