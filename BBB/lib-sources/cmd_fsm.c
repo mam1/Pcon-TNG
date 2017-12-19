@@ -1082,10 +1082,8 @@ int c_40(_CMD_FSM_CB * cb)
 		}
 		else
 			memset(sbuf, '\0', sizeof(sbuf));
-		printf("\n\r");
 	}
-	// printf("\n\r");
-	// strcpy(cb->prompt_buffer, "enter a command");
+	printf("\n\r");
 	return 0;
 }
 
