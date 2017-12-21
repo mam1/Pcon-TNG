@@ -439,6 +439,12 @@ void build_prompt(_CMD_FSM_CB * cb)
 
 			strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
 			break;
+		case 31:
+			strcpy(cb->prompt_buffer, "enter sensor group in quotes");
+			break;
+		case 32:
+			strcpy(cb->prompt_buffer, "enter sensor description in quotes");
+			break;
 		default:
 			;
 			
@@ -1065,7 +1071,7 @@ int c_40(_CMD_FSM_CB * cb)
 	struct tm 		tm;
 	char 			sbuf[20]; 
 
-	printf("\n  id group     temp  humid     time-date        description\r\n");
+	printf("\n  id group      temp humid     time-date        description\r\n");
 	printf("  ---------------------------------------------------------\r\n");
 	for(sensor=0;sensor<_NUMBER_OF_SENSORS;sensor++)
 	{
@@ -1457,9 +1463,9 @@ int c_66(_CMD_FSM_CB * cb)
 /* set sensor id prompt */
 int c_67(_CMD_FSM_CB * cb)
 {
-	char 				buf[10];
+	// char 				buf[10];
 
-	sprintf(buf, "%d", _NUMBER_OF_SENSORS);
+	// sprintf(buf, "%d", _NUMBER_OF_SENSORS);
 
 	/* build prompt */
 	// strcpy(cmd_fsm_cb.prompt_buffer, "enter sensor id (0-");
@@ -1471,73 +1477,50 @@ int c_67(_CMD_FSM_CB * cb)
 /* load sensor edit buffer */
 int c_68(_CMD_FSM_CB * cb)
 {
-	char 				buf[10];
-
-	if(cb->token_value > _NUMBER_OF_SENSORS -1){
-		strcpy(cmd_fsm_cb.prompt_buffer, "sensor id must be 0 - ");
-		sprintf(buf, "%d ", _NUMBER_OF_SENSORS);
-		strcat(cmd_fsm_cb.prompt_buffer, buf);
-		strcat(cmd_fsm_cb.prompt_buffer, "\n\renter a sensor id");
+	if(cb->token_value > _NUMBER_OF_SENSORS -1)
+	{
+		printf("sensor id must be 0 - %d\n\r", _NUMBER_OF_SENSORS);
 		return 2;
 	}
 	s_load(cb->token_value,cb);
-	
-	// /* build prompt */
-	// sedit_prompt(cb);
-
 	return 0;
 }
 
 /* set working sensor group */
-int c_69(_CMD_FSM_CB *cb){
-
-	char 			buf[10];
-
-	if(strlen(cb->token)>_GROUP_NAME_SIZE + 2){
-		strcpy(cmd_fsm_cb.prompt_buffer, "group name limited to ");
-		sprintf(buf, "%d ", _GROUP_NAME_SIZE);
-		strcat(cmd_fsm_cb.prompt_buffer, buf);
-		strcat(cmd_fsm_cb.prompt_buffer, " characters\n\renter name in quotes");
+int c_69(_CMD_FSM_CB *cb)
+{
+	if(strlen(cb->token)>_GROUP_NAME_SIZE + 2)
+	{
+		printf("group name limited to %d characters\n\r", _GROUP_NAME_SIZE);
 		return 2;
 	}
-
 	strcpy(cb->w_sen_dat.group, dequote(cb->token));
-
-	// /* build prompt */
-	// sedit_prompt(cb);
-
 	return 0;
 }
 
 /* set working sensor description */
-int c_70(_CMD_FSM_CB *cb){
-
-	// printf("token size %i\r\n", strlen(cb->token) );
+int c_70(_CMD_FSM_CB *cb)
+{
+	if(strlen(cb->token)>_DESCRIPTION_NAME_SIZE + 2)
+	{
+		printf("description limited to %d characters\n\r", _DESCRIPTION_NAME_SIZE);
+		return 2;
+	}
 	strcpy(cb->w_sen_dat.description, dequote(cb->token));
-
-	// /* build prompt */
-	// sedit_prompt(cb);
-
 	return 0;
 }
 
 /* set working sensor display to on */
-int c_71(_CMD_FSM_CB *cb){
-
+int c_71(_CMD_FSM_CB *cb)
+{
 	cb->w_sen_dat.active = _ON;
-
-	// /* build prompt */
-	// sedit_prompt(cb);
 	return 0;
 }
 
 /* set working sensor display to off */
-int c_72(_CMD_FSM_CB *cb){
-
+int c_72(_CMD_FSM_CB *cb)
+{
 	cb->w_sen_dat.active = _OFF;
-
-	// /* build prompt */
-	// sedit_prompt(cb);
 	return 0;
 }
 
@@ -1548,10 +1531,6 @@ int c_73(_CMD_FSM_CB *cb){
 	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
 	cb->ipc_ptr->s_dat[cb->w_sen_dat.sensor_id] = cb->w_sen_dat;
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
-
-	// cb->w_sen_dat.group[0] = '\0';
-	// cb->w_sen_dat.description[0] = '\0';
-	// cb->w_sen_dat.active = _OFF;
 
 	/* build prompt */
 
