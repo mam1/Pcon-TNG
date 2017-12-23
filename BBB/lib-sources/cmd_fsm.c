@@ -290,6 +290,64 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 };
 
 /*************** start fsm support functions ********************/
+
+
+/* character sort utility */
+void CharSort(char arr[][MAX_LEN], int n)
+{
+    int i, j, min_idx;
+  
+    // One by one move boundary of unsorted subarray
+    char minStr[MAX_LEN];
+    for (i = 0; i < n-1; i++)
+    {
+        // Find the minimum element in unsorted array
+        int min_idx = i;
+        strcpy(minStr, arr[i]);
+        for (j = i+1; j < n; j++)
+        {
+            // If min is greater than arr[j]
+            if (strcmp(minStr, arr[j]) > 0)
+            {
+                // Make arr[j] as minStr and update min_idx
+                strcpy(minStr, arr[j]);
+                min_idx = j;
+            }
+        }
+  
+        // Swap the found minimum element with the first element
+        if (min_idx != i)
+        {
+            char temp[MAX_LEN];
+            strcpy(temp, arr[i]); //swap item[pos] and item[i]
+            strcpy(arr[i], arr[min_idx]);
+            strcpy(arr[min_idx], temp);
+        }
+    }
+}
+/* intiger sort utility */
+void IntSort(* int[] array)
+{
+    int i, j, temp;
+ 
+    /*   Bubble sorting begins */
+    for (i = 0; i < _NUMBER_OF_SENSORS; i++)
+    {
+        for (j = 0; j < (_NUMBER_OF_SENSORS - i - 1); j++)
+        {
+            if (array[j] > array[j + 1])
+            {
+                temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
+}
+
+
+
+
 /* pad a string with trailing blanks */
 char *padstr(char *str, int len){
 	static char 	buf[120];
