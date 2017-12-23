@@ -229,7 +229,7 @@ int c_63(_CMD_FSM_CB *); /* set template number prompt  */
 int c_64(_CMD_FSM_CB *); /* set schedule number prompt */
 int c_65(_CMD_FSM_CB *); /* display current sensor values */
 int c_66(_CMD_FSM_CB *); /* display system configuration */
-int c_67(_CMD_FSM_CB *); /* set sensor id prompt */
+int c_67(_CMD_FSM_CB *); /* */
 int c_68(_CMD_FSM_CB *); /* set up working sensor buffer */
 int c_69(_CMD_FSM_CB *); /* set working sensor group */
 int c_70(_CMD_FSM_CB *); /* set working sensor description */
@@ -255,7 +255,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 	/*  6  yes         */  { c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7, c_34,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_48,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/*  7  cancel      */  {c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34, c_34},
 	/*  8  replace     */  { c_7,  c_7,  c_7,  c_7, c_39,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
-	/*  9  sedit       */  {c_67,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_67,  c_7,  c_7,  c_7,  c_7},  //
+	/*  9  sedit       */  { c_0,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_0,  c_7,  c_7,  c_7,  c_7},  //
 	/* 10  delete      */  { c_7,  c_7,  c_7,  c_7, c_50,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_24,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
 	/* 11  active      */  { c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},  //
 	/* 12  on          */  { c_7,  c_9,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_71,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7, c_22,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7,  c_7},
@@ -431,12 +431,12 @@ void build_prompt(_CMD_FSM_CB * cb)
 			break;
 		case 30:
 			printf("\r\n editing sensor id %d\n\r", cb->w_sen_dat.sensor_id);
-			printf("   group: %s\r\n   description: %s\r\n   display: ", cb->w_sen_dat.group, cb->w_sen_dat.description);
+			printf("                group: %s\r\n          description: %s\r\n              display: ", cb->w_sen_dat.group, cb->w_sen_dat.description);
 			if(cb->w_sen_dat.active == _ON)
 				printf("on\n\r");
 			else
 				printf("off\n\r");
-
+			printf("\n\r");
 			strcpy(cmd_fsm_cb.prompt_buffer, "enter a command");
 			break;
 		case 31:
