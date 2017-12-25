@@ -42,93 +42,95 @@ int s_load(int id, _CMD_FSM_CB *cb)
 			cb->w_sen_dat.sensor_id = id;
 			strcpy(cb->w_sen_dat.group, cb->ipc_ptr->s_dat[i].group);
 			strcpy(cb->w_sen_dat.description, cb->ipc_ptr->s_dat[i].description);
+			cb->w_sen_dat.active = cb->ipc_ptr->s_dat[i].active;
 			return id;
 		}
 	
 	cb->w_sen_dat.sensor_id = id;
 	strcpy(cb->w_sen_dat.group, "");
 	strcpy(cb->w_sen_dat.description, "");
-
+	cb->w_sen_dat.active = _OFF;
 	return id;
 }
 
-int s_sort(_SEN_DAT f[])
-{
-	_SEN_DAT 		source[_NUMBER_OF_SENSORS];
-	_SEN_DAT 		destination[_NUMBER_OF_SENSORS];
-	int 			source_deleted[_NUMBER_OF_SENSORS];
-	int 			i,ii;
-	int 			index_b;
-	// int 			index_f;
+// int s_sort(_SEN_DAT f[])
+// {
+// 	_SEN_DAT 		source[_NUMBER_OF_SENSORS];
+// 	_SEN_DAT 		destination[_NUMBER_OF_SENSORS];
+// 	int 			source_deleted[_NUMBER_OF_SENSORS];
+// 	int 			i,ii;
+// 	int 			index_b;
+// 	// int 			index_f;
 
 
-	/* copy sensor data to working buffer */
-	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	for(i=0; i<_NUMBER_OF_SENSORS;i++)
-		source[i] =  f[i];
-	ipc_sem_free(semid, &sb);					// free lock on shared memory
+// 	/* copy sensor data to working buffer */
+// 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+// 	for(i=0; i<_NUMBER_OF_SENSORS;i++)
+// 		source[i] =  f[i];
+// 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	ii = 0;
-	while (ii < _NUMBER_OF_SENSORS){
+// 	ii = 0;
+// 	while (ii < _NUMBER_OF_SENSORS){
 
-		/* find low value */
-		for(i=0; i<_NUMBER_OF_SENSORS-1;i++){
-			if (source_deleted[i] == _TRUE)
-				continue;
-			if(source[i].sensor_id <= source[i+1].sensor_id)
-				index_b = source[i].sensor_id;
-			else 
-				index_b = source[i+1].sensor_id;
-		}
+// 		/* find low value */
+// 		for(i=0; i<_NUMBER_OF_SENSORS-1;i++){
+// 			if (source_deleted[i] == _TRUE)
+// 				continue;
+// 			if(source[i].sensor_id <= source[i+1].sensor_id)
+// 				index_b = source[i].sensor_id;
+// 			else 
+// 				index_b = source[i+1].sensor_id;
+// 		}
 
-		destination[ii++] = source[index_b];
-		source_deleted[index_b] = _TRUE;
-	}
+// 		destination[ii++] = source[index_b];
+// 		source_deleted[index_b] = _TRUE;
+// 	}
 
-	/* copy sorted sensor data to shared memory */
-	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	for(i=0; i<_NUMBER_OF_SENSORS;i++)
-		f[i] = destination[i];
-	ipc_sem_free(semid, &sb);					// free lock on shared memory
+// 	/* copy sorted sensor data to shared memory */
+// 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+// 	for(i=0; i<_NUMBER_OF_SENSORS;i++)
+// 		f[i] = destination[i];
+// 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	return 0;
-}
+// 	return 0;
+// }
 
-int s_save(_CMD_FSM_CB *cb){ 
+// int s_save(_CMD_FSM_CB *cb){ 
 
-	_SEN_DAT 			buf[_NUMBER_OF_SENSORS];
-	int 				i;
+// 	_SEN_DAT 			buf[_NUMBER_OF_SENSORS];
+// 	int 				i;
 
-	/* copy sensor data to working buffer */
-	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	for(i=0; i<_NUMBER_OF_SENSORS;i++)
-		buf[i] = cb->ipc_ptr->s_dat[i];
-	ipc_sem_free(semid, &sb);					// free lock on shared memory
+// 	/* copy sensor data to working buffer */
+// 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+// 	for(i=0; i<_NUMBER_OF_SENSORS;i++)
+// 		buf[i] = cb->ipc_ptr->s_dat[i];
+// 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	/* check for empty space */
-	for(i=0; i<_NUMBER_OF_SENSORS;i++)
-		if(buf[i].active == _FALSE){
-			buf[i].active = _TRUE;
-			buf[i].sensor_id = cb->w_sen_dat.sensor_id;
-			strcpy(buf[i].group, cb->w_sen_dat.group);
-			strcpy(buf[i].description, cb->w_sen_dat.description);
-		}
-		else{
-			return 1;
-		}
+// 	/* check for empty space */
+// 	for(i=0; i<_NUMBER_OF_SENSORS;i++)
+// 		if(buf[i].active == _FALSE)
+// 		{
+// 			buf[i].active = _TRUE;
+// 			buf[i].sensor_id = cb->w_sen_dat.sensor_id;
+// 			strcpy(buf[i].group, cb->w_sen_dat.group);
+// 			strcpy(buf[i].description, cb->w_sen_dat.description);
+// 		}
+// 		else{
+// 			return 1;
+// 		}
 
-	s_sort(buf);
+// 	s_sort(buf);
 
-	/* copy sensor data to shared memory */
-	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
-	for(i=0; i<_NUMBER_OF_SENSORS;i++)
-		cb->ipc_ptr->s_dat[i] = buf[i];
-	ipc_sem_free(semid, &sb);					// free lock on shared memory
+// 	/* copy sensor data to shared memory */
+// 	ipc_sem_lock(semid, &sb);					// wait for a lock on shared memory
+// 	for(i=0; i<_NUMBER_OF_SENSORS;i++)
+// 		cb->ipc_ptr->s_dat[i] = buf[i];
+// 	ipc_sem_free(semid, &sb);					// free lock on shared memory
 
-	return 0;
-}
+// 	return 0;
+// }
 
-int s_delete(){
+// int s_delete(){
 
-	return 0;
-}
+// 	return 0;
+// }

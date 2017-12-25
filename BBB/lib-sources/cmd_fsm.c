@@ -292,58 +292,56 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*************** start fsm support functions ********************/
 
 
-/* character sort utility */
-void CharSort(char arr[][MAX_LEN], int n)
-{
-    int i, j, min_idx;
+// /* character sort utility */
+// void CharSort(char arr[][_GROUP_NAME_SIZE])
+// {
+//     int i, j, min_idx;
+//     char minStr[_GROUP_NAME_SIZE];
+//     // One by one move boundary of unsorted subarray
+//     for (i = 0; i < _NUMBER_OF_SENSORS-1; i++)
+//     {
+//         // Find the minimum element in unsorted array
+//         min_idx = i;
+//         strcpy(minStr, arr[i]);
+//         for (j = i+1; j < _NUMBER_OF_SENSORS; j++)
+//         {
+//             // If min is greater than arr[j]
+//             if (strcmp(minStr, arr[j]) > 0)
+//             {
+//                 // Make arr[j] as minStr and update min_idx
+//                 strcpy(minStr, arr[j]);
+//                 min_idx = j;
+//             }
+//         }
   
-    // One by one move boundary of unsorted subarray
-    char minStr[MAX_LEN];
-    for (i = 0; i < n-1; i++)
-    {
-        // Find the minimum element in unsorted array
-        int min_idx = i;
-        strcpy(minStr, arr[i]);
-        for (j = i+1; j < n; j++)
-        {
-            // If min is greater than arr[j]
-            if (strcmp(minStr, arr[j]) > 0)
-            {
-                // Make arr[j] as minStr and update min_idx
-                strcpy(minStr, arr[j]);
-                min_idx = j;
-            }
-        }
-  
-        // Swap the found minimum element with the first element
-        if (min_idx != i)
-        {
-            char temp[MAX_LEN];
-            strcpy(temp, arr[i]); //swap item[pos] and item[i]
-            strcpy(arr[i], arr[min_idx]);
-            strcpy(arr[min_idx], temp);
-        }
-    }
-}
-/* intiger sort utility */
-void IntSort(* int[] array)
-{
-    int i, j, temp;
+//         // Swap the found minimum element with the first element
+//         if (min_idx != i)
+//         {
+//             char temp[_GROUP_NAME_SIZE];
+//             strcpy(temp, arr[i]); //swap item[pos] and item[i]
+//             strcpy(arr[i], arr[min_idx]);
+//             strcpy(arr[min_idx], temp);
+//         }
+//     }
+// }
+// /* intiger sort utility */
+// void IntSort(int *array)
+// {
+//     int i, j, temp;
  
-    /*   Bubble sorting begins */
-    for (i = 0; i < _NUMBER_OF_SENSORS; i++)
-    {
-        for (j = 0; j < (_NUMBER_OF_SENSORS - i - 1); j++)
-        {
-            if (array[j] > array[j + 1])
-            {
-                temp = array[j];
-                array[j] = array[j + 1];
-                array[j + 1] = temp;
-            }
-        }
-    }
-}
+//     for (i = 0; i < _NUMBER_OF_SENSORS; i++)
+//     {
+//         for (j = 0; j < (_NUMBER_OF_SENSORS - i - 1); j++)
+//         {
+//             if (array[j] > array[j + 1])
+//             {
+//                 temp = array[j];
+//                 array[j] = array[j + 1];
+//                 array[j + 1] = temp;
+//             }
+//         }
+//     }
+// }
 
 
 
@@ -1547,12 +1545,15 @@ int c_68(_CMD_FSM_CB * cb)
 /* set working sensor group */
 int c_69(_CMD_FSM_CB *cb)
 {
+	char 			buf[_GROUP_NAME_SIZE];
 	if(strlen(cb->token)>_GROUP_NAME_SIZE + 2)
 	{
 		printf("group name limited to %d characters\n\r", _GROUP_NAME_SIZE);
 		return 2;
 	}
-	strcpy(cb->w_sen_dat.group, dequote(cb->token));
+	strcpy(buf, dequote(cb->token));
+	strcpy(cb->w_sen_dat.group, padstr(buf, _GROUP_NAME_SIZE));
+	// strcpy(cb->w_sen_dat.group, "test");
 	return 0;
 }
 
@@ -1588,12 +1589,10 @@ int c_73(_CMD_FSM_CB *cb){
 
 	ipc_sem_lock(semid, &sb);									// wait for a lock on shared memory
 	cb->ipc_ptr->s_dat[cb->w_sen_dat.sensor_id] = cb->w_sen_dat;
+	printf("ipc <%s>, cb <%s>\n\r",cb->ipc_ptr->s_dat[cb->w_sen_dat.sensor_id].group, cb->w_sen_dat.group);
 	ipc_sem_free(semid, &sb);									// free lock on shared memory
 
-	/* build prompt */
-
 	printf("sensor data saved\r\n");
-
 	return 0;
 }
 
