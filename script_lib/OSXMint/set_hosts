@@ -1,0 +1,9 @@
+#!/bin/bash
+# cron job to archive sensor data
+
+export DEV=192.168.254.205
+export PROD=192.168.254.206
+
+printf "host variables set\n"
+
+printf "dev <$DEV>\n"

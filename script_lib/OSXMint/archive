@@ -1,0 +1,64 @@
+#!/bin/bash
+# cron job to archive sensor data
+
+export PATH=$PATH:/usr/local/myscripts
+
+	TARGET_IP=$DEV
+	
+	LOCAL_DIR=/media/data/sensors
+	REMOTE_DIR=/media/Logs
+	LOG_DIR=/media/data/logs
+
+	LOG_FILE=maint.log
+	ARCHIVE_FILE=master.dat
+	TEMP_FILE=td.dat
+	SENSOR_FILE=sensor.dat
+
+	printf "\nTARGET_IP=$TARGET_IP\n"
+	printf "LOCAL_DIR=$LOCAL_DIR\n"
+	printf "REMOTE_DIR=$REMOTE_DIR\n"
+	printf "LOG_DIR=$LOG_DIR\n"
+	printf "LOG_FILE=$LOG_FILE\n"
+	printf "ARCHIVE_FILE=$ARCHIVE_FILE\n"
+	printf "TEMP_FILE=$TEMP_FILE\n"
+	printf "SENSOR_FILE=$SENSOR_FILE\n\n"
+
+
+
+# echo -n '** ' >> $LOG_FILE
+# echo -n $(date) >> $LOG_FILE
+# echo ' sensor log archive started' >> $LOG_FILE
+# mv -v $LOCAL_DIR/$SENSOR_FILE $LOCAL_DIR/$TEMP_FILE  >> $LOG_FILE											# rename sensor log file file
+# echo -e $(rsync -avz  $LOCAL_DIR/$TEMP_FILE mam1@$TARGET_IP:$REMOTE_DIR/$TEMP_FILE) >> $LOG_FILE		# move temp file to ShopMint
+# echo -n $? >> $LOG_FILE																					# print rsync return code
+# echo -e ' returned from rsync' >> $LOG_FILE																# print rsync return code
+# if [ $? == 0 ] 																							# test return code
+# 	then	
+# 		echo -n $(rm -v $LOCAL_DIR/$TEMP_FILE ) >> $LOG_FILE											# delete local temp file
+# 	else
+# 		echo 'rsync error, script aborted'  >> $LOG_FILE
+# 		exit 1
+# fi															
+# echo -e $(ssh mam1@$TARGET_IP 'cat /media/Logs/td.dat >> /media/Logs/master.dat') >> $LOG_FILE	# append temp file to master
+# # echo -e $(ssh mam1@$TARGET_IP 'cat $REMOTE_DIR/$TEMP_FILE >> $REMOTE_DIR/$ARCHIVE_FILE') >> $LOG_FILE	# append temp file to master
+# if [ $? == 0 ] 																							# test return code
+# 	then	
+# 		echo -n  $REMOTE_DIR/$TEMP_FILE >> $LOG_FILE
+# 		echo -n ' appended to '  >> $LOG_FILE
+# 		echo -e  $REMOTE_DIR/$ARCHIVE_FILE >> $LOG_FILE
+# 	else
+# 		echo 'cat error script aborted'  >> $LOG_FILE
+# 		exit 1
+# fi
+# echo -e $(ssh mam1@$TARGET_IP 'rm -v  /media/Logs/td.dat') >> $LOG_FILE								# delete remote temp file
+# if [ $? != 0 ] 																							# test return code
+# 	then	
+# 		echo 'remove error, script aborted'  >> $LOG_FILE
+# 		exit 1
+# fi
+# echo -n '** ' >> $LOG_FILE
+# echo -n $(date) >> $LOG_FILE
+# echo ' archive finished' >> $LOG_FILE
+
+
+
