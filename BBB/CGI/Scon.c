@@ -181,13 +181,16 @@ float new_strtof(char* const ostr, char** endptr, unsigned char base)
 
 /********** main routine ************************************************************************/
 int main(void) {
-	FILE 			*cgi_data;					// sensor data file
-	FILE 			*cgi_log;					// cgi log
-	char 			*s_num, *s_temp, *s_humid;
-	long 			l_num;
-	float 			l_temp, l_humid;
-	char 			*eptr;
+	FILE 				*cgi_data;					// sensor data file
+	FILE 				*cgi_log;					// cgi log
+	char 				*s_num, *s_temp, *s_humid;
+	long 				l_num;
+	float 				l_temp, l_humid;
+	char 				*eptr;
 	_SEN_DAT_REC 		buffer;
+	// char 				*bigbuf[128];
+	char 				fname[_FILE_NAME_SIZE];
+	FILE                *dropbox;
 
 	/********** initializations *******************************************************************/
 
@@ -286,6 +289,8 @@ int main(void) {
 	buffer.sensor_id = ipc_ptr->s_dat[(int)l_num].sensor_id;
 	buffer.temp = ipc_ptr->s_dat[(int)l_num].temp;
 	buffer.humidity = ipc_ptr->s_dat[(int)l_num].humidity;
+	strcpy(buffer.description, ipc_ptr->s_dat[(int)l_num].description);
+
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
 
 	if(fwrite(&buffer, sizeof(buffer), 1, cgi_data) != 1)
@@ -307,6 +312,21 @@ int main(void) {
 			buffer.temp,
 			buffer.humidity);
 		printf(" CGI: data written to %s\n\r", _SENSOR_DATA_FILE_NAME);
+
+		sprintf(fname,"/media/data/sensors/sensor-%i.sdat",buffer.sensor_id);
+		dropbox = fopen(fname,"w");
+		fprintf(dropbox,"sensor %i, %i:%i:%i,  %i/%i/%i,  temp %0.2f,  humidity %0.2f, %s\n\r",
+			buffer.sensor_id, 	
+			tm.tm_hour, 
+			tm.tm_min, 
+			tm.tm_sec, 
+			tm.tm_mon + 1, 
+			tm.tm_mday, 
+			tm.tm_year  + 1900,
+			buffer.temp,
+			buffer.humidity,
+			buffer.description);	
+		fclose(dropbox);
 	}
 	fclose(cgi_data);
 	fclose(cgi_log);

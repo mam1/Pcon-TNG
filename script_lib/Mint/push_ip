@@ -7,6 +7,8 @@ APP="push_ip"
 VER="2.0.1"
 DATE="$(date +'%m/%d/%Y')"
 TIME="$(date +'%r')" 
+LOCAL_DIR = /media/Logs
+REMOTE_DIR = /media/data/sensors
 
 echo -e "\n\r"$APP $VER "run at" $TIME "on" $DATE >> /media/logs/exip.log
 
@@ -36,3 +38,8 @@ echo -e "external IP address" $IP >> /media/BlackHole/temp/exip.dat
 
 # push external IP address to dropbox
 echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload /media/BlackHole/temp/exip.dat current_ip) >> /media/logs/exip.log
+
+# get sensor files from remote server and push to dropbox
+rsync -azv --include='*.sdat'   root@$DEV:$REMOTE_DIR $LOCAL_DIR
+cat $LOCAL_DIR/*.sdat > sensor_merge.sdat
+echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload $LOCAL_DIR/sensor_merge.sdat) >> /media/logs/exip.log

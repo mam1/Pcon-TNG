@@ -70,6 +70,7 @@ typedef	struct{
 		float		temp;
 		float		humidity;
 		time_t 		ts;
+		char 		description[_DESCRIPTION_NAME_SIZE];
 } _SEN_DAT_REC;
 
 /* schedule record */

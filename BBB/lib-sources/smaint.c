@@ -31,7 +31,7 @@
 extern int 				semid;
 extern unsigned short 	semval;
 extern struct sembuf	sb;
-
+s
 int s_load(int id, _CMD_FSM_CB *cb)
 {
 	int 		i;
@@ -52,6 +52,8 @@ int s_load(int id, _CMD_FSM_CB *cb)
 	cb->w_sen_dat.active = _OFF;
 	return id;
 }
+
+
 
 // int s_sort(_SEN_DAT f[])
 // {
