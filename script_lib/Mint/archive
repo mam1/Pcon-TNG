@@ -3,56 +3,52 @@
 
 export PATH=$PATH:/usr/local/myscripts
 
-export DEV=192.168.254.205
-
 	TARGET_IP=$DEV
-	echo TARGET_IP
-	echo $TARGET_IP
-	echo $DEV
+	
+	LOCAL_DIR=/media/Logs/sensor-data
+	REMOTE_DIR=/media/data/sensors
+	LOG_DIR=/media/Logs/sensor-data
 
-# 	LOCAL_DIR=/media/data/sensors
-# 	REMOTE_DIR=/media/Logs
+	LOG_FILE=maint.log
+	ARCHIVE_FILE=master.dat
+	TEMP_FILE=td.dat
+	SENSOR_FILE=sensor.dat
 
-# 	LOG_FILE=/media/data/logs/maint.log
+	printf "\n*** sensor archive started " >> $LOCAL_DIR/$LOG_FILE 2>&1
+	date +"%T %D"  >> $LOCAL_DIR/$LOG_FILE 2>&1
+	printf "TARGET_IP=$TARGET_IP\n" >> $LOCAL_DIR/$LOG_FILE 2>&1
+	# printf "LOCAL_DIR=$LOCAL_DIR\n" >> $LOCAL_DIR/$LOG_FILE 2>&1
+	# printf "REMOTE_DIR=$REMOTE_DIR\n" >> $LOCAL_DIR/$LOG_FILE 2>&1
+	# printf "LOG_DIR=$LOG_DIR\n" >> $LOCAL_DIR/$LOG_FILE 2>&1
+	# printf "LOG_FILE=$LOG_FILE\n" >> $LOCAL_DIR/$LOG_FILE 2>&1
+	# printf "ARCHIVE_FILE=$ARCHIVE_FILE\n" >> $LOCAL_DIR/$LOG_FILE 2>&1
+	# printf "TEMP_FILE=$TEMP_FILE\n" >> $LOCAL_DIR/$LOG_FILE 2>&1
+	# printf "SENSOR_FILE=$SENSOR_FILE\n" >> $LOCAL_DIR/$LOG_FILE 2>&1
 
-# 	ARCHIVE_FILE=master.dat
-# 	TEMP_FILE=td.dat
-# 	SENSOR_FILE=sensor.dat
+# rename remote sensor log file file
+rename=$(ssh root@$TARGET_IP "mv -v $REMOTE_DIR/$SENSOR_FILE $REMOTE_DIR/$TEMP_FILE")
+printf "$rename" >> $LOCAL_DIR/$LOG_FILE 2>&1
+# move temp file to local
+	rsync -avz  root@$TARGET_IP:$REMOTE_DIR/$TEMP_FILE $LOCAL_DIR/$TEMP_FILE >> $LOCAL_DIR/$LOG_FILE 2>&1		
+	printf "$? returned from rsync\n" >> $LOCAL_DIR/$LOG_FILE 2>&1															
+	if [ $? == 0 ] 	# test return code
+		then 			
+			remove=$(ssh root@$TARGET_IP "rm -v $REMOTE_DIR/$TEMP_FILE")	# delete remote temp file
+			printf "$remove" >> $LOCAL_DIR/$LOG_FILE 2>&1										
+		else
+			printf "rsync error >$?<, script aborted"  >> $LOCAL_DIR/$LOG_FILE 2>&1
+			exit 1
+	fi				
+# append local temp file to local master
+	cat $LOCAL_DIR/$TEMP_FILE >> $LOCAL_DIR/$ARCHIVE_FILE >> $LOCAL_DIR/$LOG_FILE 2>&1
+	if [ $? == 0 ] 	# test return code
+		then	
+			printf "$REMOTE_DIR/$TEMP_FILE appended to $REMOTE_DIR/$ARCHIVE_FILE" >> $LOCAL_DIR/$LOG_FILE 2>&1
+		else
+			printf "cat error >$?<, script aborted" >> $LOCAL_DIR/$LOG_FILE 2>&1
+			exit 1
+	fi
 
-# echo -n '** ' >> $LOG_FILE
-# echo -n $(date) >> $LOG_FILE
-# echo ' sensor log archive started' >> $LOG_FILE
-# mv -v $LOCAL_DIR/$SENSOR_FILE $LOCAL_DIR/$TEMP_FILE  >> $LOG_FILE											# rename sensor log file file
-# echo -e $(rsync -avz  $LOCAL_DIR/$TEMP_FILE mam1@$TARGET_IP:$REMOTE_DIR/$TEMP_FILE) >> $LOG_FILE		# move temp file to ShopMint
-# echo -n $? >> $LOG_FILE																					# print rsync return code
-# echo -e ' returned from rsync' >> $LOG_FILE																# print rsync return code
-# if [ $? == 0 ] 																							# test return code
-# 	then	
-# 		echo -n $(rm -v $LOCAL_DIR/$TEMP_FILE ) >> $LOG_FILE											# delete local temp file
-# 	else
-# 		echo 'rsync error, script aborted'  >> $LOG_FILE
-# 		exit 1
-# fi															
-# echo -e $(ssh mam1@$TARGET_IP 'cat /media/Logs/td.dat >> /media/Logs/master.dat') >> $LOG_FILE	# append temp file to master
-# # echo -e $(ssh mam1@$TARGET_IP 'cat $REMOTE_DIR/$TEMP_FILE >> $REMOTE_DIR/$ARCHIVE_FILE') >> $LOG_FILE	# append temp file to master
-# if [ $? == 0 ] 																							# test return code
-# 	then	
-# 		echo -n  $REMOTE_DIR/$TEMP_FILE >> $LOG_FILE
-# 		echo -n ' appended to '  >> $LOG_FILE
-# 		echo -e  $REMOTE_DIR/$ARCHIVE_FILE >> $LOG_FILE
-# 	else
-# 		echo 'cat error script aborted'  >> $LOG_FILE
-# 		exit 1
-# fi
-# echo -e $(ssh mam1@$TARGET_IP 'rm -v  /media/Logs/td.dat') >> $LOG_FILE								# delete remote temp file
-# if [ $? != 0 ] 																							# test return code
-# 	then	
-# 		echo 'remove error, script aborted'  >> $LOG_FILE
-# 		exit 1
-# fi
-# echo -n '** ' >> $LOG_FILE
-# echo -n $(date) >> $LOG_FILE
-# echo ' archive finished' >> $LOG_FILE
-
-
+	printf "*** sensor archive completed " >> $LOCAL_DIR/$LOG_FILE 2>&1
+	date +"%T %D"  >> $LOCAL_DIR/$LOG_FILE 2>&1
 
