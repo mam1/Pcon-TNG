@@ -38,6 +38,6 @@ echo -e "external IP address" $IP >> /media/BlackHole/temp/exip.dat
 echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload /media/BlackHole/temp/exip.dat current_ip) >> /media/Logs/exip.log
 
 # get sensor files from remote server and push to dropbox
-rsync -azv --include='*.sdat' --include='*/'  --exclude='*' root@$DEV:/media/data/sensors/  /media/Logs/sensors/
+rsync -azv --include='*.sdat' --include='*/'  --exclude='*' root@192.168.254.205:/media/data/sensors/  /media/Logs/sensors/
 cat /media/Logs/sensors/*.sdat > /media/Logs/sensors/sensor_merge.tdat
 echo $(/home/mam1/Git/Dropbox-Uploader/dropbox_uploader.sh upload /media/Logs/sensors/sensor_merge.tdat sensors) >> /media/Logs/exip.log
