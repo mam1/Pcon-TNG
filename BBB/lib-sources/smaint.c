@@ -31,7 +31,7 @@
 extern int 				semid;
 extern unsigned short 	semval;
 extern struct sembuf	sb;
-s
+
 int s_load(int id, _CMD_FSM_CB *cb)
 {
 	int 		i;
