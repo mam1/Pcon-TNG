@@ -1,5 +1,5 @@
 [Eagle]
-Version="08 07 01"
+Version="09 00 00"
 Platform="Linux"
 Globals="Globals"
 Desktop="Desktop"
@@ -392,6 +392,7 @@ ArcDirection=0
 AddLevel=2
 PadsSameType=0
 Layer=91
+Views=" 1: -16.256 -14.986 168.656 103.886"
 Sheet="1"
 
 [Win_2]
