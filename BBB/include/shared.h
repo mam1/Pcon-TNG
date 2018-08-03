@@ -2,7 +2,7 @@
 #define _SHARE_H_
 
 /* version info */
-#define _TAG		"v1.5"
+#define _TAG		"v1.5"        // confugured for 7 channels
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
