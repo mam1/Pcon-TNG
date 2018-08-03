@@ -94,14 +94,14 @@
 #define _CHAN2			{8,26,61}
 #define _CHAN5			{9,12,60}
 #define _CHAN4			{9,15,48}
-#define _CHAN6			{9,23,49}
-#define _CHAN8			{9,41,20}
-#define _CHAN7			{8,41,20}
+#define _CHAN7			{9,23,49}
+#define _CHAN6			{9,41,20}
+#define _CHAN8			{8,41,20}
 #define _CHAN9			{8,36,80}
 #define _CHAN10			{8,37,78}
 #define _CHAN11			{8,38,79}
 #define _CHAN12			{8,39,76}
-#define _CHAN13			{8,40,77}
+#define _CHAN13			{8,43,77} //////// {8,40,77}
 #define _CHAN14			{8,41,74}
 #define _CHAN15			{8,42,75}
 #define _HB0 			{8,7,66}
