@@ -4,7 +4,7 @@
 /* Dcon version info */
 #define _MAJOR_VERSION_Dcon		4
 #define _MINOR_VERSION_Dcon 	1
-#define _MINOR_REVISION_Dcon	0
+#define _MINOR_REVISION_Dcon	1
 
 #include "shared.h"
 

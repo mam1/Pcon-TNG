@@ -2,7 +2,7 @@
 #define _SHARE_H_
 
 /* version info */
-#define _TAG		"v1.4"
+#define _TAG		"v1.5"
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
@@ -66,7 +66,7 @@
 #define _MAX_SENSOR_ID			99
 
 /* channel parameters */
-#define _NUMBER_OF_CHANNELS 	16
+#define _NUMBER_OF_CHANNELS 	7
 #define _CHANNEL_NAME_SIZE		20
 
 /* schedule parameters */
@@ -108,6 +108,25 @@
 #define _HB1 			{8,9,67}
 #define _HB2 			{8,8,69}
 #define _HB3 			{8,10,68}
+
+/*
+#define _CHAN0			{8,27,86}
+#define _CHAN1			{8,28,88}
+#define _CHAN2			{8,29,87}
+#define _CHAN3			{8,30,89}
+#define _CHAN4			{8,31,10}
+#define _CHAN5			{8,32,11}
+#define _CHAN6			{8,33,9}
+#define _CHAN7			{8,34,81}
+#define _CHAN8			{8,35,8}
+#define _CHAN9			{8,36,80}
+#define _CHAN10			{8,37,78}
+#define _CHAN11			{8,38,79}
+#define _CHAN12			{8,39,86}
+#define _CHAN13			{8,40,77}
+#define _CHAN14			{8,41,74}
+#define _CHAN15			{8,42,75}
+*/
 
 /* general */
 #define _DAYS_PER_WEEK 	7

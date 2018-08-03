@@ -59,7 +59,7 @@ $(program_NAME): $(program_OBJS)
 	@echo "\n build of  $(program_NAME) completed\n"
 
 # move the executable to the bone
-	bload bone1
+	bload dev
 
 # clean up
 	@- $(RM) -v $(program_NAME)
