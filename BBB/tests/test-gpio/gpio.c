@@ -7,7 +7,7 @@
 #include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
-#include <sys/stat.h> 
+#include <sys/stat.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <time.h>
-
 #include "bbb.h"
 
 /*	gpio pin assignment {header,pin,gpio}  	*/
@@ -65,8 +64,9 @@
 #define _HB2 			{8,45,70}
 #define _HB3 			{8,46,71}
 
-/* initialise gpio pin */
-int init_gpio(int gpio) {
+/* export gpio pin */
+int init_gpio(int gpio)
+{
 	char 				command[120];
 
 	sprintf(command, "if [ ! -d /sys/class/gpio/gpio%i ]; then echo %i > /sys/class/gpio/export; fi", gpio, gpio);
@@ -78,125 +78,59 @@ int init_gpio(int gpio) {
 	return 0;
 }
 
-int dout(){
 
-	return 0;
-}
+int main(void)
+{
 
-int main(void){
-
-	int 		rnum,state;
-	char 		header[10];
-	char 		pin[10];
-	char 		cmd[30];
-		char 				command[120];
+	int 			rnum, state;
+	char 			header[10];
+	char 			pin[10];
+	char 			cmd[30];
+	char 			command[120];
 
 	int 			i;
 
-
+	/* gpio assignments */
 	typedef struct {
 		int         header;
 		int         pin;
 		int 		gpio;
 	} _GPIO;
+	static _GPIO 	chan[16] = {_CHAN0, _CHAN1, _CHAN2, _CHAN3, _CHAN4, _CHAN5, _CHAN6, _CHAN7, _CHAN8, _CHAN9, _CHAN10, _CHAN11, _CHAN12, _CHAN13, _CHAN14, _CHAN15};
+	static _GPIO 	heart[4] = {_HB0, _HB1, _HB2, _HB3};
 
-	_GPIO 			chan[16] = {_CHAN0,_CHAN1,_CHAN2,_CHAN3,_CHAN4,_CHAN5,_CHAN6,_CHAN7,_CHAN8,_CHAN9,_CHAN10,_CHAN11,_CHAN12,_CHAN13,_CHAN14,_CHAN15};
-	_GPIO 			heart[2] = {_HB0, _HB1, _HB2, _HB3};
-	
+	/* initializations */
+	printf"\n *********\n gpio test started\n");
+	printf("starting initializations\n");
+
+	/* load cape that disables HDMI and gives me back the gpios */
 	sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
-	printf("system command %s returned %i\n", command, system(command));
+	printf("command <%s>\n", command);
+	printf("command returned %i", system(command);
 
-	// for(i=0; i<16; i++){
-	// 	// printf(" P%i.%i", chan[i].header, chan[i].pin);
-	// 	init_gpio(chan[i].gpio);
-	// }
+	/* intialize gpio pins */
+	for (i = 0; i < 16; i++) {
+	// printf(" P%i.%i", chan[i].header, chan[i].pin);
+	init_gpio(chan[i].gpio);
+	}
 
-	// for(i=0; i<4; i++){
-	// 	// printf(" P%i.%i", heart[i].header, heart[i].pin);
-	// 	init_gpio(heart[i].gpio);
-	// }
+	for (i = 0; i < 4; i++) {
+	// printf(" P%i.%i", heart[i].header, heart[i].pin);
+	init_gpio(heart[i].gpio);
+	}
 
-	printf("\ndone with initializations\n\n");
+	printf("\ndone with initializations\ntest pins\n");
 
-	for(i=0; i<16; i++){
-		sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", chan[i].gpio);
+	for (i = 0; i < 16; i++) {
+	sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", chan[i].gpio);
 		printf("system command %s returned %i\n", command, system(command));
 	}
 
-	for(i=0; i<4; i++){
-		sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[i].gpio);
+	for (i = 0; i < 4; i++) {
+	sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", heart[i].gpio);
 		printf("system command %s returned %i\n", command, system(command));
 	}
 
-
-	// for(i=0; i<16; i++){
-	// 	sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", chan[i].gpio);
-	// 	printf("system command %s returned %i\n", command, system(command));
-	// }
-
-	// for(i=0; i<2; i++){
-	// 	sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", heart[i].gpio);
-	// 	printf("system command %s returned %i\n", command, system(command));
-	// }
-
-		// show_gpio();
-
-									
-	// printf("enter number > 17 to exit\n");
-	// for(;;){
-	// 	printf("enter relay number 0 - 17 > ");
-	// 	scanf ("%d",&rnum);
-	// 	if ((rnum < 0) || (rnum > 17)){
-	// 		printf("\nnormal exit\n");
-	// 		return 0;
-	// 	}
-	// 	sprintf( header, "%d", gpio[rnum].header );
-	// 	sprintf( pin, "%d", gpio[rnum].pin );
-
-
-	// 	state = -1;
-	// 	while((state != 0) && (state != 1)){
-	// 		printf("enter 0 for off or 1 for on > ");
-	// 		scanf ("%d",&state);
-	// 		if ((state == 0) || (state == 1)){
-	// 			printf("led %i on header %i, pin %i set to %i\n", rnum, gpio[rnum].header, gpio[rnum].pin, state );
-
-
-	// 			char 	highlow[5];
-	// 			char 	*prefix="config-pin P";
-
-	// 			switch(state){
-	// 				case 0:
-	// 					strcpy(highlow," low");
-	// 					break;
-	// 				case 1:
-	// 					strcpy(highlow," hi");
-	// 					break;
-	// 				default:
-	// 					break;
-	// 			}
-
-	// 			strcpy(cmd,prefix);
-	// 			strcat(cmd,header);
-	// 			strcat(cmd,".");
-	// 			strcat(cmd,pin);
-	// 			strcat(cmd,highlow);
-	// 			printf("\n\n%s\n\n",cmd);
-	// 			// digital_output(gpio[rnum].header, gpio[rnum].pin, state);
-	// 			system(cmd);
-	// 			show_gpio();
-	// 		}
-
-
-
-
-
-
-
-
-
-	// 	}
-	// }
 	printf("normal termination\n");
 
 	return 0;
