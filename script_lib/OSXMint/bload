@@ -3,25 +3,25 @@
 #	binload - move binaries from development machine to a bone
 #
 
-# target_IP=192.168.254.77
+# target_IP=192.168.254.34
 if [ $# == 0 ]
 	then
-		printf "\n    bone1=192.168.254.77\n"
-		printf 	 "    bone2=192.168.254.77\n"
-		printf   "    bone3=192.168.254.77\n\n"
+		printf "\n    bone1=192.168.254.34\n"
+		printf 	 "    bone2=192.168.254.34\n"
+		printf   "    bone3=192.168.254.34\n\n"
 		printf "  enter target > "
 		read answr
 		if [ "$answr" == "bone1" ] 
 			then
-				target_ip=192.168.254.77
+				target_ip=192.168.254.34
 			else
 				if [ "$answr" == "bone2" ]
 					then
-						target_ip=192.168.254.77
+						target_ip=192.168.254.34
 					else
 						if [ "$answr" == "bone3" ]
 							then
-								target_ip=192.168.254.77
+								target_ip=192.168.254.34
 							else
 								printf "must select bone1, bone2 or bone3\nscript aborted\n"
 								exit 1
@@ -31,14 +31,14 @@ if [ $# == 0 ]
 
 	else
 		case "$1" in
-			'bone1' | '192.168.254.77')
-			target_ip=192.168.254.77
+			'bone1' | '192.168.254.34')
+			target_ip=192.168.254.34
 		;;
-			'bone2' | '192.168.254.77' | 'dev')
-			target_ip=192.168.254.77
+			'bone2' | '192.168.254.34' | 'dev')
+			target_ip=192.168.254.34
 		;;
-			'bone3' | '192.168.254.77' | 'prod')
-			target_ip=192.168.254.77
+			'bone3' | '192.168.254.34' | 'prod')
+			target_ip=192.168.254.34
 		;;
 		esac
 fi
@@ -62,7 +62,7 @@ else
 fi
 
 # move the bins to the bone
-# target_IP=192.168.254.77
+# target_IP=192.168.254.34
 printf "  copying binaries to device at $target_ip"
 printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_ip:$bone_BIN_DIR\n"
 rsync -azv      $program_DIR_PREFIX/bin/ root@$target_ip:$bone_BIN_DIR
