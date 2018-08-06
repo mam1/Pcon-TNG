@@ -1,0 +1,26 @@
+
+
+if [ $# == 0 ]
+    then
+        printf "usage 'open <prod|dev|last part of the ip address>'\n"
+        exit
+
+    else
+
+        case "$1" in
+            'prod' | '77')
+            target_ip=192.168.254.77
+        ;;
+            'dev' | '34' | 'dev')
+            target_ip=192.168.254.34
+        ;;
+        esac
+
+        ssh root@$target_ip -t 'status; bash -l'
+fi
+
+if [ -z $target_ip ]
+    then
+        printf "invalid parameter\nscript aborted\n"
+    exit
+fi

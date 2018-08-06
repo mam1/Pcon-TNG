@@ -138,6 +138,19 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	return;
 }
 
+/* export gpio pin */
+int init_gpio(int gpio)
+{
+	char 				command[120];
+	sprintf(command, "if [ ! -d /sys/class/gpio/gpio%i ]; then echo %i > /sys/class/gpio/export; fi", gpio, gpio);
+	printf("system command %s returned %i\n", command, system(command));
+	sprintf(command, "echo out > /sys/class/gpio/gpio%i/direction", gpio);
+	printf("system command %s returned %i\n", command, system(command));
+	sprintf(command, "echo 0 > /sys/class/gpio/gpio%i/value", gpio);
+	printf("system command %s returned %i\n", command, system(command));
+	return 0;
+}
+
 int main(void) {
 	
 	pid_t 		pid, sid;		// process ID and Session ID
@@ -198,9 +211,9 @@ int main(void) {
 	logit("starting initializations"); 
 
 	/* load cape that disables HDMI and gives me back the gpios */
-	sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
-	logit(command);
-	system(command);
+	// sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
+	// logit(command);
+	// system(command);
 
 	/* check for ipc file */
 	if (access(ipc_file, F_OK) == 0) {
@@ -235,14 +248,15 @@ int main(void) {
         ipc_sem_free(semid, &sb);                   // free lock on shared memory
 	}
 
-	/* set the gpio direction */
-	for(i=0;i<_NUMBER_OF_CHANNELS;i++){
-		sprintf(command, "echo out > /sys/class/gpio/gpio%i/direction", chan[i].gpio);
-		system(command);
+	/* intialize gpio pins */
+	for (i = 0; i < _NUMBER_OF_CHANNELS; i++) {
+	// printf(" P%i.%i", chan[i].header, chan[i].pin);
+	init_gpio(chan[i].gpio);
 	}
-	for(i=0;i<4;i++){
-		sprintf(command, "echo out > /sys/class/gpio/gpio%i/direction", heart[i].gpio);
-		system(command);
+
+	for (i = 0; i < 4; i++) {
+	// printf(" P%i.%i", heart[i].header, heart[i].pin);
+	init_gpio(heart[i].gpio);
 	}
 
 	/* The Big Loop */
