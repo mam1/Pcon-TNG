@@ -23,21 +23,42 @@
 
 /*	gpio pin assignment {header,pin,gpio}  	*/
 
-#define _CHAN0			{8,17,27}
-#define _CHAN1			{8,16,46}
-#define _CHAN2			{8,26,61}
-#define _CHAN3			{8,18,65}
-#define _CHAN4			{9,15,48}
-#define _CHAN5			{9,12,60}
-#define _CHAN6			{9,41,20} 
-#define _CHAN7			{9,23,49}
-#define _CHAN8			{9,18,4} //
+// #define _CHAN0			{8,17,27}
+// #define _CHAN1			{8,16,46}
+// #define _CHAN2			{8,26,61}
+// #define _CHAN3			{8,18,65}
+// #define _CHAN4			{9,15,48}
+// #define _CHAN5			{9,12,60}
+// #define _CHAN6			{9,41,20} 
+// #define _CHAN7			{9,23,49}
+// #define _CHAN8			{9,18,4} //
+// #define _CHAN9			{8,36,80}
+// #define _CHAN10			{8,37,78}
+// #define _CHAN11			{8,38,79}
+// #define _CHAN12			{8,39,76}
+// #define _CHAN13			{8,40,77} 
+// #define _CHAN14			{8,41,74} 
+// #define _CHAN15			{8,42,75}
+// #define _HB0 			{8,7,66}
+// #define _HB1 			{8,9,67}
+// #define _HB2 			{8,8,69}
+// #define _HB3 			{8,10,68}
+
+#define _CHAN0			{8,27,86}
+#define _CHAN1			{8,28,88}
+#define _CHAN2			{8,29,87}
+#define _CHAN3			{8,30,89}
+#define _CHAN4			{8,31,10}
+#define _CHAN5			{8,32,11}
+#define _CHAN6			{8,33,9}
+#define _CHAN7			{8,34,81}
+#define _CHAN8			{8,35,8}
 #define _CHAN9			{8,36,80}
 #define _CHAN10			{8,37,78}
 #define _CHAN11			{8,38,79}
-#define _CHAN12			{8,39,76}
-#define _CHAN13			{8,40,77} 
-#define _CHAN14			{8,41,74} 
+#define _CHAN12			{8,39,86}
+#define _CHAN13			{8,40,77}
+#define _CHAN14			{8,41,74}
 #define _CHAN15			{8,42,75}
 #define _HB0 			{8,7,66}
 #define _HB1 			{8,9,67}
@@ -82,10 +103,10 @@ int main(void)
 	printf("\n *********\n gpio test started\n");
 	printf("starting initializations\n");
 
-	/* load cape that disables HDMI and gives me back the gpios */
-	sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
-	printf("command <%s>\n", command);
-	printf("command returned %i", system(command));
+	// /* load cape that disables HDMI and gives me back the gpios */
+	// sprintf(command, "echo 'cape-universalh' > /sys/devices/platform/bone_capemgr/slots");
+	// printf("command <%s>\n", command);
+	// printf("command returned %i", system(command));
 
 	/* intialize gpio pins */
 	for (i = 0; i < 16; i++) {
