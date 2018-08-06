@@ -1,54 +1,26 @@
-#!/bin/bash
-#
-#	login to beaglebone on local network
-#
 
-target_ip=''
+
 if [ $# == 0 ]
-	then
-		printf "\n    bone1=192.168.254.204\n"
-		printf 	 "    bone2=192.168.254.205\n"
-		printf   "    bone3=192.168.254.206\n\n"
-		printf "  enter target > "
-		read answr
-		if [ "$answr" == "bone1" ] 
-			then
-				target_ip=192.168.254.204
-			else
-				if [ "$answr" == "bone2" ]
-					then
-						target_ip=192.168.254.205
-					else
-						if [ "$answr" == "bone3" ]
-							then
-								target_ip=192.168.254.206
-							else
-								printf "must select bone1, bone2 or bone3\nscript aborted\n"
-								exit 1
-						fi
-				fi
-		fi
+    then
+        printf "usage 'open <prod|dev|last part of the ip address>'\n"
+        exit
 
-	else
-		case "$1" in
-			'bone1' | '192.168.254.204')
-			target_ip=192.168.254.204
-		;;
-			'bone2' | '192.168.254.205' | 'dev')
-			target_ip=192.168.254.205
-		;;
-			'bone3' | '192.168.254.206' | 'prod')
-			target_ip=192.168.254.206
-		;;
-		esac
+    else
+
+        case "$1" in
+            'prod' | '77')
+            target_ip=192.168.254.77
+        ;;
+            'dev' | '34' | 'dev')
+            target_ip=192.168.254.34
+        ;;
+        esac
+
+        ssh root@$target_ip -t 'status; bash -l'
 fi
 
 if [ -z $target_ip ]
-	then
-		printf "invalid parameter\nscript aborted\n"
-	exit
+    then
+        printf "invalid parameter\nscript aborted\n"
+    exit
 fi
-
-printf "  host address $target_ip\n"
-
-ssh root@$target_ip
