@@ -4,13 +4,10 @@
 
 target_ip=''
 if [ $# == 0 ]
-<<<<<<< HEAD
     then
-        printf "usage 'open <prod|dev|last part of the ip address>'\n"
+        printf "usage 'bload <prod|dev|last section of ip adress>'\n"
         exit
-
     else
-
         case "$1" in
             'prod' | '77')
             target_ip=192.168.254.77
@@ -19,44 +16,6 @@ if [ $# == 0 ]
             target_ip=192.168.254.34
         ;;
         esac
-=======
-	then
-		printf "\n    bone1=192.168.254.34\n"
-		printf 	 "    bone2=192.168.254.34\n"
-		printf   "    bone3=192.168.254.34\n\n"
-		printf "  enter target > "
-		read answr
-		if [ "$answr" == "bone1" ] 
-			then
-				target_ip=192.168.254.34
-			else
-				if [ "$answr" == "bone2" ]
-					then
-						target_ip=192.168.254.34
-					else
-						if [ "$answr" == "bone3" ]
-							then
-								target_ip=192.168.254.34
-							else
-								printf "must select bone1, bone2 or bone3\nscript aborted\n"
-								exit 1
-						fi
-				fi
-		fi
-
-	else
-		case "$1" in
-			'bone1' | '192.168.254.34')
-			target_ip=192.168.254.34
-		;;
-			'bone2' | '192.168.254.34' | 'dev')
-			target_ip=192.168.254.34
-		;;
-			'bone3' | '192.168.254.34' | 'prod')
-			target_ip=192.168.254.34
-		;;
-		esac
->>>>>>> 68e2dc731e92a116b675d02468bc71a736403000
 fi
 
 if [ -z $target_ip ]
@@ -70,10 +29,10 @@ bone_BIN_DIR=/usr/local/sbin
 # set directories
 CURRENT_OS=$(uname)
 if [ $CURRENT_OS == "Linux" ]
-then 
-	program_DIR_PREFIX=/home/mam1/Git/Pcon-TNG
-else 
-	program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
+	then 
+		program_DIR_PREFIX=/home/mam1/Git/Pcon-TNG
+	else 
+		program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
 fi
 
 # move shell scripts to the bone

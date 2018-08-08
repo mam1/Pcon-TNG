@@ -2,7 +2,7 @@
 #define _SHARE_H_
 
 /* version info */
-#define _TAG		"v1.5"
+#define _TAG		"v1.6"
 
 /* file names */
 #define _FILE_NAME_SIZE 		50
