@@ -1373,7 +1373,7 @@ int c_56(_CMD_FSM_CB * cb)
 int c_57(_CMD_FSM_CB * cb)
 {
 
-	sch_print(cb, cb->ssch_ptr); // print a formated dump od schedules for each channel and day
+	sch_print(cb, cb->ssch_ptr); // print a formated dump of schedules for each channel and day
 	return 0;
 }
 
@@ -1381,7 +1381,7 @@ int c_57(_CMD_FSM_CB * cb)
 int c_58(_CMD_FSM_CB * cb)
 {
 
-	sch_print(cb, cb->wsch_ptr);  // print a formated dump od schedules for each channel and day
+	sch_print(cb, cb->wsch_ptr);  // print a formated dump of schedules for each channel and day
 	return 0;
 }
 
