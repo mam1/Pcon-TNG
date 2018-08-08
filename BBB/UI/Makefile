@@ -1,6 +1,6 @@
 
-version.o: FORCE
+working_DIRECTORY:=UI 
+program_NAME:=Pcon 
+target_MACHINE:=dev
 
-.PHONY: FORCE
-FORCE:
-	cd ../mastermake && $(MAKE) -C .. UI working_DIRECTORY=UI program_NAME=Pcon target_MACHINE=dev
+include ../mastermake/makefile	
