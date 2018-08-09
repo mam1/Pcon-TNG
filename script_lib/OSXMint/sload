@@ -1,11 +1,12 @@
 #!/bin/bash
 #
 #	move scripts from ../script_lib/Bone to a bone
+#
 
 target_ip=''
 if [ $# == 0 ]
     then
-        printf "usage 'bload <prod|dev|last section of ip adress>'\n"
+        printf "usage 'sload <prod|dev|last section of ip adress>'\n"
         exit
     else
         case "$1" in

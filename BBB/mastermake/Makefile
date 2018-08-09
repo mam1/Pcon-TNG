@@ -83,10 +83,10 @@ project:
 	cd .. && $(MAKE) clean
 	cd .. && $(MAKE)
 	cd ../CGI && $(MAKE)
-	cd ../UI && $(MAKE)
+	cd ../UI && $(MAKE) 
 	cd ../daemon && $(MAKE)	
 	cd ../../script_lib/OSXMint && $(MAKE)
-	sload $target_MACHINE
+	sload $(target_MACHINE)
 
 dump:
 	@echo CC ............... $(CC)

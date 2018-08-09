@@ -17,7 +17,7 @@ endif
 .PHONY: all clean distclean
 
 all:
-	@echo moving 
+	echo moving scripts
 	@echo $(lib_SRCS)
 
 # move the scripts to script library 
@@ -31,8 +31,8 @@ all:
 	chmod 4755 /usr/local/myscripts/*
 
 os:
-	@echo "****************"
-	@echo $(UNAME_S)
+	echo "****************"
+	echo $(UNAME_S)
 
 
 
