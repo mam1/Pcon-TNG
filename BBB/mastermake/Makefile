@@ -83,8 +83,8 @@ project:
 	cd .. && $(MAKE) clean
 	cd .. && $(MAKE)
 	cd ../CGI && $(MAKE)
-	cd ../UI && $(MAKE) 
-	cd ../daemon && $(MAKE)	
+	cd ../UI && $(MAKE) t=$(target_MACHINE)
+	cd ../daemon && $(MAKE)	t=$(target_MACHINE)
 	cd ../../script_lib/OSXMint && $(MAKE)
 	sload $(target_MACHINE)
 
