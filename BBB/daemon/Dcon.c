@@ -98,17 +98,20 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 		switch (ipc_ptr->sys_data.c_data[channel].mode) {
 		case 0:	// manual
 			state = ipc_ptr->sys_data.c_data[channel].state;
+			if(state) pause(1000);
 			break;
 		case 1:	// time
 			state =  test_sch_time(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]));
+			if(state) pause(1000);
 			// FILE *saved = stdout;
 			// stdout = fopen(_DAEMON_LOG, "a");
-			// printf("    channel %i conreoled by time, test_sch_time returned <%i>\n", channel, state);
+			// printf("    channel %i controlled by time, test_sch_time returned <%i>\n", channel, state);
 			// fclose(stdout);
 			// stdout = saved;
 			break;
 		case 2:	// time & sensor
 			state =  test_sch_sensor(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
+			if(state) pause(1000);
 			break;
 		case 3:	// cycle
 			logit("*** error channel mode set to 3 - cycle mode not supported");
