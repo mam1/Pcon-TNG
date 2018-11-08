@@ -1,7 +1,7 @@
 --startup.lua
 
 version="1.0.1"
-ip="192.168.254.205"
+ip="192.168.254.85"
 
  -- setup I2c and connect display
 function init_i2c_display()
