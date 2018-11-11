@@ -198,6 +198,22 @@ int main(void) {
 	printf("\n  **** cgi %i.%i.%i active ****\n\r",_MAJOR_VERSION_Scon,_MINOR_VERSION_Scon,_MINOR_REVISION_Scon);
 
 	/* open files */
+
+// code to rederict stdio
+    // int fd;
+    // char *name = "helloworld";
+    // fd = open(name, O_WRONLY | O_CREAT, 0644);
+    // if (fd == -1) {
+    //     perror("open failed");
+    //     exit(1);
+    // }
+
+    // if (dup2(fd, 1) == -1) {
+    //     perror("dup2 failed"); 
+    //     exit(1);
+    // }
+
+
 	cgi_log = fopen(_CGI_LOG_FILE_NAME,"a");
 	if(cgi_log == NULL){
 		printf("  Error: %d (%s)\n", errno, strerror(errno));

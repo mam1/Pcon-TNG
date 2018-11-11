@@ -1,5 +1,5 @@
 program_NAME := Scon
-target_ip := 192.168.254.205
+target_ip := 192.168.254.72
 cgi_dir := /usr/lib/cgi-bin
 
 # scan directory 

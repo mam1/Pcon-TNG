@@ -1,8 +1,8 @@
 
 --startup.lua
 
-version="1.0.1"
-ip="192.168.254.205"
+version="2.1.0"
+ip="192.168.254.72"
 
  -- setup I2c and connect display
 function init_i2c_display()
@@ -24,10 +24,10 @@ function draw(str)
     disp:drawStr(10,10,str)
 end 
 
-print('\n *** startup.lua ver 2.0')
+print('\n *** startup.lua ver 2.1')
 
 wifi.setmode(wifi.STATION);
-wifi.sta.config("FrontierHSI","")
+wifi.sta.config("FrontierHSI","passfire")
 wifi.sta.sethostname("sen06")
 
 print('    set mode=STATION (mode='..wifi.getmode()..')')
