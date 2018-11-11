@@ -1,0 +1,65 @@
+-- init.lua
+SSID="FrontierHSI" -- SSID 
+PASSWORD="passfire" -- SSID password
+TIMEOUT=10000    -- timeout to check the network status
+EXSENSOR1="tempumid.lua"    -- module to run
+MQTTSERVER="192.168.254.73"   -- mqtt broker address
+MQTTPORT="1883"  -- mqtt borker port
+MQTTQOS="0" -- qos used
+ 
+print('\n *** MQTT init.lua ver 0.2')
+
+-- setup I2c and connect display
+
+function init_i2c_display()
+     -- SDA and SCL can be assigned freely to available GPIOs
+     local sda = 6 
+     local scl = 5 
+     local sla = 0x3c
+     print("    initializng I2c OLED display on pins "..sda.." and "..scl)    
+     i2c.setup(0, sda, scl, i2c.SLOW)
+     disp = u8g.ssd1306_128x64_i2c(sla)
+     disp:setFont(u8g.font_6x10)
+     disp:setFontRefHeightExtendedText()
+     disp:setDefaultForegroundColor()
+     disp:setFontPosTop()
+     disp:setColorIndex(1)
+end
+
+function draw(str)
+    disp:drawStr(10,10,str)
+end 
+
+-- Set the network parameters and get ip address
+
+station_cfg={}
+station_cfg.ssid=SSID
+station_cfg.pwd=PASSWORD
+station_cfg.save=true
+wifi.sta.config(station_cfg)
+wifi.sta.sethostname("MQTTsen06")
+
+print('    set mode=STATION (mode='..wifi.getmode()..')')
+print('    MAC: ',wifi.sta.getmac())
+print('    chip: ',node.chipid())
+print('    heap: ',node.heap())
+print(' ')
+
+-- Check the network status after the TIMEOUT interval
+tmr.alarm(1,1000,1,function()
+  if wifi.sta.getip()==nil then
+     print("    IP unavailable, waiting")
+  else
+     tmr.stop(1)
+     print("\n    Config done, IP is "..wifi.sta.getip())
+     print("    hostname: "..wifi.sta.gethostname())
+     print("    ESP8266 mode is: " .. wifi.getmode())
+     print("    MAC address is: " .. wifi.ap.getmac())
+     print("    initializing the OLED display")
+     -- init_i2c_display()
+     print("\n    starting sensor read loop")
+     dofile(EXSENSOR1)
+  end
+end)
+
+
