@@ -1,6 +1,6 @@
 print('\n *** MQTT tempumid.lua ver 0.2')
 -- tempumid.lua
-CNAME="room69" -- Client name 
+CNAME="shop-office" -- Client name 
 AMBIENT="home"  -- Ambient name
 TTOPIC     = AMBIENT.."/"..CNAME.."/temperature"  -- Temperature topic
 HTOPIC     = AMBIENT.."/"..CNAME.."/humidity"  -- Humidity topic 
@@ -135,9 +135,9 @@ function esp_sleep()
 end
  
 -- Connection to the mqtt server at the mqttport
-print("trying to connect")
+print("trying to connect ")
 mqt:connect(MQTTSERVER, MQTTPORT, 0, 0)
- 
+print("connected ...")
 --Sends periodically the temperature and humidity to the topics
 tmr.alarm(1, TUPTEMP*1000, tmr.ALARM_AUTO, function() read_temp_hum(mqt) end)
  

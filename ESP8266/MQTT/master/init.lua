@@ -4,7 +4,7 @@ PASSWORD="passfire" -- SSID password
 HOSTNAME="MQTTsen008"
 TIMEOUT=100000    -- timeout to check the network status
 EXSENSOR1="tempumid.lua"    -- module to run
-MQTTSERVER="192.168.254.220"   -- mqtt broker address
+MQTTSERVER="192.168.254.72"   -- mqtt broker address
 MQTTPORT="1883"  -- mqtt borker port
 MQTTQOS="0" -- qos used
  

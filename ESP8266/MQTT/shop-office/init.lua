@@ -1,14 +1,14 @@
 -- init.lua
 SSID="FrontierHSI" -- SSID 
 PASSWORD="passfire" -- SSID password
-HOSTNAME="MQTTsen008"
+HOSTNAME="MQTT-temp-shop-office"
 TIMEOUT=100000    -- timeout to check the network status
 EXSENSOR1="tempumid.lua"    -- module to run
 MQTTSERVER="192.168.254.220"   -- mqtt broker address
-MQTTPORT="1883"  -- mqtt borker port
+MQTTPORT="1883"  -- mqtt broker port
 MQTTQOS="0" -- qos used
  
-print('\n *** MQTT init.lua ver 0.2')
+print('\n *** MQTT init.lua ver 1.0')
 
 -- setup I2c and connect display
 
