@@ -8,7 +8,8 @@ STOPIC     = AMBIENT.."/"..CNAME.."/status"  -- Status topic
 CTOPIC     = AMBIENT.."/"..CNAME.."/command" --Command topic   
 MTOPIC     = AMBIENT.."/"..CNAME.."/monitor" --Monitor topic
  
-sleep_in_seconds= nil --Sleep in seconds
+sleep_in_seconds= 60 --Sleep in seconds
+rsleep_in_seconds= 60 --Sleep in seconds
  
 TUPDATE = 15 -- Time interval for update monitor in seconds
 TUPTEMP = 10 -- Time interval for update temperature and humidity values
@@ -29,7 +30,12 @@ mqt:on("connect", function()
 end )
  
 -- Callback when mqtt is offline
-mqt:on("offline", function() print("mqtt offline");  end)
+mqt:on("offline", function() print("mqtt offline");  
+    tmr.alarm(3, TGEN*1000, tmr.ALARM_SINGLE, function() 
+        node.dsleep(rsleep_in_seconds*1000000) 
+    end)
+    node.restart()
+    end)
  
 --Callback to manage messages 
 mqt:on("message", function(client, topic, data) 

@@ -1,17 +1,18 @@
-print('\n *** MQTT tempumid.lua ver 0.2')
+print('\n *** MQTT tempumid.lua ver 1.1')
 -- tempumid.lua
-CNAME="room69" -- Client name 
-AMBIENT="home"  -- Ambient name
+CNAME="shop/furance" -- Client name 
+AMBIENT="258Thomas"  -- Ambient name
 TTOPIC     = AMBIENT.."/"..CNAME.."/temperature"  -- Temperature topic
 HTOPIC     = AMBIENT.."/"..CNAME.."/humidity"  -- Humidity topic 
 STOPIC     = AMBIENT.."/"..CNAME.."/status"  -- Status topic
 CTOPIC     = AMBIENT.."/"..CNAME.."/command" --Command topic   
 MTOPIC     = AMBIENT.."/"..CNAME.."/monitor" --Monitor topic
  
-sleep_in_seconds= nil --Sleep in seconds
+sleep_in_seconds= 60 --Sleep in seconds
+rsleep_in_seconds= 60 --Sleep in seconds
  
-TUPDATE = 15 -- Time interval for update monitor in seconds
-TUPTEMP = 10 -- Time interval for update temperature and humidity values
+TUPDATE = 65 -- Time interval for update monitor in seconds
+TUPTEMP = 60 -- Time interval for update temperature and humidity values
 SPIN    =  7 -- Sensor pin
 TGEN    =  5 -- Time interval in seconds usend in various trm
  
@@ -29,7 +30,11 @@ mqt:on("connect", function()
 end )
  
 -- Callback when mqtt is offline
-mqt:on("offline", function() print("mqtt offline");  end)
+mqt:on("offline", function() print("mqtt offline");  
+    -- tmr.alarm(3, TGEN*1000, tmr.ALARM_SINGLE, function() 
+    --     node.dsleep(rsleep_in_seconds*1000000) end)
+    -- node.restart()
+    end)
  
 --Callback to manage messages 
 mqt:on("message", function(client, topic, data) 
@@ -135,9 +140,9 @@ function esp_sleep()
 end
  
 -- Connection to the mqtt server at the mqttport
-print("trying to connect")
+print("trying to connect ")
 mqt:connect(MQTTSERVER, MQTTPORT, 0, 0)
- 
+print("connected ...")
 --Sends periodically the temperature and humidity to the topics
 tmr.alarm(1, TUPTEMP*1000, tmr.ALARM_AUTO, function() read_temp_hum(mqt) end)
  
