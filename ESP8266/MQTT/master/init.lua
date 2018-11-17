@@ -1,7 +1,7 @@
 -- init.lua
 SSID="FrontierHSI" -- SSID 
 PASSWORD="passfire" -- SSID password
-HOSTNAME="MQTT-temp-shop-office"
+HOSTNAME="MQTT-DHT22-barn-furnace"
 TIMEOUT=100000    -- timeout to check the network status
 EXSENSOR1="tempumid.lua"    -- module to run
 MQTTSERVER="192.168.254.220"   -- mqtt broker address

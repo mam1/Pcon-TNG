@@ -1,6 +1,6 @@
-print('\n *** MQTT tempumid.lua ver 1.1')
+print('\n *** MQTT tempumid.lua ver 1.4')
 -- tempumid.lua
-CNAME="shop/furance" -- Client name 
+CNAME="barn/furnace" -- Client name 
 AMBIENT="258Thomas"  -- Ambient name
 TTOPIC     = AMBIENT.."/"..CNAME.."/temperature"  -- Temperature topic
 HTOPIC     = AMBIENT.."/"..CNAME.."/humidity"  -- Humidity topic 
@@ -8,11 +8,11 @@ STOPIC     = AMBIENT.."/"..CNAME.."/status"  -- Status topic
 CTOPIC     = AMBIENT.."/"..CNAME.."/command" --Command topic   
 MTOPIC     = AMBIENT.."/"..CNAME.."/monitor" --Monitor topic
  
-sleep_in_seconds= 60 --Sleep in seconds
-rsleep_in_seconds= 60 --Sleep in seconds
+sleep_in_seconds = 60 --Sleep in seconds
+-- rsleep_in_seconds= 60 --Sleep in seconds
  
-TUPDATE = 65 -- Time interval for update monitor in seconds
-TUPTEMP = 60 -- Time interval for update temperature and humidity values
+TUPDATE = 15 -- Time interval for update monitor in seconds
+TUPTEMP = 10 -- Time interval for update temperature and humidity values
 SPIN    =  7 -- Sensor pin
 TGEN    =  5 -- Time interval in seconds usend in various trm
  
@@ -142,9 +142,10 @@ end
 -- Connection to the mqtt server at the mqttport
 print("trying to connect ")
 mqt:connect(MQTTSERVER, MQTTPORT, 0, 0)
-print("connected ...")
+print("connected ... \nsensor <"..HOSTNAME.."> active")
+print("publishing to "..AMBIENT.."/"..CNAME.."/ ...")
 --Sends periodically the temperature and humidity to the topics
 tmr.alarm(1, TUPTEMP*1000, tmr.ALARM_AUTO, function() read_temp_hum(mqt) end)
  
 -- Sends periodically a message to the monitor topic
-tmr.alarm(4, TUPDATE*1000, tmr.ALARM_AUTO, function() send_mstatus("Sensor Ready") end)
+tmr.alarm(4, TUPDATE*1000, tmr.ALARM_AUTO, function() send_mstatus("Sensor <"..HOSTNAME.."> Ready") print("Sensor <"..HOSTNAME.."> Ready") end)
