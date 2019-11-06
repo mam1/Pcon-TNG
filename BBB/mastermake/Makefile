@@ -35,17 +35,13 @@ CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions      
 
 # set locations for basic gnu tools
-ifeq ($(UNAME_S),Darwin)
-	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
-else
-	PREFIX := /gcc-linaro-5.4.1-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
-endif
-	CC  := $(PREFIX)gcc
-	CXX := $(PREFIX)g++
-	LD  := $(PREFIX)ld
-	AS  := $(PREFIX)as
-	AR  := $(PREFIX)ar
-	OBJCOPY := $(PREFIX)objcopy
+
+	CC  := gcc
+	CXX := g++
+	LD  := ld
+	AS  := as
+	AR  := ar
+	OBJCOPY := objcopy
 
 .PHONY: all clean distclean
 
