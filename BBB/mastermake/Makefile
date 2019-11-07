@@ -7,12 +7,8 @@
 UNAME_S := $(shell uname -s)
 
 # set directories
-ifeq ($(UNAME_S),Darwin)
-	program_DIR_PREFIX := /Users/mam1/Git/Pcon-TNG
-else
-	program_DIR_PREFIX := /home/mam1/Git/Pcon-TNG
-endif
 
+program_DIR_PREFIX := /home/mam1/Git/Pcon-TNG
 system_BINARIES := $(program_DIR_PREFIX)/bin
 code_DIRECTORY := $(program_DIR_PREFIX)/BBB/$(working_DIRECTORY)
 program_INCLUDE_DIRS := $(program_DIR_PREFIX)/BBB/include
@@ -50,15 +46,23 @@ all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
 	@echo "\n>>>>> building $(program_NAME) sending output to $(target_MACHINE)\n"
-
 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
-	
 	@echo "\n>>>>> build of  $(program_NAME) completed\n"
-
 
 # move the executable to the bone
 	@echo ">>>>> moving binaries to $(target_MACHINE)\n"
-	bload $(target_MACHINE)
+
+# move the bins to the bone
+	@echo "\n *** rsync -> $(program_DIR_PREFIX)/bin/ root@$(target_MACHINE):$(bone_BIN_DIR)\n"
+	rsync -azv      $(program_DIR_PREFIX)/bin/ root@$(target_MACHINE):$(bone_BIN_DIR)
+
+# move shell scripts to the bone
+	printf "\n *** rsync -> $(program_DIR_PREFIX)/script_lib/Bone/ root@$target_MACHINE:$bone_BIN_DIR" 
+	rsync -azv      $(program_DIR_PREFIX)/script_lib/Bone/ root@$(target_MACHINE):$(bone_BIN_DIR)
+
+# fix permissions
+	$(ssh root@$target_MACHINE chown root:root $(bone_BIN_DIR))	# change owner
+	$(ssh root@$target_MACHINE chmod 4755 $(bone_BIN_DIR))		# open access
 
 # clean up
 	@- $(RM) -v $(program_NAME)

@@ -7,13 +7,7 @@ target_IP=192.168.254.75
 bone_BIN_DIR=/usr/local/sbin
 
 # set directories
-CURRENT_OS=$(uname)
-if [ $CURRENT_OS == "Linux" ]
-then 
-	program_DIR_PREFIX=/home/mam1/Git/Pcon-TNG
-else 
-	program_DIR_PREFIX=/Users/mam1/Git/Pcon-TNG
-fi
+program_DIR_PREFIX=/home/mam1/Git/Pcon-TNG
 
 # move the bins to the bone
 printf "\n *** rsync -> $program_DIR_PREFIX/bin/ root@$target_IP:$bone_BIN_DIR\n"
