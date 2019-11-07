@@ -45,24 +45,26 @@ LDFLAGS += $(CFLAGS) -fno-exceptions
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	@echo "\n>>>>> building $(program_NAME) sending output to $(target_MACHINE)\n"
+	@echo "\n>>>>> building $(program_NAME) sending output to $(target_MACHINE)"
 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
-	@echo "\n>>>>> build of  $(program_NAME) completed\n"
+	@echo ">>>>> build of  $(program_NAME) completed"
 
 # move the executable to the bone
-	@echo ">>>>> moving binaries to $(target_MACHINE)\n"
+	
 
 # move the bins to the bone
-	@echo "\n *** rsync -> $(program_DIR_PREFIX)/bin/ root@$(target_MACHINE):$(bone_BIN_DIR)\n"
+# 	@echo "\n *** rsync -> $(program_DIR_PREFIX)/bin/ root@$(target_MACHINE):$(bone_BIN_DIR)\n"
+	@echo ">>>>> moving binaries to $(target_MACHINE)"
 	rsync -azv      $(program_DIR_PREFIX)/bin/ root@$(target_MACHINE):$(bone_BIN_DIR)
 
 # move shell scripts to the bone
-	printf "\n *** rsync -> $(program_DIR_PREFIX)/script_lib/Bone/ root@$target_MACHINE:$bone_BIN_DIR" 
+# 	printf "\n *** rsync -> $(program_DIR_PREFIX)/script_lib/Bone/ root@$target_MACHINE:$bone_BIN_DIR"
+	@echo ">>>>> moving shell scripts to $(target_MACHINE)" 
 	rsync -azv      $(program_DIR_PREFIX)/script_lib/Bone/ root@$(target_MACHINE):$(bone_BIN_DIR)
 
 # fix permissions
-	$(ssh root@$target_MACHINE chown root:root $(bone_BIN_DIR))	# change owner
-	$(ssh root@$target_MACHINE chmod 4755 $(bone_BIN_DIR))		# open access
+	ssh root@$(target_MACHINE) chown root:root $(bone_BIN_DIR)/*	# change owner
+	ssh root@$(target_MACHINE) chmod 4755 $(bone_BIN_DIR)/*		# open access
 
 # clean up
 	@- $(RM) -v $(program_NAME)
