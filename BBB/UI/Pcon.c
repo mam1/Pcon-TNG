@@ -3,8 +3,9 @@
 /* This is the main Pcon.c program file  */
 /* BeagleBone Black implementation		 */
 /*										 */
-/*  									 */
 /*****************************************/
+// 
+// 
 
 #include <sys/sem.h>
 #include <sys/ipc.h>

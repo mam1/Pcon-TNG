@@ -3,9 +3,6 @@
 #	target - BeagleBone (Debian)														#
 ############################################################################# 
 
-# get the development machine OS
-UNAME_S := $(shell uname -s)
-
 # set directories
 
 program_DIR_PREFIX := /home/mam1/Git/Pcon-TNG
@@ -32,12 +29,12 @@ LDFLAGS += $(CFLAGS) -fno-exceptions
 
 # set locations for basic gnu tools
 
-	CC  := gcc
-	CXX := g++
-	LD  := ld
-	AS  := as
-	AR  := ar
-	OBJCOPY := objcopy
+	CC  := /home/mam1/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc
+# 	CXX := ${CC}g++
+# 	LD  := ${CC}ld
+# 	AS  := ${CC}as
+# 	AR  := ${CC}ar
+# 	OBJCOPY := ${CC}objcopy
 
 .PHONY: all clean distclean
 
@@ -45,26 +42,24 @@ LDFLAGS += $(CFLAGS) -fno-exceptions
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
+	@echo ${CC}
 	@echo "\n>>>>> building $(program_NAME) sending output to $(target_MACHINE)"
-	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
+ 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 	@echo ">>>>> build of  $(program_NAME) completed"
 
-# move the executable to the bone
-	
-
 # move the bins to the bone
-# 	@echo "\n *** rsync -> $(program_DIR_PREFIX)/bin/ root@$(target_MACHINE):$(bone_BIN_DIR)\n"
+# 	@echo "\n *** rsync -> $(program_DIR_PREFIX)/bin/ mam1@$(target_MACHINE):$(bone_BIN_DIR)\n"
 	@echo ">>>>> moving binaries to $(target_MACHINE)"
-	rsync -azv      $(program_DIR_PREFIX)/bin/ root@$(target_MACHINE):$(bone_BIN_DIR)
+	rsync -azv      $(program_DIR_PREFIX)/bin/ mam1@$(target_MACHINE):/usr/local/sbin
 
 # move shell scripts to the bone
-# 	printf "\n *** rsync -> $(program_DIR_PREFIX)/script_lib/Bone/ root@$target_MACHINE:$bone_BIN_DIR"
+# 	printf "\n *** rsync -> $(program_DIR_PREFIX)/script_lib/Bone/ mam1@$target_MACHINE:$bone_BIN_DIR"
 	@echo ">>>>> moving shell scripts to $(target_MACHINE)" 
-	rsync -azv      $(program_DIR_PREFIX)/script_lib/Bone/ root@$(target_MACHINE):$(bone_BIN_DIR)
+	rsync -azv      $(program_DIR_PREFIX)/script_lib/Bone/ mam1@$(target_MACHINE):${bone_BIN_DIR}
 
 # fix permissions
-	ssh root@$(target_MACHINE) chown root:root $(bone_BIN_DIR)/*	# change owner
-	ssh root@$(target_MACHINE) chmod 4755 $(bone_BIN_DIR)/*		# open access
+# 	ssh mam1@$(target_MACHINE) chown mam1:mam1 $(bone_BIN_DIR)/*	# change owner
+# 	ssh mam1@$(target_MACHINE) chmod 4755 $(bone_BIN_DIR)/*		# open access
 
 # clean up
 	@- $(RM) -v $(program_NAME)
