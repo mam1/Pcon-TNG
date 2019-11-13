@@ -7,8 +7,6 @@
 /*****************************************/
 
 
-// 
-
 #include <sys/sem.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
