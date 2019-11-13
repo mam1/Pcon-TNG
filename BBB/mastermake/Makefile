@@ -3,16 +3,7 @@
 #	target - BeagleBone (Debian)														#
 ############################################################################# 
 
-# get the development machine OS
-UNAME_S := $(shell uname -s)
-
 # set directories
-ifeq ($(UNAME_S),Darwin)
-	program_DIR_PREFIX := /Users/mam1/Git/Pcon-TNG
-else
-	program_DIR_PREFIX := /home/mam1/Git/Pcon-TNG
-endif
-
 system_BINARIES := $(program_DIR_PREFIX)/bin
 code_DIRECTORY := $(program_DIR_PREFIX)/BBB/$(working_DIRECTORY)
 program_INCLUDE_DIRS := $(program_DIR_PREFIX)/BBB/include
@@ -35,11 +26,7 @@ CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions      
 
 # set locations for basic gnu tools
-ifeq ($(UNAME_S),Darwin)
-	PREFIX := /Volumes/cross-compile/bin/arm-linux-gnueabihf-
-else
-	PREFIX := /gcc-linaro-5.4.1-2017.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
-endif
+	PREFIX := /home/mam1/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 	CC  := $(PREFIX)gcc
 	CXX := $(PREFIX)g++
 	LD  := $(PREFIX)ld
@@ -53,16 +40,20 @@ endif
 all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
-	@echo "\n>>>>> building $(program_NAME) sending output to $(target_MACHINE)\n"
-
+	@echo "\n>>>>> building $(program_NAME)"
 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
-	
-	@echo "\n>>>>> build of  $(program_NAME) completed\n"
+	@echo ">>>>> build of $(program_NAME) completed\n"
 
+# move the bins to the bone
+	@echo "  copying binaries to device at $(target_MACHINE)"
+# 	@echo "\n *** rsync -> $(program_DIR_PREFIX)/bin/ mam1@$(target_MACHINE):$(bone_BIN_DIR)\n"
+	rsync -azv      $(system_BINARIES)/ root@$(target_MACHINE):$(bone_BIN_DIR)
+	@echo "\n"
 
-# move the executable to the bone
-	@echo ">>>>> moving binaries to $(target_MACHINE)\n"
-	bload $(target_MACHINE)
+# fix permissions
+	ssh mam1@$(target_MACHINE) sudo chown mam1:mam1 $(bone_BIN_DIR)/*	# change owner
+	ssh mam1@$(target_MACHINE) sudo chmod 777 $(bone_BIN_DIR)/*		# open acces
+
 
 # clean up
 	@- $(RM) -v $(program_NAME)
