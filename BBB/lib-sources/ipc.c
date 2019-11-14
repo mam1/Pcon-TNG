@@ -43,8 +43,6 @@ union semun {
     uint8_t 			*array;  	// used for GETALL and SETALL
 };
 
-
-
 int ipc_open(char *fname, int size) {
     int                 fd;
     struct stat         sb;

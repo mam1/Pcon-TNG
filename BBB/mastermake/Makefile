@@ -42,12 +42,12 @@ all: $(program_NAME)
 $(program_NAME): $(program_OBJS)
 	@echo "\n>>>>> building $(program_NAME)"
 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
-	@echo ">>>>> build of $(program_NAME) completed\n"
+	@echo ">>>>> build of $(program_NAME) completed"
 
 # move the bins to the bone
-	@echo "  copying binaries to device at $(target_MACHINE)"
+	@echo ">>>>> copying binaries to device at $(target_MACHINE)"
 # 	@echo "\n *** rsync -> $(program_DIR_PREFIX)/bin/ mam1@$(target_MACHINE):$(bone_BIN_DIR)\n"
-	rsync -azv      $(system_BINARIES)/ root@$(target_MACHINE):$(bone_BIN_DIR)
+	rsync -azv $(system_BINARIES)/ root@$(target_MACHINE):$(bone_BIN_DIR)
 	@echo "\n"
 
 # fix permissions

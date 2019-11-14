@@ -86,8 +86,6 @@ int main(void)
 {
 	int 			i;
 
-
-	printf("%s\n","hellow" );
 	// char 			*ppp;
 
 	/************************ initializations ****************************/
@@ -102,7 +100,6 @@ int main(void)
 	data = ipc_map(fd, ipc_size());           			// map file to memory
 	ipc_ptr = data; 									// overlay data with _IPC_DAT data structure
 	ipc_sem_free(semid, &sb);							// free lock on shared memory
-
 	/* setup control block pointers */
 	cmd_fsm_cb.ipc_ptr = ipc_ptr;					 	// set pointer to shared memory
 	cmd_fsm_cb.sys_ptr = &(ipc_ptr->sys_data);		 	// set pointer to system data in shared memory
