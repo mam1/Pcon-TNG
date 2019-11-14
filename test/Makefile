@@ -1,5 +1,5 @@
 program_NAME := tcc
-CC := /home/mam1/gcc-linaro-7.3.1-2018.05-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+CC := /home/mam1/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 
 .PHONY: all clean distclean
 
@@ -7,7 +7,7 @@ all: $(program_NAME)
 
 $(program_NAME): $(program_OBJS)
 
-	$(CC)gcc tcc.c -o  -Wall -fno-exceptions -fno-rtti 
+	$(CC)gcc tcc.c -o tcc -Wall -fno-exceptions
 
 # # clean up
 # 	@- $(RM) -v $(program_NAME)

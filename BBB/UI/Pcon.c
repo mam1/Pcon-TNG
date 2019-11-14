@@ -85,6 +85,9 @@ char *mode[4] = {"manual", "  time", "sensor", " cycle"};
 int main(void) 
 {
 	int 			i;
+
+
+	printf("%s\n","hellow" );
 	// char 			*ppp;
 
 	/************************ initializations ****************************/
