@@ -13,8 +13,8 @@
 // #define _SYSTEM_FILE_NAME			"/home/mam1/Pcon-data/sys.dat"			// system data file
 #define _IPC_FILE_NAME				"/home/mam1/Pcon-data/ipc.dat"   			// memory mapped ipc file
 #define _IPC_FILE_BACKUP_NAME		"/home/mam1/Pcon-data/ipc.bkup"   			// ipc backup file 
-#define _TRACE_FILE_NAME			"/hmedia/data/trace/Pcon-trace.dat" 	// trace file
-#define _DAEMON_LOG 				"/media/data/logs/daemon.log" 			// daemon log file name
+#define _TRACE_FILE_NAME			"/media/data/trace/Pcon-trace.dat" 	// trace file
+#define _DAEMON_LOG 				"/home/mam1/logs/daemon.log" 			// daemon log file name
 #define _SENSOR_MASTER_FILE_NAME    "/media/Raid/sensor logs/master.dat"	// cumulative history of sensor readings
 #define _PID_FILE_NAME 				"/run/Dcon.pid"							// daemon pid
 

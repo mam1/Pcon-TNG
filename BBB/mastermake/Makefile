@@ -1,6 +1,6 @@
 #############################################################################
 #	basic cross compile build
-#	target - BeagleBone (Debian)														#
+#	target - BeagleBone (Debian)												
 ############################################################################# 
 
 # set directories
@@ -47,8 +47,16 @@ $(program_NAME): $(program_OBJS)
 # move the bins to the bone
 	@echo ">>>>> copying binaries to device at $(target_MACHINE)"
 # 	@echo "\n *** rsync -> $(program_DIR_PREFIX)/bin/ mam1@$(target_MACHINE):$(bone_BIN_DIR)\n"
-	rsync -azv $(system_BINARIES)/ root@$(target_MACHINE):$(bone_BIN_DIR)
+	rsync -azv $(system_BINARIES)/ mam1@$(target_MACHINE):$(bone_BIN_DIR)
 	@echo "\n"
+
+# if the progeam is a daemon move shell scripts to /etc/init.d bone
+# 	ifeq ($(program_TYPE),daemon)
+		@echo ">>>>> copying init.d script to device at $(target_MACHINE)\n"
+# 		@echo "\n *** rsync -> $(program_DIR_PREFIX)/script_lib/daemon/ mam1@$(target_MACHINE):/etc/init.d\n" 
+		rsync -azv      $(program_DIR_PREFIX)/script_lib/daemon/ mam1@$(target_MACHINE):/etc/init.d
+		@echo "\n"	
+# 	endif
 
 # fix permissions
 	ssh mam1@$(target_MACHINE) sudo chown mam1:mam1 $(bone_BIN_DIR)/*	# change owner
