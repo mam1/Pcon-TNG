@@ -43,13 +43,6 @@ typedef struct {
 	int 		hide; 				// do not dispplay channel data
 } _CHN_DAT;
 
-// typedef struct sl_node {
-// 	char 				name[10];
-// 	char 		 		definition[50];
-// 	int 				id;
-// 	struct sl_ node 	*next;
-// } _SL_NODE;
-
 /* sensor data */
 typedef struct {
 	int 		sensor_id;
@@ -67,6 +60,7 @@ typedef struct {
 /* sensor data log file */
 typedef	struct{
 		int 		sensor_id;
+    char    *topic
 		float		temp;
 		float		humidity;
 		time_t 		ts;
@@ -112,9 +106,10 @@ typedef struct {
 
 /* ipc data - memory mapped */
 typedef	struct {
-	int				force_update;					// force daemon to update relays
+	int				force_update;					// force daemon to update channels
 	_SYS_DAT		sys_data;						// persistant system data
 	_SEN_DAT		s_dat[_NUMBER_OF_SENSORS];  	// current sensor values - set by cgi
+  
 } _IPC_DAT;
 
 /* cmd_fsm control block */
