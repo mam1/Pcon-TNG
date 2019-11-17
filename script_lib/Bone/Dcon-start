@@ -20,7 +20,7 @@ if [ "$plist" != "" ]
 fi
 
 # start daemon 
-echo -e "\n*****************************************\nsystemd starting Pcon daemon" >> /media/data/logs/daemon.log
-Dcon >> /media/data/logs/daemon.log
+echo -e "\n*****************************************\nstarting scheduler daemon" >> /home/mam1/logs/daemon.log
+sudo Dcon >> /home/mam1/logs/daemon.log
 
 exit 0

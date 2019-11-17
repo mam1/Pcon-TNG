@@ -60,7 +60,7 @@ typedef struct {
 /* sensor data log file */
 typedef	struct{
 		int 		sensor_id;
-    char    *topic
+    char    *topic;
 		float		temp;
 		float		humidity;
 		time_t 		ts;

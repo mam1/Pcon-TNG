@@ -100,9 +100,9 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 	logit("starting channel update");
 	/* set channel state based on channel mode */
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
-		switch (ipc_ptr->sys_data.c_data[channel].mode) {
+		switch (ipc_ptr->sys_data.c_dat[channel].mode) {
 		case 0:	// manual
-			state = ipc_ptr->sys_data.c_data[channel].state;
+			state = ipc_ptr->sys_data.c_dat[channel].state;
 			if(state)
 			{	current_time = clock();
 				for ( ; (clock() - current_time) < (2 * CLOCKS_PER_SEC); );
@@ -121,7 +121,7 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 			// stdout = saved;
 			break;
 		case 2:	// time & sensor
-			state =  test_sch_sensor(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_data[channel].sensor_id].temp);
+			state =  test_sch_sensor(key, &(ipc_ptr->sys_data.sys_sch.sch[tm->tm_wday][channel]), ipc_ptr->s_dat[ipc_ptr->sys_data.c_dat[channel].sensor_id].temp);
 			if(state)
 			{	current_time = clock();
 				for ( ; (clock() - current_time) < (2 * CLOCKS_PER_SEC); );
@@ -133,13 +133,13 @@ void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
 		default: // error
 			logit("*** error channel mode set to a bad value");
 		}
-		ipc_ptr->sys_data.c_data[channel].state = state;
+		ipc_ptr->sys_data.c_dat[channel].state = state;
 	}
 	
 	/* update gpio pins for all channels */
 	logit("starting pin update");
 	for (channel = 0; channel < _NUMBER_OF_CHANNELS; channel++) {
-		if (ipc_ptr->sys_data.c_data[channel].state) {
+		if (ipc_ptr->sys_data.c_dat[channel].state) {
 			sprintf(command, "echo 1 > /sys/class/gpio/gpio%i/value", chan[channel].gpio);
 			// logit(command);
 			system(command);
