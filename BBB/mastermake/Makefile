@@ -56,7 +56,7 @@ $(program_NAME): $(program_OBJS)
 	rsync -azv /home/mam1/Git/Pcon-TNG/script_lib/Bone/ mam1@$(target_MACHINE):$(bone_BIN_DIR)
 	@echo "\n"
 
-# if the progeam is a daemon move shell scripts to /etc/init.d bone
+# if the progeam is a daemon move shell script to /etc/init.d bone
 # 	@if [ "$(strip $(program_TYPE))" =  daemon ]; then
 
 # 		@echo ">>>>> copying init.d script to device at $(target_MACHINE)\n"

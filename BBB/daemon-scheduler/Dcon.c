@@ -27,6 +27,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
+#include "MQTTClient.h"
+
 #include "Pcon.h"
 #include "Dcon.h"
 #include "ipc.h"
