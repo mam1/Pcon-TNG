@@ -38,6 +38,12 @@
 #include "trace.h"
 #include "typedefs.h"
 #include "sys_dat.h"
+
+#define url "192.168.254.221:1883"
+#define	clientid "12345"
+#define MQTTCLIENT_PERSISTENCE_NONE 1
+
+
 // #include "bbb.h"
 
 /***************** global code to text conversion ********************/
@@ -215,6 +221,10 @@ int main(void) {
 	FILE 		*pidf;
 	char 		command[120];
 	// int 		i;
+	MQTTClient 	client;
+	int 		rc;
+
+
 
 	/* Fork off the parent process */
 	pid = fork();
@@ -312,6 +322,10 @@ printf("%s\n", "ready to launch daemon" );
 	// // printf(" P%i.%i", heart[i].header, heart[i].pin);
 	// init_gpio(heart[i].gpio);
 	// }
+
+	/* create MQTT client */
+	rc = MQTTClient_create(&client, url, clientid, MQTTCLIENT_PERSISTENCE_NONE, NULL);
+	logit("MQTT client created");
 
 	/* The Big Loop */
 	logit("initialization complete");
