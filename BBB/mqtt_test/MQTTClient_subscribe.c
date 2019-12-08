@@ -42,13 +42,15 @@
 
 */
 // #include <sys/stdio.h>
+#include <stdlib.h>
+
 #include <memory.h>
 #include "MQTTClient.h"
 
 #include <sys/types.h>
 #include <stdint.h>     //uint_8, uint_16, uint_32, etc.
 
-// #include <stdio.h>
+#include <stdio.h>
 #include <signal.h>
 
 #include <sys/time.h>
@@ -93,7 +95,7 @@ struct opts_struct
     int showtopics;
 } opts =
 {
-    (char*)"stdout-subscriber", 0, (char*)"\n", QOS2, NULL, NULL, (char*)"localhost", 1883, 0
+    (char*)"stdout-subscriber", 0, (char*)"\n", QOS2, NULL, NULL, (char*)"192.168.254.221", 1883, 0
 };
 
 

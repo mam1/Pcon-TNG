@@ -6,8 +6,15 @@
 # set directories
 system_BINARIES := $(program_DIR_PREFIX)/bin
 code_DIRECTORY := $(program_DIR_PREFIX)/BBB/$(working_DIRECTORY)
-program_INCLUDE_DIRS := $(program_DIR_PREFIX)/BBB/include $(program_INCLUDE_DIRS) /usr/include/x86_64-linux-gnu/
-program_LIBRARY_DIRS := $(program_DIR_PREFIX)/BBB/lib /tmp/openssl-1.0.1t/libssl.a /tmp/openssl-1.0.1t/libssl.a /home/mam1/Git/paho.mqtt.c/build/output
+
+program_INCLUDE_DIRS := $(program_DIR_PREFIX)/BBB/include $(program_INCLUDE_DIRS) /home/mam1/Git/paho.mqtt.c/src
+
+# program_INCLUDE_DIRS := $(program_DIR_PREFIX)/BBB/include $(program_INCLUDE_DIRS) /usr/include/x86_64-linux-gnu/
+
+program_LIBRARY_DIRS := $(program_DIR_PREFIX)/BBB/lib 
+
+
+# program_LIBRARY_DIRS := $(program_DIR_PREFIX)/BBB/lib /tmp/openssl-1.0.1t/libssl.a /tmp/openssl-1.0.1t/libssl.a /home/mam1/Git/paho.mqtt.c/build/output 
 program_LIBRARIES := Pcon
 
 # scan working directory
