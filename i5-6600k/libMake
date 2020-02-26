@@ -9,7 +9,7 @@ program_OBJS := $(program_C_OBJS)
 # set directories
 program_INCLUDE_DIRS := /home/mam1/Git/Pcon-TNG/i5-6600k/include
 program_LIBRARY_DIRS := /home/mam1/Git/Pcon-TNG/i5-6600k/lib
-program_LIBRARIES := i5-6600.a
+program_LIBRARIES := libi5-6600k
 
 # set parameters
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
@@ -20,7 +20,7 @@ CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions -fno-rtti 
 
 # set libarary
-LIB=libi56600.a
+LIB=libi5-6600k.so
 LIBDEST= /home/mam1/Git/Pcon-TNG/i5-6600k/lib
 LIBSRC := $(wildcard lib_src/*.c)
 LIBOBJ=$(LIBSRC:.c=.o)

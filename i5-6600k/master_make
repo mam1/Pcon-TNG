@@ -1,5 +1,5 @@
 #############################################################################
-#	basic cross compile build
+#	basic build
 #	target - i5-6600k														#
 ############################################################################# 
 
@@ -9,7 +9,7 @@ system_BINARIES := $(program_DIR_PREFIX)/bin
 code_DIRECTORY := $(program_DIR_PREFIX)/$(working_DIRECTORY)
 program_INCLUDE_DIRS := $(program_DIR_PREFIX)/include
 program_LIBRARY_DIRS := $(program_DIR_PREFIX)/lib
-program_LIBRARIES := i5-6600k
+program_LIBRARIES := i5-6600k paho-mqtt3a paho-mqtt3as paho-mqtt3c paho-mqtt3cs
 
 # scan working directory
 program_C_SRCS := $(wildcard *.c)
@@ -22,9 +22,10 @@ program_OBJS :=  $(program_C_OBJS) $(program_CXX_OBJS)
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
-CFLAGS  += -Wall
+CFLAGS  += -Wall -fPIC -g 
+# -Xlinker --verbose
 CXXFLAGS += $(CFLAGS)
-LDFLAGS += $(CFLAGS) -fno-exceptions      
+LDFLAGS += $(CFLAGS) -shared  
 
 .PHONY: all clean distclean
 
@@ -58,11 +59,11 @@ project:
 	cd ../UI && $(MAKE) t=$(target_MACHINE)
 	cd ../daemon && $(MAKE)	t=$(target_MACHINE)
 	cd ../../script_lib/OSXMint && $(MAKE)
-	sload $(target_MACHINE)
+
 
 dump:
-	@echo LINK ............. $(LINK)
 	@echo LINK.cc .......... $(LINK.cc)
+	@echo CC ............... $(CC)
 	@echo program_NAME ..... $(program_NAME)
 	@echo program_C_OBJS ... $(program_C_OBJS)
 	@echo program_OBJS ..... $(program_OBJS)
