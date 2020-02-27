@@ -21,7 +21,7 @@
 
 #define ADDRESS     "tcp://192.168.254.221:1883"
 #define CLIENTID    "ExampleClientSub"
-#define TOPIC       "MQTT Examples"
+#define TOPIC       "258Thomas/#"
 #define PAYLOAD     "Hello World!"
 #define QOS         1
 #define TIMEOUT     10000L
