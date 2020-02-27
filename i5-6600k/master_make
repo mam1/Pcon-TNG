@@ -8,8 +8,8 @@ program_DIR_PREFIX := /home/mam1/Git/Pcon-TNG/i5-6600k
 system_BINARIES := $(program_DIR_PREFIX)/bin
 code_DIRECTORY := $(program_DIR_PREFIX)/$(working_DIRECTORY)
 program_INCLUDE_DIRS := $(program_DIR_PREFIX)/include
-program_LIBRARY_DIRS := $(program_DIR_PREFIX)/lib
-program_LIBRARIES := i5-6600k paho-mqtt3a paho-mqtt3as paho-mqtt3c paho-mqtt3cs
+program_LIBRARY_DIRS := $(program_DIR_PREFIX)/lib '/home/mam1/Git/Pcon-TNG/i5-6600k/Eclipse-Paho-MQTT-C-1.3.1-Linux/lib'
+program_LIBRARIES := i5-6600k paho-mqtt3c
 
 # scan working directory
 program_C_SRCS := $(wildcard *.c)
@@ -22,10 +22,11 @@ program_OBJS :=  $(program_C_OBJS) $(program_CXX_OBJS)
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
-CFLAGS  += -Wall -fPIC -g 
-# -Xlinker --verbose
+CFLAGS  += -Wall -Wextra 
+# -fPIC -g -Xlinker --verbose
 CXXFLAGS += $(CFLAGS)
-LDFLAGS += $(CFLAGS) -shared  
+LDFLAGS += $(CFLAGS) 
+# -shared  
 
 .PHONY: all clean distclean
 

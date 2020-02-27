@@ -19,7 +19,7 @@
 #include <string.h>
 #include "MQTTClient.h"
 
-#define ADDRESS     "tcp://192.168.254.221:1883"
+#define ADDRESS     "tcp://localhost:1883"
 #define CLIENTID    "ExampleClientSub"
 #define TOPIC       "MQTT Examples"
 #define PAYLOAD     "Hello World!"
