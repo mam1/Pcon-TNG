@@ -49,8 +49,8 @@ clean:
 # rebuild the project ibrary from lib-sources 
 lib:
 	@echo rebuilding library 
-	make -f'/home/mam1/Git/Pcon-TNG/i5-6600k/libMake' clean
-	make -f'/home/mam1/Git/Pcon-TNG/i5-6600k/libMake' install
+	cd && .. make -f'/home/mam1/Git/Pcon-TNG/i5-6600k/lib-sources/libMake' clean
+	cd && .. make -f'/home/mam1/Git/Pcon-TNG/i5-6600k/lib-sources/libMake'
 
 # build all project moduals
 project:

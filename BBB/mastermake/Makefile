@@ -44,7 +44,7 @@ all: $(program_NAME)
 $(program_NAME): $(program_OBJS)
 	@echo ${CC}
 	@echo "\n>>>>> building $(program_NAME) sending output to $(target_MACHINE)"
- 	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
+	$(CC) $(program_OBJS) -o $(system_BINARIES)/$(program_NAME) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 	@echo ">>>>> build of  $(program_NAME) completed"
 
 # move the bins to the bone

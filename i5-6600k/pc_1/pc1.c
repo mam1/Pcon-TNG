@@ -9,6 +9,7 @@ mam1 - 2/28/2020
 #include <stdlib.h>
 #include <string.h>
 #include "MQTTClient.h"
+#include "build_token_q.h"
 
 #define ADDRESS     "tcp://192.168.254.221:1883"
 #define CLIENTID    "ShopMint"
@@ -21,6 +22,9 @@ volatile MQTTClient_deliveryToken deliveredtoken;
 
 /*********************************************************************************************/
 // globals
+
+_TOPIC_NODE 			*topic_stack, 
+
 
 /*********************************************************************************************/
 // support routines
@@ -39,6 +43,16 @@ int msgarrvd(void *context, char *topicName, int topicLen, MQTTClient_message *m
     printf("Message arrived\n");
     printf("     topic: %s\n", topicName);
     printf("   message: ");
+
+/***************************************/
+
+    topic_stack = build_token_q(topicName, topicLen);
+    if (topic_stack!=NULL) process_topic_stack(topic_stack)
+    
+
+
+/******************************************/
+
 
     payloadptr = message->payload;
     for(i=0; i<message->payloadlen; i++)
@@ -62,6 +76,12 @@ void connlost(void *context, char *cause)
 
 int main(int argc, char* argv[])
 {
+	// initialize topic stack
+	topic_stack_head = NULL;
+	topic_stack_tail - NULL;	
+
+
+
     MQTTClient client;
     MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
     int rc;
