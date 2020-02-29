@@ -43,6 +43,13 @@ void build_token_q(char *topicName, int topicLen)
 			putchar(*topicNameptr++);
 		}
 		putchar('\n');
+		// push token on to queue
+		// allocate a node
+		
+
+
+
+
 		topicNameptr++;
 	}
 
