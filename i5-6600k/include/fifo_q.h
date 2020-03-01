@@ -13,7 +13,7 @@
 
 /* fuctions */
 
-_TOPIC_Q* list_add_element(_TOPIC_Q*, int);
+_TOPIC_Q* list_add_element(_TOPIC_Q*, char *);
 _TOPIC_Q* list_remove_element( _TOPIC_Q*);
 _TOPIC_Q* list_free( _TOPIC_Q*);
 _TOPIC_Q* list_new(void);

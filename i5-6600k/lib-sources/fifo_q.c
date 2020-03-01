@@ -4,7 +4,7 @@
 #include "typedefs.h"
 
 /* Will always return the pointer to topic_q */
-_TOPIC_Q * list_add_element(_TOPIC_Q* s, const char *tokenptr)
+_TOPIC_Q * list_add_element(_TOPIC_Q* s, char *tokenptr)
 {
 
   _TOPIC_NODE           *new_node;
@@ -118,7 +118,7 @@ _TOPIC_Q* list_new(void)
 }
 
 
-void list_print( const _TOPIC_Q* ps )
+void list_print(_TOPIC_Q* ps )
 {
   _TOPIC_NODE* p = NULL;
 
@@ -134,7 +134,7 @@ void list_print( const _TOPIC_Q* ps )
 }
 
 
-void list_print_element(const _TOPIC_NODE* p )
+void list_print_element(_TOPIC_NODE* p )
 {
   if ( p )
   {
