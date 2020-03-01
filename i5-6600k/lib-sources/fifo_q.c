@@ -9,26 +9,14 @@ _TOPIC_Q * list_add_element(_TOPIC_Q* s, char *tokenptr)
 
   _TOPIC_NODE           *new_node;
 
-  printf("size of node %i\n", (int)sizeof(*new_node));
   new_node = (_TOPIC_NODE *)malloc(sizeof(*new_node));
   if ( NULL == new_node )
   {
     fprintf(stderr, "IN %s, %s: malloc() failed\n", __FILE__, "node alocate");
     return s;
   }
-  printf("%s\n","node allocated" );
-  // struct _TOPIC_NODE* p = malloc( 1 * sizeof(*p) );
-
-  // if ( NULL == p )
-  // {
-  //   fprintf(stderr, "IN %s, %s: malloc() failed\n", __FILE__, "list_add");
-  //   return s;
-  // }
-
   new_node->token = tokenptr;
   new_node->next = NULL;
-
-printf("node values set\n");
 
   if ( NULL == s )
   {
@@ -54,10 +42,16 @@ printf("node values set\n");
     s->tail->next = new_node;
     s->tail = new_node;
   }
-
   return s;
 }
 
+/* return the token from the first node and then remove the node */
+void pop (_TOPIC_Q * topic_q, char * buffer)
+{
+  printf("token size > %i, token is > %s\n", (int)strlen(topic_q->head->token), topic_q->head->token);
+  strncpy(buffer, topic_q->head->token, strlen(topic_q->head->token));
+  return;
+}
 
 /* This is a queue and it is FIFO, so we will always remove the first element */
 _TOPIC_Q* list_remove_element( _TOPIC_Q* s )
@@ -84,13 +78,13 @@ _TOPIC_Q* list_remove_element( _TOPIC_Q* s )
 
   h = s->head;
   p = h->next;
+  free(h->token);
   free(h);
   s->head = p;
   if ( NULL == s->head )  s->tail = s->head;  /* The element tail was pointing to is free(), so we need an update */
 
   return s;
 }
-
 
 /* ---------------------- small helper fucntions ---------------------------------- */
 _TOPIC_Q* list_free( _TOPIC_Q* s )
@@ -117,8 +111,19 @@ _TOPIC_Q* list_new(void)
   return p;
 }
 
+void list_print_element(_TOPIC_NODE *p )
+{
+  if ( p )
+  {
+    printf("token = %s\n", p->token);
+  }
+  else
+  {
+    printf("Can not print NULL struct \n");
+  }
+}
 
-void list_print(_TOPIC_Q* ps )
+void list_print(_TOPIC_Q *ps )
 {
   _TOPIC_NODE* p = NULL;
 
@@ -131,17 +136,4 @@ void list_print(_TOPIC_Q* ps )
   }
 
   printf("------------------\n");
-}
-
-
-void list_print_element(_TOPIC_NODE* p )
-{
-  if ( p )
-  {
-    printf("token = %s\n", p->token);
-  }
-  else
-  {
-    printf("Can not print NULL struct \n");
-  }
 }

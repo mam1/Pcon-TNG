@@ -18,7 +18,9 @@ _TOPIC_Q* list_remove_element( _TOPIC_Q*);
 _TOPIC_Q* list_free( _TOPIC_Q*);
 _TOPIC_Q* list_new(void);
 
-void list_print(  _TOPIC_Q*);
-void list_print_element(_TOPIC_NODE*);
+void list_print_element(_TOPIC_NODE *);
+void list_print(_TOPIC_Q *);
+void pop(_TOPIC_Q *, char *);
+
 
 #endif

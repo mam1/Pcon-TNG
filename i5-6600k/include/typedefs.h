@@ -49,7 +49,7 @@ typedef struct topic_node
 	struct topic_node 	*next;
 } _TOPIC_NODE;
  
-typedef struct
+typedef struct topic_q
 {
   _TOPIC_NODE* head;
   _TOPIC_NODE* tail;
