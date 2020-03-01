@@ -43,10 +43,19 @@
 // 	int 		hide; 				// do not dispplay channel data
 // } _CHN_DAT;
 
-typedef struct topic_node {
+typedef struct topic_node 
+{
 	char 				*token;
 	struct topic_node 	*next;
 } _TOPIC_NODE;
+ 
+typedef struct
+{
+  _TOPIC_NODE* head;
+  _TOPIC_NODE* tail;
+} _TOPIC_Q;
+ 
+
 
 // /* sensor data */
 // typedef struct {
