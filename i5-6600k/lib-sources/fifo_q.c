@@ -16,7 +16,7 @@ _TOPIC_Q * list_add_element(_TOPIC_Q* s, const char *tokenptr)
     fprintf(stderr, "IN %s, %s: malloc() failed\n", __FILE__, "node alocate");
     return s;
   }
-
+  printf("%s\n","node allocated" );
   // struct _TOPIC_NODE* p = malloc( 1 * sizeof(*p) );
 
   // if ( NULL == p )
@@ -25,9 +25,10 @@ _TOPIC_Q * list_add_element(_TOPIC_Q* s, const char *tokenptr)
   //   return s;
   // }
 
-  new_node->token = (const char *)tokenptr;
+  new_node->token = tokenptr;
   new_node->next = NULL;
 
+printf("node values set\n");
 
   if ( NULL == s )
   {
