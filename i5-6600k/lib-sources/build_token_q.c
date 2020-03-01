@@ -13,7 +13,6 @@ _TOPIC_NODE				* topic_stack_tail = NULL;
 
 void build_token_q(char *topicName, int topicLen)
 {
-	int 			i;
 	char			*topicNameptr, *topicNameEnd;
 	int 			topicNamesize;
 	char 			token_buffer[TOKEN_BUFFER_SIZE], *token_buffer_ptr;
