@@ -22,5 +22,7 @@ void list_print_element(_TOPIC_NODE *);
 void list_print(_TOPIC_Q *);
 void pop(_TOPIC_Q *, char *);
 
+_TOPIC_Q* build_token_q(char *, int);
+
 
 #endif

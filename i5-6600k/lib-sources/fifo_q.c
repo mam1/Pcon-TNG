@@ -2,6 +2,7 @@
 #include  <stdlib.h>
 #include  <string.h>
 #include "typedefs.h"
+#include "fifo_q.h"
 
 /* Will always return the pointer to topic_q */
 _TOPIC_Q * list_add_element(_TOPIC_Q* s, char *tokenptr)
@@ -45,11 +46,14 @@ _TOPIC_Q * list_add_element(_TOPIC_Q* s, char *tokenptr)
   return s;
 }
 
-/* return the token from the first node and then remove the node */
+/* load the token from the first node into a buffer and remove the node */
 void pop (_TOPIC_Q * topic_q, char * buffer)
 {
   printf("token size > %i, token is > %s\n", (int)strlen(topic_q->head->token), topic_q->head->token);
   strncpy(buffer, topic_q->head->token, strlen(topic_q->head->token));
+  
+  list_remove_element(topic_q);
+
   return;
 }
 
@@ -78,7 +82,7 @@ _TOPIC_Q* list_remove_element( _TOPIC_Q* s )
 
   h = s->head;
   p = h->next;
-  free(h->token);
+  free(s->head->token);
   free(h);
   s->head = p;
   if ( NULL == s->head )  s->tail = s->head;  /* The element tail was pointing to is free(), so we need an update */
