@@ -43,9 +43,9 @@ _TOPIC_Q * build_token_q(char *topicName, int topicLen)
 		putchar('\n');
 
 		// allocate allocate memory for token
-		printf("buffer size %i\n", (int)strlen(token_buffer));
+		printf("allocating memory for token buffer size %i\n", (int)strlen(token_buffer));
 
-		cptr = (char *)malloc((strlen(token_buffer)+1) * strlen(token_buffer));
+		cptr = (char *)malloc((strlen(token_buffer)+1) * sizeof(char));
 		if( NULL == cptr )
 	    {
 	      fprintf(stderr, "IN %s, %s: malloc() failed\n", __FILE__, "token alocate");

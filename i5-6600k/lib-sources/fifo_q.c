@@ -50,9 +50,9 @@ _TOPIC_Q * list_add_element(_TOPIC_Q* s, char *tokenptr)
 void pop (_TOPIC_Q * topic_q, char * buffer)
 {
   printf("token size > %i, token is > %s\n", (int)strlen(topic_q->head->token), topic_q->head->token);
-  strncpy(buffer, topic_q->head->token, strlen(topic_q->head->token));
+  // strncpy(buffer, topic_q->head->token, strlen(topic_q->head->token));
   
-  list_remove_element(topic_q);
+  // list_remove_element(topic_q);
 
   return;
 }
