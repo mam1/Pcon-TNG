@@ -15,10 +15,10 @@ int main(void)
 
   mt = build_token_q("258Thomas/xxxx", 14);
    
-  list_print(mt);
+  // list_print(mt);
   memset(buffer, '\0', TOKEN_BUFFER_SIZE);
   // pop (mt,buffer);
-  printf("poped token >%s<\n", buffer);
+  printf("poped token >%s<\n", "test");
   // list_print(mt);
 
 
