@@ -13,7 +13,6 @@ int main(void)
   _TOPIC_Q      *n;
   char           buffer[TOKEN_BUFFER_SIZE];
   char           topic[] = "258Thomas/xxxx/zz";
-  int           i;
 
   printf("/ntopic string >%s<\n", topic);
 
@@ -22,8 +21,8 @@ int main(void)
   list_print(mt);
 
   memset(buffer, '\0', TOKEN_BUFFER_SIZE);
-  // while (pop(mt, buffer))
-  for(i=0; i<3; i++)
+  while (pop(mt, buffer))
+
   {
     pop(mt, buffer);
     printf("**** poped token >%s<\n", buffer);

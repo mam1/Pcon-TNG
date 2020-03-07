@@ -63,24 +63,24 @@ _TOPIC_Q* list_remove_element( _TOPIC_Q* s )
   if ( NULL == s )
   {
     printf("List is empty\n");
-    return s;
+    return NULL;
   }
   else if ( NULL == s->head && NULL == s->tail )
   {
     printf("Well, List is empty\n");
-    return s;
+    return NULL;
   }
   else if ( NULL == s->head || NULL == s->tail )
   {
     printf("There is something seriously wrong with your list\n");
     printf("One of the head/tail is empty while other is not \n");
-    return s;
+    return NULL;
   }
 
   h = s->head;
   p = h->next;
   free(s->head->token);
-  free(h);
+  free(s->head);
   s->head = p;
   if ( NULL == s->head )  s->tail = s->head;  /* The element tail was pointing to is free(), so we need an update */
 
