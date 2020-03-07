@@ -47,14 +47,11 @@ _TOPIC_Q * list_add_element(_TOPIC_Q* s, char *tokenptr)
 }
 
 /* load the token from the first node into a buffer and remove the node */
-void pop (_TOPIC_Q * topic_q, char * buffer)
+_TOPIC_Q*  pop (_TOPIC_Q * topic_q, char * buffer)
 {
-  printf("token size > %i, token is > %s\n", (int)strlen(topic_q->head->token), topic_q->head->token);
-  // strncpy(buffer, topic_q->head->token, strlen(topic_q->head->token));
-  
-  // list_remove_element(topic_q);
-
-  return;
+  // printf("pop called token size > %i, token is > %s\n", (int)strlen(topic_q->head->token), topic_q->head->token);
+  strncpy(buffer, topic_q->head->token, strlen(topic_q->head->token));
+  return list_remove_element(topic_q);
 }
 
 /* This is a queue and it is FIFO, so we will always remove the first element */
