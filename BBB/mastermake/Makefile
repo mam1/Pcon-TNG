@@ -28,13 +28,13 @@ CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions      
 
 # set locations for basic gnu tools
-
-	CC  := /home/mam1/gcc-linaro-6.5.0-2018.12-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gcc
-# 	CXX := ${CC}g++
-# 	LD  := ${CC}ld
-# 	AS  := ${CC}as
-# 	AR  := ${CC}ar
-# 	OBJCOPY := ${CC}objcopy
+arm_PREFIX := /home/mam1/Git/Pcon-TNG/BBB/arm-xcompile-binaries/arm-linux-gnueabihf-
+CC  	:= ${arm_PREFIX}gcc
+CXX 	:= ${arm_PREFIX}g++
+LD  	:= ${arm_PREFIX}ld
+AS  	:= ${arm_PREFIX}as
+AR  	:= ${arm_PREFIX}ar
+OBJCOPY := ${arm_PREFIX}objcopy
 
 .PHONY: all clean distclean
 
