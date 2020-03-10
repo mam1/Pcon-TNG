@@ -51,4 +51,3 @@ void close_tm(int);
 void get_tm(_tm *);
 void set_tm(int, _tm *);
 
-

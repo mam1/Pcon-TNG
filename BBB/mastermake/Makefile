@@ -8,9 +8,9 @@
 program_DIR_PREFIX := /home/mam1/Git/Pcon-TNG
 system_BINARIES := $(program_DIR_PREFIX)/bin
 code_DIRECTORY := $(program_DIR_PREFIX)/BBB/$(working_DIRECTORY)
-program_INCLUDE_DIRS := $(program_DIR_PREFIX)/BBB/include
-program_LIBRARY_DIRS := $(program_DIR_PREFIX)/BBB/lib
-program_LIBRARIES := Pcon
+program_INCLUDE_DIRS := $(program_DIR_PREFIX)/BBB/include /usr/local/include
+program_LIBRARY_DIRS := $(program_DIR_PREFIX)/BBB/lib /home/mam1/Git/paho.mqtt.c/build/output
+program_LIBRARIES := Pcon paho-mqtt3c
 
 # scan working directory
 program_C_SRCS := $(wildcard *.c)
@@ -23,18 +23,18 @@ program_OBJS :=  $(program_C_OBJS) $(program_CXX_OBJS)
 CPPFLAGS += $(foreach includedir,$(program_INCLUDE_DIRS),-I$(includedir))
 LDFLAGS += $(foreach librarydir,$(program_LIBRARY_DIRS),-L$(librarydir))
 LDFLAGS += $(foreach library,$(program_LIBRARIES),-l$(library))
-CFLAGS  += -Wall
+CFLAGS  += -Wall -Wextra 
 CXXFLAGS += $(CFLAGS)
 LDFLAGS += $(CFLAGS) -fno-exceptions      
 
 # set locations for basic gnu tools
-arm_PREFIX := /home/mam1/Git/Pcon-TNG/BBB/arm-xcompile-binaries/arm-linux-gnueabihf-
-CC  	:= ${arm_PREFIX}gcc
-CXX 	:= ${arm_PREFIX}g++
-LD  	:= ${arm_PREFIX}ld
-AS  	:= ${arm_PREFIX}as
-AR  	:= ${arm_PREFIX}ar
-OBJCOPY := ${arm_PREFIX}objcopy
+PREFIX 	:= /home/mam1/gcc-linaro-7.4.1-2019.02-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+CC  	:= ${PREFIX}gcc
+CXX 	:= ${PREFIX}g++
+LD  	:= ${PREFIX}ld
+AS  	:= ${PREFIX}as
+AR  	:= ${PREFIX}ar
+OBJCOPY := ${PREFIX}objcopy
 
 .PHONY: all clean distclean
 

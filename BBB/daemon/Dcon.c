@@ -28,7 +28,50 @@
 #include "trace.h"
 #include "typedefs.h"
 #include "sys_dat.h"
+#include "MQTTClient.h"
+
+#define ADDRESS     "tcp://192.168.254.221:1883"
+#define CLIENTID    "ExampleClientSub"
+#define TOPIC       "258Thomas/#"
+#define PAYLOAD     "Hello World!"
+#define QOS         1
+#define TIMEOUT     10000
 // #include "bbb.h"
+
+
+volatile MQTTClient_deliveryToken deliveredtoken;
+
+void delivered(void *context, MQTTClient_deliveryToken dt)
+{
+    printf("Message with token value %d delivery confirmed\n", dt);
+    deliveredtoken = dt;
+}
+
+int msgarrvd(void *context, char *topicName, int topicLen, MQTTClient_message *message)
+{
+    int i;
+    char* payloadptr;
+
+    logit("Message arrived");
+    printf("     topic: %s\n", topicName);
+    printf("   message: ");
+
+    payloadptr = message->payload;
+    for(i=0; i<message->payloadlen; i++)
+    {
+        putchar(*payloadptr++);
+    }
+    putchar('\n');
+    MQTTClient_freeMessage(&message);
+    MQTTClient_free(topicName);
+    return 1;
+}
+
+void connlost(void *context, char *cause)
+{
+    printf("\nConnection lost\n");
+    printf("     cause: %s\n", cause);
+}
 
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
@@ -192,6 +235,7 @@ int main(void) {
 		}
 		else{
 			printf(" can't write pid file <%s>\n", _PID_FILE_NAME);
+			logit("can't write pid file");
 			exit(EXIT_FAILURE);
 		}
 		exit(EXIT_SUCCESS);
@@ -271,6 +315,30 @@ int main(void) {
 	// printf(" P%i.%i", heart[i].header, heart[i].pin);
 	init_gpio(heart[i].gpio);
 	}
+
+	/* initialize mqtt client */
+ 	MQTTClient client;
+    MQTTClient_connectOptions conn_opts = MQTTClient_connectOptions_initializer;
+    int rc;
+    int ch;
+
+    MQTTClient_create(&client, ADDRESS, CLIENTID,
+        MQTTCLIENT_PERSISTENCE_NONE, NULL);
+    conn_opts.keepAliveInterval = 20;
+    conn_opts.cleansession = 1;
+
+    MQTTClient_setCallbacks(client, NULL, connlost, msgarrvd, delivered);
+
+    if ((rc = MQTTClient_connect(client, &conn_opts)) != MQTTCLIENT_SUCCESS)
+    {
+        printf("Failed to connect, return code %d\n", rc);
+        exit(EXIT_FAILURE);
+    }
+    printf("Subscribing to topic %s\nfor client %s using QoS%d\n\n"
+           "Press Q<Enter> to quit\n\n", TOPIC, CLIENTID, QOS);
+    MQTTClient_subscribe(client, TOPIC, QOS);
+
+
 
 	/* The Big Loop */
 	logit("initialization complete");
