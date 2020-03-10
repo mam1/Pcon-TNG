@@ -41,6 +41,26 @@
 
 volatile MQTTClient_deliveryToken deliveredtoken;
 
+/* write an entry to the daemon log file */
+void logit(char *mess){
+	FILE 		*dlog;
+	_tm 		tm;
+
+	get_tm(&tm); 		// load my time date structure from system clock
+
+	/* Open log file */
+	dlog = fopen(_DAEMON_LOG, "a");
+	if (dlog == NULL) {
+		exit(EXIT_FAILURE);
+	}
+
+	fprintf(dlog,"%02i:%02i:%02i  %02i/%02i/%02i  %s\n",tm.tm_hour,tm.tm_min,tm.tm_sec,tm.tm_mon,tm.tm_mday,tm.tm_year, mess);
+	fclose(dlog);
+	return;
+}
+
+
+
 void delivered(void *context, MQTTClient_deliveryToken dt)
 {
     printf("Message with token value %d delivery confirmed\n", dt);
@@ -49,19 +69,23 @@ void delivered(void *context, MQTTClient_deliveryToken dt)
 
 int msgarrvd(void *context, char *topicName, int topicLen, MQTTClient_message *message)
 {
-    int i;
+    int i, ii, iii;
     char* payloadptr;
+    char 			buffer[100];
 
-    logit("Message arrived");
-    printf("     topic: %s\n", topicName);
-    printf("   message: ");
+    sprintf(buffer, "Message arrived  topic: %s", topicName);
+    logit(buffer);
 
-    payloadptr = message->payload;
-    for(i=0; i<message->payloadlen; i++)
-    {
-        putchar(*payloadptr++);
-    }
-    putchar('\n');
+    // ii = strlen(buffer);
+    // payloadptr = message->payload;
+    // for(i=0; i<message->payloadlen; i++)
+    // {
+    //     buffer[ii++] = *payloadptr;
+    //     putchar(*payloadptr++);
+    // }
+    // putchar('\n');
+    // buffer[ii] = '\0';
+
     MQTTClient_freeMessage(&message);
     MQTTClient_free(topicName);
     return 1;
@@ -108,23 +132,6 @@ char 				command[120];
 
 /********** support functions *******************************************************************/
 
-/* write an entry to the daemon log file */
-void logit(char *mess){
-	FILE 		*dlog;
-	_tm 		tm;
-
-	get_tm(&tm); 		// load my time date structure from system clock
-
-	/* Open log file */
-	dlog = fopen(_DAEMON_LOG, "a");
-	if (dlog == NULL) {
-		exit(EXIT_FAILURE);
-	}
-
-	fprintf(dlog,"%02i:%02i:%02i  %02i/%02i/%02i  %s\n",tm.tm_hour,tm.tm_min,tm.tm_sec,tm.tm_mon,tm.tm_mday,tm.tm_year, mess);
-	fclose(dlog);
-	return;
-}
 
 /* update all relays */
 void update_relays(_tm *tm, _IPC_DAT *ipc_ptr) {
