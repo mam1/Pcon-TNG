@@ -47,14 +47,19 @@ _TOPIC_Q * list_add_element(_TOPIC_Q* s, char *tokenptr)
 }
 
 /* load the token from the first node into a buffer and remove the node */
-void pop (_TOPIC_Q * topic_q, char * buffer)
+_TOPIC_Q*  pop(_TOPIC_Q * topic_q, char * buffer)
 {
-  printf("token size > %i, token is > %s\n", (int)strlen(topic_q->head->token), topic_q->head->token);
-  // strncpy(buffer, topic_q->head->token, strlen(topic_q->head->token));
-  
-  // list_remove_element(topic_q);
+  _TOPIC_Q                      *rtn;
 
-  return;
+  if (topic_q->head == NULL || topic_q == NULL)                                            // if the list is empty return NULL
+    return NULL;
+
+  strncpy(buffer, topic_q->head->token, strlen(topic_q->head->token));  // save the token
+  rtn = list_remove_element(topic_q);                                   // remove the elememnt from the list
+
+  return rtn;                                
+
+
 }
 
 /* This is a queue and it is FIFO, so we will always remove the first element */
@@ -66,24 +71,24 @@ _TOPIC_Q* list_remove_element( _TOPIC_Q* s )
   if ( NULL == s )
   {
     printf("List is empty\n");
-    return s;
+    return NULL;
   }
   else if ( NULL == s->head && NULL == s->tail )
   {
     printf("Well, List is empty\n");
-    return s;
+    return NULL;
   }
   else if ( NULL == s->head || NULL == s->tail )
   {
     printf("There is something seriously wrong with your list\n");
     printf("One of the head/tail is empty while other is not \n");
-    return s;
+    return NULL;
   }
 
   h = s->head;
   p = h->next;
   free(s->head->token);
-  free(h);
+  free(s->head);
   s->head = p;
   if ( NULL == s->head )  s->tail = s->head;  /* The element tail was pointing to is free(), so we need an update */
 
