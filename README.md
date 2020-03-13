@@ -73,6 +73,8 @@ When cross compiling for the Bone on OS X I am using a tool chain I got from htt
 	*	OS X 10.11.x - 3.4 GHz Intel Core i7 (iMac)
 * BeagleBone Black (rev C)- Debian, jessie
 * ESP8266 (nodeMCU dev board r2) - nodeMCU firmware 
+* Communication
+    *   MQTT broker (mosquitto) running on the BeagleBone
 
 #### Channels and Schedules 
 A channel is controlled by a schedule. There is a different schedule for each day of the week. Each channel has it own set of schedules. Channels 0-7 can switch a 60 volt 1.1 amp loads.  Channels 8 -15 can switch 120 volt 8 amp loads.  Each channel can be set manually to on or off.  Channels and also be controlled by time of day, i.e. on at 8:00 off at 14:30 or sensor value and time.  When a channel is controlled by time and sensor once a minute the remote sensor value is compared to the value stored in the schedule for current time and day of the week. If the actual values exceeds the schedule value the channel is turned off when. If the schedule values is less than the actual value the channel is turned on.  
@@ -94,13 +96,24 @@ will result in the channel being off between 1:00 - 13:00. It will be on at any 
 * 13:00 off
 * 18:00 on
 
-will result in the channel turning on at 1:00, off at 13:00 and on at 18:00.  If the current time is between 1:00 and 13:00 the channel will be on, between 13:00 and 18:00 it will be off, between 18:00 and 0:0 it will be on and between 0:0 and 13:00 it will also be on.  
+will result in the channel turning on at 1:00, off at 13:00 and on at 18:00.  If the current time is between 1:00 and 13:00 the channel will be on, between 13:00 and 18:00 it will be off, between 18:00 and 0:0 it will be on and between 0:0 and 13:00 it will also be on.
+
+#### MQTT
+##### Topic structure:
+topic = location1/location2/location3/command|sensor|status/text|float
+
+
+
 
 #### Application Architecture
 ##### Interprocess Communication (BBB)
 A memory mapped file is used to create a shared memory space in virtual memory.  This file contains communication, system, schedule and sensor data.  A daemon is started as part of the boot process on the BBB. If the daemon does not find the file it creates and initializes it.  Other processes can access this shared memory space.  Semaphores are used to control access to shared memory.
 ##### Processes
-A deamon (Dcon) running on the BBB communicates with the DIOB(s).  It uses data located in a memory mapped file (ipc.dat) and the real time clock to determine the state of each channel. The state of each channel is reset once every minute. The daemon does not require any other processes to be active.
+A daemon (Dcon) running on the BBB communicates with the DIOB(s).  It uses data located in a memory mapped file (ipc.dat) and the real time clock to determine the state of each channel. The state of each channel is reset once every minute. The daemon does not require any other processes to be active.
+
+A second daemon (mqtt-watcher) running on the BBB connects to a mqtt broker also running on the BBB.  The daemon subscribes to a high level topic and listens for any message.  It parses the topic and takes appropriate action.
+
+
 
 A command processor (Pcon) is the user interface to the system.  It allows the user to modify the data in shared memory.
 
@@ -120,6 +133,7 @@ The command processor pops tokens off the stack and feeds them to a second fsm (
 When the main event loop detects a non-empty token stack it passes the stack to a second state machine (cmd_fsm) which processes the token stack. 
 
 ![command parser state diagram](./support_docs/state_diagrams/cmd_fsm.jpg?raw=true "command parser FSM")
+
 
  
 

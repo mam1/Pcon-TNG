@@ -52,7 +52,7 @@ typedef struct {
 
 /* sensor data */
 typedef struct {
-	int 		sensor_id;
+	int 		locaton_id;
 	int			group_id;
 	int 		active;
 	char 	 	group[_GROUP_NAME_SIZE];			// sort tag for sensor display
@@ -63,6 +63,27 @@ typedef struct {
 	float		humidity;						// current sensor reading
 	time_t 		ts; 							// time and date of the reading
 } _SEN_DAT;
+
+
+
+
+/* sensor data */
+typedef struct {
+	int 		sensor_id;
+	int			group_id;
+	int 		active;
+
+	char 	 	group[_GROUP_NAME_SIZE];			// sort tag for sensor display
+	char 		description[_DESCRIPTION_NAME_SIZE];		// description
+
+	int 		channel[_NUMBER_OF_CHANNELS];  	// channel assignments
+	int 		channel_index;					// points to the next open assingment
+
+	float		temp;							// current sensor reading
+	float		humidity;						// current sensor reading
+	time_t 		ts; 
+	} _SEN_DAT2;
+
 
 /* sensor data log file */
 typedef	struct{
